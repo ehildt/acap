@@ -1,0 +1,30 @@
+{
+  "importStringConfiguration": {
+    "trailingComma": "multiLine",
+    "tabSize": 2,
+    "quoteMark": "single",
+    "maximumNumberOfImportExpressionsPerLine": {
+      "count": 80,
+      "type": "newLineEachExpressionAfterCountLimitExceptIfOnlyOne"
+    }
+  },
+  "sortConfiguration": {
+    "joinImportPaths": true,
+    "removeUnusedImports": true,
+    "removeUnusedDefaultImports": true,
+    "importMembers": {
+      "order": "caseInsensitive",
+      "direction": "asc"
+    },
+    "importPaths": {
+      "order": "caseInsensitive",
+      "direction": "asc"
+    },
+    "customOrderingRules": {
+      "defaultNumberOfEmptyLinesAfterGroup": 0
+    }
+  },
+  "generalConfiguration": {
+    "sortOnBeforeSave": true
+  }
+}

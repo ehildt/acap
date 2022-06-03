@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/prepare.sh"
+
+check_commit_msg_format $1
+check_commit_msg_length $1

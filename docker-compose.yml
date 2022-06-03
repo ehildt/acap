@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  config-manager:
+    container_name: config-manager
+    build: 
+      context: .
+      dockerfile: dockerfile
+      target: local
+    volumes:
+      - ./:/app
+    depends_on:
+      - mongo
+      - redis
+    env_file:
+      - env/defaults.env
+    ports:
+      - '3000:3000'
+
+  mongo:
+    command: mongod --logpath /dev/null
+    image: mongo
+    container_name: mongo
+    env_file:
+      - env/docker.env
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - '27017:27017'
+
+  redis:
+    image: redis
+    container_name: redis
+    env_file:
+      - env/docker.env
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass myRedisPass --loglevel warning
+
+volumes:
+  mongo_data:
+
+networks:
+  default:
+    name: CONFIG_MANAGER_NETWORK
