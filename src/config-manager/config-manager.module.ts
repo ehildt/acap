@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigManagerController } from './config-manager.controller';
 import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
-import { MongoConfig } from './configs/mongo/mongo-config-registry.dbs';
+import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
 import {
   ConfigManager,
   ConfigManagerSchema,
@@ -14,7 +14,7 @@ import { ConfigManagerService } from './services/config-manager.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [MongoConfig],
+      load: [MongoConfigRegistry],
       cache: process.env.CONFIG_MODULE_CACHE == 'true',
       ignoreEnvFile: true,
     }),
