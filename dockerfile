@@ -1,0 +1,64 @@
+# entrypoint for local development
+FROM node:18-alpine3.15 as local
+WORKDIR /app
+EXPOSE 3000
+ENTRYPOINT [ "npm", "run", "start:dev"]
+
+# entrypoint for the app builder
+FROM node:18-alpine3.15 AS builder
+WORKDIR /app
+
+ENV PORT=3000
+ENV HOST=localhost
+ENV HTTP_PROTOCOL=http
+ENV SWAGGER_AUTO_START=false
+ENV NODE_ENV=docker:prod
+
+ENV MONGO_USER=mongo
+ENV MONGO_PASS=mongo
+ENV MONGO_DB_NAME=configs
+ENV MONGO_URL=mongodb://localhost:27017
+
+EXPOSE ${PORT}
+
+COPY package*.json ./
+COPY tsconfig*.json ./
+COPY shims.d.ts ./
+COPY src ./src
+
+RUN npm ci --ignore-scripts --loglevel=error 
+
+# entrypoint for dev-stage
+FROM builder AS dev
+WORKDIR /app
+RUN npm run build
+ENTRYPOINT ["npm", "run", "start"]
+
+# entrypoint for prepare-prod
+FROM builder AS prepare_prod
+WORKDIR /app
+RUN npm run build:prod
+
+# entrypoint for prod-stage
+FROM node:18-alpine3.15 AS prod
+WORKDIR /app
+
+ENV PORT=3000
+ENV HOST=localhost
+ENV HTTP_PROTOCOL=http
+ENV SWAGGER_AUTO_START=false
+ENV NODE_ENV=docker:prod
+
+ENV MONGO_USER=mongo
+ENV MONGO_PASS=mongo
+ENV MONGO_DB_NAME=configs
+ENV MONGO_URL=mongodb://localhost:27017
+
+EXPOSE ${PORT}
+
+COPY --from=PREPARE_PROD ./app/dist ./dist
+COPY --from=PREPARE_PROD ./app/package*.json ./
+
+RUN npm ci --ignore-scripts --loglevel=error --omit=dev
+
+ENTRYPOINT ["npm", "run", "start:prod", "--silent"]

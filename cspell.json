@@ -1,0 +1,26 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [],
+    "words": [
+        "bubbleprof",
+        "cultify",
+        "depcruise",
+        "dtos",
+        "Eugen",
+        "Hildt",
+        "hyperx",
+        "loglevel",
+        "manager",
+        "nestjs",
+        "prebuild",
+        "sonarjs",
+        "styl",
+        "Upsert"
+    ],
+    "ignoreWords": [
+        "dbaeumer"
+    ],
+    "import": []
+}

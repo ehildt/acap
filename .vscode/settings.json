@@ -1,0 +1,161 @@
+{
+    "eslint.enable": true,
+    "editor.formatOnSave": true,
+    "diffEditor.codeLens": true,
+    "editor.formatOnPaste": true,
+    "json.format.enable": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.formatOnSaveMode": "modifications",
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true,
+        "source.sortMembers": true,
+        "source.fixAll.markdownlint": true
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
+    "[ignore]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[dotenv]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "node_modules": true,
+        "dist": true
+    },
+    "hide-files.files": [
+        "node_modules",
+        "dist"
+    ],
+    "todo-tree.filtering.ignoreGitSubmodules": true,
+    "todo-tree.filtering.useBuiltInExcludes": "file and search excludes",
+    "todo-tree.general.enableFileWatcher": true,
+    "todo-tree.general.tags": [
+        "DIRTY",
+        "BUG",
+        "FIX",
+        "NOTE",
+        "TEST",
+        "TODO",
+        "REFINE",
+        "[ ]",
+        "[x]",
+        "?",
+        "!"
+    ],
+    "todo-tree.tree.groupedByTag": true,
+    "todo-tree.highlights.customHighlight": {
+        "BUG": {
+            "foreground": "#db3272",
+            "gutterIcon": true,
+            "icon": "bug",
+            "iconColour": "#db3272"
+        },
+        "DIRTY": {
+            "foreground": "#8b63e7",
+            "gutterIcon": true,
+            "icon": "octoface",
+            "iconColour": "#8b63e7"
+        },
+        "FIX": {
+            "foreground": "#f1ad55",
+            "gutterIcon": true,
+            "icon": "alert",
+            "iconColour": "#f1ad55"
+        },
+        "NOTE": {
+            "foreground": "#e971e9",
+            "gutterIcon": true,
+            "icon": "note",
+            "iconColour": "#e971e9"
+        },
+        "TODO": {
+            "foreground": "#e6e343",
+            "gutterIcon": true,
+            "icon": "gear",
+            "iconColour": "#e6e343"
+        },
+        "REFINE": {
+            "foreground": "#E0B0FF",
+            "gutterIcon": true,
+            "icon": "heart",
+            "iconColour": "#E0B0FF"
+        },
+        "TEST": {
+            "foreground": "#6399e9",
+            "gutterIcon": true,
+            "icon": "beaker",
+            "iconColour": "#6399e9"
+        },
+        "[ ]": {
+            "foreground": "#CCCCFF",
+            "gutterIcon": true,
+            "icon": "square",
+            "iconColour": "#CCCCFF",
+            "type": "tag-and-subTag",
+            "hideFromTree": true
+        },
+        "[x]": {
+            "foreground": "#CCCCFF",
+            "gutterIcon": true,
+            "icon": "square-fill",
+            "iconColour": "#CCCCFF",
+            "type": "tag-and-subTag",
+            "hideFromTree": true
+        },
+        "?": {
+            "foreground": "#CCCCFF",
+            "gutterIcon": true,
+            "icon": "question",
+            "iconColour": "#CCCCFF",
+            "type": "tag-and-subTag",
+            "hideFromTree": true
+        },
+        "!": {
+            "foreground": "#CCCCFF",
+            "gutterIcon": true,
+            "icon": "info",
+            "iconColour": "#CCCCFF",
+            "type": "tag-and-subTag",
+            "hideFromTree": true
+        }
+    },
+    "todo-tree.regex.regex": "([/*]|//|#){1,}\\s($TAGS)\\s\\w+",
+    "todo-tree.regex.subTagRegex": "([/*]|//|#){1,2}(\\[\\s\\]|\\[x\\]|\\!|\\?)\\w+",
+    "todo-tree.tree.sort": true,
+    "todo-tree.regex.enableMultiLine": true,
+    "todo-tree.tree.filterCaseSensitive": true,
+    "todo-tree.tree.flat": true,
+    "todo-tree.tree.labelFormat": "${tag} : ${after}",
+    "todo-tree.tree.sortTagsOnlyViewAlphabetically": true,
+    "todo-tree.tree.scanMode": "workspace only",
+    "todo-tree.filtering.excludeGlobs": [
+        "**/node_modules",
+        "dist",
+        ".clinic"
+    ],
+    "[properties]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    }
+}

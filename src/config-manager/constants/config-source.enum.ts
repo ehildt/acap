@@ -1,0 +1,4 @@
+export enum CONFIG_SOURCE {
+  VALUE = 'VALUE',
+  ENVIRONMENT = 'ENVIRONMENT',
+}
