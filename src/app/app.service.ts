@@ -13,6 +13,10 @@ import { appConfigFactory } from './configs/app-config-factory.dbs';
 export class AppService {
   constructor(private readonly configService: ConfigService) {}
 
+  getAppConfig() {
+    return appConfigFactory(this.configService);
+  }
+
   useGlobalPipes(app: INestApplication) {
     app.useGlobalPipes(
       new ValidationPipe({
@@ -48,7 +52,7 @@ export class AppService {
   }
 
   enableOpenApi(app: INestApplication) {
-    const { swaggerAutoStart } = appConfigFactory(this.configService);
+    const { swaggerAutoStart } = this.getAppConfig();
 
     if (swaggerAutoStart) {
       const pickOpenApiObj = this.swaggerDocument();
