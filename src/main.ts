@@ -2,9 +2,9 @@ import compression from 'compression';
 import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { appConfigFactory } from './app/app.config.dbs';
 import { AppModule } from './app/app.module';
 import { AppService } from './app/app.service';
+import { appConfigFactory } from './app/configs/app-config-registry.dbs';
 
 (async () => {
   const app = await NestFactory.create(AppModule);

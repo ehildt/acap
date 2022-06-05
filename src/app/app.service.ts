@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { appConfigFactory } from './app.config.dbs';
 import { API_DOCS } from './app.constants';
+import { appConfigFactory } from './configs/app-config-factory.dbs';
 
 @Injectable()
 export class AppService {
@@ -37,8 +37,8 @@ export class AppService {
 
   private swaggerDocument() {
     return new DocumentBuilder()
-      .setTitle('EEAGLE-RDP2')
-      .setDescription('please provide some description')
+      .setTitle('Config-Manager')
+      .setDescription('A simple and convenient way to config your apps ;)')
       .setVersion('1.0')
       .addBearerAuth({
         in: 'header',

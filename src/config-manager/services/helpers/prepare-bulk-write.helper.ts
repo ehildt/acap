@@ -8,13 +8,13 @@ export function prepareBulkWriteUpsert(
 ) {
   return req.map((config) => ({
     updateOne: {
+      upsert: true,
       filter: { configId: config.configId },
       update: {
         value: challengeStringifyConfigValue(config.value),
         serviceId,
         source: CONFIG_SOURCE[config.source],
       },
-      upsert: true,
     },
   }));
 }
