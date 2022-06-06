@@ -1,6 +1,7 @@
 import { FilterQuery, Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ConfigManagerGetReq } from '../dtos/config-manager-get-req.dto';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import {
   ConfigManager,
@@ -21,12 +22,8 @@ export class ConfigManagerRepository {
     return this.configModel.bulkWrite(rowsToUpsert);
   }
 
-  find(filter: FilterQuery<ConfigManagerUpsertReq>) {
+  where(filter: FilterQuery<ConfigManagerGetReq>) {
     return this.configModel.where(filter);
-  }
-
-  findOne(filter: FilterQuery<ConfigManagerUpsertReq>) {
-    return this.configModel.findOne(filter);
   }
 
   delete(serviceId: string, req?: string[]) {

@@ -1,17 +1,18 @@
 import { ConfigManagerModule } from '@/config-manager/config-manager.module';
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppConfig, appConfigFactory } from './app.config.dbs';
 import { API_DOCS, API_DOCS_JSON, SWAGGER } from './app.constants';
 import { AppService } from './app.service';
+import { appConfigFactory } from './configs/app-config-factory.dbs';
+import { AppConfigRegistry } from './configs/app-config-registry.dbs';
 
 @Module({
   imports: [
     ConfigManagerModule,
     ConfigModule.forRoot({
-      load: [AppConfig],
-      cache: process.env.CONFIG_MODULE_CACHE == 'true',
+      cache: true,
       ignoreEnvFile: true,
+      load: [AppConfigRegistry],
     }),
   ],
   providers: [AppService, ConsoleLogger],

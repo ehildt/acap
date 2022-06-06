@@ -24,7 +24,7 @@ EXPOSE ${PORT}
 COPY package*.json ./
 COPY tsconfig*.json ./
 COPY shims.d.ts ./
-COPY src ./src
+COPY src ./src/
 
 RUN npm ci --ignore-scripts --loglevel=error 
 
@@ -32,7 +32,8 @@ RUN npm ci --ignore-scripts --loglevel=error
 FROM builder AS dev
 WORKDIR /app
 RUN npm run build
-ENTRYPOINT ["npm", "run", "start"]
+USER node
+ENTRYPOINT ["npm", "--silent", "run", "start:node"]
 
 # entrypoint for prepare-prod
 FROM builder AS prepare_prod
@@ -61,4 +62,5 @@ COPY --from=PREPARE_PROD ./app/package*.json ./
 
 RUN npm ci --ignore-scripts --loglevel=error --omit=dev
 
-ENTRYPOINT ["npm", "run", "start:prod", "--silent"]
+USER node
+ENTRYPOINT ["npm", "--silent", "run", "start:node"]
