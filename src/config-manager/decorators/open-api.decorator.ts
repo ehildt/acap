@@ -3,12 +3,14 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
-  ApiResponse,
 } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
-import { ConfigManagerUpsertRes } from '../dtos/config-manager-upsert-res.dto';
+
+const ServiceIdParam = () => ApiParam({ name: 'serviceId', type: String });
+const ConfigIdParam = () => ApiParam({ name: 'configIds', type: String });
 
 export function OpenApi_Upsert() {
   return applyDecorators(
@@ -16,37 +18,44 @@ export function OpenApi_Upsert() {
       required: true,
       type: ConfigManagerUpsertReq,
       isArray: true,
-      description: 'system config request example',
     }),
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
   );
 }
 
-export function OpenApi_GetByConfigId() {
+export function OpenApi_GetByServiceId() {
   return applyDecorators(
-    ApiResponse({ type: ConfigManagerUpsertRes }),
     ApiInternalServerErrorResponse(),
+    ApiNoContentResponse(),
+    ApiOkResponse(),
+    ServiceIdParam(),
   );
 }
 
-// eslint-disable-next-line sonarjs/no-identical-functions
-export function OpenApi_GetByServiceId() {
+export function OpenApi_GetByServiceIdConfigIds() {
   return applyDecorators(
-    ApiResponse({ type: ConfigManagerUpsertRes }),
     ApiInternalServerErrorResponse(),
+    ApiNoContentResponse(),
+    ApiOkResponse(),
+    ServiceIdParam(),
+    ConfigIdParam(),
   );
 }
 
 export function OpenApi_DeleteByServiceId() {
-  return applyDecorators(ApiOkResponse(), ApiInternalServerErrorResponse());
-}
-
-// eslint-disable-next-line sonarjs/no-identical-functions
-export function OpenApi_DeleteByConfigIds() {
   return applyDecorators(
     ApiOkResponse(),
     ApiInternalServerErrorResponse(),
-    ApiParam({ name: 'configIds', type: String }),
+    ServiceIdParam(),
+  );
+}
+
+export function OpenApi_DeleteByServiceIdConfigIds() {
+  return applyDecorators(
+    ApiOkResponse(),
+    ApiInternalServerErrorResponse(),
+    ServiceIdParam(),
+    ConfigIdParam(),
   );
 }

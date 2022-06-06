@@ -12,13 +12,17 @@ export class ConfigManagerService {
   }
 
   async getByServiceId(serviceId: string) {
-    const entities = await this.configRepo.find({ serviceId });
+    const entities = await this.configRepo.where({ serviceId });
     return mapConfigRes(entities);
   }
 
-  async getByServiceIdConfigId(serviceId: string, configId: string) {
-    const entity = await this.configRepo.findOne({ serviceId, configId });
-    return mapConfigRes(entity);
+  async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
+    const entities = await this.configRepo.where({
+      serviceId,
+      configId: { $in: configIds },
+    });
+
+    return mapConfigRes(entities);
   }
 
   async deleteByServiceId(serviceId: string) {

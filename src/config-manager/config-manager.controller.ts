@@ -1,19 +1,17 @@
 import { Controller, Delete, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
-  ConfigIdParam,
   ConfigIdsParam,
   ConfigManagerUpsertBody,
   serviceId,
-  serviceIdConfigId,
   serviceIdConfigIds,
   ServiceIdParam,
 } from './decorators/controller-properties.decorator';
 import {
-  OpenApi_DeleteByConfigIds,
   OpenApi_DeleteByServiceId,
-  OpenApi_GetByConfigId,
+  OpenApi_DeleteByServiceIdConfigIds,
   OpenApi_GetByServiceId,
+  OpenApi_GetByServiceIdConfigIds,
   OpenApi_Upsert,
 } from './decorators/open-api.decorator';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
@@ -39,13 +37,13 @@ export class ConfigManagerController {
     return this.managerConfig.getByServiceId(serviceId);
   }
 
-  @Get(serviceIdConfigId)
-  @OpenApi_GetByConfigId()
-  getByConfigId(
+  @Get(serviceIdConfigIds)
+  @OpenApi_GetByServiceIdConfigIds()
+  getByServiceIdConfigIds(
     @ServiceIdParam() serviceId: string,
-    @ConfigIdParam() configId: string,
+    @ConfigIdsParam() configIds: string[],
   ) {
-    return this.managerConfig.getByServiceIdConfigId(serviceId, configId);
+    return this.managerConfig.getByServiceIdConfigIds(serviceId, configIds);
   }
 
   @Delete(serviceId)
@@ -55,7 +53,7 @@ export class ConfigManagerController {
   }
 
   @Delete(serviceIdConfigIds)
-  @OpenApi_DeleteByConfigIds()
+  @OpenApi_DeleteByServiceIdConfigIds()
   deleteByConfigIds(
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],

@@ -14,9 +14,9 @@ import { ConfigManagerService } from './services/config-manager.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [MongoConfigRegistry],
-      cache: process.env.CONFIG_MODULE_CACHE == 'true',
+      cache: true,
       ignoreEnvFile: true,
+      load: [MongoConfigRegistry],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
