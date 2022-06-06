@@ -15,6 +15,7 @@
         "hyperx",
         "INITDB",
         "loglevel",
+        "logpath",
         "manager",
         "nestjs",
         "prebuild",

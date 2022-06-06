@@ -9,7 +9,6 @@ By default the config-manager starts with the following envs:
 ```bash
 PORT='3000'
 HOST='localhost'
-HTTP_PROTOCOL='http'
 START_SWAGGER='true'
 PRINT_ENV='true'
 
@@ -33,9 +32,9 @@ services:
       - mongo
 
   mongo:
-    command: todo add command!
     image: mongo
     container_name: mongo
+    command: mongod --logpath /dev/null
     volumes:
       - mongo_data:/data/db
     ports:
@@ -53,4 +52,32 @@ networks:
     name: CONFIG_MANAGER_NETWORK
 ```
 
-Running `docker compose up` should console log:
+Running `docker compose up` should log:
+
+```bash
+config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [Config-Manager] Object:
+config-manager  | {
+config-manager  |   "MONGO_CONFIG": {
+config-manager  |     "uri": "mongodb://mongo:27017",
+config-manager  |     "ssl": false,
+config-manager  |     "sslValidate": false,
+config-manager  |     "dbName": "configs",
+config-manager  |     "user": "mongo",
+config-manager  |     "pass": "mongo"
+config-manager  |   }
+config-manager  | }
+config-manager  | 
+config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [App] Object:
+config-manager  | {
+config-manager  |   "APP_CONFIG": {
+config-manager  |     "port": "3000",
+config-manager  |     "host": "localhost",
+config-manager  |     "StartSwagger": true,
+config-manager  |     "httpProtocol": "http"
+config-manager  |   }
+config-manager  | }
+config-manager  | 
+config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [Swagger] (docker:local) => http://localhost:3000/api-docs-json
+config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [Swagger] (docker:local) => http://localhost:3000/api-docs
+config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [NestApplication] Nest application successfully started +1ms
+```
