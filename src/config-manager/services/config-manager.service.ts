@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
 import { mapConfigRes } from './helpers/map-config-res.helper';
@@ -12,16 +12,17 @@ export class ConfigManagerService {
   }
 
   async getByServiceId(serviceId: string) {
-    const entities = await this.configRepo.find({ serviceId });
-    if (!entities?.length)
-      throw new HttpException('NoContent', HttpStatus.NO_CONTENT);
+    const entities = await this.configRepo.where({ serviceId });
     return mapConfigRes(entities);
   }
 
-  async getByServiceIdConfigId(serviceId: string, configId: string) {
-    const entity = await this.configRepo.findOne({ serviceId, configId });
-    if (!entity) throw new HttpException('NoContent', HttpStatus.NO_CONTENT);
-    return mapConfigRes(entity);
+  async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
+    const entities = await this.configRepo.where({
+      serviceId,
+      configId: { $in: configIds },
+    });
+
+    return mapConfigRes(entities);
   }
 
   async deleteByServiceId(serviceId: string) {
