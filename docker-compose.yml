@@ -16,6 +16,7 @@ services:
       - '3000:3000'
 
   mongo:
+    command: mongod --logpath /dev/null
     image: mongo
     container_name: mongo
     env_file:

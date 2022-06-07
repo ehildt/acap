@@ -1,4 +1,4 @@
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigManagerController } from './config-manager.controller';
@@ -27,17 +27,7 @@ import { ConfigManagerService } from './services/config-manager.service';
       { name: ConfigManager.name, schema: ConfigManagerSchema },
     ]),
   ],
-  providers: [ConfigManagerService, ConfigManagerRepository, ConsoleLogger],
+  providers: [ConfigManagerService, ConfigManagerRepository],
   controllers: [ConfigManagerController],
 })
-export class ConfigManagerModule {
-  constructor(
-    private readonly logger: ConsoleLogger,
-    private readonly configService: ConfigService,
-  ) {}
-
-  onModuleInit() {
-    const MONGO_CONFIG = mongoConfigFactory(this.configService);
-    this.logger.log({ MONGO_CONFIG }, 'Config-Manager');
-  }
-}
+export class ConfigManagerModule {}
