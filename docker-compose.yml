@@ -23,7 +23,6 @@ services:
       - env/docker.env
     volumes:
       - mongo_data:/data/db
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
     ports:
       - '27017:27017'
 

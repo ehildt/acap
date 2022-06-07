@@ -4,15 +4,17 @@ import { challengeConfigSource } from './challenge-config-source.helper';
 
 const NO_CONTENT = 'NoContent';
 
-const documentReducer = (
-  previous: Record<string, unknown>,
-  document: ConfigManagerDocument,
-) => ({
-  ...previous,
-  [document.configId]: challengeConfigSource(document.source, document.value),
+const documentMapper = ({
+  configId,
+  source,
+  value,
+}: ConfigManagerDocument) => ({
+  configId,
+  source,
+  value: challengeConfigSource(source, value),
 });
 
 export function mapConfigRes(documents?: ConfigManagerDocument[]) {
-  if (documents?.length) return documents.reduce(documentReducer, {});
+  if (documents?.length) return documents.map(documentMapper, {});
   throw new HttpException(NO_CONTENT, HttpStatus.NO_CONTENT);
 }

@@ -30,7 +30,10 @@ export function OpenApi_GetByServiceId() {
   return applyDecorators(
     ApiInternalServerErrorResponse(),
     ApiNoContentResponse(),
-    ApiOkResponse(),
+    ApiOkResponse({
+      isArray: true,
+      type: ConfigManagerUpsertReq,
+    }),
     ServiceIdParam(),
   );
 }
@@ -39,6 +42,8 @@ export function OpenApi_GetByServiceIdConfigIds() {
   return applyDecorators(
     ApiInternalServerErrorResponse(),
     ApiNoContentResponse(),
+    // TODO OpenApi_GetByServiceIdConfigIds
+    // ! ApiOkResponse => provide type information
     ApiOkResponse(),
     ServiceIdParam(),
     ConfigIdParam(),
