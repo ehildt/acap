@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -21,6 +22,7 @@ export function OpenApi_Upsert() {
     }),
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
+    ApiBadRequestResponse(),
   );
 }
 

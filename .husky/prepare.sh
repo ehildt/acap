@@ -4,8 +4,8 @@
 # constants
 CURRENT_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 GIT_STATUS_PORCELAIN=$(git status --porcelain | head -1)
-REGEX_GIT_BRANCH_NAME="^(feat|fix|chore|bug|task)\/[0-9]{4,}-[a-zA-Z0-9_\.\-]+$"
-REGEX_GIT_COMMIT_MSG="^(feat|fix|chore|docs|test|style|refactor|perf|build|ci|revert)(\(.+?\))?: .{1,}$"
+REGEX_GIT_BRANCH_NAME="^(feat|fix|chore|bug|task|wiki)\/[0-9]{4,}-[a-zA-Z0-9_\.\-]+$"
+REGEX_GIT_COMMIT_MSG="^(feat|fix|chore|wiki|test|style|refactor|perf|build|ci|revert)(\(.+?\))?: .{1,}$"
 REGEX_GIT_MSG_LENGTH="^.{1,88}$"
 
 # formators
