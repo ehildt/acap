@@ -8,16 +8,17 @@ ENTRYPOINT [ "npm", "run", "start:dev"]
 FROM node:18-alpine3.15 AS builder
 WORKDIR /app
 
-ENV PORT=3000
-ENV HOST=localhost
-ENV HTTP_PROTOCOL=http
-ENV SWAGGER_AUTO_START=false
-ENV NODE_ENV=docker:prod
+ENV PORT='3000'
+ENV HOST='localhost'
+ENV HTTP_PROTOCOL='http'
+ENV START_SWAGGER='false'
+ENV NODE_ENV='docker:prod'
+ENV PRINT_ENV='true'
 
-ENV MONGO_USER=mongo
-ENV MONGO_PASS=mongo
-ENV MONGO_DB_NAME=configs
-ENV MONGO_URL=mongodb://localhost:27017
+ENV MONGO_USER='mongo'
+ENV MONGO_PASS='mongo'
+ENV MONGO_DB_NAME='configs'
+ENV MONGO_URL='mongodb://localhost:27017'
 
 EXPOSE ${PORT}
 
@@ -44,16 +45,17 @@ RUN npm run build:prod
 FROM node:18-alpine3.15 AS prod
 WORKDIR /app
 
-ENV PORT=3000
-ENV HOST=localhost
-ENV HTTP_PROTOCOL=http
-ENV SWAGGER_AUTO_START=false
-ENV NODE_ENV=docker:prod
+ENV PORT='3000'
+ENV HOST='localhost'
+ENV HTTP_PROTOCOL='http'
+ENV START_SWAGGER='false'
+ENV NODE_ENV='docker:prod'
+ENV PRINT_ENV='false'
 
-ENV MONGO_USER=mongo
-ENV MONGO_PASS=mongo
-ENV MONGO_DB_NAME=configs
-ENV MONGO_URL=mongodb://localhost:27017
+ENV MONGO_USER='mongo'
+ENV MONGO_PASS='mongo'
+ENV MONGO_DB_NAME='configs'
+ENV MONGO_URL='mongodb://localhost:27017'
 
 EXPOSE ${PORT}
 

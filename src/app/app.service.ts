@@ -52,9 +52,9 @@ export class AppService {
   }
 
   enableOpenApi(app: INestApplication) {
-    const { swaggerAutoStart } = this.getAppConfig();
+    const { swaggerStart } = this.getAppConfig();
 
-    if (swaggerAutoStart) {
+    if (swaggerStart) {
       const pickOpenApiObj = this.swaggerDocument();
       const openApiObj = SwaggerModule.createDocument(app, pickOpenApiObj);
       SwaggerModule.setup(API_DOCS, app, openApiObj, {

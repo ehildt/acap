@@ -55,8 +55,16 @@ networks:
 Running `docker compose up` should log:
 
 ```bash
-config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [Config-Manager] Object:
+config-manager  | [Nest] 59  - 06/07/2022, 6:59:50 PM     LOG [Config-Manager] Object:
 config-manager  | {
+config-manager  |   "APP_CONFIG": {
+config-manager  |     "nodeEnv": "docker:local",
+config-manager  |     "port": "3000",
+config-manager  |     "host": "localhost",
+config-manager  |     "swaggerStart": true,
+config-manager  |     "httpProtocol": "http",
+config-manager  |     "printEnv": true
+config-manager  |   },
 config-manager  |   "MONGO_CONFIG": {
 config-manager  |     "uri": "mongodb://mongo:27017",
 config-manager  |     "ssl": false,
@@ -67,17 +75,7 @@ config-manager  |     "pass": "mongo"
 config-manager  |   }
 config-manager  | }
 config-manager  | 
-config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [App] Object:
-config-manager  | {
-config-manager  |   "APP_CONFIG": {
-config-manager  |     "port": "3000",
-config-manager  |     "host": "localhost",
-config-manager  |     "StartSwagger": true,
-config-manager  |     "httpProtocol": "http"
-config-manager  |   }
-config-manager  | }
-config-manager  | 
-config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [Swagger] (docker:local) => http://localhost:3000/api-docs-json
-config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [Swagger] (docker:local) => http://localhost:3000/api-docs
-config-manager  | [Nest] 34  - 06/06/2022, 4:01:58 PM     LOG [NestApplication] Nest application successfully started +1ms
+config-manager  | [Nest] 59  - 06/07/2022, 6:59:50 PM     LOG [Swagger] (docker:local) => http://localhost:3000/api-docs-json
+config-manager  | [Nest] 59  - 06/07/2022, 6:59:50 PM     LOG [Swagger] (docker:local) => http://localhost:3000/api-docs
+config-manager  | [Nest] 59  - 06/07/2022, 6:59:50 PM     LOG [NestApplication] Nest application successfully started +1ms
 ```
