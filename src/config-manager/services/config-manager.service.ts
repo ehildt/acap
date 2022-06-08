@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
 import { mapConfigRes } from './helpers/map-config-res.helper';
+import { reduceConfigRes } from './helpers/reduce-config-res.helper';
 
 @Injectable()
 export class ConfigManagerService {
@@ -22,7 +23,7 @@ export class ConfigManagerService {
       configId: { $in: configIds },
     });
 
-    return mapConfigRes(entities);
+    return reduceConfigRes(entities);
   }
 
   async deleteByServiceId(serviceId: string) {
