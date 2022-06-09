@@ -31,7 +31,7 @@ export class AppModule {
     if (APP_CONFIG.printEnv)
       this.logger.log({ APP_CONFIG, MONGO_CONFIG }, 'Config-Manager');
 
-    if (APP_CONFIG.swaggerStart) {
+    if (APP_CONFIG.startSwagger) {
       const { nodeEnv, httpProtocol, host, port } = APP_CONFIG;
       const swaggerPath = `(${nodeEnv}) => ${httpProtocol}://${host}:${port}`;
       this.logger.log(`${swaggerPath}/${API_DOCS_JSON}`, SWAGGER);

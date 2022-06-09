@@ -61,7 +61,7 @@ config-manager  |   "APP_CONFIG": {
 config-manager  |     "nodeEnv": "docker:local",
 config-manager  |     "port": "3000",
 config-manager  |     "host": "localhost",
-config-manager  |     "swaggerStart": true,
+config-manager  |     "startSwagger": true,
 config-manager  |     "httpProtocol": "http",
 config-manager  |     "printEnv": true
 config-manager  |   },
