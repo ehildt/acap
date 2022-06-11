@@ -1,4 +1,13 @@
-import { Controller, Delete, Get, Post } from '@nestjs/common';
+import { Cache } from 'cache-manager';
+import {
+  BadRequestException,
+  CACHE_MANAGER,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   ConfigIdsParam,
@@ -20,11 +29,14 @@ import { ConfigManagerService } from './services/config-manager.service';
 @ApiTags('Config-Manager')
 @Controller('configs/services')
 export class ConfigManagerController {
-  constructor(private readonly managerConfig: ConfigManagerService) {}
+  constructor(
+    private readonly managerConfig: ConfigManagerService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+  ) {}
 
   @Post(serviceId)
   @OpenApi_Upsert()
-  upsert(
+  async upsert(
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
@@ -37,18 +49,45 @@ export class ConfigManagerController {
     return this.managerConfig.getByServiceId(serviceId);
   }
 
+  // TODO CacheController
+  // ! write cache controller and cache service
+  @Get('caches/:serviceId')
+  getByServiceIdCached(@ServiceIdParam() serviceId: string) {
+    return this.managerConfig.getByServiceId(serviceId);
+  }
+
   @Get(serviceIdConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
-  getByServiceIdConfigIds(
+  async getByServiceIdConfigIds(
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
   ) {
-    return this.managerConfig.getByServiceIdConfigIds(serviceId, configIds);
+    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+    const data = Object.keys(cache).filter((c) => configIds.includes(c));
+    if (data?.length === configIds?.length) return cache;
+
+    const entities = await this.managerConfig.getByServiceIdConfigIds(
+      serviceId,
+      configIds,
+    );
+
+    if (Object.keys(entities)?.length !== configIds?.length) {
+      throw new BadRequestException(
+        `configIds not found: ${configIds.filter(
+          (id) => !Object.keys(entities).find((key) => key === id),
+        )}`,
+      );
+    }
+
+    const upsertCache = { ...cache, ...entities };
+    await this.cacheManager.set(serviceId, upsertCache);
+    return upsertCache;
   }
 
   @Delete(serviceId)
   @OpenApi_DeleteByServiceId()
-  deleteByServiceId(@ServiceIdParam() serviceId: string) {
+  async deleteByServiceId(@ServiceIdParam() serviceId: string) {
+    await this.cacheManager.del(serviceId);
     return this.managerConfig.deleteByServiceId(serviceId);
   }
 
@@ -58,6 +97,8 @@ export class ConfigManagerController {
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
   ) {
-    return this.managerConfig.deleteByConfigId(serviceId, configIds);
+    // TODO deleteByServiceIdConfigId
+    // ! also delete from cache
+    return this.managerConfig.deleteByServiceIdConfigId(serviceId, configIds);
   }
 }

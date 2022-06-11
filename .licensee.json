@@ -91,12 +91,13 @@
     "semver-utils": "1.1.4",
     "cli-table": "0.3.11",
     "type-component": "0.0.1",
-    "hdr-histogram-js": "3.0.0"
+    "hdr-histogram-js": "3.0.0",
+    "cluster-key-slot": "1.1.0"
   },
   "corrections": true,
   "ignore": [
     {
-      "scope": "manager"
+      "scope": "cultify"
     }
   ]
 }

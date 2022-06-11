@@ -30,7 +30,7 @@ export class ConfigManagerService {
     return this.configRepo.delete(serviceId);
   }
 
-  async deleteByConfigId(serviceId: string, configIds?: string[]) {
+  async deleteByServiceIdConfigId(serviceId: string, configIds?: string[]) {
     return this.configRepo.delete(serviceId, configIds);
   }
 }
