@@ -1,10 +1,11 @@
 import { Cache } from 'cache-manager';
 import {
-  BadRequestException,
   CACHE_MANAGER,
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Inject,
   Post,
 } from '@nestjs/common';
@@ -12,8 +13,8 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   ConfigIdsParam,
   ConfigManagerUpsertBody,
-  serviceId,
-  serviceIdConfigIds,
+  namespace,
+  namespaceConfigIds,
   ServiceIdParam,
 } from './decorators/controller-properties.decorator';
 import {
@@ -25,18 +26,20 @@ import {
 } from './decorators/open-api.decorator';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
 
+const NO_CONTENT = 'NoContent';
+
 @ApiTags('Cache-Manager')
 @Controller('caches/services')
 export class CacheManagerController {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-  @Post(serviceId)
+  @Post(namespace)
   @OpenApi_Upsert()
   async upsert(
-    @ServiceIdParam() serviceId: string,
+    @ServiceIdParam() namespace: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
-    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+    const cache = (await this.cacheManager.get(namespace)) ?? ({} as any);
 
     const data = {
       ...cache,
@@ -46,53 +49,59 @@ export class CacheManagerController {
       ),
     };
 
-    return this.cacheManager.set(serviceId, data);
+    return this.cacheManager.set(namespace, data);
   }
 
-  @Get(serviceId)
+  @Get(namespace)
   @OpenApi_GetByServiceId()
-  getByServiceId(@ServiceIdParam() serviceId: string) {
-    return this.cacheManager.get(serviceId);
+  async getByServiceId(@ServiceIdParam() namespace: string) {
+    const cache = await this.cacheManager.get(namespace);
+    if (!cache) throw new HttpException(NO_CONTENT, HttpStatus.NO_CONTENT);
+    return cache;
   }
 
-  @Get(serviceIdConfigIds)
+  @Get(namespaceConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
   async getByServiceIdConfigIds(
-    @ServiceIdParam() serviceId: string,
+    @ServiceIdParam() namespace: string,
     @ConfigIdsParam() configIds: string[],
   ) {
-    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+    const cache = (await this.cacheManager.get(namespace)) ?? ({} as any);
     const keys = Object.keys(cache);
     const matchedKeys = keys.filter((c) => configIds.includes(c));
 
     if (matchedKeys?.length === configIds?.length)
       return keys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
 
-    throw new BadRequestException(
-      `configIds not found: ${configIds.filter(
-        (id) => !keys.find((key) => key === id),
-      )}`,
+    throw new HttpException(
+      {
+        message: `N/A (config): ${configIds.filter(
+          (id) => !keys.find((k) => k === id),
+        )}`,
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+      },
+      HttpStatus.UNPROCESSABLE_ENTITY,
     );
   }
 
-  @Delete(serviceId)
+  @Delete(namespace)
   @OpenApi_DeleteByServiceId()
-  async deleteByServiceId(@ServiceIdParam() serviceId: string) {
-    return this.cacheManager.del(serviceId);
+  async deleteByServiceId(@ServiceIdParam() namespace: string) {
+    return this.cacheManager.del(namespace);
   }
 
-  @Delete(serviceIdConfigIds)
+  @Delete(namespaceConfigIds)
   @OpenApi_DeleteByServiceIdConfigIds()
   async deleteByConfigIds(
-    @ServiceIdParam() serviceId: string,
+    @ServiceIdParam() namespace: string,
     @ConfigIdsParam() configIds: string[],
   ) {
-    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+    const cache = (await this.cacheManager.get(namespace)) ?? ({} as any);
     const keys = Object.keys(cache).filter(
       (key) => delete cache[configIds.find((id) => id === key)],
     );
 
-    if (keys.length) await this.cacheManager.set(serviceId, cache);
-    return this.cacheManager.del(serviceId);
+    if (keys.length) await this.cacheManager.set(namespace, cache);
+    return this.cacheManager.del(namespace);
   }
 }

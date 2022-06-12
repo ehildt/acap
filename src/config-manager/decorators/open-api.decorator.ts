@@ -7,10 +7,11 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 
-const ServiceIdParam = () => ApiParam({ name: 'serviceId', type: String });
+const ServiceIdParam = () => ApiParam({ name: 'namespace', type: String });
 const ConfigIdParam = () => ApiParam({ name: 'configIds', type: String });
 
 export function OpenApi_Upsert() {
@@ -41,9 +42,7 @@ export function OpenApi_GetByServiceId() {
 export function OpenApi_GetByServiceIdConfigIds() {
   return applyDecorators(
     ApiInternalServerErrorResponse(),
-    ApiNoContentResponse(),
-    // TODO OpenApi_GetByServiceIdConfigIds
-    // ! ApiOkResponse => provide type information
+    ApiUnprocessableEntityResponse(),
     ApiOkResponse(),
     ServiceIdParam(),
     ConfigIdParam(),

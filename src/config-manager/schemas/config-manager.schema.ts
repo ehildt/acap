@@ -7,7 +7,7 @@ export type ConfigManagerDocument = ConfigManager & Document;
 @Schema({ timestamps: true, autoIndex: true })
 export class ConfigManager {
   @Prop({ required: true, uppercase: true })
-  serviceId: string;
+  namespace: string;
 
   @Prop({ required: true, uppercase: true, unique: true })
   configId: string;

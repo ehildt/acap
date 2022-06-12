@@ -8,29 +8,29 @@ import { reduceConfigRes } from './helpers/reduce-config-res.helper';
 export class ConfigManagerService {
   constructor(private readonly configRepo: ConfigManagerRepository) {}
 
-  async upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
-    return this.configRepo.upsert(serviceId, req);
+  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
+    return this.configRepo.upsert(namespace, req);
   }
 
-  async getByServiceId(serviceId: string) {
-    const entities = await this.configRepo.where({ serviceId });
+  async getByServiceId(namespace: string) {
+    const entities = await this.configRepo.where({ namespace });
     return mapConfigRes(entities);
   }
 
-  async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
+  async getByServiceIdConfigIds(namespace: string, configIds: string[]) {
     const entities = await this.configRepo.where({
-      serviceId,
+      namespace,
       configId: { $in: configIds },
     });
 
     return reduceConfigRes(entities);
   }
 
-  async deleteByServiceId(serviceId: string) {
-    return this.configRepo.delete(serviceId);
+  async deleteByServiceId(namespace: string) {
+    return this.configRepo.delete(namespace);
   }
 
-  async deleteByServiceIdConfigId(serviceId: string, configIds?: string[]) {
-    return this.configRepo.delete(serviceId, configIds);
+  async deleteByServiceIdConfigId(namespace: string, configIds?: string[]) {
+    return this.configRepo.delete(namespace, configIds);
   }
 }

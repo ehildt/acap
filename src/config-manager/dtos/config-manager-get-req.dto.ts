@@ -3,6 +3,6 @@ export class ConfigManagerGetReq {
     Object.assign(this, copy);
   }
 
-  serviceId: string;
+  namespace: string;
   configId: string;
 }
