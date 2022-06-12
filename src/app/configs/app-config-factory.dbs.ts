@@ -7,6 +7,5 @@ export function appConfigFactory(config: ConfigService) {
     host: config.get<string>('AppConfig.HOST'),
     startSwagger: config.get<boolean>('AppConfig.START_SWAGGER'),
     httpProtocol: config.get<string>('AppConfig.HTTP_PROTOCOL'),
-    printEnv: config.get<boolean>('AppConfig.PRINT_ENV'),
   };
 }
