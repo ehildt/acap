@@ -2,7 +2,7 @@ import RedisStore from 'cache-manager-ioredis';
 import { CacheModule, ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigCacheManagerController } from './config-cache-manager.controller';
+import { CacheManagerController } from './cache-manager.controller';
 import { ConfigManagerController } from './config-manager.controller';
 import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
 import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
@@ -42,7 +42,7 @@ import { ConfigManagerService } from './services/config-manager.service';
     ]),
   ],
   providers: [ConfigManagerService, ConfigManagerRepository, ConsoleLogger],
-  controllers: [ConfigManagerController, ConfigCacheManagerController],
+  controllers: [ConfigManagerController, CacheManagerController],
 })
 export class ConfigManagerModule {
   constructor(
@@ -52,9 +52,9 @@ export class ConfigManagerModule {
 
   onModuleInit() {
     const MONGO_CONFIG = mongoConfigFactory(this.configService);
-    const REDIS_CACHE_CONFIG = redisCacheConfigFactory(this.configService);
+    const REDIS_CONFIG = redisCacheConfigFactory(this.configService);
 
     if (process.env.PRINT_ENV)
-      this.logger.log({ MONGO_CONFIG, REDIS_CACHE_CONFIG }, 'Config-Manager');
+      this.logger.log({ MONGO_CONFIG, REDIS_CONFIG }, 'Config-Manager');
   }
 }

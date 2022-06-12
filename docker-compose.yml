@@ -10,7 +10,7 @@ services:
       - ./:/app
     depends_on:
       - mongo
-      - redis_cache
+      - redis
     env_file:
       - env/defaults.env
     ports:
@@ -27,20 +27,17 @@ services:
     ports:
       - '27017:27017'
 
-  redis_cache:
-    image: redis:7-alpine3.16
-    container_name: redis_cache
-    volumes: 
-      - redis_cache_data:/data
+  redis:
+    image: redis
+    container_name: redis
     env_file:
       - env/docker.env
     ports:
       - '6379:6379'
-    command: redis-server --save 60 1 --requirepass myRedisPass --loglevel warning
+    command: redis-server --requirepass myRedisPass --loglevel warning
 
 volumes:
   mongo_data:
-  redis_cache_data:
 
 networks:
   default:

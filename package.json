@@ -39,7 +39,7 @@
     "docker:tag": "docker image tag localhost:5000/config-manager cultify/config-manager",
     "docker:publish:local": "docker push localhost:5000/config-manager",
     "docker:publish:remote": "docker push cultify/config-manager",
-    "compose:up": "docker compose up -d mongo && docker compose up config-manager"
+    "compose:up": "docker compose up -d mongo redis && docker compose up config-manager"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.6",

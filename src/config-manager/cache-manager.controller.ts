@@ -27,7 +27,7 @@ import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
 
 @ApiTags('Cache-Manager')
 @Controller('caches/services')
-export class ConfigCacheManagerController {
+export class CacheManagerController {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   @Post(serviceId)
