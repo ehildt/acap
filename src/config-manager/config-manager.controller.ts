@@ -40,7 +40,19 @@ export class ConfigManagerController {
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
-    return this.managerConfig.upsert(serviceId, req);
+    const entities = await this.managerConfig.upsert(serviceId, req);
+    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+
+    const data = {
+      ...cache,
+      ...req.reduce(
+        (acc, { configId, value }) => ({ ...acc, [configId]: value }),
+        {},
+      ),
+    };
+
+    await this.cacheManager.set(serviceId, data);
+    return entities;
   }
 
   @Get(serviceId)
@@ -53,7 +65,7 @@ export class ConfigManagerController {
   // ! write cache controller and cache service
   @Get('caches/:serviceId')
   getByServiceIdCached(@ServiceIdParam() serviceId: string) {
-    return this.managerConfig.getByServiceId(serviceId);
+    return this.cacheManager.get(serviceId);
   }
 
   @Get(serviceIdConfigIds)
@@ -63,8 +75,10 @@ export class ConfigManagerController {
     @ConfigIdsParam() configIds: string[],
   ) {
     const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
-    const data = Object.keys(cache).filter((c) => configIds.includes(c));
-    if (data?.length === configIds?.length) return cache;
+    const keys = Object.keys(cache).filter((c) => configIds.includes(c));
+
+    if (keys?.length === configIds?.length)
+      return keys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
 
     const entities = await this.managerConfig.getByServiceIdConfigIds(
       serviceId,
@@ -93,12 +107,24 @@ export class ConfigManagerController {
 
   @Delete(serviceIdConfigIds)
   @OpenApi_DeleteByServiceIdConfigIds()
-  deleteByConfigIds(
+  async deleteByConfigIds(
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
   ) {
-    // TODO deleteByServiceIdConfigId
-    // ! also delete from cache
-    return this.managerConfig.deleteByServiceIdConfigId(serviceId, configIds);
+    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+    const keys = Object.keys(cache).filter(
+      (key) => delete cache[configIds.find((id) => id === key)],
+    );
+
+    if (keys.length) {
+      await this.cacheManager.set(serviceId, cache);
+      return await this.managerConfig.deleteByServiceIdConfigId(
+        serviceId,
+        configIds,
+      );
+    }
+
+    await this.cacheManager.del(serviceId);
+    return this.deleteByServiceId(serviceId);
   }
 }
