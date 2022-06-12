@@ -1,6 +1,6 @@
 {
   "name": "@cultify/config-manager",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A simple and convenient way to config you apps ;)",
   "author": "Eugen Hildt",
   "private": true,
