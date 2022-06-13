@@ -12,6 +12,7 @@ import {
   ConfigManager,
   ConfigManagerSchema,
 } from './schemas/config-manager.schema';
+import { CacheManagerService } from './services/cache-manager.service';
 import { ConfigManagerRepository } from './services/config-manager.repository';
 import { ConfigManagerService } from './services/config-manager.service';
 
@@ -41,7 +42,12 @@ import { ConfigManagerService } from './services/config-manager.service';
       { name: ConfigManager.name, schema: ConfigManagerSchema },
     ]),
   ],
-  providers: [ConfigManagerService, ConfigManagerRepository, ConsoleLogger],
+  providers: [
+    ConfigManagerService,
+    CacheManagerService,
+    ConfigManagerRepository,
+    ConsoleLogger,
+  ],
   controllers: [ConfigManagerController, CacheManagerController],
 })
 export class ConfigManagerModule {
