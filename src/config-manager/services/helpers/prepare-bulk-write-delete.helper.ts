@@ -1,7 +1,7 @@
-export function prepareBulkWriteDelete(namespace: string, req?: string[]) {
+export function prepareBulkWriteDelete(serviceId: string, req?: string[]) {
   return req
     ? req.map((configId) => ({
-        deleteOne: { filter: { namespace, configId } },
+        deleteOne: { filter: { serviceId, configId } },
       }))
-    : [{ deleteMany: { filter: { namespace } } }];
+    : [{ deleteMany: { filter: { serviceId } } }];
 }

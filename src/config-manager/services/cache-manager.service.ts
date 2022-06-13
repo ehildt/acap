@@ -8,44 +8,43 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
+import { reduceEntities } from './helpers/reduce-entities.helper';
 
 const NO_CONTENT = 'NoContent';
-
-const reduceList = (list: Array<any>) =>
-  list?.reduce(
-    (acc, { configId, value }) => ({ ...acc, [configId]: value }),
-    {},
-  );
 
 @Injectable()
 export class CacheManagerService {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
-    const cache = (await this.cacheManager.get(namespace)) ?? ({} as any);
-    const data = { ...cache, ...reduceList(req) };
-    return this.cacheManager.set(namespace, data);
+  async upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
+    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+    const data = { ...cache, ...reduceEntities(req) };
+    return this.cacheManager.set(serviceId, data);
   }
 
-  async upsertFromEntities(namespace: string, entities: any) {
-    const cache = (await this.cacheManager.get(namespace)) ?? ({} as any);
-    const data = { ...cache, ...entities };
-    await this.cacheManager.set(namespace, data);
+  async upsertFromEntities(serviceId: string, entities: any) {
+    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
+    const data = { ...cache, ...reduceEntities(entities) };
+    await this.cacheManager.set(serviceId, data);
+    return data;
   }
 
-  async getByServiceId(namespace: string) {
-    const cache = await this.cacheManager.get(namespace);
+  async getByServiceId(serviceId: string) {
+    const cache = await this.cacheManager.get(serviceId);
     if (!cache) throw new HttpException(NO_CONTENT, HttpStatus.NO_CONTENT);
     return cache;
   }
 
-  async getByServiceIdConfigIds(namespace: string, configIds: string[]) {
-    const cache = (await this.cacheManager.get(namespace)) ?? ({} as any);
+  async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
+    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
     const keys = Object.keys(cache);
     const matchedKeys = keys.filter((c) => configIds.includes(c));
 
-    if (matchedKeys?.length === configIds?.length)
-      return keys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
+    if (matchedKeys?.length >= configIds?.length)
+      return configIds.reduce(
+        (acc, key) => ({ ...acc, [key]: cache[key] }),
+        {},
+      );
 
     throw new UnprocessableEntityException({
       message: `N/A (config): ${configIds.filter(
@@ -54,21 +53,17 @@ export class CacheManagerService {
     });
   }
 
-  async deleteByServiceId(namespace: string) {
-    return this.cacheManager.del(namespace);
+  async deleteByServiceId(serviceId: string) {
+    return this.cacheManager.del(serviceId);
   }
 
-  async deleteByServiceIdConfigId(namespace: string, configIds?: string[]) {
-    const cache = (await this.cacheManager.get(namespace)) ?? ({} as any);
+  async deleteByServiceIdConfigId(serviceId: string, configIds?: string[]) {
+    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
     const keys = Object.keys(cache).filter(
       (key) => delete cache[configIds.find((id) => id === key)],
     );
 
-    if (keys.length) {
-      await this.cacheManager.set(namespace, cache);
-      return cache;
-    }
-
-    return this.cacheManager.del(namespace);
+    if (keys.length) return this.cacheManager.set(serviceId, cache);
+    return this.cacheManager.del(serviceId);
   }
 }

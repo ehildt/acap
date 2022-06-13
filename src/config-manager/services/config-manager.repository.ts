@@ -17,8 +17,8 @@ export class ConfigManagerRepository {
     private readonly configModel: Model<ConfigManagerDocument>,
   ) {}
 
-  upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
-    const rowsToUpsert = prepareBulkWriteUpsert(req, namespace);
+  upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
+    const rowsToUpsert = prepareBulkWriteUpsert(req, serviceId);
     return this.configModel.bulkWrite(rowsToUpsert);
   }
 
@@ -26,8 +26,8 @@ export class ConfigManagerRepository {
     return this.configModel.where(filter);
   }
 
-  delete(namespace: string, req?: string[]) {
-    const rowsToDelete = prepareBulkWriteDelete(namespace, req);
+  delete(serviceId: string, req?: string[]) {
+    const rowsToDelete = prepareBulkWriteDelete(serviceId, req);
     return this.configModel.bulkWrite(rowsToDelete);
   }
 }

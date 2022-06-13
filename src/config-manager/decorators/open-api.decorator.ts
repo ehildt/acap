@@ -11,7 +11,7 @@ import {
 } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 
-const ServiceIdParam = () => ApiParam({ name: 'namespace', type: String });
+const ServiceIdParam = () => ApiParam({ name: 'serviceId', type: String });
 const ConfigIdParam = () => ApiParam({ name: 'configIds', type: String });
 
 export function OpenApi_Upsert() {

@@ -1,36 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
-import { mapConfigRes } from './helpers/map-config-res.helper';
 import { reduceConfigRes } from './helpers/reduce-config-res.helper';
+
+const NO_CONTENT = 'NoContent';
 
 @Injectable()
 export class ConfigManagerService {
   constructor(private readonly configRepo: ConfigManagerRepository) {}
 
-  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
-    return this.configRepo.upsert(namespace, req);
+  async upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
+    return this.configRepo.upsert(serviceId, req);
   }
 
-  async getByServiceId(namespace: string) {
-    const entities = await this.configRepo.where({ namespace });
-    return mapConfigRes(entities);
+  async getByServiceId(serviceId: string) {
+    const entities = await this.configRepo.where({ serviceId });
+    if (entities?.length) return entities;
+    throw new HttpException(NO_CONTENT, HttpStatus.NO_CONTENT);
   }
 
-  async getByServiceIdConfigIds(namespace: string, configIds: string[]) {
+  async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
     const entities = await this.configRepo.where({
-      namespace,
+      serviceId,
       configId: { $in: configIds },
     });
 
     return reduceConfigRes(entities);
   }
 
-  async deleteByServiceId(namespace: string) {
-    return this.configRepo.delete(namespace);
+  async deleteByServiceId(serviceId: string) {
+    return this.configRepo.delete(serviceId);
   }
 
-  async deleteByServiceIdConfigId(namespace: string, configIds?: string[]) {
-    return this.configRepo.delete(namespace, configIds);
+  async deleteByServiceIdConfigId(serviceId: string, configIds?: string[]) {
+    return this.configRepo.delete(serviceId, configIds);
   }
 }

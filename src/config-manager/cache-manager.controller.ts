@@ -3,8 +3,8 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   ConfigIdsParam,
   ConfigManagerUpsertBody,
-  namespace,
-  namespaceConfigIds,
+  serviceId,
+  serviceIdConfigIds,
   ServiceIdParam,
 } from './decorators/controller-properties.decorator';
 import {
@@ -22,48 +22,44 @@ import { CacheManagerService } from './services/cache-manager.service';
 export class CacheManagerController {
   constructor(private readonly cacheManagerService: CacheManagerService) {}
 
-  @Post(namespace)
+  @Post(serviceId)
   @OpenApi_Upsert()
   async upsert(
-    @ServiceIdParam() namespace: string,
+    @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
-    return this.cacheManagerService.upsert(namespace, req);
+    return this.cacheManagerService.upsert(serviceId, req);
   }
 
-  @Get(namespace)
+  @Get(serviceId)
   @OpenApi_GetByServiceId()
-  async getByServiceId(@ServiceIdParam() namespace: string) {
-    return this.cacheManagerService.getByServiceId(namespace);
+  async getByServiceId(@ServiceIdParam() serviceId: string) {
+    return this.cacheManagerService.getByServiceId(serviceId);
   }
 
-  @Get(namespaceConfigIds)
+  @Get(serviceIdConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
   async getByServiceIdConfigIds(
-    @ServiceIdParam() namespace: string,
+    @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
   ) {
-    return this.cacheManagerService.getByServiceIdConfigIds(
-      namespace,
-      configIds,
-    );
+    const ids = Array.from(new Set(configIds.filter((e) => e)));
+    return this.cacheManagerService.getByServiceIdConfigIds(serviceId, ids);
   }
 
-  @Delete(namespace)
+  @Delete(serviceId)
   @OpenApi_DeleteByServiceId()
-  async deleteByServiceId(@ServiceIdParam() namespace: string) {
-    return this.cacheManagerService.deleteByServiceId(namespace);
+  async deleteByServiceId(@ServiceIdParam() serviceId: string) {
+    return this.cacheManagerService.deleteByServiceId(serviceId);
   }
 
-  @Delete(namespaceConfigIds)
+  @Delete(serviceIdConfigIds)
   @OpenApi_DeleteByServiceIdConfigIds()
   async deleteByServiceIdConfigIds(
-    @ServiceIdParam() namespace: string,
+    @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
   ) {
-    return this.cacheManagerService.deleteByServiceIdConfigId(
-      namespace,
-      configIds,
-    );
+    const ids = Array.from(new Set(configIds.filter((e) => e)));
+    return this.cacheManagerService.deleteByServiceIdConfigId(serviceId, ids);
   }
 }

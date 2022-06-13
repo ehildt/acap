@@ -4,7 +4,7 @@ import { challengeStringifyConfigValue } from './challenge-stringify-config-valu
 
 export function prepareBulkWriteUpsert(
   req: ConfigManagerUpsertReq[],
-  namespace: string,
+  serviceId: string,
 ) {
   return req.map((config) => ({
     updateOne: {
@@ -12,7 +12,7 @@ export function prepareBulkWriteUpsert(
       filter: { configId: config.configId },
       update: {
         value: challengeStringifyConfigValue(config.value),
-        namespace,
+        serviceId,
         source: CONFIG_SOURCE[config.source],
       },
     },

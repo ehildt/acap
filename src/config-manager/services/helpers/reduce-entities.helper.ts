@@ -1,0 +1,11 @@
+import { challengeConfigSource } from './challenge-config-source.helper';
+
+export function reduceEntities(entities: Array<any>) {
+  return entities?.reduce(
+    (acc, { configId, value, source }) => ({
+      ...acc,
+      [configId]: challengeConfigSource(source, value),
+    }),
+    {},
+  );
+}
