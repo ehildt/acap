@@ -6,6 +6,7 @@ import {
   Get,
   Inject,
   Post,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -52,8 +53,13 @@ export class ConfigManagerController {
     const entities = await this.configManagerService.getByServiceId(serviceId);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
     const data = { ...cache, ...reduceEntities(entities) };
-    await this.cache.set(serviceId, data);
-    return data;
+
+    if (Object.keys(data)?.length) {
+      await this.cache.set(serviceId, data);
+      return data;
+    }
+
+    throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 
   @Get(serviceIdConfigIds)

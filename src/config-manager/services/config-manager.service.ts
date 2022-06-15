@@ -13,8 +13,7 @@ export class ConfigManagerService {
 
   async getByServiceId(serviceId: string) {
     const entities = await this.configRepo.where({ serviceId });
-    if (entities?.length) return entities;
-    throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
+    return entities ?? [];
   }
 
   async getByServiceIdConfigIds(serviceId: string, ids: string[]) {

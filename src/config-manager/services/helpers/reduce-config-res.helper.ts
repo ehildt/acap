@@ -9,7 +9,7 @@ const documentReducer = (
   document: ConfigManagerDocument,
 ) => ({
   ...previous,
-  [document.configId]: challengeConfigSource(document.source, document.value),
+  [document.configId]: challengeConfigSource(document.value),
 });
 
 export function reduceConfigRes(documents?: ConfigManagerDocument[]) {
