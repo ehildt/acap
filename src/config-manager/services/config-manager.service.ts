@@ -1,9 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
 import { reduceConfigRes } from './helpers/reduce-config-res.helper';
-
-const NO_CONTENT = 'NoContent';
 
 @Injectable()
 export class ConfigManagerService {
@@ -16,14 +14,21 @@ export class ConfigManagerService {
   async getByServiceId(serviceId: string) {
     const entities = await this.configRepo.where({ serviceId });
     if (entities?.length) return entities;
-    throw new HttpException(NO_CONTENT, HttpStatus.NO_CONTENT);
+    throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 
-  async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
+  async getByServiceIdConfigIds(serviceId: string, ids: string[]) {
     const entities = await this.configRepo.where({
       serviceId,
-      configId: { $in: configIds },
+      configId: { $in: ids },
     });
+
+    if (entities?.length < ids?.length)
+      throw new UnprocessableEntityException(
+        `N/A [ serviceId: ${serviceId} | configId: ${ids.filter(
+          (id) => !entities.find(({ configId }) => configId === id),
+        )} ]`,
+      );
 
     return reduceConfigRes(entities);
   }

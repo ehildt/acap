@@ -1,9 +1,11 @@
+import { Cache } from 'cache-manager';
 import {
+  CACHE_MANAGER,
   Controller,
   Delete,
   Get,
+  Inject,
   Post,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -21,15 +23,15 @@ import {
   OpenApi_Upsert,
 } from './decorators/open-api.decorator';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
-import { CacheManagerService } from './services/cache-manager.service';
 import { ConfigManagerService } from './services/config-manager.service';
+import { reduceEntities } from './services/helpers/reduce-entities.helper';
 
 @ApiTags('Config-Manager')
 @Controller('configs/services')
 export class ConfigManagerController {
   constructor(
     private readonly configManagerService: ConfigManagerService,
-    private readonly cacheManagerService: CacheManagerService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
   @Post(serviceId)
@@ -39,7 +41,8 @@ export class ConfigManagerController {
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
     const entities = await this.configManagerService.upsert(serviceId, req);
-    await this.cacheManagerService.upsert(serviceId, req);
+    const cache = (await this.cache.get(serviceId)) ?? ({} as any);
+    await this.cache.set(serviceId, { ...cache, ...reduceEntities(req) });
     return entities;
   }
 
@@ -47,7 +50,10 @@ export class ConfigManagerController {
   @OpenApi_GetByServiceId()
   async getByServiceId(@ServiceIdParam() serviceId: string) {
     const entities = await this.configManagerService.getByServiceId(serviceId);
-    return this.cacheManagerService.upsertFromEntities(serviceId, entities);
+    const cache = (await this.cache.get(serviceId)) ?? ({} as any);
+    const data = { ...cache, ...reduceEntities(entities) };
+    await this.cache.set(serviceId, data);
+    return data;
   }
 
   @Get(serviceIdConfigIds)
@@ -57,34 +63,31 @@ export class ConfigManagerController {
     @ConfigIdsParam() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    const cache = await this.cacheManagerService.getByServiceIdConfigIds(
-      serviceId,
-      ids,
-    );
+    let cache = (await this.cache.get(serviceId)) ?? ({} as any);
+    const matchedKeys = Object.keys(cache).filter((c) => ids.includes(c));
 
-    if (cache) return cache;
+    if (matchedKeys?.length)
+      cache = matchedKeys.reduce(
+        (acc, key) => ({ ...acc, [key]: cache[key] }),
+        {},
+      );
+
+    if (matchedKeys?.length === ids?.length) return cache;
 
     const entities = await this.configManagerService.getByServiceIdConfigIds(
       serviceId,
       ids,
     );
 
-    if (Object.keys(entities)?.length < ids?.length)
-      throw new UnprocessableEntityException({
-        message: `N/A (config): ${ids.filter(
-          (id) => !Object.keys(entities).find((k) => k === id),
-        )}`,
-      });
-
     const upsertCache = { ...cache, ...entities };
-    await this.cacheManagerService.upsertFromEntities(serviceId, upsertCache);
+    await this.cache.set(serviceId, upsertCache);
     return upsertCache;
   }
 
   @Delete(serviceId)
   @OpenApi_DeleteByServiceId()
   async deleteByServiceId(@ServiceIdParam() serviceId: string) {
-    await this.cacheManagerService.deleteByServiceId(serviceId);
+    await this.cache.del(serviceId);
     return this.configManagerService.deleteByServiceId(serviceId);
   }
 
@@ -95,7 +98,13 @@ export class ConfigManagerController {
     @ConfigIdsParam() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    await this.cacheManagerService.deleteByServiceIdConfigId(serviceId, ids);
+    const cache = (await this.cache.get(serviceId)) ?? ({} as any);
+    const keys = Object.keys(cache).filter(
+      (key) => delete cache[configIds.find((id) => id === key)],
+    );
+
+    if (keys.length) await this.cache.set(serviceId, cache);
+    else await this.cache.del(serviceId);
     return this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
   }
 }

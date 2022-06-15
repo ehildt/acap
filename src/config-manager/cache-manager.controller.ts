@@ -1,4 +1,10 @@
-import { Controller, Delete, Get, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Post,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   ConfigIdsParam,
@@ -44,7 +50,25 @@ export class CacheManagerController {
     @ConfigIdsParam() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    return this.cacheManagerService.getByServiceIdConfigIds(serviceId, ids);
+    const cache = await this.cacheManagerService.getByServiceIdConfigIds(
+      serviceId,
+      ids,
+    );
+
+    const objKeys = Object.keys(cache);
+    const keys = ids.filter((id) => objKeys.includes(id));
+
+    if (!objKeys.length)
+      throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
+
+    if (keys.length < ids.length)
+      throw new UnprocessableEntityException(
+        `N/A configId: ${configIds.filter(
+          (id) => !keys.find((k) => k === id),
+        )}`,
+      );
+
+    return cache;
   }
 
   @Delete(serviceId)

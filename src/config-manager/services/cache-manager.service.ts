@@ -1,16 +1,12 @@
 import { Cache } from 'cache-manager';
 import {
   CACHE_MANAGER,
-  HttpException,
-  HttpStatus,
   Inject,
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { reduceEntities } from './helpers/reduce-entities.helper';
-
-const NO_CONTENT = 'NoContent';
 
 @Injectable()
 export class CacheManagerService {
@@ -22,35 +18,23 @@ export class CacheManagerService {
     return this.cacheManager.set(serviceId, data);
   }
 
-  async upsertFromEntities(serviceId: string, entities: any) {
-    const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
-    const data = { ...cache, ...reduceEntities(entities) };
-    await this.cacheManager.set(serviceId, data);
-    return data;
-  }
-
   async getByServiceId(serviceId: string) {
     const cache = await this.cacheManager.get(serviceId);
-    if (!cache) throw new HttpException(NO_CONTENT, HttpStatus.NO_CONTENT);
-    return cache;
+    if (cache) return cache;
+    throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 
   async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
     const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
-    const keys = Object.keys(cache);
-    const matchedKeys = keys.filter((c) => configIds.includes(c));
+    const matchedKeys = Object.keys(cache).filter((c) => configIds.includes(c));
 
     if (matchedKeys?.length >= configIds?.length)
-      return configIds.reduce(
+      return matchedKeys.reduce(
         (acc, key) => ({ ...acc, [key]: cache[key] }),
         {},
       );
 
-    throw new UnprocessableEntityException({
-      message: `N/A (config): ${configIds.filter(
-        (id) => !keys.find((k) => k === id),
-      )}`,
-    });
+    return cache;
   }
 
   async deleteByServiceId(serviceId: string) {
