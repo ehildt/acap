@@ -7,6 +7,7 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 
@@ -41,9 +42,7 @@ export function OpenApi_GetByServiceId() {
 export function OpenApi_GetByServiceIdConfigIds() {
   return applyDecorators(
     ApiInternalServerErrorResponse(),
-    ApiNoContentResponse(),
-    // TODO OpenApi_GetByServiceIdConfigIds
-    // ! ApiOkResponse => provide type information
+    ApiUnprocessableEntityResponse(),
     ApiOkResponse(),
     ServiceIdParam(),
     ConfigIdParam(),

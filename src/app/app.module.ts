@@ -1,5 +1,4 @@
 import { ConfigManagerModule } from '@/config-manager/config-manager.module';
-import { mongoConfigFactory } from '@/config-manager/configs/mongo/mongo-config-factory.dbs';
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { API_DOCS, API_DOCS_JSON, SWAGGER } from './app.constants';
@@ -26,12 +25,10 @@ export class AppModule {
 
   onModuleInit() {
     const APP_CONFIG = appConfigFactory(this.configService);
-    const MONGO_CONFIG = mongoConfigFactory(this.configService);
 
-    if (APP_CONFIG.printEnv)
-      this.logger.log({ APP_CONFIG, MONGO_CONFIG }, 'Config-Manager');
+    if (process.env.PRINT_ENV) this.logger.log({ APP_CONFIG }, 'App');
 
-    if (APP_CONFIG.swaggerStart) {
+    if (APP_CONFIG.startSwagger) {
       const { nodeEnv, httpProtocol, host, port } = APP_CONFIG;
       const swaggerPath = `(${nodeEnv}) => ${httpProtocol}://${host}:${port}`;
       this.logger.log(`${swaggerPath}/${API_DOCS_JSON}`, SWAGGER);

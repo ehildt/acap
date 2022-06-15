@@ -19,6 +19,7 @@
         "manager",
         "nestjs",
         "prebuild",
+        "requirepass",
         "sonarjs",
         "styl",
         "Upsert"

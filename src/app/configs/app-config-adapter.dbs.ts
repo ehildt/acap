@@ -20,8 +20,4 @@ export class AppConfigAdapter {
   get START_SWAGGER(): boolean {
     return this.copy?.START_SWAGGER ?? process.env.START_SWAGGER == 'true';
   }
-
-  get PRINT_ENV(): boolean {
-    return this.copy?.PRINT_ENV ?? process.env.PRINT_ENV == 'true';
-  }
 }

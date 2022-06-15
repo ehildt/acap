@@ -1,9 +1,11 @@
-import { CONFIG_SOURCE } from '@/config-manager/constants/config-source.enum';
 import { challengeParseConfigValue } from './challenge-parse-config-value.helper';
 
-export function challengeConfigSource(source: CONFIG_SOURCE, value: string) {
-  if (source === CONFIG_SOURCE.VALUE) return challengeParseConfigValue(value);
+export function challengeConfigSource(value: string) {
+  const result = challengeParseConfigValue(value);
+  let data: any;
 
-  if (source === CONFIG_SOURCE.ENVIRONMENT)
-    return challengeParseConfigValue(process.env[value]);
+  if (typeof result === 'string')
+    data = challengeParseConfigValue(process.env[result]);
+
+  return data ?? result;
 }
