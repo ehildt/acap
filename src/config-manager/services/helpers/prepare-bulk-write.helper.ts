@@ -1,5 +1,4 @@
 import { ConfigManagerUpsertReq } from '@/config-manager/dtos/config-manager-upsert-req.dto';
-import { challengeStringifyConfigValue } from './challenge-stringify-config-value.helper';
 
 export function prepareBulkWriteUpsert(
   req: ConfigManagerUpsertReq[],
@@ -10,7 +9,10 @@ export function prepareBulkWriteUpsert(
       upsert: true,
       filter: { configId: config.configId },
       update: {
-        value: challengeStringifyConfigValue(config.value),
+        value:
+          typeof config.value === 'string'
+            ? config.value
+            : JSON.stringify(config.value),
         serviceId,
       },
     },
