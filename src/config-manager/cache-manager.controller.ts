@@ -3,6 +3,7 @@ import {
   Delete,
   Get,
   Post,
+  Query,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -33,8 +34,9 @@ export class CacheManagerController {
   async upsert(
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
+    @Query('ttl') ttl: number,
   ) {
-    return this.cacheManagerService.upsert(serviceId, req);
+    return this.cacheManagerService.upsert(serviceId, req, ttl);
   }
 
   @Get(serviceId)

@@ -7,6 +7,7 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
@@ -21,6 +22,7 @@ export function OpenApi_Upsert() {
       type: ConfigManagerUpsertReq,
       isArray: true,
     }),
+    ApiQuery({ name: 'ttl', type: Number, required: false }),
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
     ApiBadRequestResponse(),

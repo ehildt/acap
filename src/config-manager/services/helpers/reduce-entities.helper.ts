@@ -1,10 +1,10 @@
-import { challengeConfigSource } from './challenge-config-source.helper';
+import { challengeConfigValue } from './challenge-config-source.helper';
 
 export function reduceEntities(entities?: Array<any>) {
   return entities?.reduce(
     (acc, { configId, value }) => ({
       ...acc,
-      [configId]: challengeConfigSource(value),
+      [configId]: challengeConfigValue(value),
     }),
     {},
   );

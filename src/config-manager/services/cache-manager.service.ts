@@ -12,10 +12,11 @@ import { reduceEntities } from './helpers/reduce-entities.helper';
 export class CacheManagerService {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-  async upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
+  async upsert(serviceId: string, req: ConfigManagerUpsertReq[], ttl: number) {
     const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
     const data = { ...cache, ...reduceEntities(req) };
-    return this.cacheManager.set(serviceId, data);
+    await this.cacheManager.set(serviceId, data, { ttl: ttl ?? 360 });
+    return data;
   }
 
   async getByServiceId(serviceId: string) {

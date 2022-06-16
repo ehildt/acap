@@ -6,6 +6,7 @@ import {
   Get,
   Inject,
   Post,
+  Query,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -40,10 +41,15 @@ export class ConfigManagerController {
   async upsert(
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
+    @Query('ttl') ttl: number,
   ) {
     const entities = await this.configManagerService.upsert(serviceId, req);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
-    await this.cache.set(serviceId, { ...cache, ...reduceEntities(req) });
+    await this.cache.set(
+      serviceId,
+      { ...cache, ...reduceEntities(req) },
+      { ttl: ttl ?? 360 },
+    );
     return entities;
   }
 
