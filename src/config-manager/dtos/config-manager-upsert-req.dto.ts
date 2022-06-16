@@ -1,6 +1,6 @@
 import { IsDefined, IsString, IsUppercase } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ValueProperty } from '../decorators/class-validator-properties.decorator';
+import { ValueProperty } from '../decorators/class.property.decorator';
 
 export class ConfigManagerUpsertReq {
   constructor(copy?: ConfigManagerUpsertReq) {

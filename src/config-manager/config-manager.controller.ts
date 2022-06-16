@@ -2,27 +2,34 @@ import { Cache } from 'cache-manager';
 import {
   CACHE_MANAGER,
   Controller,
-  Delete,
-  Get,
+  HttpCode,
+  HttpStatus,
   Inject,
-  Post,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Role } from './constants/role.enum';
+import { Roles } from './decorators/controller.custom.decorator';
 import {
-  ConfigIdsParam,
+  AccessTokenGuard,
+  DeleteConfigIds,
+  DeleteServiceId,
+  GetConfigIds,
+  GetServiceId,
+  PostServiceId,
+} from './decorators/controller.method.decorator';
+import {
   ConfigManagerUpsertBody,
-  serviceId,
-  serviceIdConfigIds,
-  ServiceIdParam,
-} from './decorators/controller-properties.decorator';
+  ParamConfigIds,
+  ParamServiceId,
+} from './decorators/controller.parameter.decorator';
 import {
   OpenApi_DeleteByServiceId,
   OpenApi_DeleteByServiceIdConfigIds,
   OpenApi_GetByServiceId,
   OpenApi_GetByServiceIdConfigIds,
   OpenApi_Upsert,
-} from './decorators/open-api.decorator';
+} from './decorators/open-api.controller.decorator';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
 import { ConfigManagerService } from './services/config-manager.service';
 import { reduceEntities } from './services/helpers/reduce-entities.helper';
@@ -35,10 +42,12 @@ export class ConfigManagerController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
-  @Post(serviceId)
+  @PostServiceId()
+  @AccessTokenGuard()
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_Upsert()
   async upsert(
-    @ServiceIdParam() serviceId: string,
+    @ParamServiceId() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
     const entities = await this.configManagerService.upsert(serviceId, req);
@@ -47,9 +56,11 @@ export class ConfigManagerController {
     return entities;
   }
 
-  @Get(serviceId)
+  @GetServiceId()
+  @AccessTokenGuard()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   @OpenApi_GetByServiceId()
-  async getByServiceId(@ServiceIdParam() serviceId: string) {
+  async getByServiceId(@ParamServiceId() serviceId: string) {
     const entities = await this.configManagerService.getByServiceId(serviceId);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
     const data = { ...cache, ...reduceEntities(entities) };
@@ -62,11 +73,13 @@ export class ConfigManagerController {
     throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 
-  @Get(serviceIdConfigIds)
+  @GetConfigIds()
+  @AccessTokenGuard()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   @OpenApi_GetByServiceIdConfigIds()
   async getByServiceIdConfigIds(
-    @ServiceIdParam() serviceId: string,
-    @ConfigIdsParam() configIds: string[],
+    @ParamServiceId() serviceId: string,
+    @ParamConfigIds() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     let cache = (await this.cache.get(serviceId)) ?? ({} as any);
@@ -90,18 +103,24 @@ export class ConfigManagerController {
     return upsertCache;
   }
 
-  @Delete(serviceId)
+  @DeleteServiceId()
+  @AccessTokenGuard()
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
-  async deleteByServiceId(@ServiceIdParam() serviceId: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteByServiceId(@ParamServiceId() serviceId: string) {
     await this.cache.del(serviceId);
-    return this.configManagerService.deleteByServiceId(serviceId);
+    await this.configManagerService.deleteByServiceId(serviceId);
   }
 
-  @Delete(serviceIdConfigIds)
+  @DeleteConfigIds()
+  @AccessTokenGuard()
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteByConfigIds(
-    @ServiceIdParam() serviceId: string,
-    @ConfigIdsParam() configIds: string[],
+    @ParamServiceId() serviceId: string,
+    @ParamConfigIds() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
@@ -111,6 +130,6 @@ export class ConfigManagerController {
 
     if (keys.length) await this.cache.set(serviceId, cache);
     else await this.cache.del(serviceId);
-    return this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
+    await this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
   }
 }

@@ -1,20 +1,18 @@
 import RedisStore from 'cache-manager-ioredis';
-import { CacheModule, ConsoleLogger, Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CacheManagerController } from './cache-manager.controller';
 import { ConfigManagerController } from './config-manager.controller';
-import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
+import { ConfigFactoryService } from './configs/config-factory.service';
 import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
-import { redisCacheConfigFactory } from './configs/redis-cache/redis-cache-config-factory.dbs';
-import { RedisCacheConfigRegistry } from './configs/redis-cache/redis-cache-config-registry.dbs';
+import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
 import {
   ConfigManager,
   ConfigManagerSchema,
 } from './schemas/config-manager.schema';
-import { CacheManagerService } from './services/cache-manager.service';
 import { ConfigManagerRepository } from './services/config-manager.repository';
 import { ConfigManagerService } from './services/config-manager.service';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
 
 @Module({
   imports: [
@@ -23,7 +21,7 @@ import { ConfigManagerService } from './services/config-manager.service';
       useFactory: async (config: ConfigService) => {
         return {
           store: RedisStore,
-          ...redisCacheConfigFactory(config),
+          ...new ConfigFactoryService(config).redis,
         };
       },
       inject: [ConfigService],
@@ -31,36 +29,27 @@ import { ConfigManagerService } from './services/config-manager.service';
     ConfigModule.forRoot({
       cache: true,
       ignoreEnvFile: true,
-      load: [MongoConfigRegistry, RedisCacheConfigRegistry],
+      load: [MongoConfigRegistry, RedisConfigRegistry],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: mongoConfigFactory,
+      useFactory: (service) => new ConfigFactoryService(service).mongo,
     }),
     MongooseModule.forFeature([
-      { name: ConfigManager.name, schema: ConfigManagerSchema },
+      {
+        name: ConfigManager.name,
+        schema: ConfigManagerSchema,
+        collection: 'configs',
+      },
     ]),
   ],
   providers: [
     ConfigManagerService,
-    CacheManagerService,
     ConfigManagerRepository,
-    ConsoleLogger,
+    AccessTokenStrategy,
+    ConfigFactoryService,
   ],
-  controllers: [ConfigManagerController, CacheManagerController],
+  controllers: [ConfigManagerController],
 })
-export class ConfigManagerModule {
-  constructor(
-    private readonly logger: ConsoleLogger,
-    private readonly configService: ConfigService,
-  ) {}
-
-  onModuleInit() {
-    const MONGO_CONFIG = mongoConfigFactory(this.configService);
-    const REDIS_CONFIG = redisCacheConfigFactory(this.configService);
-
-    if (process.env.PRINT_ENV)
-      this.logger.log({ MONGO_CONFIG, REDIS_CONFIG }, 'Config-Manager');
-  }
-}
+export class ConfigManagerModule {}

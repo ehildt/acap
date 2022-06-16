@@ -1,21 +1,20 @@
 import {
+  ConsoleLogger,
   INestApplication,
   Injectable,
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { API_DOCS } from './app.constants';
-import { appConfigFactory } from './configs/app-config-factory.dbs';
+import { API_DOCS, API_DOCS_JSON } from './app.constants';
+import { ConfigFactoryService } from './configs/config-factory.service';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly configService: ConfigService) {}
-
-  getAppConfig() {
-    return appConfigFactory(this.configService);
-  }
+  constructor(
+    private readonly logger: ConsoleLogger,
+    private readonly configFactory: ConfigFactoryService,
+  ) {}
 
   useGlobalPipes(app: INestApplication) {
     app.useGlobalPipes(
@@ -39,21 +38,8 @@ export class AppService {
     });
   }
 
-  private swaggerDocument() {
-    return new DocumentBuilder()
-      .setTitle('Config-Manager')
-      .setDescription('A simple and convenient way to config your apps ;)')
-      .setVersion('1.0')
-      .addBearerAuth({
-        in: 'header',
-        type: 'http',
-      })
-      .build();
-  }
-
   enableOpenApi(app: INestApplication) {
-    const { startSwagger } = this.getAppConfig();
-
+    const { startSwagger } = this.configFactory.app;
     if (startSwagger) {
       const pickOpenApiObj = this.swaggerDocument();
       const openApiObj = SwaggerModule.createDocument(app, pickOpenApiObj);
@@ -65,5 +51,40 @@ export class AppService {
         },
       });
     }
+  }
+
+  logOnServerStart(appFactory: any, authFactory: any) {
+    if (process.env.PRINT_ENV)
+      this.logger.log(
+        JSON.stringify(
+          {
+            APP_CONFIG: appFactory.app,
+            AUTH_CONFIG: authFactory.auth,
+            MONGO_CONFIG: authFactory.mongo,
+            REDIS_CONFIG: authFactory.redis,
+          },
+          null,
+          4,
+        ),
+        'AppConfiguration',
+      );
+
+    if (appFactory.app.startSwagger) {
+      const swaggerPath = `https://localhost:${appFactory.app.port}`;
+      this.logger.log(`${swaggerPath}/${API_DOCS_JSON}`);
+      this.logger.log(`${swaggerPath}/${API_DOCS}`);
+    }
+  }
+
+  private swaggerDocument() {
+    return new DocumentBuilder()
+      .setTitle('Config-Manager')
+      .setDescription('A simple and convenient way to config your apps ;)')
+      .setVersion('1.0')
+      .addBearerAuth({
+        in: 'header',
+        type: 'http',
+      })
+      .build();
   }
 }

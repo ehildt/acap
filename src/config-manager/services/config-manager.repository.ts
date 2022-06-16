@@ -8,7 +8,7 @@ import {
   ConfigManagerDocument,
 } from '../schemas/config-manager.schema';
 import { prepareBulkWriteDelete } from './helpers/prepare-bulk-write-delete.helper';
-import { prepareBulkWriteUpsert } from './helpers/prepare-bulk-write.helper';
+import { prepareBulkWriteUpsert } from './helpers/prepare-bulk-write-upsert.helper';
 
 @Injectable()
 export class ConfigManagerRepository {
