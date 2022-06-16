@@ -41,14 +41,14 @@ export class ConfigManagerController {
   async upsert(
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
-    @Query('ttl') ttl: number,
+    @Query('ttlServiceId') ttl: number,
   ) {
     const entities = await this.configManagerService.upsert(serviceId, req);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
     await this.cache.set(
       serviceId,
       { ...cache, ...reduceEntities(req) },
-      { ttl: ttl ?? 360 },
+      { ttl },
     );
     return entities;
   }

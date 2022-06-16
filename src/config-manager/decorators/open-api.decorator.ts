@@ -4,7 +4,6 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
   ApiQuery,
@@ -22,7 +21,11 @@ export function OpenApi_Upsert() {
       type: ConfigManagerUpsertReq,
       isArray: true,
     }),
-    ApiQuery({ name: 'ttl', type: Number, required: false }),
+    ApiQuery({
+      name: 'ttlServiceId',
+      type: Number,
+      required: false,
+    }),
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
     ApiBadRequestResponse(),
@@ -32,7 +35,7 @@ export function OpenApi_Upsert() {
 export function OpenApi_GetByServiceId() {
   return applyDecorators(
     ApiInternalServerErrorResponse(),
-    ApiNoContentResponse(),
+    ApiUnprocessableEntityResponse(),
     ApiOkResponse({
       isArray: true,
       type: ConfigManagerUpsertReq,

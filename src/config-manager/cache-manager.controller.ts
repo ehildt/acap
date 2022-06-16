@@ -34,7 +34,7 @@ export class CacheManagerController {
   async upsert(
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
-    @Query('ttl') ttl: number,
+    @Query('ttlServiceId') ttl: number,
   ) {
     return this.cacheManagerService.upsert(serviceId, req, ttl);
   }

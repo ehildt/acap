@@ -15,7 +15,7 @@ export class CacheManagerService {
   async upsert(serviceId: string, req: ConfigManagerUpsertReq[], ttl: number) {
     const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
     const data = { ...cache, ...reduceEntities(req) };
-    await this.cacheManager.set(serviceId, data, { ttl: ttl ?? 360 });
+    await this.cacheManager.set(serviceId, data, { ttl });
     return data;
   }
 
