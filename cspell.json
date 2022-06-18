@@ -4,6 +4,7 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "auths",
         "bubbleprof",
         "cultify",
         "depcruise",
@@ -20,6 +21,7 @@
         "nestjs",
         "prebuild",
         "requirepass",
+        "signin",
         "sonarjs",
         "styl",
         "Upsert"

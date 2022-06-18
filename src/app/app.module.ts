@@ -1,3 +1,4 @@
+import { AuthModule } from '@/auth/auth.module';
 import { ConfigManagerModule } from '@/config-manager/config-manager.module';
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,6 +9,7 @@ import { AppConfigRegistry } from './configs/app-config-registry.dbs';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigManagerModule,
     ConfigModule.forRoot({
       cache: true,
