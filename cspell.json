@@ -22,6 +22,7 @@
         "prebuild",
         "requirepass",
         "signin",
+        "Singup",
         "sonarjs",
         "styl",
         "Upsert"
