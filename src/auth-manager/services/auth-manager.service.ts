@@ -9,12 +9,19 @@ export class AuthManagerService {
   async signup(req: AuthManagerSignupReq[]) {
     return this.userRepo.signup(req);
   }
+
+  async getUsers() {
+    return this.userRepo.getUsers();
+  }
+
   async signin(req: any) {
     return req;
   }
+
   async logout(req: any) {
     return req;
   }
+
   async refresh(req: any) {
     return req;
   }

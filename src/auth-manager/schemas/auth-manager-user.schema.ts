@@ -5,14 +5,11 @@ export type AuthManagerUserDocument = AuthManagerUser & Document;
 
 @Schema({ timestamps: true })
 export class AuthManagerUser {
-  @Prop()
+  @Prop({ required: true, unique: true })
   username: string;
 
-  @Prop({ unique: true })
-  email: string;
-
-  @Prop()
-  passwordHash: string;
+  @Prop({ required: true })
+  password: string;
 }
 
 export const AuthManagerUserSchema =

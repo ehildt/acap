@@ -12,11 +12,15 @@ import { prepareBulkWriteSignup } from './helpers/prepare-bulk-write-upsert.help
 export class AuthManagerUserRepository {
   constructor(
     @InjectModel(AuthManagerUser.name)
-    private readonly configModel: Model<AuthManagerUserDocument>,
+    private readonly authModel: Model<AuthManagerUserDocument>,
   ) {}
 
   signup(req: AuthManagerSignupReq[]) {
     const rowsToSingup = prepareBulkWriteSignup(req);
-    return this.configModel.bulkWrite(rowsToSingup);
+    return this.authModel.bulkWrite(rowsToSingup);
+  }
+
+  getUsers() {
+    return this.authModel.find();
   }
 }

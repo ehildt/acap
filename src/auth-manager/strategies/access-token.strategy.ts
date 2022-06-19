@@ -12,12 +12,12 @@ export class AccessTokenStrategy extends PassportStrategy(
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'ACCESS_TOKEN_SECRET',
+      secretOrKey:
+        process.env.AUTH_MANAGER_ACCESS_TOKEN_SECRET ?? 'ACCESS_TOKEN_SECRET',
     });
   }
 
-  // here the payload is the decoded token
-  validate(payload: any) {
-    return payload;
+  validate(decodedAccessToken: Record<string, unknown>) {
+    return decodedAccessToken;
   }
 }

@@ -1,13 +1,22 @@
-import { Module } from '@nestjs/common';
+import { validateOrReject } from 'class-validator';
+import { Model } from 'mongoose';
+import {
+  InternalServerErrorException,
+  Module,
+  OnModuleInit,
+} from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
+import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { AuthManagerController } from './auth-manager.controller';
+import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
 import {
   AuthManagerUser,
+  AuthManagerUserDocument,
   AuthManagerUserSchema,
 } from './schemas/auth-manager-user.schema';
 import { AuthManagerUserRepository } from './services/auth-manager-user.repository';
 import { AuthManagerService } from './services/auth-manager.service';
+import { hashPassword } from './services/helpers/hash-password.helper';
 
 @Module({
   imports: [
@@ -21,4 +30,38 @@ import { AuthManagerService } from './services/auth-manager.service';
   controllers: [AuthManagerController],
   providers: [AuthManagerService, AuthManagerUserRepository],
 })
-export class AuthManagerModule {}
+export class AuthManagerModule implements OnModuleInit {
+  constructor(
+    @InjectModel(AuthManagerUser.name)
+    private readonly authModal: Model<AuthManagerUserDocument>,
+  ) {}
+
+  async onModuleInit() {
+    let document: AuthManagerSignupReq;
+
+    try {
+      document = new AuthManagerSignupReq({
+        username: process.env.AUTH_MANAGER_USERNAME ?? 'superadmin',
+        password: process.env.AUTH_MANAGER_PASSWORD ?? 'superadmin',
+      });
+
+      await validateOrReject(document);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('could not create superadmin');
+    }
+
+    try {
+      await this.authModal.bulkWrite([
+        {
+          insertOne: {
+            document: {
+              username: document.username,
+              password: hashPassword(document.password),
+            },
+          },
+        },
+      ]);
+    } catch {}
+  }
+}

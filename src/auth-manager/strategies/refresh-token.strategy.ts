@@ -13,18 +13,15 @@ export class RefreshTokenStrategy extends PassportStrategy(
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'REFRESH_TOKEN_SECRET',
+      secretOrKey:
+        process.env.AUTH_MANAGER_REFRESH_TOKEN_SECRET ?? 'REFRESH_TOKEN_SECRET',
       passReqToCallback: true,
     });
   }
 
-  // here the payload is the decoded token
-  // since passport does not return the token after decoding
-  // we need to get it from the request,
-  // which is why we pass it to the validate "callback".
-  validate(req: Request, payload: any) {
+  validate(req: Request, decodedRefreshToken: Record<string, unknown>) {
     return {
-      ...payload,
+      ...decodedRefreshToken,
       refreshToken: req.get('authorization').slice(7),
     };
   }
