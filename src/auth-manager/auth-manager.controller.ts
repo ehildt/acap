@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { SignupBody } from './decorators/controller.decorators';
 import { OpenApi_Singup } from './decorators/open-api.decorator';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
 import { AuthManagerService } from './services/auth-manager.service';
@@ -12,7 +11,7 @@ export class AuthManagerController {
 
   @Post('signup')
   @OpenApi_Singup()
-  async signup(@SignupBody() req: AuthManagerSignupReq[]) {
+  async signup(@Body() req: AuthManagerSignupReq) {
     return this.authManagerService.signup(req);
   }
 

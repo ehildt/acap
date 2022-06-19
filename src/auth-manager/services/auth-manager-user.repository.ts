@@ -6,7 +6,6 @@ import {
   AuthManagerUser,
   AuthManagerUserDocument,
 } from '../schemas/auth-manager-user.schema';
-import { prepareBulkWriteSignup } from './helpers/prepare-bulk-write-upsert.helper';
 
 @Injectable()
 export class AuthManagerUserRepository {
@@ -15,9 +14,8 @@ export class AuthManagerUserRepository {
     private readonly authModel: Model<AuthManagerUserDocument>,
   ) {}
 
-  signup(req: AuthManagerSignupReq[]) {
-    const rowsToSingup = prepareBulkWriteSignup(req);
-    return this.authModel.bulkWrite(rowsToSingup);
+  signup(req: AuthManagerSignupReq) {
+    return this.authModel.create(req);
   }
 
   getUsers() {

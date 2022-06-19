@@ -17,6 +17,8 @@ import {
 import { AuthManagerUserRepository } from './services/auth-manager-user.repository';
 import { AuthManagerService } from './services/auth-manager.service';
 import { hashPassword } from './services/helpers/hash-password.helper';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
+import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 @Module({
   imports: [
@@ -28,7 +30,12 @@ import { hashPassword } from './services/helpers/hash-password.helper';
     ]),
   ],
   controllers: [AuthManagerController],
-  providers: [AuthManagerService, AuthManagerUserRepository],
+  providers: [
+    AuthManagerService,
+    AuthManagerUserRepository,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+  ],
 })
 export class AuthManagerModule implements OnModuleInit {
   constructor(
@@ -52,16 +59,10 @@ export class AuthManagerModule implements OnModuleInit {
     }
 
     try {
-      await this.authModal.bulkWrite([
-        {
-          insertOne: {
-            document: {
-              username: document.username,
-              password: hashPassword(document.password),
-            },
-          },
-        },
-      ]);
+      await this.authModal.create({
+        username: document.username,
+        password: hashPassword(document.password),
+      });
     } catch {}
   }
 }
