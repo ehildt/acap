@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -18,7 +17,10 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(req: Request, decodedRefreshToken: Record<string, unknown>) {
+  // here req is of type Request from express
+  // we do not import the type for sake of the
+  // dependency-cruiser rule not-to-dev-dep
+  validate(req: any, decodedRefreshToken: Record<string, unknown>) {
     return {
       ...decodedRefreshToken,
       refreshToken: req.get('authorization').slice(7),
