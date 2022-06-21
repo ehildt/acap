@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { OpenApi_Singup } from './decorators/open-api.decorator';
+import { OpenApi_Singup, OpenApi_Token } from './decorators/open-api.decorator';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
+import { AuthManagerTokenReq } from './dtos/auth-manager-token-req.dto';
 import { AuthManagerService } from './services/auth-manager.service';
 
 @ApiTags('Auth-Manager')
@@ -15,13 +16,20 @@ export class AuthManagerController {
     return this.authManagerService.signup(req);
   }
 
-  @Get('users')
-  async getUsers() {
-    return this.authManagerService.getUsers();
+  @Post('token')
+  @OpenApi_Token()
+  async elevate(@Body() req: AuthManagerTokenReq) {
+    return this.authManagerService.token(req, {
+      expiresIn: null,
+      audience: ['service one', 'service two'],
+      secret: process.env.AUTH_MANAGER_ACCESS_TOKEN_SECRET,
+    });
+    // return this.authManagerService.signup(req);
   }
 
   @Post('signin')
-  async signin(@Body() req: any) {
+  @OpenApi_Singup()
+  async signin(@Body() req: AuthManagerSignupReq) {
     return this.authManagerService.signin(req);
   }
 

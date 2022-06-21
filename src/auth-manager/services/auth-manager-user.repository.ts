@@ -1,3 +1,4 @@
+import { hash } from 'argon2';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -11,14 +12,18 @@ import {
 export class AuthManagerUserRepository {
   constructor(
     @InjectModel(AuthManagerUser.name)
-    private readonly authModel: Model<AuthManagerUserDocument>,
+    private readonly user: Model<AuthManagerUserDocument>,
   ) {}
 
-  signup(req: AuthManagerSignupReq) {
-    return this.authModel.create(req);
+  async signup({ password, ...req }: AuthManagerSignupReq) {
+    return this.user.create({ ...req, hash: await hash(password) });
+  }
+
+  signin(req: AuthManagerSignupReq) {
+    return this.user.findOne({ username: req.username });
   }
 
   getUsers() {
-    return this.authModel.find();
+    return this.user.find();
   }
 }

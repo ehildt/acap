@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { verify } from 'argon2';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 import { AuthManagerUserRepository } from './auth-manager-user.repository';
@@ -32,12 +33,26 @@ export class AuthManagerService {
     };
   }
 
+  async token(req: any, options: any) {
+    if (!options?.expiresIn) delete options.expiresIn;
+    return this.jwtService.signAsync(req, options);
+  }
+
   async getUsers() {
     return this.userRepo.getUsers();
   }
 
-  async signin(req: any) {
-    return req;
+  async signin(req: AuthManagerSignupReq) {
+    const user = await this.userRepo.signin(req);
+
+    if (!user || !(await verify(user.hash, req.password)))
+      throw new ForbiddenException('username/password does not match');
+
+    // TODO signin
+    // get roles and claims from user
+    // return the newly signed tokens (ac,rf)
+    // mark as as signed up (rf hash) in the cache
+    return 'here are your tokens';
   }
 
   async logout(req: any) {

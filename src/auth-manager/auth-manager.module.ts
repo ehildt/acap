@@ -1,3 +1,4 @@
+import { hash } from 'argon2';
 import { validateOrReject } from 'class-validator';
 import { Model } from 'mongoose';
 import {
@@ -16,7 +17,6 @@ import {
 } from './schemas/auth-manager-user.schema';
 import { AuthManagerUserRepository } from './services/auth-manager-user.repository';
 import { AuthManagerService } from './services/auth-manager.service';
-import { hashPassword } from './services/helpers/hash-password.helper';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
@@ -61,7 +61,7 @@ export class AuthManagerModule implements OnModuleInit {
     try {
       await this.authModal.create({
         username: document.username,
-        password: hashPassword(document.password),
+        hash: await hash(document.password),
       });
     } catch {}
   }

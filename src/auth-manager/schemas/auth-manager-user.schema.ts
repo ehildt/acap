@@ -9,7 +9,7 @@ export class AuthManagerUser {
   username: string;
 
   @Prop({ required: true })
-  password: string;
+  hash: string;
 }
 
 export const AuthManagerUserSchema =
