@@ -4,6 +4,7 @@ import { validateOrReject } from 'class-validator';
 import { Model } from 'mongoose';
 import {
   CacheModule,
+  ConsoleLogger,
   InternalServerErrorException,
   Module,
   OnModuleInit,
@@ -13,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { AuthManagerController } from './auth-manager.controller';
 import { redisCacheConfigFactory } from './configs/redis-cache/redis-cache-config-factory.dbs';
+import { RedisCacheConfigRegistry } from './configs/redis-cache/redis-cache-config-registry.dbs';
 import { superAdminClaims } from './constants/claims';
 import { Role } from './constants/role.enum';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
@@ -28,6 +30,11 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      cache: true,
+      ignoreEnvFile: true,
+      load: [RedisCacheConfigRegistry],
+    }),
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => {
@@ -51,12 +58,15 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     AuthManagerUserRepository,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    ConsoleLogger,
   ],
 })
 export class AuthManagerModule implements OnModuleInit {
   constructor(
     @InjectModel(AuthManagerUser.name)
     private readonly authModal: Model<AuthManagerUserDocument>,
+    private readonly logger: ConsoleLogger,
+    private readonly configService: ConfigService,
   ) {}
 
   async onModuleInit() {
@@ -84,5 +94,10 @@ export class AuthManagerModule implements OnModuleInit {
     } catch (error) {
       if (error?.code !== 11000) console.error(error);
     }
+
+    const REDIS_CONFIG = redisCacheConfigFactory(this.configService);
+
+    if (process.env.PRINT_ENV)
+      this.logger.log({ REDIS_CONFIG }, 'Config-Manager');
   }
 }
