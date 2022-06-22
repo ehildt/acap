@@ -15,15 +15,21 @@ export class AuthManagerUserRepository {
     private readonly user: Model<AuthManagerUserDocument>,
   ) {}
 
-  async signup({ password, ...req }: AuthManagerSignupReq) {
-    return this.user.create({ ...req, hash: await hash(password) });
+  async signup(req: AuthManagerSignupReq) {
+    return this.user
+      .findOneAndUpdate(
+        { username: req.username },
+        { $set: { hash: await hash(req.password) } },
+        { upsert: true },
+      )
+      .exec();
   }
 
   signin(req: AuthManagerSignupReq) {
-    return this.user.findOne({ username: req.username });
+    return this.user.findOne({ username: req.username }).exec();
   }
 
   getUsers() {
-    return this.user.find();
+    return this.user.find().exec();
   }
 }

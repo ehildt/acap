@@ -1,14 +1,20 @@
 import { hash } from 'argon2';
+import RedisStore from 'cache-manager-ioredis';
 import { validateOrReject } from 'class-validator';
 import { Model } from 'mongoose';
 import {
+  CacheModule,
   InternalServerErrorException,
   Module,
   OnModuleInit,
 } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { AuthManagerController } from './auth-manager.controller';
+import { redisCacheConfigFactory } from './configs/redis-cache/redis-cache-config-factory.dbs';
+import { superAdminClaims } from './constants/claims';
+import { Role } from './constants/role.enum';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
 import {
   AuthManagerUser,
@@ -22,6 +28,16 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 @Module({
   imports: [
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => {
+        return {
+          store: RedisStore,
+          ...redisCacheConfigFactory(config),
+        };
+      },
+      inject: [ConfigService],
+    }),
     // since we need two tokens,
     // we handle the jwt options in the auth service
     JwtModule.register({}),
@@ -62,7 +78,11 @@ export class AuthManagerModule implements OnModuleInit {
       await this.authModal.create({
         username: document.username,
         hash: await hash(document.password),
+        role: Role.superadmin,
+        claims: superAdminClaims,
       });
-    } catch {}
+    } catch (error) {
+      if (error?.code !== 11000) console.error(error);
+    }
   }
 }

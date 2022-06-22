@@ -1,6 +1,13 @@
-import { verify } from 'argon2';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { hash, verify } from 'argon2';
+import { Cache } from 'cache-manager';
+import {
+  CACHE_MANAGER,
+  ForbiddenException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 import { AuthManagerUserRepository } from './auth-manager-user.repository';
 
@@ -9,54 +16,53 @@ export class AuthManagerService {
   constructor(
     private readonly userRepo: AuthManagerUserRepository,
     private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  async signup(req: AuthManagerSignupReq) {
-    await this.userRepo.signup(req);
-    return {
-      [req.username]: {
-        ACCESS_TOKEN: this.jwtService.sign(
-          { username: req.username },
-          {
-            expiresIn: 60 * 15,
-            secret: process.env.AUTH_MANAGER_ACCESS_TOKEN_SECRET,
-          },
-        ),
-        REFRESH_TOKEN: this.jwtService.sign(
-          { username: req.username },
-          {
-            expiresIn: 60 * 60 * 24 * 7,
-            secret: process.env.AUTH_MANAGER_REFRESH_TOKEN_SECRET,
-          },
-        ),
-      },
-    };
+  signup(req: AuthManagerSignupReq) {
+    return this.userRepo.signup(req);
   }
 
-  async token(req: any, options: any) {
-    if (!options?.expiresIn) delete options.expiresIn;
-    return this.jwtService.signAsync(req, options);
-  }
-
-  async getUsers() {
-    return this.userRepo.getUsers();
-  }
-
-  async signin(req: AuthManagerSignupReq) {
+  async signin(req: AuthManagerSigninReq) {
     const user = await this.userRepo.signin(req);
 
     if (!user || !(await verify(user.hash, req.password)))
       throw new ForbiddenException('username/password does not match');
 
-    // TODO signin
-    // get roles and claims from user
-    // return the newly signed tokens (ac,rf)
-    // mark as as signed up (rf hash) in the cache
-    return 'here are your tokens';
+    const ACCESS_TOKEN = this.jwtService.sign(
+      { username: req.username, role: user.role, claims: user.claims },
+      {
+        expiresIn: parseInt(process.env.AUTH_MANAGER_ACCESS_TOKEN_TTL, 10),
+        secret: process.env.AUTH_MANAGER_ACCESS_TOKEN_SECRET,
+      },
+    );
+
+    const REFRESH_TOKEN = this.jwtService.sign(
+      { username: req.username, role: user.role, claims: user.claims },
+      {
+        expiresIn: parseInt(process.env.AUTH_MANAGER_REFRESH_TOKEN_TTL, 10),
+        secret: process.env.AUTH_MANAGER_REFRESH_TOKEN_SECRET,
+      },
+    );
+
+    await this.cacheManager.set(
+      user.username,
+      { REFRESH_TOKEN_HASH: await hash(REFRESH_TOKEN) },
+      {
+        ttl: parseInt(process.env.AUTH_MANAGER_REFRESH_TOKEN_TTL, 10),
+      },
+    );
+
+    return { ACCESS_TOKEN, REFRESH_TOKEN };
   }
 
-  async logout(req: any) {
-    return req;
+  token(req: any, options: any) {
+    if (!options?.expiresIn) delete options.expiresIn;
+    return this.jwtService.sign(req, options);
+  }
+
+  logout(req: string) {
+    return this.cacheManager.del(req);
   }
 
   async refresh(req: any) {

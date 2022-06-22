@@ -2,8 +2,8 @@ import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '../constants/role.enum';
 
-export class AuthManagerSignupReq {
-  constructor(copy?: AuthManagerSignupReq) {
+export class AuthManagerSigninReq {
+  constructor(copy?: AuthManagerSigninReq) {
     Object.assign(this, copy);
   }
 
