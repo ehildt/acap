@@ -3,6 +3,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiQuery,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
@@ -28,6 +29,8 @@ export function OpenApi_Signin() {
       required: true,
       type: AuthManagerSigninReq,
     }),
+    ApiQuery({ name: 'refConfigIds', isArray: true, required: false }),
+    ApiQuery({ name: 'refServiceId', required: false }),
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
   );

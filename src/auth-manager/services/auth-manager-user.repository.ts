@@ -28,8 +28,4 @@ export class AuthManagerUserRepository {
   signin(req: AuthManagerSignupReq) {
     return this.user.findOne({ username: req.username }).exec();
   }
-
-  getUsers() {
-    return this.user.find().exec();
-  }
 }

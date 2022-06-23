@@ -1,18 +1,21 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ConfigManagerApi } from './api/config-manager.api';
 import {
   OpenApi_Signin,
   OpenApi_Singup,
-  OpenApi_Token,
 } from './decorators/open-api.decorator';
+import { AuthManagerSigninReq } from './dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
-import { AuthManagerTokenReq } from './dtos/auth-manager-token-req.dto';
 import { AuthManagerService } from './services/auth-manager.service';
 
 @ApiTags('Auth-Manager')
 @Controller('auths')
 export class AuthManagerController {
-  constructor(private readonly authManagerService: AuthManagerService) {}
+  constructor(
+    private readonly authManagerService: AuthManagerService,
+    private readonly configManagerApi: ConfigManagerApi,
+  ) {}
 
   @Post('signup')
   @OpenApi_Singup()
@@ -22,28 +25,31 @@ export class AuthManagerController {
 
   @Post('signin')
   @OpenApi_Signin()
-  async signin(@Body() req: AuthManagerSignupReq) {
-    return this.authManagerService.signin(req);
+  async signin(
+    @Body() req: AuthManagerSigninReq,
+    @Query('refServiceId') refServiceId: string,
+    @Query('refConfigIds') refConfigIds: string[],
+  ) {
+    let result: Record<string, unknown>;
+
+    if (refServiceId && refConfigIds?.length)
+      result = await this.configManagerApi.getConfigIds(
+        refServiceId,
+        refConfigIds,
+      );
+    else if (refServiceId)
+      result = await this.configManagerApi.getServiceId(refServiceId);
+
+    return this.authManagerService.signin(req, refServiceId, result);
   }
 
-  @Post('logout/:username')
-  async logout(@Param('username') req: string) {
+  @Post('logout')
+  async logout(@Body() req: string) {
     return this.authManagerService.logout(req);
   }
 
   @Post('refresh')
   async refresh(@Body() req: any) {
     return this.authManagerService.refresh(req);
-  }
-
-  @Post('token')
-  @OpenApi_Token()
-  async elevate(@Body() req: AuthManagerTokenReq) {
-    return this.authManagerService.token(req, {
-      expiresIn: null,
-      audience: ['service one', 'service two'],
-      secret: process.env.AUTH_MANAGER_ACCESS_TOKEN_SECRET,
-    });
-    // return this.authManagerService.signup(req);
   }
 }

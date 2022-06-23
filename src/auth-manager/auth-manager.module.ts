@@ -2,6 +2,7 @@ import { hash } from 'argon2';
 import RedisStore from 'cache-manager-ioredis';
 import { validateOrReject } from 'class-validator';
 import { Model } from 'mongoose';
+import { HttpModule } from '@nestjs/axios';
 import {
   CacheModule,
   ConsoleLogger,
@@ -12,7 +13,10 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
+import { ConfigManagerApi } from './api/config-manager.api';
 import { AuthManagerController } from './auth-manager.controller';
+import { authManagerConfigFactory } from './configs/auth-manager/auth-manager-config-factory.dbs';
+import { AuthManagerConfigRegistry } from './configs/auth-manager/auth-manager-config-registry.dbs';
 import { redisCacheConfigFactory } from './configs/redis-cache/redis-cache-config-factory.dbs';
 import { RedisCacheConfigRegistry } from './configs/redis-cache/redis-cache-config-registry.dbs';
 import { superAdminClaims } from './constants/claims';
@@ -30,10 +34,12 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 @Module({
   imports: [
+    HttpModule,
+    JwtModule.register({}),
     ConfigModule.forRoot({
       cache: true,
       ignoreEnvFile: true,
-      load: [RedisCacheConfigRegistry],
+      load: [RedisCacheConfigRegistry, AuthManagerConfigRegistry],
     }),
     CacheModule.registerAsync({
       imports: [ConfigModule],
@@ -45,9 +51,6 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
       },
       inject: [ConfigService],
     }),
-    // since we need two tokens,
-    // we handle the jwt options in the auth service
-    JwtModule.register({}),
     MongooseModule.forFeature([
       { name: AuthManagerUser.name, schema: AuthManagerUserSchema },
     ]),
@@ -59,6 +62,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     AccessTokenStrategy,
     RefreshTokenStrategy,
     ConsoleLogger,
+    ConfigManagerApi,
   ],
 })
 export class AuthManagerModule implements OnModuleInit {
@@ -92,12 +96,13 @@ export class AuthManagerModule implements OnModuleInit {
         claims: superAdminClaims,
       });
     } catch (error) {
-      if (error?.code !== 11000) console.error(error);
+      if (error?.code !== 11000) throw new InternalServerErrorException(error);
     }
 
     const REDIS_CONFIG = redisCacheConfigFactory(this.configService);
+    const AUTH_MANAGER_CONFIG = authManagerConfigFactory(this.configService);
 
     if (process.env.PRINT_ENV)
-      this.logger.log({ REDIS_CONFIG }, 'Config-Manager');
+      this.logger.log({ REDIS_CONFIG, AUTH_MANAGER_CONFIG }, 'Auth-Manager');
   }
 }
