@@ -17,8 +17,8 @@ import { ConfigManagerApi } from './api/config-manager.api';
 import { AuthManagerController } from './auth-manager.controller';
 import { authManagerConfigFactory } from './configs/auth-manager/auth-manager-config-factory.dbs';
 import { AuthManagerConfigRegistry } from './configs/auth-manager/auth-manager-config-registry.dbs';
-import { redisCacheConfigFactory } from './configs/redis-cache/redis-cache-config-factory.dbs';
-import { RedisCacheConfigRegistry } from './configs/redis-cache/redis-cache-config-registry.dbs';
+import { redisConfigFactory } from './configs/redis/redis-config-factory.dbs';
+import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
 import { superAdminClaims } from './constants/claims';
 import { Role } from './constants/role.enum';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
@@ -39,14 +39,14 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     ConfigModule.forRoot({
       cache: true,
       ignoreEnvFile: true,
-      load: [RedisCacheConfigRegistry, AuthManagerConfigRegistry],
+      load: [RedisConfigRegistry, AuthManagerConfigRegistry],
     }),
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => {
         return {
           store: RedisStore,
-          ...redisCacheConfigFactory(config),
+          ...redisConfigFactory(config),
         };
       },
       inject: [ConfigService],
@@ -99,7 +99,7 @@ export class AuthManagerModule implements OnModuleInit {
       if (error?.code !== 11000) throw new InternalServerErrorException(error);
     }
 
-    const REDIS_CONFIG = redisCacheConfigFactory(this.configService);
+    const REDIS_CONFIG = redisConfigFactory(this.configService);
     const AUTH_MANAGER_CONFIG = authManagerConfigFactory(this.configService);
 
     if (process.env.PRINT_ENV)
