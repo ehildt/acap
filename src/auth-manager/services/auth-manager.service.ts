@@ -12,6 +12,7 @@ import {
   AuthManagerConfig,
   authManagerConfigFactory,
 } from '../configs/auth-manager/auth-manager-config-factory.dbs';
+import { AuthManagerLogoutReq } from '../dtos/auth-manager-logout-req.dto';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 import { AuthManagerUserRepository } from './auth-manager-user.repository';
@@ -86,8 +87,8 @@ export class AuthManagerService {
     return this.jwtService.sign(req, options);
   }
 
-  logout(req: string) {
-    return this.cacheManager.del(req);
+  logout(req: AuthManagerLogoutReq) {
+    return this.cacheManager.del(req.username);
   }
 
   async refresh(req: any) {

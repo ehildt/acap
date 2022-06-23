@@ -2,9 +2,11 @@ import { Body, Controller, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ConfigManagerApi } from './api/config-manager.api';
 import {
+  OpenApi_Logout,
   OpenApi_Signin,
   OpenApi_Singup,
 } from './decorators/open-api.decorator';
+import { AuthManagerLogoutReq } from './dtos/auth-manager-logout-req.dto';
 import { AuthManagerSigninReq } from './dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
 import { AuthManagerService } from './services/auth-manager.service';
@@ -44,7 +46,8 @@ export class AuthManagerController {
   }
 
   @Post('logout')
-  async logout(@Body() req: string) {
+  @OpenApi_Logout()
+  async logout(@Body() req: AuthManagerLogoutReq) {
     return this.authManagerService.logout(req);
   }
 

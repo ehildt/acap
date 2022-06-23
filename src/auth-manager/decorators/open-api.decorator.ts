@@ -5,6 +5,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiQuery,
 } from '@nestjs/swagger';
+import { AuthManagerLogoutReq } from '../dtos/auth-manager-logout-req.dto';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 
@@ -29,6 +30,17 @@ export function OpenApi_Signin() {
     }),
     ApiQuery({ name: 'refConfigIds', isArray: true, required: false }),
     ApiQuery({ name: 'refServiceId', required: false }),
+    ApiCreatedResponse(),
+    ApiInternalServerErrorResponse(),
+  );
+}
+
+export function OpenApi_Logout() {
+  return applyDecorators(
+    ApiBody({
+      required: true,
+      type: AuthManagerLogoutReq,
+    }),
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
   );
