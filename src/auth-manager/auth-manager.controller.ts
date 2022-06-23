@@ -1,14 +1,29 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ConfigManagerApi } from './api/config-manager.api';
+import {
+  PostLogout,
+  PostRefresh,
+  PostSignin,
+  PostSignup,
+  QueryRefConfigIds,
+  QueryRefServiceId,
+} from './decorators/controller-properties.decorator';
 import {
   OpenApi_Logout,
   OpenApi_Signin,
   OpenApi_Singup,
 } from './decorators/open-api.decorator';
-import { AuthManagerLogoutReq } from './dtos/auth-manager-logout-req.dto';
 import { AuthManagerSigninReq } from './dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
+import { AccessTokenAuthGuard } from './guards/auth-manager-access-token.guard';
 import { AuthManagerService } from './services/auth-manager.service';
 
 @ApiTags('Auth-Manager')
@@ -19,18 +34,19 @@ export class AuthManagerController {
     private readonly configManagerApi: ConfigManagerApi,
   ) {}
 
-  @Post('signup')
+  @PostSignup()
   @OpenApi_Singup()
   async signup(@Body() req: AuthManagerSignupReq) {
     return this.authManagerService.signup(req);
   }
 
-  @Post('signin')
+  @PostSignin()
   @OpenApi_Signin()
+  @HttpCode(HttpStatus.OK)
   async signin(
     @Body() req: AuthManagerSigninReq,
-    @Query('refServiceId') refServiceId: string,
-    @Query('refConfigIds') refConfigIds: string[],
+    @QueryRefServiceId() refServiceId?: string,
+    @QueryRefConfigIds() refConfigIds?: string[],
   ) {
     let result: Record<string, unknown>;
 
@@ -45,13 +61,17 @@ export class AuthManagerController {
     return this.authManagerService.signin(req, refServiceId, result);
   }
 
-  @Post('logout')
+  @UseGuards(AccessTokenAuthGuard)
+  @PostLogout()
   @OpenApi_Logout()
-  async logout(@Body() req: AuthManagerLogoutReq) {
-    return this.authManagerService.logout(req);
+  @HttpCode(HttpStatus.OK)
+  async logout(@Request() req: { user: any }) {
+    return this.authManagerService.logout(req.user.username);
   }
 
-  @Post('refresh')
+  @UseGuards(AccessTokenAuthGuard)
+  @PostRefresh()
+  @HttpCode(HttpStatus.OK)
   async refresh(@Body() req: any) {
     return this.authManagerService.refresh(req);
   }

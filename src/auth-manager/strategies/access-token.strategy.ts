@@ -2,12 +2,12 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
-// TODO AccessTokenStrategy
-// ? do we need injectable here
+export const ACCESS_TOKEN = 'ACCESS_TOKEN';
+
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(
   Strategy,
-  'ACCESS_TOKEN',
+  ACCESS_TOKEN,
 ) {
   constructor() {
     super({

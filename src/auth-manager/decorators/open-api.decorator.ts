@@ -1,8 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiOkResponse,
   ApiQuery,
 } from '@nestjs/swagger';
 import { AuthManagerLogoutReq } from '../dtos/auth-manager-logout-req.dto';
@@ -30,7 +32,7 @@ export function OpenApi_Signin() {
     }),
     ApiQuery({ name: 'refConfigIds', isArray: true, required: false }),
     ApiQuery({ name: 'refServiceId', required: false }),
-    ApiCreatedResponse(),
+    ApiOkResponse(),
     ApiInternalServerErrorResponse(),
   );
 }
@@ -41,7 +43,8 @@ export function OpenApi_Logout() {
       required: true,
       type: AuthManagerLogoutReq,
     }),
-    ApiCreatedResponse(),
+    ApiOkResponse(),
     ApiInternalServerErrorResponse(),
+    ApiBearerAuth(),
   );
 }

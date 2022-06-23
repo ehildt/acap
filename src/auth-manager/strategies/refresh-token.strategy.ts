@@ -2,12 +2,12 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
-// TODO RefreshTokenStrategy
-// ? do we need injectable here
+export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  'REFRESH_TOKEN',
+  REFRESH_TOKEN,
 ) {
   constructor() {
     super({
