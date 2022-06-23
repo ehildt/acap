@@ -4,11 +4,9 @@ import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiQuery,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
-import { AuthManagerTokenReq } from '../dtos/auth-manager-token-req.dto';
 
 AuthManagerSigninReq;
 
@@ -32,18 +30,6 @@ export function OpenApi_Signin() {
     ApiQuery({ name: 'refConfigIds', isArray: true, required: false }),
     ApiQuery({ name: 'refServiceId', required: false }),
     ApiCreatedResponse(),
-    ApiInternalServerErrorResponse(),
-  );
-}
-
-export function OpenApi_Token() {
-  return applyDecorators(
-    ApiBody({
-      required: true,
-      type: AuthManagerTokenReq,
-    }),
-    ApiCreatedResponse(),
-    ApiUnauthorizedResponse(),
     ApiInternalServerErrorResponse(),
   );
 }
