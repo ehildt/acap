@@ -18,13 +18,15 @@ import {
   Token,
 } from './decorators/controller-properties.decorator';
 import {
-  OpenApi_Logout,
   OpenApi_Signin,
   OpenApi_Singup,
+  OpenApi_Token,
 } from './decorators/open-api.decorator';
 import { AuthManagerSigninReq } from './dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
+import { AuthManagerToken } from './dtos/auth-manager-token.dto';
 import { AccessTokenAuthGuard } from './guards/auth-manager-access-token.guard';
+import { RefreshTokenAuthGuard } from './guards/auth-manager-refresh-token.guard';
 import { AuthManagerService } from './services/auth-manager.service';
 
 @ApiTags('Auth-Manager')
@@ -61,17 +63,18 @@ export class AuthManagerController {
   }
 
   @PostLogout()
-  @OpenApi_Logout()
+  @OpenApi_Token()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenAuthGuard)
-  async logout(@Token() token: any) {
-    return this.authManagerService.logout(token.username);
+  async logout(@Token() token: AuthManagerToken) {
+    return this.authManagerService.logout(token);
   }
 
   @PostRefresh()
+  @OpenApi_Token()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AccessTokenAuthGuard)
-  async refresh(@Token() token: any) {
+  @UseGuards(RefreshTokenAuthGuard)
+  async refresh(@Token() token: AuthManagerToken) {
     return this.authManagerService.refresh(token);
   }
 }

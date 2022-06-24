@@ -7,7 +7,6 @@ import {
   ApiOkResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-import { AuthManagerLogoutReq } from '../dtos/auth-manager-logout-req.dto';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 
@@ -37,12 +36,8 @@ export function OpenApi_Signin() {
   );
 }
 
-export function OpenApi_Logout() {
+export function OpenApi_Token() {
   return applyDecorators(
-    ApiBody({
-      required: true,
-      type: AuthManagerLogoutReq,
-    }),
     ApiOkResponse(),
     ApiInternalServerErrorResponse(),
     ApiBearerAuth(),

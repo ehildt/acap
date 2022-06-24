@@ -2,6 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+import { AuthManagerToken } from '../dtos/auth-manager-token.dto';
 
 export const ACCESS_TOKEN = 'ACCESS_TOKEN';
 
@@ -17,7 +18,7 @@ export class AccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(decodedAccessToken: Record<string, unknown>) {
+  validate(decodedAccessToken: AuthManagerToken) {
     return decodedAccessToken;
   }
 }

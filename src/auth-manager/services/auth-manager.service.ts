@@ -15,6 +15,7 @@ import {
 } from '../configs/auth-manager/auth-manager-config-factory.dbs';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
+import { AuthManagerToken } from '../dtos/auth-manager-token.dto';
 import { AuthManagerUserRepository } from './auth-manager-user.repository';
 
 @Injectable()
@@ -48,34 +49,24 @@ export class AuthManagerService {
     if (!user || !(await verify(user.hash, req.password)))
       throw new ForbiddenException('username/password does not match');
 
-    const ACCESS_TOKEN = this.jwtService.sign(
-      {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        claims: user.claims,
-        configs: refServiceId && result,
-      },
-      {
-        expiresIn: this.config.accessTokenTTL,
-        secret: this.config.accessTokenSecret,
-      },
-    );
+    const data = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      claims: user.claims?.length ? user.claims : undefined,
+      configs: refServiceId && result,
+    };
 
-    const REFRESH_TOKEN = this.jwtService.sign(
-      {
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        claims: user.claims,
-        configs: refServiceId && result,
-      },
-      {
-        expiresIn: this.config.refreshTokenTTL,
-        secret: this.config.refreshTokenSecret,
-      },
-    );
+    const ACCESS_TOKEN = this.jwtService.sign(data, {
+      expiresIn: this.config.accessTokenTTL,
+      secret: this.config.accessTokenSecret,
+    });
+
+    const REFRESH_TOKEN = this.jwtService.sign(data, {
+      expiresIn: this.config.refreshTokenTTL,
+      secret: this.config.refreshTokenSecret,
+    });
 
     await this.cacheManager.set(
       user.email,
@@ -91,11 +82,11 @@ export class AuthManagerService {
     return this.jwtService.sign(req, options);
   }
 
-  logout(username: string) {
-    return this.cacheManager.del(username);
+  logout(token: AuthManagerToken) {
+    return this.cacheManager.del(token.username);
   }
 
-  async refresh(req: any) {
+  async refresh(req: AuthManagerToken) {
     return req;
   }
 
