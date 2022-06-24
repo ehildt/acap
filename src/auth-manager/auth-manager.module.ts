@@ -21,6 +21,7 @@ import {
 } from './configs/auth-manager/auth-manager-config-factory.dbs';
 import { AuthManagerConfigRegistry } from './configs/auth-manager/auth-manager-config-registry.dbs';
 import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
+import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
 import { redisConfigFactory } from './configs/redis/redis-config-factory.dbs';
 import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
 import { superAdminClaims } from './constants/claims';
@@ -43,7 +44,11 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     ConfigModule.forRoot({
       cache: true,
       ignoreEnvFile: true,
-      load: [RedisConfigRegistry, AuthManagerConfigRegistry],
+      load: [
+        MongoConfigRegistry,
+        RedisConfigRegistry,
+        AuthManagerConfigRegistry,
+      ],
     }),
     CacheModule.registerAsync({
       imports: [ConfigModule],
@@ -122,8 +127,12 @@ export class AuthManagerModule implements OnModuleInit {
 
     const REDIS_CONFIG = redisConfigFactory(this.configService);
     const AUTH_MANAGER_CONFIG = authManagerConfigFactory(this.configService);
+    const MONGO_CONFIG = mongoConfigFactory(this.configService);
 
     if (process.env.PRINT_ENV)
-      this.logger.log({ REDIS_CONFIG, AUTH_MANAGER_CONFIG }, 'Auth-Manager');
+      this.logger.log(
+        { REDIS_CONFIG, MONGO_CONFIG, AUTH_MANAGER_CONFIG },
+        'Auth-Manager',
+      );
   }
 }
