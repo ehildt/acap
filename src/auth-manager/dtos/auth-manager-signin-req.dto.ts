@@ -11,7 +11,7 @@ export class AuthManagerSigninReq {
   @IsString()
   @MinLength(8)
   @ApiProperty({ example: Role.superadmin })
-  username: string;
+  usernameOrEmail: string;
 
   @IsNotEmpty()
   @IsString()

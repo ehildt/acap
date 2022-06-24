@@ -3,6 +3,8 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  InternalServerErrorException,
+  UnprocessableEntityException,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -44,12 +46,18 @@ export class AuthManagerController {
     @QueryRefServiceId() refServiceId?: string,
     @QueryRefConfigIds() refConfigIds?: string[],
   ) {
-    const result = await this.authManagerService.challengeOptionalConfigs(
-      refServiceId,
-      refConfigIds,
-    );
+    try {
+      const result = await this.authManagerService.challengeOptionalConfigs(
+        refServiceId,
+        refConfigIds,
+      );
 
-    return this.authManagerService.signin(req, refServiceId, result);
+      return this.authManagerService.signin(req, refServiceId, result);
+    } catch (error) {
+      if (error?.response?.data)
+        throw new UnprocessableEntityException(error?.response.data);
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @PostLogout()

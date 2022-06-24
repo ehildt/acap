@@ -8,12 +8,14 @@ export interface AuthManagerConfig {
   accessTokenSecret: string;
   refreshTokenSecret: string;
   configManagerBaseUrl: string;
+  email: string;
 }
 
 export function authManagerConfigFactory(config: ConfigService) {
   return <AuthManagerConfig>{
     username: config.get<string>('AuthManagerConfig.USERNAME'),
     password: config.get<string>('AuthManagerConfig.PASSWORD'),
+    email: config.get<string>('AuthManagerConfig.EMAIL'),
     accessTokenTTL: config.get<number>('AuthManagerConfig.ACCESS_TOKEN_TTL'),
     refreshTokenTTL: config.get<number>('AuthManagerConfig.REFRESH_TOKEN_TTL'),
     accessTokenSecret: config.get<string>(

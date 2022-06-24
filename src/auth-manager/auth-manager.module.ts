@@ -15,8 +15,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { ConfigManagerApi } from './api/config-manager.api';
 import { AuthManagerController } from './auth-manager.controller';
-import { authManagerConfigFactory } from './configs/auth-manager/auth-manager-config-factory.dbs';
+import {
+  AuthManagerConfig,
+  authManagerConfigFactory,
+} from './configs/auth-manager/auth-manager-config-factory.dbs';
 import { AuthManagerConfigRegistry } from './configs/auth-manager/auth-manager-config-registry.dbs';
+import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
 import { redisConfigFactory } from './configs/redis/redis-config-factory.dbs';
 import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
 import { superAdminClaims } from './constants/claims';
@@ -51,8 +55,17 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
       },
       inject: [ConfigService],
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: mongoConfigFactory,
+    }),
     MongooseModule.forFeature([
-      { name: AuthManagerUser.name, schema: AuthManagerUserSchema },
+      {
+        name: AuthManagerUser.name,
+        schema: AuthManagerUserSchema,
+        collection: 'auths',
+      },
     ]),
   ],
   controllers: [AuthManagerController],
@@ -66,6 +79,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
   ],
 })
 export class AuthManagerModule implements OnModuleInit {
+  #config: AuthManagerConfig;
   constructor(
     @InjectModel(AuthManagerUser.name)
     private readonly authModal: Model<AuthManagerUserDocument>,
@@ -73,13 +87,19 @@ export class AuthManagerModule implements OnModuleInit {
     private readonly configService: ConfigService,
   ) {}
 
+  private get config() {
+    if (this.#config) return this.#config;
+    return (this.#config = authManagerConfigFactory(this.configService));
+  }
+
   async onModuleInit() {
     let document: AuthManagerSignupReq;
 
     try {
       document = new AuthManagerSignupReq({
-        username: process.env.AUTH_MANAGER_USERNAME ?? 'superadmin',
-        password: process.env.AUTH_MANAGER_PASSWORD ?? 'superadmin',
+        email: this.config.email,
+        username: this.config.username,
+        password: this.config.password,
       });
 
       await validateOrReject(document);
@@ -91,6 +111,7 @@ export class AuthManagerModule implements OnModuleInit {
     try {
       await this.authModal.create({
         username: document.username,
+        email: document.email,
         hash: await hash(document.password),
         role: Role.superadmin,
         claims: superAdminClaims,

@@ -2,6 +2,7 @@ import { hash } from 'argon2';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 import {
   AuthManagerUser,
@@ -25,7 +26,10 @@ export class AuthManagerUserRepository {
       .exec();
   }
 
-  signin(req: AuthManagerSignupReq) {
-    return this.user.findOne({ username: req.username }).exec();
+  async signin(req: AuthManagerSigninReq) {
+    return await this.user
+      .findOne()
+      .or([{ email: req.usernameOrEmail }, { username: req.usernameOrEmail }])
+      .exec();
   }
 }

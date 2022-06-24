@@ -5,7 +5,6 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -51,10 +50,12 @@ export class AuthManagerService {
 
     const ACCESS_TOKEN = this.jwtService.sign(
       {
-        username: req.username,
+        id: user.id,
+        username: user.username,
+        email: user.email,
         role: user.role,
         claims: user.claims,
-        ...(refServiceId && { [refServiceId]: result }),
+        configs: refServiceId && result,
       },
       {
         expiresIn: this.config.accessTokenTTL,
@@ -64,10 +65,11 @@ export class AuthManagerService {
 
     const REFRESH_TOKEN = this.jwtService.sign(
       {
-        username: req.username,
+        username: user.username,
+        email: user.email,
         role: user.role,
         claims: user.claims,
-        ...(refServiceId && { [refServiceId]: result }),
+        configs: refServiceId && result,
       },
       {
         expiresIn: this.config.refreshTokenTTL,
@@ -76,8 +78,8 @@ export class AuthManagerService {
     );
 
     await this.cacheManager.set(
-      user.username,
-      { REFRESH_TOKEN_HASH: await hash(REFRESH_TOKEN) },
+      user.email,
+      { AUTH_HASH: await hash(REFRESH_TOKEN) },
       { ttl: this.config.refreshTokenTTL },
     );
 
@@ -98,13 +100,8 @@ export class AuthManagerService {
   }
 
   async challengeOptionalConfigs(serviceId?: string, configIds?: string[]) {
-    try {
-      if (serviceId && configIds?.length)
-        return this.configManagerApi.getConfigIds(serviceId, configIds);
-
-      if (serviceId) return this.configManagerApi.getServiceId(serviceId);
-    } catch (error) {
-      throw new UnprocessableEntityException(error?.response.data);
-    }
+    if (serviceId && configIds?.length)
+      return this.configManagerApi.getConfigIds(serviceId, configIds);
+    if (serviceId) return this.configManagerApi.getServiceId(serviceId);
   }
 }

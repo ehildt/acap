@@ -42,4 +42,10 @@ export class AuthManagerConfigAdapter {
       ? process.env.AUTH_MANAGER_PROVIDER_CONFIG_MANAGER_BASE_URL
       : 'http://localhost:3000';
   }
+
+  get EMAIL(): string {
+    return this.copy?.EMAIL
+      ? process.env.PROVIDER_AUTH_MANAGER_EMAIL
+      : 'super@admin.com';
+  }
 }

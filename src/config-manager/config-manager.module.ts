@@ -39,7 +39,11 @@ import { ConfigManagerService } from './services/config-manager.service';
       useFactory: mongoConfigFactory,
     }),
     MongooseModule.forFeature([
-      { name: ConfigManager.name, schema: ConfigManagerSchema },
+      {
+        name: ConfigManager.name,
+        schema: ConfigManagerSchema,
+        collection: 'configs',
+      },
     ]),
   ],
   providers: [
