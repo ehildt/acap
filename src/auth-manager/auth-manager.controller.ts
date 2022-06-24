@@ -3,11 +3,9 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ConfigManagerApi } from './api/config-manager.api';
 import {
   PostLogout,
   PostRefresh,
@@ -15,6 +13,7 @@ import {
   PostSignup,
   QueryRefConfigIds,
   QueryRefServiceId,
+  Token,
 } from './decorators/controller-properties.decorator';
 import {
   OpenApi_Logout,
@@ -29,10 +28,7 @@ import { AuthManagerService } from './services/auth-manager.service';
 @ApiTags('Auth-Manager')
 @Controller('auths')
 export class AuthManagerController {
-  constructor(
-    private readonly authManagerService: AuthManagerService,
-    private readonly configManagerApi: ConfigManagerApi,
-  ) {}
+  constructor(private readonly authManagerService: AuthManagerService) {}
 
   @PostSignup()
   @OpenApi_Singup()
@@ -48,31 +44,26 @@ export class AuthManagerController {
     @QueryRefServiceId() refServiceId?: string,
     @QueryRefConfigIds() refConfigIds?: string[],
   ) {
-    let result: Record<string, unknown>;
-
-    if (refServiceId && refConfigIds?.length)
-      result = await this.configManagerApi.getConfigIds(
-        refServiceId,
-        refConfigIds,
-      );
-    else if (refServiceId)
-      result = await this.configManagerApi.getServiceId(refServiceId);
+    const result = await this.authManagerService.challengeOptionalConfigs(
+      refServiceId,
+      refConfigIds,
+    );
 
     return this.authManagerService.signin(req, refServiceId, result);
   }
 
-  @UseGuards(AccessTokenAuthGuard)
   @PostLogout()
   @OpenApi_Logout()
   @HttpCode(HttpStatus.OK)
-  async logout(@Request() req: { user: any }) {
-    return this.authManagerService.logout(req.user.username);
+  @UseGuards(AccessTokenAuthGuard)
+  async logout(@Token() token: any) {
+    return this.authManagerService.logout(token.username);
   }
 
-  @UseGuards(AccessTokenAuthGuard)
   @PostRefresh()
   @HttpCode(HttpStatus.OK)
-  async refresh(@Body() req: any) {
-    return this.authManagerService.refresh(req);
+  @UseGuards(AccessTokenAuthGuard)
+  async refresh(@Token() token: any) {
+    return this.authManagerService.refresh(token);
   }
 }

@@ -5,9 +5,11 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigManagerApi } from '../api/config-manager.api';
 import {
   AuthManagerConfig,
   authManagerConfigFactory,
@@ -24,6 +26,7 @@ export class AuthManagerService {
     private readonly userRepo: AuthManagerUserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly configManagerApi: ConfigManagerApi,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
@@ -92,5 +95,16 @@ export class AuthManagerService {
 
   async refresh(req: any) {
     return req;
+  }
+
+  async challengeOptionalConfigs(serviceId?: string, configIds?: string[]) {
+    try {
+      if (serviceId && configIds?.length)
+        return this.configManagerApi.getConfigIds(serviceId, configIds);
+
+      if (serviceId) return this.configManagerApi.getServiceId(serviceId);
+    } catch (error) {
+      throw new UnprocessableEntityException(error?.response.data);
+    }
   }
 }
