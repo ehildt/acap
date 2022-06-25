@@ -5,10 +5,10 @@ import {
   HttpStatus,
   InternalServerErrorException,
   UnprocessableEntityException,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
+  AccessTokenGuard,
   PostLogout,
   PostRefresh,
   PostSignin,
@@ -16,6 +16,7 @@ import {
   QueryRefConfigIds,
   QueryRefServiceId,
   RawToken,
+  RefreshTokenGuard,
   Token,
 } from './decorators/controller-properties.decorator';
 import {
@@ -26,8 +27,6 @@ import {
 import { AuthManagerSigninReq } from './dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
 import { AuthManagerToken } from './dtos/auth-manager-token.dto';
-import { AccessTokenAuthGuard } from './guards/auth-manager-access-token.guard';
-import { RefreshTokenAuthGuard } from './guards/auth-manager-refresh-token.guard';
 import { AuthManagerService } from './services/auth-manager.service';
 
 @ApiTags('Auth-Manager')
@@ -65,16 +64,16 @@ export class AuthManagerController {
 
   @PostLogout()
   @OpenApi_Token()
+  @AccessTokenGuard()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AccessTokenAuthGuard)
-  async logout(@Token() token: AuthManagerToken) {
+  logout(@Token() token: AuthManagerToken) {
     return this.authManagerService.logout(token);
   }
 
   @PostRefresh()
   @OpenApi_Token()
+  @RefreshTokenGuard()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(RefreshTokenAuthGuard)
   refresh(@Token() token: AuthManagerToken, @RawToken() rawToken: string) {
     return this.authManagerService.refresh(rawToken, token);
   }

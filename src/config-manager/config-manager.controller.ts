@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
+  AccessTokenGuard,
   ConfigIdsParam,
   ConfigManagerUpsertBody,
   serviceId,
@@ -36,6 +37,7 @@ export class ConfigManagerController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
+  @AccessTokenGuard()
   @Post(serviceId)
   @OpenApi_Upsert()
   async upsert(
@@ -53,6 +55,7 @@ export class ConfigManagerController {
     return entities;
   }
 
+  @AccessTokenGuard()
   @Get(serviceId)
   @OpenApi_GetByServiceId()
   async getByServiceId(@ServiceIdParam() serviceId: string) {
@@ -68,6 +71,7 @@ export class ConfigManagerController {
     throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 
+  @AccessTokenGuard()
   @Get(serviceIdConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
   async getByServiceIdConfigIds(
@@ -96,6 +100,7 @@ export class ConfigManagerController {
     return upsertCache;
   }
 
+  @AccessTokenGuard()
   @Delete(serviceId)
   @OpenApi_DeleteByServiceId()
   async deleteByServiceId(@ServiceIdParam() serviceId: string) {
@@ -103,6 +108,7 @@ export class ConfigManagerController {
     return this.configManagerService.deleteByServiceId(serviceId);
   }
 
+  @AccessTokenGuard()
   @Delete(serviceIdConfigIds)
   @OpenApi_DeleteByServiceIdConfigIds()
   async deleteByConfigIds(

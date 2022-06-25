@@ -4,7 +4,10 @@ import {
   ParseArrayPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AccessTokenAuthGuard } from '../guards/auth-manager-access-token.guard';
+import { RefreshTokenAuthGuard } from '../guards/auth-manager-refresh-token.guard';
 
 const parseArrayPipe = new ParseArrayPipe({ items: String, optional: true });
 
@@ -29,3 +32,6 @@ export const QueryRefConfigIds = () => Query('refConfigIds', parseArrayPipe);
 
 export const Token = createParamDecorator(getTokenFromRequest);
 export const RawToken = createParamDecorator(getRawTokenFromRequest);
+
+export const RefreshTokenGuard = () => UseGuards(RefreshTokenAuthGuard);
+export const AccessTokenGuard = () => UseGuards(AccessTokenAuthGuard);

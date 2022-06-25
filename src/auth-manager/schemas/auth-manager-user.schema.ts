@@ -17,9 +17,6 @@ export class AuthManagerUser {
 
   @Prop({ required: true, enum: Role })
   role: Role;
-
-  @Prop({ required: true })
-  claims: string[];
 }
 
 export const AuthManagerUserSchema =

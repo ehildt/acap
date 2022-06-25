@@ -24,7 +24,6 @@ import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
 import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
 import { redisConfigFactory } from './configs/redis/redis-config-factory.dbs';
 import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
-import { superAdminClaims } from './constants/claims';
 import { Role } from './constants/role.enum';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
 import {
@@ -119,7 +118,6 @@ export class AuthManagerModule implements OnModuleInit {
         email: document.email,
         hash: await hash(document.password),
         role: Role.superadmin,
-        claims: superAdminClaims,
       });
     } catch (error) {
       if (error?.code !== 11000) throw new InternalServerErrorException(error);

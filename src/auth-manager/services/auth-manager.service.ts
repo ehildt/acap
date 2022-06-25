@@ -53,46 +53,20 @@ export class AuthManagerService {
     if (!user || !(await verify(user.hash, req.password)))
       throw new ForbiddenException('username/password does not match');
 
-    const data = {
+    return this.signAccessRefreshToken({
       id: user.id,
       username: user.username,
       email: user.email,
       role: user.role,
-      claims: user.claims?.length ? user.claims : undefined,
       configs: refServiceId && result,
-    };
-
-    const ACCESS_TOKEN = this.jwtService.sign(data, {
-      expiresIn: this.config.accessTokenTTL,
-      secret: this.config.accessTokenSecret,
     });
-
-    const REFRESH_TOKEN = this.jwtService.sign(data, {
-      expiresIn: this.config.refreshTokenTTL,
-      secret: this.config.refreshTokenSecret,
-    });
-
-    await this.cacheManager.set(
-      user.id,
-      { AUTH_HASH: await hash(REFRESH_TOKEN) },
-      { ttl: this.config.refreshTokenTTL },
-    );
-
-    return { ACCESS_TOKEN, REFRESH_TOKEN };
   }
 
   async refresh(rawToken: string, token: AuthManagerToken) {
     const { AUTH_HASH } = await this.cacheManager.get(token.id);
-
-    if (!AUTH_HASH || !(await verify(AUTH_HASH, rawToken)))
-      throw new UnauthorizedException();
-
-    return {
-      ACCESS_TOKEN: this.jwtService.sign(token, {
-        expiresIn: this.config.accessTokenTTL,
-        secret: this.config.accessTokenSecret,
-      }),
-    };
+    if (AUTH_HASH && (await verify(AUTH_HASH, rawToken)))
+      return this.signAccessRefreshToken(token);
+    throw new UnauthorizedException();
   }
 
   logout(token: AuthManagerToken) {
@@ -103,5 +77,25 @@ export class AuthManagerService {
     if (serviceId && configIds?.length)
       return this.configManagerApi.getConfigIds(serviceId, configIds);
     if (serviceId) return this.configManagerApi.getServiceId(serviceId);
+  }
+
+  async signAccessRefreshToken(token: Omit<AuthManagerToken, 'iat' | 'exp'>) {
+    const ACCESS_TOKEN = this.jwtService.sign(token, {
+      expiresIn: this.config.accessTokenTTL,
+      secret: this.config.accessTokenSecret,
+    });
+
+    const REFRESH_TOKEN = this.jwtService.sign(token, {
+      expiresIn: this.config.refreshTokenTTL,
+      secret: this.config.refreshTokenSecret,
+    });
+
+    await this.cacheManager.set(
+      token.id,
+      { AUTH_HASH: await hash(REFRESH_TOKEN) },
+      { ttl: this.config.refreshTokenTTL },
+    );
+
+    return { ACCESS_TOKEN, REFRESH_TOKEN };
   }
 }

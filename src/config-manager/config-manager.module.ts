@@ -15,6 +15,8 @@ import {
 import { CacheManagerService } from './services/cache-manager.service';
 import { ConfigManagerRepository } from './services/config-manager.repository';
 import { ConfigManagerService } from './services/config-manager.service';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
+import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { ConfigManagerService } from './services/config-manager.service';
     CacheManagerService,
     ConfigManagerRepository,
     ConsoleLogger,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
   ],
   controllers: [ConfigManagerController, CacheManagerController],
 })

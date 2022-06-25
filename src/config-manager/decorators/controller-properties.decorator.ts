@@ -1,5 +1,6 @@
-import { Body, Param, ParseArrayPipe } from '@nestjs/common';
+import { Body, Param, ParseArrayPipe, UseGuards } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
+import { AccessTokenAuthGuard } from '../guards/auth-manager-access-token.guard';
 
 export const serviceId = ':serviceId';
 
@@ -11,3 +12,5 @@ export const ConfigManagerUpsertBody = () =>
 
 export const ConfigIdsParam = () =>
   Param('configIds', new ParseArrayPipe({ items: String }));
+
+export const AccessTokenGuard = () => UseGuards(AccessTokenAuthGuard);

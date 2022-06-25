@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
+  AccessTokenGuard,
   ConfigIdsParam,
   ConfigManagerUpsertBody,
   serviceId,
@@ -29,6 +30,7 @@ import { CacheManagerService } from './services/cache-manager.service';
 export class CacheManagerController {
   constructor(private readonly cacheManagerService: CacheManagerService) {}
 
+  @AccessTokenGuard()
   @Post(serviceId)
   @OpenApi_Upsert()
   async upsert(
@@ -39,12 +41,14 @@ export class CacheManagerController {
     return this.cacheManagerService.upsert(serviceId, req, ttl);
   }
 
+  @AccessTokenGuard()
   @Get(serviceId)
   @OpenApi_GetByServiceId()
   async getByServiceId(@ServiceIdParam() serviceId: string) {
     return this.cacheManagerService.getByServiceId(serviceId);
   }
 
+  @AccessTokenGuard()
   @Get(serviceIdConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
   async getByServiceIdConfigIds(
@@ -73,12 +77,14 @@ export class CacheManagerController {
     return cache;
   }
 
+  @AccessTokenGuard()
   @Delete(serviceId)
   @OpenApi_DeleteByServiceId()
   async deleteByServiceId(@ServiceIdParam() serviceId: string) {
     return this.cacheManagerService.deleteByServiceId(serviceId);
   }
 
+  @AccessTokenGuard()
   @Delete(serviceIdConfigIds)
   @OpenApi_DeleteByServiceIdConfigIds()
   async deleteByServiceIdConfigIds(
