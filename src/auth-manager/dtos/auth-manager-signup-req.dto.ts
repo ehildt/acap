@@ -14,7 +14,7 @@ export class AuthManagerSignupReq {
   username: string;
 
   @IsEmail()
-  @ApiProperty({ example: 'some@email.com' })
+  @ApiProperty({ example: 'super@admin.com' })
   email: string;
 
   @IsNotEmpty()

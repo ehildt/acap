@@ -22,6 +22,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
   // we do not import the type for sake of the
   // dependency-cruiser rule not-to-dev-dep
   validate(req: any, decodedRefreshToken: AuthManagerToken) {
+    if (!decodedRefreshToken.configs) delete decodedRefreshToken.configs;
     return {
       ...decodedRefreshToken,
       refreshToken: req.get('authorization').slice(7),

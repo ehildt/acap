@@ -9,6 +9,7 @@ export interface AuthManagerConfig {
   refreshTokenSecret: string;
   configManagerBaseUrl: string;
   email: string;
+  consumerToken: string;
 }
 
 export function authManagerConfigFactory(config: ConfigService) {
@@ -27,5 +28,6 @@ export function authManagerConfigFactory(config: ConfigService) {
     configManagerBaseUrl: config.get<string>(
       'AuthManagerConfig.CONFIG_MANAGER_BASE_URL',
     ),
+    consumerToken: config.get<string>('AuthManagerConfig.CONSUMER_TOKEN'),
   };
 }

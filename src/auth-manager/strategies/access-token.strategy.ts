@@ -18,6 +18,7 @@ export class AccessTokenStrategy extends PassportStrategy(
   }
 
   validate(decodedAccessToken: AuthManagerToken) {
+    if (!decodedAccessToken.configs) delete decodedAccessToken.configs;
     return decodedAccessToken;
   }
 }

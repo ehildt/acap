@@ -80,8 +80,6 @@ export class AuthManagerService {
   }
 
   async signAccessRefreshToken(token: Omit<AuthManagerToken, 'iat' | 'exp'>) {
-    if (!token.configs) delete token.configs;
-
     const ACCESS_TOKEN = this.jwtService.sign(token, {
       expiresIn: this.config.accessTokenTTL,
       secret: this.config.accessTokenSecret,

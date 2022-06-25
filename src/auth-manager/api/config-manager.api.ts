@@ -29,7 +29,12 @@ export class ConfigManagerApi {
       await firstValueFrom(
         this.httpService.get(
           `api/v1/configs/services/${refServiceId}/configs/${refConfigIds}`,
-          { baseURL: this.config.configManagerBaseUrl },
+          {
+            baseURL: this.config.configManagerBaseUrl,
+            headers: {
+              Authorization: `Bearer ${this.config.consumerToken}`,
+            },
+          },
         ),
       )
     )?.data;
@@ -40,6 +45,9 @@ export class ConfigManagerApi {
       await firstValueFrom(
         this.httpService.get(`api/v1/configs/services/${refServiceId}`, {
           baseURL: this.config.configManagerBaseUrl,
+          headers: {
+            Authorization: `Bearer ${this.config.consumerToken}`,
+          },
         }),
       )
     )?.data;
