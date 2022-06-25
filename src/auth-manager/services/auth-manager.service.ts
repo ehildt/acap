@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -32,11 +33,14 @@ export class AuthManagerService {
 
   private get config() {
     if (this.#config) return this.#config;
+    // TODO authManagerConfigFactory
+    // ! turn into a service
+    // for it implements the singleton pattern
     return (this.#config = authManagerConfigFactory(this.configService));
   }
 
   signup(req: AuthManagerSignupReq) {
-    return this.userRepo.signup(req);
+    return this.userRepo.findOneAndUpdate(req);
   }
 
   async signin(
@@ -44,7 +48,7 @@ export class AuthManagerService {
     refServiceId?: string,
     result: Record<string, unknown> = {},
   ) {
-    const user = await this.userRepo.signin(req);
+    const user = await this.userRepo.findOne(req);
 
     if (!user || !(await verify(user.hash, req.password)))
       throw new ForbiddenException('username/password does not match');
@@ -69,7 +73,7 @@ export class AuthManagerService {
     });
 
     await this.cacheManager.set(
-      user.email,
+      user.id,
       { AUTH_HASH: await hash(REFRESH_TOKEN) },
       { ttl: this.config.refreshTokenTTL },
     );
@@ -77,20 +81,25 @@ export class AuthManagerService {
     return { ACCESS_TOKEN, REFRESH_TOKEN };
   }
 
-  token(req: any, options: any) {
-    if (!options?.expiresIn) delete options.expiresIn;
-    return this.jwtService.sign(req, options);
+  async refresh(rawToken: string, token: AuthManagerToken) {
+    const { AUTH_HASH } = await this.cacheManager.get(token.id);
+
+    if (!AUTH_HASH || !(await verify(AUTH_HASH, rawToken)))
+      throw new UnauthorizedException();
+
+    return {
+      ACCESS_TOKEN: this.jwtService.sign(token, {
+        expiresIn: this.config.accessTokenTTL,
+        secret: this.config.accessTokenSecret,
+      }),
+    };
   }
 
   logout(token: AuthManagerToken) {
-    return this.cacheManager.del(token.username);
+    return this.cacheManager.del(token.id);
   }
 
-  async refresh(req: AuthManagerToken) {
-    return req;
-  }
-
-  async challengeOptionalConfigs(serviceId?: string, configIds?: string[]) {
+  challengeOptionalConfigs(serviceId?: string, configIds?: string[]) {
     if (serviceId && configIds?.length)
       return this.configManagerApi.getConfigIds(serviceId, configIds);
     if (serviceId) return this.configManagerApi.getServiceId(serviceId);

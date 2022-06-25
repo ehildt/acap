@@ -15,6 +15,7 @@ import {
   PostSignup,
   QueryRefConfigIds,
   QueryRefServiceId,
+  RawToken,
   Token,
 } from './decorators/controller-properties.decorator';
 import {
@@ -74,7 +75,7 @@ export class AuthManagerController {
   @OpenApi_Token()
   @HttpCode(HttpStatus.OK)
   @UseGuards(RefreshTokenAuthGuard)
-  async refresh(@Token() token: AuthManagerToken) {
-    return this.authManagerService.refresh(token);
+  refresh(@Token() token: AuthManagerToken, @RawToken() rawToken: string) {
+    return this.authManagerService.refresh(rawToken, token);
   }
 }

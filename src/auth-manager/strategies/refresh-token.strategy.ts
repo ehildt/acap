@@ -14,17 +14,17 @@ export class RefreshTokenStrategy extends PassportStrategy(
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.AUTH_MANAGER_REFRESH_TOKEN_SECRET,
-      // passReqToCallback: true,
+      passReqToCallback: true,
     });
   }
 
   // here req is of type Request from express
   // we do not import the type for sake of the
   // dependency-cruiser rule not-to-dev-dep
-  validate(_req: any, decodedRefreshToken: AuthManagerToken) {
+  validate(req: any, decodedRefreshToken: AuthManagerToken) {
     return {
       ...decodedRefreshToken,
-      // refreshToken: req.get('authorization').slice(7),
+      refreshToken: req.get('authorization').slice(7),
     };
   }
 }

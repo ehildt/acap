@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
@@ -14,14 +15,17 @@ export class AuthManagerToken {
     Object.assign(this, copy);
   }
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: '62b5c4467a8dc36f85a18188' })
   id: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: Role.superadmin })
   username: string;
 
+  @IsNotEmpty()
   @IsEmail()
   @ApiProperty({ example: 'some@email.com' })
   email: string;

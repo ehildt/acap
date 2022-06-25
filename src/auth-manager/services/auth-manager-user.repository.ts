@@ -16,7 +16,7 @@ export class AuthManagerUserRepository {
     private readonly user: Model<AuthManagerUserDocument>,
   ) {}
 
-  async signup(req: AuthManagerSignupReq) {
+  async findOneAndUpdate(req: AuthManagerSignupReq) {
     return this.user
       .findOneAndUpdate(
         { username: req.username },
@@ -26,8 +26,8 @@ export class AuthManagerUserRepository {
       .exec();
   }
 
-  async signin(req: AuthManagerSigninReq) {
-    return await this.user
+  findOne(req: AuthManagerSigninReq) {
+    return this.user
       .findOne()
       .or([{ email: req.usernameOrEmail }, { username: req.usernameOrEmail }])
       .exec();
