@@ -6,8 +6,8 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { AccessTokenAuthGuard } from '../guards/auth-manager-access-token.guard';
-import { RefreshTokenAuthGuard } from '../guards/auth-manager-refresh-token.guard';
+import { AccessTokenAuthGuard } from '../guards/access-token.guard';
+import { RefreshTokenAuthGuard } from '../guards/refresh-token.guard';
 
 const parseArrayPipe = new ParseArrayPipe({ items: String, optional: true });
 
