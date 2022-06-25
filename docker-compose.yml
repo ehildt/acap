@@ -5,11 +5,12 @@ services:
     build: 
       context: .
       dockerfile: dockerfile
-      target: LOCAL
+      target: local
     volumes:
       - ./:/app
     depends_on:
       - mongo
+      - redis
     env_file:
       - env/defaults.env
     ports:
@@ -25,6 +26,15 @@ services:
       - mongo_data:/data/db
     ports:
       - '27017:27017'
+
+  redis:
+    image: redis
+    container_name: redis
+    env_file:
+      - env/docker.env
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass myRedisPass --loglevel warning
 
 volumes:
   mongo_data:

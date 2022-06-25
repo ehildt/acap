@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
-import { mapConfigRes } from './helpers/map-config-res.helper';
 import { reduceConfigRes } from './helpers/reduce-config-res.helper';
 
 @Injectable()
@@ -14,14 +13,21 @@ export class ConfigManagerService {
 
   async getByServiceId(serviceId: string) {
     const entities = await this.configRepo.where({ serviceId });
-    return mapConfigRes(entities);
+    return entities ?? [];
   }
 
-  async getByServiceIdConfigIds(serviceId: string, configIds: string[]) {
+  async getByServiceIdConfigIds(serviceId: string, ids: string[]) {
     const entities = await this.configRepo.where({
       serviceId,
-      configId: { $in: configIds },
+      configId: { $in: ids },
     });
+
+    if (entities?.length < ids?.length)
+      throw new UnprocessableEntityException(
+        `N/A [ serviceId: ${serviceId} | configId: ${ids.filter(
+          (id) => !entities.find(({ configId }) => configId === id),
+        )} ]`,
+      );
 
     return reduceConfigRes(entities);
   }
@@ -30,7 +36,7 @@ export class ConfigManagerService {
     return this.configRepo.delete(serviceId);
   }
 
-  async deleteByConfigId(serviceId: string, configIds?: string[]) {
+  async deleteByServiceIdConfigId(serviceId: string, configIds?: string[]) {
     return this.configRepo.delete(serviceId, configIds);
   }
 }

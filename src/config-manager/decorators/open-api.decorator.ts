@@ -1,12 +1,14 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 
@@ -20,33 +22,39 @@ export function OpenApi_Upsert() {
       type: ConfigManagerUpsertReq,
       isArray: true,
     }),
+    ApiQuery({
+      name: 'ttlServiceId',
+      type: Number,
+      required: false,
+    }),
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
     ApiBadRequestResponse(),
+    ApiBearerAuth(),
   );
 }
 
 export function OpenApi_GetByServiceId() {
   return applyDecorators(
     ApiInternalServerErrorResponse(),
-    ApiNoContentResponse(),
+    ApiUnprocessableEntityResponse(),
     ApiOkResponse({
       isArray: true,
       type: ConfigManagerUpsertReq,
     }),
     ServiceIdParam(),
+    ApiBearerAuth(),
   );
 }
 
 export function OpenApi_GetByServiceIdConfigIds() {
   return applyDecorators(
     ApiInternalServerErrorResponse(),
-    ApiNoContentResponse(),
-    // TODO OpenApi_GetByServiceIdConfigIds
-    // ! ApiOkResponse => provide type information
+    ApiUnprocessableEntityResponse(),
     ApiOkResponse(),
     ServiceIdParam(),
     ConfigIdParam(),
+    ApiBearerAuth(),
   );
 }
 
@@ -55,6 +63,7 @@ export function OpenApi_DeleteByServiceId() {
     ApiOkResponse(),
     ApiInternalServerErrorResponse(),
     ServiceIdParam(),
+    ApiBearerAuth(),
   );
 }
 
@@ -64,5 +73,6 @@ export function OpenApi_DeleteByServiceIdConfigIds() {
     ApiInternalServerErrorResponse(),
     ServiceIdParam(),
     ConfigIdParam(),
+    ApiBearerAuth(),
   );
 }

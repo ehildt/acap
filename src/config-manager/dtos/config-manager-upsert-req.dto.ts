@@ -1,6 +1,5 @@
-import { IsDefined, IsEnum, IsString, IsUppercase } from 'class-validator';
+import { IsDefined, IsString, IsUppercase } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CONFIG_SOURCE } from '../constants/config-source.enum';
 import { ValueProperty } from '../decorators/class-validator-properties.decorator';
 
 export class ConfigManagerUpsertReq {
@@ -15,10 +14,5 @@ export class ConfigManagerUpsertReq {
 
   @IsDefined()
   @ValueProperty()
-  value: string | Record<string, unknown>;
-
-  @IsEnum(CONFIG_SOURCE)
-  @IsUppercase()
-  @ApiProperty({ enum: CONFIG_SOURCE })
-  source: CONFIG_SOURCE;
+  value?: string | Record<string, unknown>;
 }
