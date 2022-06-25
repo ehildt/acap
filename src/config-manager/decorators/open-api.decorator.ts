@@ -1,6 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -29,6 +30,7 @@ export function OpenApi_Upsert() {
     ApiCreatedResponse(),
     ApiInternalServerErrorResponse(),
     ApiBadRequestResponse(),
+    ApiBearerAuth(),
   );
 }
 
@@ -41,6 +43,7 @@ export function OpenApi_GetByServiceId() {
       type: ConfigManagerUpsertReq,
     }),
     ServiceIdParam(),
+    ApiBearerAuth(),
   );
 }
 
@@ -51,6 +54,7 @@ export function OpenApi_GetByServiceIdConfigIds() {
     ApiOkResponse(),
     ServiceIdParam(),
     ConfigIdParam(),
+    ApiBearerAuth(),
   );
 }
 
@@ -59,6 +63,7 @@ export function OpenApi_DeleteByServiceId() {
     ApiOkResponse(),
     ApiInternalServerErrorResponse(),
     ServiceIdParam(),
+    ApiBearerAuth(),
   );
 }
 
@@ -68,5 +73,6 @@ export function OpenApi_DeleteByServiceIdConfigIds() {
     ApiInternalServerErrorResponse(),
     ServiceIdParam(),
     ConfigIdParam(),
+    ApiBearerAuth(),
   );
 }

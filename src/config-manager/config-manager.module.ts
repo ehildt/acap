@@ -6,8 +6,8 @@ import { CacheManagerController } from './cache-manager.controller';
 import { ConfigManagerController } from './config-manager.controller';
 import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
 import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
-import { redisCacheConfigFactory } from './configs/redis-cache/redis-cache-config-factory.dbs';
-import { RedisCacheConfigRegistry } from './configs/redis-cache/redis-cache-config-registry.dbs';
+import { redisConfigFactory } from './configs/redis/redis-config-factory.dbs';
+import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
 import {
   ConfigManager,
   ConfigManagerSchema,
@@ -15,6 +15,7 @@ import {
 import { CacheManagerService } from './services/cache-manager.service';
 import { ConfigManagerRepository } from './services/config-manager.repository';
 import { ConfigManagerService } from './services/config-manager.service';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { ConfigManagerService } from './services/config-manager.service';
       useFactory: async (config: ConfigService) => {
         return {
           store: RedisStore,
-          ...redisCacheConfigFactory(config),
+          ...redisConfigFactory(config),
         };
       },
       inject: [ConfigService],
@@ -31,7 +32,7 @@ import { ConfigManagerService } from './services/config-manager.service';
     ConfigModule.forRoot({
       cache: true,
       ignoreEnvFile: true,
-      load: [MongoConfigRegistry, RedisCacheConfigRegistry],
+      load: [MongoConfigRegistry, RedisConfigRegistry],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,7 +40,11 @@ import { ConfigManagerService } from './services/config-manager.service';
       useFactory: mongoConfigFactory,
     }),
     MongooseModule.forFeature([
-      { name: ConfigManager.name, schema: ConfigManagerSchema },
+      {
+        name: ConfigManager.name,
+        schema: ConfigManagerSchema,
+        collection: 'configs',
+      },
     ]),
   ],
   providers: [
@@ -47,6 +52,7 @@ import { ConfigManagerService } from './services/config-manager.service';
     CacheManagerService,
     ConfigManagerRepository,
     ConsoleLogger,
+    AccessTokenStrategy,
   ],
   controllers: [ConfigManagerController, CacheManagerController],
 })
@@ -58,7 +64,7 @@ export class ConfigManagerModule {
 
   onModuleInit() {
     const MONGO_CONFIG = mongoConfigFactory(this.configService);
-    const REDIS_CONFIG = redisCacheConfigFactory(this.configService);
+    const REDIS_CONFIG = redisConfigFactory(this.configService);
 
     if (process.env.PRINT_ENV)
       this.logger.log({ MONGO_CONFIG, REDIS_CONFIG }, 'Config-Manager');

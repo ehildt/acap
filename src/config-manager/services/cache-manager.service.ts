@@ -20,8 +20,8 @@ export class CacheManagerService {
   }
 
   async getByServiceId(serviceId: string) {
-    const cache = await this.cacheManager.get(serviceId);
-    if (cache) return cache;
+    const cache = (await this.cacheManager.get(serviceId)) ?? {};
+    if (Object.keys(cache)?.length) return cache;
     throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 

@@ -10,9 +10,12 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Role } from './constants/role.enum';
 import {
+  AccessTokenGuard,
   ConfigIdsParam,
   ConfigManagerUpsertBody,
+  Roles,
   serviceId,
   serviceIdConfigIds,
   ServiceIdParam,
@@ -36,8 +39,10 @@ export class ConfigManagerController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
+  @AccessTokenGuard()
   @Post(serviceId)
   @OpenApi_Upsert()
+  @Roles(Role.superadmin, Role.moderator)
   async upsert(
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
@@ -53,8 +58,10 @@ export class ConfigManagerController {
     return entities;
   }
 
+  @AccessTokenGuard()
   @Get(serviceId)
   @OpenApi_GetByServiceId()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   async getByServiceId(@ServiceIdParam() serviceId: string) {
     const entities = await this.configManagerService.getByServiceId(serviceId);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
@@ -68,8 +75,10 @@ export class ConfigManagerController {
     throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 
+  @AccessTokenGuard()
   @Get(serviceIdConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   async getByServiceIdConfigIds(
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
@@ -96,14 +105,18 @@ export class ConfigManagerController {
     return upsertCache;
   }
 
+  @AccessTokenGuard()
   @Delete(serviceId)
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
   async deleteByServiceId(@ServiceIdParam() serviceId: string) {
     await this.cache.del(serviceId);
     return this.configManagerService.deleteByServiceId(serviceId);
   }
 
+  @AccessTokenGuard()
   @Delete(serviceIdConfigIds)
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
   async deleteByConfigIds(
     @ServiceIdParam() serviceId: string,
