@@ -7,10 +7,12 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Role } from './constants/role.enum';
 import {
   AccessTokenGuard,
   ConfigIdsParam,
   ConfigManagerUpsertBody,
+  Roles,
   serviceId,
   serviceIdConfigIds,
   ServiceIdParam,
@@ -32,6 +34,7 @@ export class CacheManagerController {
 
   @AccessTokenGuard()
   @Post(serviceId)
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_Upsert()
   async upsert(
     @ServiceIdParam() serviceId: string,
@@ -44,6 +47,7 @@ export class CacheManagerController {
   @AccessTokenGuard()
   @Get(serviceId)
   @OpenApi_GetByServiceId()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   async getByServiceId(@ServiceIdParam() serviceId: string) {
     return this.cacheManagerService.getByServiceId(serviceId);
   }
@@ -51,6 +55,7 @@ export class CacheManagerController {
   @AccessTokenGuard()
   @Get(serviceIdConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   async getByServiceIdConfigIds(
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
@@ -80,6 +85,7 @@ export class CacheManagerController {
   @AccessTokenGuard()
   @Delete(serviceId)
   @OpenApi_DeleteByServiceId()
+  @Roles(Role.superadmin, Role.moderator)
   async deleteByServiceId(@ServiceIdParam() serviceId: string) {
     return this.cacheManagerService.deleteByServiceId(serviceId);
   }
@@ -87,6 +93,7 @@ export class CacheManagerController {
   @AccessTokenGuard()
   @Delete(serviceIdConfigIds)
   @OpenApi_DeleteByServiceIdConfigIds()
+  @Roles(Role.superadmin, Role.moderator)
   async deleteByServiceIdConfigIds(
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],

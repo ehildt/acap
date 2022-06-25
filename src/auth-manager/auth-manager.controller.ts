@@ -7,6 +7,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Role } from './constants/role.enum';
 import {
   AccessTokenGuard,
   PostLogout,
@@ -17,6 +18,7 @@ import {
   QueryRefServiceId,
   RawToken,
   RefreshTokenGuard,
+  Roles,
   Token,
 } from './decorators/controller-properties.decorator';
 import {
@@ -66,6 +68,7 @@ export class AuthManagerController {
   @OpenApi_Token()
   @AccessTokenGuard()
   @HttpCode(HttpStatus.OK)
+  @Roles(Role.superadmin, Role.moderator, Role.member)
   logout(@Token() token: AuthManagerToken) {
     return this.authManagerService.logout(token);
   }
@@ -74,6 +77,7 @@ export class AuthManagerController {
   @OpenApi_Token()
   @RefreshTokenGuard()
   @HttpCode(HttpStatus.OK)
+  @Roles(Role.superadmin, Role.moderator, Role.member)
   refresh(@Token() token: AuthManagerToken, @RawToken() rawToken: string) {
     return this.authManagerService.refresh(rawToken, token);
   }

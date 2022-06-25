@@ -4,10 +4,13 @@ import {
   ParseArrayPipe,
   Post,
   Query,
+  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
+import { Role, ROLES } from '../constants/role.enum';
 import { AccessTokenAuthGuard } from '../guards/access-token.guard';
 import { RefreshTokenAuthGuard } from '../guards/refresh-token.guard';
+import { RolesGuard } from '../guards/roles.guard';
 
 const parseArrayPipe = new ParseArrayPipe({ items: String, optional: true });
 
@@ -33,5 +36,10 @@ export const QueryRefConfigIds = () => Query('refConfigIds', parseArrayPipe);
 export const Token = createParamDecorator(getTokenFromRequest);
 export const RawToken = createParamDecorator(getRawTokenFromRequest);
 
-export const RefreshTokenGuard = () => UseGuards(RefreshTokenAuthGuard);
-export const AccessTokenGuard = () => UseGuards(AccessTokenAuthGuard);
+export const RefreshTokenGuard = () =>
+  UseGuards(RefreshTokenAuthGuard, RolesGuard);
+
+export const AccessTokenGuard = () =>
+  UseGuards(AccessTokenAuthGuard, RolesGuard);
+
+export const Roles = (...roles: Role[]) => SetMetadata(ROLES, roles);

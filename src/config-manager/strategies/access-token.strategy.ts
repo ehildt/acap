@@ -1,7 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Role } from '../constants/role.enum';
 import { AuthManagerToken } from '../dtos/auth-manager-token.dto';
 
 export const ACCESS_TOKEN = 'ACCESS_TOKEN';
@@ -19,8 +18,6 @@ export class AccessTokenStrategy extends PassportStrategy(
   }
 
   validate(decodedAccessToken: AuthManagerToken) {
-    if (Role.member === decodedAccessToken.role)
-      throw new ForbiddenException('Restricted Access');
     return decodedAccessToken;
   }
 }

@@ -10,10 +10,12 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Role } from './constants/role.enum';
 import {
   AccessTokenGuard,
   ConfigIdsParam,
   ConfigManagerUpsertBody,
+  Roles,
   serviceId,
   serviceIdConfigIds,
   ServiceIdParam,
@@ -40,6 +42,7 @@ export class ConfigManagerController {
   @AccessTokenGuard()
   @Post(serviceId)
   @OpenApi_Upsert()
+  @Roles(Role.superadmin, Role.moderator)
   async upsert(
     @ServiceIdParam() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
@@ -58,6 +61,7 @@ export class ConfigManagerController {
   @AccessTokenGuard()
   @Get(serviceId)
   @OpenApi_GetByServiceId()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   async getByServiceId(@ServiceIdParam() serviceId: string) {
     const entities = await this.configManagerService.getByServiceId(serviceId);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
@@ -74,6 +78,7 @@ export class ConfigManagerController {
   @AccessTokenGuard()
   @Get(serviceIdConfigIds)
   @OpenApi_GetByServiceIdConfigIds()
+  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   async getByServiceIdConfigIds(
     @ServiceIdParam() serviceId: string,
     @ConfigIdsParam() configIds: string[],
@@ -102,6 +107,7 @@ export class ConfigManagerController {
 
   @AccessTokenGuard()
   @Delete(serviceId)
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
   async deleteByServiceId(@ServiceIdParam() serviceId: string) {
     await this.cache.del(serviceId);
@@ -110,6 +116,7 @@ export class ConfigManagerController {
 
   @AccessTokenGuard()
   @Delete(serviceIdConfigIds)
+  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
   async deleteByConfigIds(
     @ServiceIdParam() serviceId: string,

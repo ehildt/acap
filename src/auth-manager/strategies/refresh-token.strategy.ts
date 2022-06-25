@@ -1,7 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Role } from '../constants/role.enum';
 import { AuthManagerToken } from '../dtos/auth-manager-token.dto';
 
 export const REFRESH_TOKEN = 'REFRESH_TOKEN';
@@ -23,8 +22,6 @@ export class RefreshTokenStrategy extends PassportStrategy(
   // we do not import the type for sake of the
   // dependency-cruiser rule not-to-dev-dep
   validate(req: any, decodedRefreshToken: AuthManagerToken) {
-    if (Role.member === decodedRefreshToken.role)
-      throw new ForbiddenException('Restricted Access');
     return {
       ...decodedRefreshToken,
       refreshToken: req.get('authorization').slice(7),
