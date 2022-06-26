@@ -14,7 +14,6 @@ import {
   AuthManagerConfig,
   authManagerConfigFactory,
 } from '../configs/auth-manager/auth-manager-config-factory.dbs';
-import { Role } from '../constants/role.enum';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 import { AuthManagerToken } from '../dtos/auth-manager-token.dto';
@@ -47,13 +46,8 @@ export class AuthManagerService {
   async signin(
     req: AuthManagerSigninReq,
     refServiceId?: string,
-    refConfigIds?: string[],
+    result: Record<string, unknown> = {},
   ) {
-    const result = await this.challengeOptionalConfigs(
-      refServiceId,
-      refConfigIds,
-    );
-
     const user = await this.userRepo.findOne(req);
 
     if (!user || !(await verify(user.hash, req.password)))
@@ -68,33 +62,9 @@ export class AuthManagerService {
     });
   }
 
-  async token(
-    serviceId: string,
-    refServiceId?: string,
-    refConfigIds?: string[],
-    data?: Record<string, any>,
-  ) {
-    const configs = await this.challengeOptionalConfigs(
-      refServiceId,
-      refConfigIds,
-    );
-
-    const CONSUMER_TOKEN = this.jwtService.sign(
-      {
-        serviceId,
-        role: Role.consumer,
-        ...(Object.keys(data)?.length && { data }),
-        configs,
-      },
-      { secret: this.config.tokenSecret },
-    );
-
-    return { CONSUMER_TOKEN };
-  }
-
   async refresh(rawToken: string, token: AuthManagerToken) {
-    const cache: any = await this.cacheManager.get(token.id);
-    if (cache?.AUTH_HASH && (await verify(cache?.AUTH_HASH, rawToken)))
+    const { AUTH_HASH } = await this.cacheManager.get(token.id);
+    if (AUTH_HASH && (await verify(AUTH_HASH, rawToken)))
       return this.signAccessRefreshToken(token);
     throw new UnauthorizedException();
   }
@@ -103,27 +73,27 @@ export class AuthManagerService {
     return this.cacheManager.del(token.id);
   }
 
-  challengeOptionalConfigs(refServiceId?: string, refConfigIds?: string[]) {
-    if (refServiceId && refConfigIds?.length)
-      return this.configManagerApi.getConfigIds(refServiceId, refConfigIds);
-    if (refServiceId) return this.configManagerApi.getServiceId(refServiceId);
+  challengeOptionalConfigs(serviceId?: string, configIds?: string[]) {
+    if (serviceId && configIds?.length)
+      return this.configManagerApi.getConfigIds(serviceId, configIds);
+    if (serviceId) return this.configManagerApi.getServiceId(serviceId);
   }
 
   async signAccessRefreshToken(token: Omit<AuthManagerToken, 'iat' | 'exp'>) {
     const ACCESS_TOKEN = this.jwtService.sign(token, {
       expiresIn: this.config.accessTokenTTL,
-      secret: this.config.tokenSecret,
+      secret: this.config.accessTokenSecret,
     });
 
     const REFRESH_TOKEN = this.jwtService.sign(token, {
       expiresIn: this.config.refreshTokenTTL,
-      secret: this.config.tokenSecret,
+      secret: this.config.refreshTokenSecret,
     });
 
     await this.cacheManager.set(
       token.id,
-      { AUTH_HASH: await hash(ACCESS_TOKEN) },
-      { ttl: this.config.accessTokenTTL },
+      { AUTH_HASH: await hash(REFRESH_TOKEN) },
+      { ttl: this.config.refreshTokenTTL },
     );
 
     return { ACCESS_TOKEN, REFRESH_TOKEN };
