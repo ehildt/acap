@@ -5,7 +5,7 @@ EXPOSE 3000
 ENTRYPOINT [ "npm", "run", "start:dev"]
 
 # entrypoint for the app builder
-FROM node:18 AS builder
+FROM node:18-slim AS builder
 WORKDIR /app
 
 ENV PORT='3000'
@@ -42,7 +42,7 @@ WORKDIR /app
 RUN npm run build:prod
 
 # entrypoint for prod-stage
-FROM node:18 AS prod
+FROM node:18-slim AS prod
 WORKDIR /app
 
 ENV PORT='3000'

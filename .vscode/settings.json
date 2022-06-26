@@ -39,12 +39,9 @@
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
         "node_modules": true,
-        "dist": true
+        "dist": true,
+        "reports": true
     },
-    "hide-files.files": [
-        "node_modules",
-        "dist"
-    ],
     "todo-tree.filtering.ignoreGitSubmodules": true,
     "todo-tree.filtering.useBuiltInExcludes": "file and search excludes",
     "todo-tree.general.enableFileWatcher": true,

@@ -16,3 +16,6 @@ info 'npm run ts-unused-exports' && npm run ts-unused-exports
 
 # add known orphans to .dependency-orphans.json
 info 'npm run dependency-cruiser' && npm run dependency-cruiser
+
+# scan for credentials
+info 'npm run shiftleft-scan' && npm run shiftleft-scan

@@ -5,6 +5,7 @@ import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
@@ -33,6 +34,24 @@ export function OpenApi_Signin() {
     ApiQuery({ name: 'refServiceId', required: false }),
     ApiOkResponse(),
     ApiInternalServerErrorResponse(),
+  );
+}
+
+export function OpenApi_ConsumerToken() {
+  return applyDecorators(
+    ApiBody({
+      schema: {
+        type: 'object',
+        title: 'ConsumerTokenData',
+        example: { 'this object': 'will be injected into the token.data' },
+      },
+    }),
+    ApiParam({ name: 'serviceId' }),
+    ApiQuery({ name: 'refConfigIds', isArray: true, required: false }),
+    ApiQuery({ name: 'refServiceId', required: false }),
+    ApiOkResponse(),
+    ApiInternalServerErrorResponse(),
+    ApiBearerAuth(),
   );
 }
 

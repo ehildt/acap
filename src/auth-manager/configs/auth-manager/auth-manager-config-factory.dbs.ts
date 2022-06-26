@@ -5,8 +5,7 @@ export interface AuthManagerConfig {
   password: string;
   accessTokenTTL: number;
   refreshTokenTTL: number;
-  accessTokenSecret: string;
-  refreshTokenSecret: string;
+  tokenSecret: string;
   configManagerBaseUrl: string;
   email: string;
   consumerToken: string;
@@ -19,12 +18,7 @@ export function authManagerConfigFactory(config: ConfigService) {
     email: config.get<string>('AuthManagerConfig.EMAIL'),
     accessTokenTTL: config.get<number>('AuthManagerConfig.ACCESS_TOKEN_TTL'),
     refreshTokenTTL: config.get<number>('AuthManagerConfig.REFRESH_TOKEN_TTL'),
-    accessTokenSecret: config.get<string>(
-      'AuthManagerConfig.ACCESS_TOKEN_SECRET',
-    ),
-    refreshTokenSecret: config.get<string>(
-      'AuthManagerConfig.REFRESH_TOKEN_SECRET',
-    ),
+    tokenSecret: config.get<string>('AuthManagerConfig.TOKEN_SECRET'),
     configManagerBaseUrl: config.get<string>(
       'AuthManagerConfig.CONFIG_MANAGER_BASE_URL',
     ),
