@@ -1,6 +1,6 @@
 {
   "name": "@cultify/config-manager",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "A simple and convenient way to config you apps ;)",
   "author": "Eugen Hildt",
   "private": true,
@@ -30,7 +30,7 @@
     "dependency-cruiser": "npx depcruise -c .dependency-cruiser.js --ts-config tsconfig.json src",
     "dependency-cruiser:graph": "npx depcruise -c .dependency-cruiser.js -x \".+.spec.ts\" -T dot ./src | dot -T png > .dependency-graph.png",
     "ts-unused-exports": "npx ts-unused-exports ./tsconfig.json",
-    "shiftleft-scan": "mkdir reports && docker run --rm -e \"WORKSPACE=${PWD}/dist\" -v $PWD:/app shiftleft/scan scan --build",
+    "shiftleft-scan": "rm -rf reports && mkdir reports && docker run --rm -e \"WORKSPACE=${PWD}\" -v $PWD:/app shiftleft/scan scan --type credscan --build",
     "clinic:doctor": "npx clinic doctor -- node ./dist/main.js",
     "clinic:flame": "npx clinic flame -- node ./dist/main.js",
     "clinic:bubble": "npx clinic bubbleprof -- node ./dist/main.js",
