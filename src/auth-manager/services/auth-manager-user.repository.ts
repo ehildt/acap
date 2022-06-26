@@ -18,12 +18,13 @@ export class AuthManagerUserRepository {
   ) {}
 
   async findOneAndUpdate(req: AuthManagerSignupReq) {
+    const passwordHash = await hash(req.password);
     return this.user
       .findOneAndUpdate(
-        { email: req.email },
+        { email: req.email, hash: passwordHash },
         {
           $set: {
-            hash: await hash(req.password),
+            hash: passwordHash,
             username: req.username,
             email: req.email,
             role: Role.member,

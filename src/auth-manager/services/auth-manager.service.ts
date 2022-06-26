@@ -40,8 +40,12 @@ export class AuthManagerService {
     return (this.#config = authManagerConfigFactory(this.configService));
   }
 
-  signup(req: AuthManagerSignupReq) {
-    return this.userRepo.findOneAndUpdate(req);
+  async signup(req: AuthManagerSignupReq) {
+    try {
+      return await this.userRepo.findOneAndUpdate(req);
+    } catch (error) {
+      throw new ForbiddenException('email/username already exist');
+    }
   }
 
   async signin(
