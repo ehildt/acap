@@ -29,19 +29,11 @@ export class AuthManagerConfigAdapter {
     );
   }
 
-  get ACCESS_TOKEN_SECRET(): string {
+  get TOKEN_SECRET(): string {
     return (
-      this.copy?.ACCESS_TOKEN_SECRET ??
-      process.env.AUTH_MANAGER_ACCESS_TOKEN_SECRET ??
+      this.copy?.TOKEN_SECRET ??
+      process.env.AUTH_MANAGER_TOKEN_SECRET ??
       'd742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd9eb0'
-    );
-  }
-
-  get REFRESH_TOKEN_SECRET(): string {
-    return (
-      this.copy?.REFRESH_TOKEN_SECRET ??
-      process.env.AUTH_MANAGER_REFRESH_TOKEN_SECRET ??
-      '8b64b052251476b08ffecca559c7a1bdfed7a57d278964cb2fc53b3461b4b4b9'
     );
   }
 
@@ -63,7 +55,9 @@ export class AuthManagerConfigAdapter {
 
   get CONSUMER_TOKEN(): string {
     return (
-      this.copy?.CONSUMER_TOKEN ?? process.env.AUTH_MANAGER_CONSUMER_TOKEN ?? ''
+      this.copy?.CONSUMER_TOKEN ??
+      process.env.AUTH_MANAGER_PROVIDER_CONFIG_MANAGER_TOKEN ??
+      ''
     );
   }
 }

@@ -1,6 +1,7 @@
 import {
   createParamDecorator,
   ExecutionContext,
+  Param,
   ParseArrayPipe,
   Post,
   Query,
@@ -25,10 +26,13 @@ const getTokenFromRequest = (_: string, ctx: ExecutionContext) => {
   return token;
 };
 
+export const ServiceIdParam = () => Param('serviceId');
+
 export const PostLogout = () => Post('logout');
 export const PostRefresh = () => Post('refresh');
 export const PostSignup = () => Post('signup');
 export const PostSignin = () => Post('signin');
+export const PostConsumerToken = () => Post('token/:serviceId');
 
 export const QueryRefServiceId = () => Query('refServiceId');
 export const QueryRefConfigIds = () => Query('refConfigIds', parseArrayPipe);
