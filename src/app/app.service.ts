@@ -19,7 +19,7 @@ export class AppService {
   getConfig() {
     return {
       APP_CONFIG: this.configFactory.app,
-      AUTH_MANGER: this.configFactory.authManager,
+      AUTH_CONFIG: this.configFactory.auth,
       MONGO_CONFIG: this.configFactory.mongo,
       REDIS_CONFIG: this.configFactory.redis,
     };

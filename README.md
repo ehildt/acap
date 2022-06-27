@@ -117,7 +117,7 @@ config-manager  |     "host": "localhost",
 config-manager  |     "startSwagger": true,
 config-manager  |     "httpProtocol": "http"
 config-manager  |   },
-config-manager  |   "AUTH_MANGER": {
+config-manager  |   "AUTH_CONFIG": {
 config-manager  |     "username": "superadmin",
 config-manager  |     "password": "superadmin",
 config-manager  |     "email": "super@admin.com",

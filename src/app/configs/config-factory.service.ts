@@ -27,7 +27,7 @@ export class ConfigFactoryService {
     });
   }
 
-  get authManager() {
+  get auth() {
     if (this.#authConfig) return this.#authConfig;
     return (this.#authConfig = <AuthManagerConfig>{
       username: this.configService.get<string>('AuthManagerConfig.USERNAME'),
