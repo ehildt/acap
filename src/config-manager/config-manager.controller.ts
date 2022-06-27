@@ -2,31 +2,33 @@ import { Cache } from 'cache-manager';
 import {
   CACHE_MANAGER,
   Controller,
-  Delete,
-  Get,
   Inject,
-  Post,
-  Query,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Role } from './constants/role.enum';
+import { Roles } from './decorators/controller.custom.decorator';
 import {
   AccessTokenGuard,
-  ConfigIdsParam,
+  DeleteConfigIds,
+  DeleteServiceId,
+  GetConfigIds,
+  GetServiceId,
+  PostServiceId,
+} from './decorators/controller.method.decorator';
+import {
   ConfigManagerUpsertBody,
-  Roles,
-  serviceId,
-  serviceIdConfigIds,
-  ServiceIdParam,
-} from './decorators/controller-properties.decorator';
+  ParamConfigIds,
+  ParamServiceId,
+  QueryTTLServiceId,
+} from './decorators/controller.parameter.decorator';
 import {
   OpenApi_DeleteByServiceId,
   OpenApi_DeleteByServiceIdConfigIds,
   OpenApi_GetByServiceId,
   OpenApi_GetByServiceIdConfigIds,
   OpenApi_Upsert,
-} from './decorators/open-api.decorator';
+} from './decorators/open-api.controller.decorator';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
 import { ConfigManagerService } from './services/config-manager.service';
 import { reduceEntities } from './services/helpers/reduce-entities.helper';
@@ -39,14 +41,14 @@ export class ConfigManagerController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
+  @PostServiceId()
   @AccessTokenGuard()
-  @Post(serviceId)
-  @OpenApi_Upsert()
   @Roles(Role.superadmin, Role.moderator)
+  @OpenApi_Upsert()
   async upsert(
-    @ServiceIdParam() serviceId: string,
+    @QueryTTLServiceId() ttl: number,
+    @ParamServiceId() serviceId: string,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
-    @Query('ttlServiceId') ttl: number,
   ) {
     const entities = await this.configManagerService.upsert(serviceId, req);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
@@ -58,11 +60,11 @@ export class ConfigManagerController {
     return entities;
   }
 
+  @GetServiceId()
   @AccessTokenGuard()
-  @Get(serviceId)
-  @OpenApi_GetByServiceId()
   @Roles(Role.superadmin, Role.moderator, Role.consumer)
-  async getByServiceId(@ServiceIdParam() serviceId: string) {
+  @OpenApi_GetByServiceId()
+  async getByServiceId(@ParamServiceId() serviceId: string) {
     const entities = await this.configManagerService.getByServiceId(serviceId);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
     const data = { ...cache, ...reduceEntities(entities) };
@@ -75,13 +77,13 @@ export class ConfigManagerController {
     throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
   }
 
+  @GetConfigIds()
   @AccessTokenGuard()
-  @Get(serviceIdConfigIds)
-  @OpenApi_GetByServiceIdConfigIds()
   @Roles(Role.superadmin, Role.moderator, Role.consumer)
+  @OpenApi_GetByServiceIdConfigIds()
   async getByServiceIdConfigIds(
-    @ServiceIdParam() serviceId: string,
-    @ConfigIdsParam() configIds: string[],
+    @ParamServiceId() serviceId: string,
+    @ParamConfigIds() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     let cache = (await this.cache.get(serviceId)) ?? ({} as any);
@@ -105,22 +107,22 @@ export class ConfigManagerController {
     return upsertCache;
   }
 
+  @DeleteServiceId()
   @AccessTokenGuard()
-  @Delete(serviceId)
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
-  async deleteByServiceId(@ServiceIdParam() serviceId: string) {
+  async deleteByServiceId(@ParamServiceId() serviceId: string) {
     await this.cache.del(serviceId);
     return this.configManagerService.deleteByServiceId(serviceId);
   }
 
+  @DeleteConfigIds()
   @AccessTokenGuard()
-  @Delete(serviceIdConfigIds)
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
   async deleteByConfigIds(
-    @ServiceIdParam() serviceId: string,
-    @ConfigIdsParam() configIds: string[],
+    @ParamServiceId() serviceId: string,
+    @ParamConfigIds() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);

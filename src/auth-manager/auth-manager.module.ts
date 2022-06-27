@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { HttpModule } from '@nestjs/axios';
 import {
   CacheModule,
-  ConsoleLogger,
   InternalServerErrorException,
   Module,
   OnModuleInit,
@@ -78,7 +77,6 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     AuthManagerUserRepository,
     AccessTokenStrategy,
     RefreshTokenStrategy,
-    ConsoleLogger,
     ConfigManagerApi,
   ],
 })
@@ -87,7 +85,6 @@ export class AuthManagerModule implements OnModuleInit {
   constructor(
     @InjectModel(AuthManagerUser.name)
     private readonly authModal: Model<AuthManagerUserDocument>,
-    private readonly logger: ConsoleLogger,
     private readonly configService: ConfigService,
   ) {}
 
@@ -122,15 +119,5 @@ export class AuthManagerModule implements OnModuleInit {
     } catch (error) {
       if (error?.code !== 11000) throw new InternalServerErrorException(error);
     }
-
-    const REDIS_CONFIG = redisConfigFactory(this.configService);
-    const AUTH_MANAGER_CONFIG = authManagerConfigFactory(this.configService);
-    const MONGO_CONFIG = mongoConfigFactory(this.configService);
-
-    if (process.env.PRINT_ENV)
-      this.logger.log(
-        { REDIS_CONFIG, MONGO_CONFIG, AUTH_MANAGER_CONFIG },
-        'Auth-Manager',
-      );
   }
 }

@@ -1,5 +1,5 @@
 import RedisStore from 'cache-manager-ioredis';
-import { CacheModule, ConsoleLogger, Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheManagerController } from './cache-manager.controller';
@@ -51,22 +51,8 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
     ConfigManagerService,
     CacheManagerService,
     ConfigManagerRepository,
-    ConsoleLogger,
     AccessTokenStrategy,
   ],
   controllers: [ConfigManagerController, CacheManagerController],
 })
-export class ConfigManagerModule {
-  constructor(
-    private readonly logger: ConsoleLogger,
-    private readonly configService: ConfigService,
-  ) {}
-
-  onModuleInit() {
-    const MONGO_CONFIG = mongoConfigFactory(this.configService);
-    const REDIS_CONFIG = redisConfigFactory(this.configService);
-
-    if (process.env.PRINT_ENV)
-      this.logger.log({ MONGO_CONFIG, REDIS_CONFIG }, 'Config-Manager');
-  }
-}
+export class ConfigManagerModule {}

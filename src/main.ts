@@ -7,7 +7,7 @@ import { AppService } from './app/app.service';
 (async () => {
   const app = await NestFactory.create(AppModule);
   const appService = app.get(AppService);
-  const { port } = appService.getAppConfig();
+  const config = appService.getConfig();
 
   app.use(helmet());
   app.use(compression());
@@ -17,5 +17,5 @@ import { AppService } from './app/app.service';
   appService.enableVersioning(app);
   appService.enableOpenApi(app);
 
-  await app.listen(port);
+  await app.listen(config.APP_CONFIG.port, () => appService.logOnServerStart());
 })();
