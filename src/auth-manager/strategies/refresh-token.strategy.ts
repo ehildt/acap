@@ -38,7 +38,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     const token = req.get('authorization').slice(7);
 
     if (!cache?.AUTH_HASH || !(await verify(cache?.AUTH_HASH, token)))
-      throw new UnauthorizedException('session expired');
+      throw new UnauthorizedException('Session Expired');
 
     return {
       ...decodedRefreshToken,

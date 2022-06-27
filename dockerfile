@@ -42,6 +42,7 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY shims.d.ts ./
 COPY src ./src/
+COPY ssl ./ssl/
 
 RUN npm ci --ignore-scripts --loglevel=error 
 
@@ -93,6 +94,7 @@ EXPOSE ${PORT}
 
 COPY --from=PREPARE_PROD ./app/dist ./dist
 COPY --from=PREPARE_PROD ./app/package*.json ./
+COPY --from=PREPARE_PROD ./app/ssl ./ssl
 
 RUN npm ci --ignore-scripts --loglevel=error --omit=dev
 
