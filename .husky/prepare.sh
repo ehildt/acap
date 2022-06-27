@@ -93,6 +93,17 @@ check_licenses() {
     fi
 }
 
+gittyleaks_scan() {
+    local GITTYLEAKS=$(~/.local/bin/gittyleaks --find-anything -b -e $ $(cat .gittyleaks))
+    if [ ! $(echo "$GITTYLEAKS" | grep -o "No matches." | wc -m) -eq 12 ]; then
+        info "gittyleaks_scan.. $(redfy error)"
+        echo "$GITTYLEAKS"
+        exit 1
+    else
+        info "gittyleaks_scan.. $(yellowfy ok)"
+    fi
+}
+
 # lint staged filess
 check_lint_staged() {
     if [ -n '$(npx lint-staged --allow-empty | tail -1 | grep -E "No staged files|[SUCCESS]"' ]; then

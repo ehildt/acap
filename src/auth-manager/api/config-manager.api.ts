@@ -1,38 +1,28 @@
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import {
-  AuthManagerConfig,
-  authManagerConfigFactory,
-} from '../configs/auth-manager/auth-manager-config-factory.dbs';
+import { ConfigFactoryService } from '../configs/config-factory.service';
 
 @Injectable()
 export class ConfigManagerApi {
-  #config: AuthManagerConfig;
-
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
+    private readonly configFactory: ConfigFactoryService,
   ) {}
-
-  private get config() {
-    if (this.#config) return this.#config;
-    return (this.#config = authManagerConfigFactory(this.configService));
-  }
 
   async getConfigIds(
     refServiceId: string,
     refConfigIds: string[],
   ): Promise<Record<string, any>> {
+    const config = this.configFactory.authManager;
     return (
       await firstValueFrom(
         this.httpService.get(
           `api/v1/configs/services/${refServiceId}/configs/${refConfigIds}`,
           {
-            baseURL: this.config.configManagerBaseUrl,
+            baseURL: config.configManagerBaseUrl,
             headers: {
-              Authorization: `Bearer ${this.config.consumerToken}`,
+              Authorization: `Bearer ${config.consumerToken}`,
             },
           },
         ),
@@ -41,12 +31,13 @@ export class ConfigManagerApi {
   }
 
   async getServiceId(refServiceId: string): Promise<Record<string, any>> {
+    const config = this.configFactory.authManager;
     return (
       await firstValueFrom(
         this.httpService.get(`api/v1/configs/services/${refServiceId}`, {
-          baseURL: this.config.configManagerBaseUrl,
+          baseURL: config.configManagerBaseUrl,
           headers: {
-            Authorization: `Bearer ${this.config.consumerToken}`,
+            Authorization: `Bearer ${config.consumerToken}`,
           },
         }),
       )

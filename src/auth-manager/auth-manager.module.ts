@@ -1,11 +1,10 @@
-import { hash } from 'argon2';
+import { argon2i, hash } from 'argon2';
 import RedisStore from 'cache-manager-ioredis';
 import { validateOrReject } from 'class-validator';
 import { Model } from 'mongoose';
 import { HttpModule } from '@nestjs/axios';
 import {
   CacheModule,
-  ConsoleLogger,
   InternalServerErrorException,
   Module,
   OnModuleInit,
@@ -15,14 +14,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { ConfigManagerApi } from './api/config-manager.api';
 import { AuthManagerController } from './auth-manager.controller';
-import {
-  AuthManagerConfig,
-  authManagerConfigFactory,
-} from './configs/auth-manager/auth-manager-config-factory.dbs';
 import { AuthManagerConfigRegistry } from './configs/auth-manager/auth-manager-config-registry.dbs';
-import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
+import { ConfigFactoryService } from './configs/config-factory.service';
 import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
-import { redisConfigFactory } from './configs/redis/redis-config-factory.dbs';
 import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
 import { Role } from './constants/role.enum';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
@@ -54,7 +48,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
       useFactory: async (config: ConfigService) => {
         return {
           store: RedisStore,
-          ...redisConfigFactory(config),
+          ...new ConfigFactoryService(config).redis,
         };
       },
       inject: [ConfigService],
@@ -62,7 +56,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: mongoConfigFactory,
+      useFactory: (service) => new ConfigFactoryService(service).mongo,
     }),
     MongooseModule.forFeature([
       {
@@ -78,32 +72,26 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     AuthManagerUserRepository,
     AccessTokenStrategy,
     RefreshTokenStrategy,
-    ConsoleLogger,
     ConfigManagerApi,
+    ConfigFactoryService,
   ],
 })
 export class AuthManagerModule implements OnModuleInit {
-  #config: AuthManagerConfig;
   constructor(
     @InjectModel(AuthManagerUser.name)
     private readonly authModal: Model<AuthManagerUserDocument>,
-    private readonly logger: ConsoleLogger,
-    private readonly configService: ConfigService,
+    private readonly configFactory: ConfigFactoryService,
   ) {}
-
-  private get config() {
-    if (this.#config) return this.#config;
-    return (this.#config = authManagerConfigFactory(this.configService));
-  }
 
   async onModuleInit() {
     let document: AuthManagerSignupReq;
+    const config = this.configFactory.authManager;
 
     try {
       document = new AuthManagerSignupReq({
-        email: this.config.email,
-        username: this.config.username,
-        password: this.config.password,
+        email: config.email,
+        username: config.username,
+        password: config.password,
       });
 
       await validateOrReject(document);
@@ -116,21 +104,11 @@ export class AuthManagerModule implements OnModuleInit {
       await this.authModal.create({
         username: document.username,
         email: document.email,
-        hash: await hash(document.password),
+        hash: await hash(document.password, { type: argon2i }),
         role: Role.superadmin,
       });
     } catch (error) {
       if (error?.code !== 11000) throw new InternalServerErrorException(error);
     }
-
-    const REDIS_CONFIG = redisConfigFactory(this.configService);
-    const AUTH_MANAGER_CONFIG = authManagerConfigFactory(this.configService);
-    const MONGO_CONFIG = mongoConfigFactory(this.configService);
-
-    if (process.env.PRINT_ENV)
-      this.logger.log(
-        { REDIS_CONFIG, MONGO_CONFIG, AUTH_MANAGER_CONFIG },
-        'Auth-Manager',
-      );
   }
 }

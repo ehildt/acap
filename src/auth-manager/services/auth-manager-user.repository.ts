@@ -1,4 +1,4 @@
-import { hash } from 'argon2';
+import { argon2i, hash } from 'argon2';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -18,12 +18,13 @@ export class AuthManagerUserRepository {
   ) {}
 
   async findOneAndUpdate(req: AuthManagerSignupReq) {
+    const passwordHash = await hash(req.password, { type: argon2i });
     return this.user
       .findOneAndUpdate(
-        { email: req.email },
+        { email: req.email, hash: passwordHash },
         {
           $set: {
-            hash: await hash(req.password),
+            hash: passwordHash,
             username: req.username,
             email: req.email,
             role: Role.member,

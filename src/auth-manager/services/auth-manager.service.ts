@@ -1,4 +1,4 @@
-import { hash, verify } from 'argon2';
+import { argon2i, hash, verify } from 'argon2';
 import { Cache } from 'cache-manager';
 import {
   CACHE_MANAGER,
@@ -7,13 +7,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigManagerApi } from '../api/config-manager.api';
-import {
-  AuthManagerConfig,
-  authManagerConfigFactory,
-} from '../configs/auth-manager/auth-manager-config-factory.dbs';
+import { ConfigFactoryService } from '../configs/config-factory.service';
 import { Role } from '../constants/role.enum';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
@@ -22,38 +18,23 @@ import { AuthManagerUserRepository } from './auth-manager-user.repository';
 
 @Injectable()
 export class AuthManagerService {
-  #config: AuthManagerConfig;
-
   constructor(
     private readonly userRepo: AuthManagerUserRepository,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly configManagerApi: ConfigManagerApi,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly configFactory: ConfigFactoryService,
   ) {}
 
-  private get config() {
-    if (this.#config) return this.#config;
-    // TODO authManagerConfigFactory
-    // ! turn into a service
-    // for it implements the singleton pattern
-    return (this.#config = authManagerConfigFactory(this.configService));
+  async signup(req: AuthManagerSignupReq) {
+    try {
+      return await this.userRepo.findOneAndUpdate(req);
+    } catch (error) {
+      throw new ForbiddenException('email/username already exist');
+    }
   }
 
-  signup(req: AuthManagerSignupReq) {
-    return this.userRepo.findOneAndUpdate(req);
-  }
-
-  async signin(
-    req: AuthManagerSigninReq,
-    refServiceId?: string,
-    refConfigIds?: string[],
-  ) {
-    const result = await this.challengeOptionalConfigs(
-      refServiceId,
-      refConfigIds,
-    );
-
+  async signin(req: AuthManagerSigninReq) {
     const user = await this.userRepo.findOne(req);
 
     if (!user || !(await verify(user.hash, req.password)))
@@ -64,7 +45,6 @@ export class AuthManagerService {
       username: user.username,
       email: user.email,
       role: user.role,
-      configs: refServiceId && result,
     });
   }
 
@@ -74,6 +54,8 @@ export class AuthManagerService {
     refConfigIds?: string[],
     data?: Record<string, any>,
   ) {
+    const config = this.configFactory.authManager;
+
     const configs = await this.challengeOptionalConfigs(
       refServiceId,
       refConfigIds,
@@ -86,7 +68,7 @@ export class AuthManagerService {
         ...(Object.keys(data)?.length && { data }),
         configs,
       },
-      { secret: this.config.tokenSecret },
+      { secret: config.tokenSecret },
     );
 
     return { CONSUMER_TOKEN };
@@ -103,27 +85,43 @@ export class AuthManagerService {
     return this.cacheManager.del(token.id);
   }
 
-  challengeOptionalConfigs(refServiceId?: string, refConfigIds?: string[]) {
-    if (refServiceId && refConfigIds?.length)
-      return this.configManagerApi.getConfigIds(refServiceId, refConfigIds);
-    if (refServiceId) return this.configManagerApi.getServiceId(refServiceId);
+  async challengeOptionalConfigs(
+    refServiceId?: string,
+    refConfigIds?: string[],
+  ) {
+    try {
+      if (refServiceId && refConfigIds?.length)
+        return await this.configManagerApi.getConfigIds(
+          refServiceId,
+          refConfigIds,
+        );
+
+      if (refServiceId)
+        return await this.configManagerApi.getServiceId(refServiceId);
+    } catch (error) {
+      if (error.response?.data?.statusCode === 401)
+        throw new ForbiddenException(
+          'Access denied when fetching configs. Please refer to your system administrator',
+        );
+    }
   }
 
   async signAccessRefreshToken(token: Omit<AuthManagerToken, 'iat' | 'exp'>) {
+    const config = this.configFactory.authManager;
     const ACCESS_TOKEN = this.jwtService.sign(token, {
-      expiresIn: this.config.accessTokenTTL,
-      secret: this.config.tokenSecret,
+      expiresIn: config.accessTokenTTL,
+      secret: config.tokenSecret,
     });
 
     const REFRESH_TOKEN = this.jwtService.sign(token, {
-      expiresIn: this.config.refreshTokenTTL,
-      secret: this.config.tokenSecret,
+      expiresIn: config.refreshTokenTTL,
+      secret: config.tokenSecret,
     });
 
     await this.cacheManager.set(
       token.id,
-      { AUTH_HASH: await hash(ACCESS_TOKEN) },
-      { ttl: this.config.accessTokenTTL },
+      { AUTH_HASH: await hash(ACCESS_TOKEN, { type: argon2i }) },
+      { ttl: config.accessTokenTTL },
     );
 
     return { ACCESS_TOKEN, REFRESH_TOKEN };
