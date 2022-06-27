@@ -97,6 +97,7 @@ gittyleaks_scan() {
     local GITTYLEAKS=$(~/.local/bin/gittyleaks -b -e $ $(cat .gittyleaks))
     if [ ! $(echo "$GITTYLEAKS" | grep -o "No matches." | wc -m) -eq 12 ]; then
         info "gittyleaks_scan.. $(redfy error)"
+        echo "$GITTYLEAKS"
         exit 1
     else
         info "gittyleaks_scan.. $(yellowfy ok)"
