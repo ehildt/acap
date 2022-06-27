@@ -30,8 +30,6 @@ services:
   redis:
     image: redis
     container_name: redis
-    env_file:
-      - env/docker.env
     ports:
       - '6379:6379'
     command: redis-server --requirepass myRedisPass --loglevel warning

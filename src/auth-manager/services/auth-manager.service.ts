@@ -55,6 +55,7 @@ export class AuthManagerService {
     data?: Record<string, any>,
   ) {
     const config = this.configFactory.authManager;
+
     const configs = await this.challengeOptionalConfigs(
       refServiceId,
       refConfigIds,
@@ -84,10 +85,25 @@ export class AuthManagerService {
     return this.cacheManager.del(token.id);
   }
 
-  challengeOptionalConfigs(refServiceId?: string, refConfigIds?: string[]) {
-    if (refServiceId && refConfigIds?.length)
-      return this.configManagerApi.getConfigIds(refServiceId, refConfigIds);
-    if (refServiceId) return this.configManagerApi.getServiceId(refServiceId);
+  async challengeOptionalConfigs(
+    refServiceId?: string,
+    refConfigIds?: string[],
+  ) {
+    try {
+      if (refServiceId && refConfigIds?.length)
+        return await this.configManagerApi.getConfigIds(
+          refServiceId,
+          refConfigIds,
+        );
+
+      if (refServiceId)
+        return await this.configManagerApi.getServiceId(refServiceId);
+    } catch (error) {
+      if (error.response?.data?.statusCode === 401)
+        throw new ForbiddenException(
+          'Access denied when fetching configs. Please refer to your system administrator',
+        );
+    }
   }
 
   async signAccessRefreshToken(token: Omit<AuthManagerToken, 'iat' | 'exp'>) {

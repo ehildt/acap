@@ -7,7 +7,7 @@ export const PostLogout = () => Post('logout');
 export const PostRefresh = () => Post('refresh');
 export const PostSignup = () => Post('signup');
 export const PostSignin = () => Post('signin');
-export const PostConsumerToken = () => Post('token/:serviceId');
+export const PostConsumerToken = () => Post('consumers/tokens/:serviceId');
 
 export const RefreshTokenGuard = () =>
   UseGuards(RefreshTokenAuthGuard, RolesGuard);

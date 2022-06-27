@@ -47,6 +47,24 @@ export class AuthManagerController {
     return this.authManagerService.signin(req);
   }
 
+  @PostLogout()
+  @AccessTokenGuard()
+  @HttpCode(HttpStatus.OK)
+  @Roles(Role.superadmin, Role.moderator, Role.member)
+  @OpenApi_Token()
+  logout(@Token() token: AuthManagerToken) {
+    return this.authManagerService.logout(token);
+  }
+
+  @PostRefresh()
+  @RefreshTokenGuard()
+  @HttpCode(HttpStatus.OK)
+  @Roles(Role.superadmin, Role.moderator, Role.member)
+  @OpenApi_Token()
+  refresh(@Token() token: AuthManagerToken, @RawToken() rawToken: string) {
+    return this.authManagerService.refresh(rawToken, token);
+  }
+
   @PostConsumerToken()
   @AccessTokenGuard()
   @HttpCode(HttpStatus.OK)
@@ -64,23 +82,5 @@ export class AuthManagerController {
       refConfigIds,
       req,
     );
-  }
-
-  @PostLogout()
-  @AccessTokenGuard()
-  @HttpCode(HttpStatus.OK)
-  @Roles(Role.superadmin, Role.moderator, Role.member)
-  @OpenApi_Token()
-  logout(@Token() token: AuthManagerToken) {
-    return this.authManagerService.logout(token);
-  }
-
-  @PostRefresh()
-  @RefreshTokenGuard()
-  @HttpCode(HttpStatus.OK)
-  @Roles(Role.superadmin, Role.moderator, Role.member)
-  @OpenApi_Token()
-  refresh(@Token() token: AuthManagerToken, @RawToken() rawToken: string) {
-    return this.authManagerService.refresh(rawToken, token);
   }
 }

@@ -3,6 +3,7 @@ import { Cache } from 'cache-manager';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import {
   CACHE_MANAGER,
+  ForbiddenException,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -30,7 +31,8 @@ export class RefreshTokenStrategy extends PassportStrategy(
   // we do not import the type for sake of the
   // dependency-cruiser rule not-to-dev-dep
   async validate(req: any, decodedRefreshToken: AuthManagerToken) {
-    if (Role[decodedRefreshToken.role]) return decodedRefreshToken;
+    if (Role.consumer === decodedRefreshToken.role)
+      throw new ForbiddenException('Access Denied');
 
     const cache: any = await this.cacheManager.get(decodedRefreshToken.id);
     const token = req.get('authorization').slice(7);

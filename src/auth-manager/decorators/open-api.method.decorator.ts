@@ -27,6 +27,8 @@ export const ApiBodyConsumerToken = () =>
     schema: {
       type: 'object',
       title: 'ConsumerTokenData',
-      example: { 'this object': 'will be injected into the token.data' },
+      example: {
+        description: 'this object will be injected and available as jwt.data',
+      },
     },
   });
