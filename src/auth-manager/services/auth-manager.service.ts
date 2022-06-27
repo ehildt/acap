@@ -7,13 +7,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigManagerApi } from '../api/config-manager.api';
-import {
-  AuthManagerConfig,
-  authManagerConfigFactory,
-} from '../configs/auth-manager/auth-manager-config-factory.dbs';
+import { ConfigFactoryService } from '../configs/config-factory.service';
 import { Role } from '../constants/role.enum';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
@@ -22,23 +18,13 @@ import { AuthManagerUserRepository } from './auth-manager-user.repository';
 
 @Injectable()
 export class AuthManagerService {
-  #config: AuthManagerConfig;
-
   constructor(
     private readonly userRepo: AuthManagerUserRepository,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly configManagerApi: ConfigManagerApi,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly configFactory: ConfigFactoryService,
   ) {}
-
-  private get config() {
-    if (this.#config) return this.#config;
-    // TODO authManagerConfigFactory
-    // ! turn into a service
-    // for it implements the singleton pattern
-    return (this.#config = authManagerConfigFactory(this.configService));
-  }
 
   async signup(req: AuthManagerSignupReq) {
     try {
@@ -78,6 +64,7 @@ export class AuthManagerService {
     refConfigIds?: string[],
     data?: Record<string, any>,
   ) {
+    const config = this.configFactory.authManager;
     const configs = await this.challengeOptionalConfigs(
       refServiceId,
       refConfigIds,
@@ -90,7 +77,7 @@ export class AuthManagerService {
         ...(Object.keys(data)?.length && { data }),
         configs,
       },
-      { secret: this.config.tokenSecret },
+      { secret: config.tokenSecret },
     );
 
     return { CONSUMER_TOKEN };
@@ -114,20 +101,21 @@ export class AuthManagerService {
   }
 
   async signAccessRefreshToken(token: Omit<AuthManagerToken, 'iat' | 'exp'>) {
+    const config = this.configFactory.authManager;
     const ACCESS_TOKEN = this.jwtService.sign(token, {
-      expiresIn: this.config.accessTokenTTL,
-      secret: this.config.tokenSecret,
+      expiresIn: config.accessTokenTTL,
+      secret: config.tokenSecret,
     });
 
     const REFRESH_TOKEN = this.jwtService.sign(token, {
-      expiresIn: this.config.refreshTokenTTL,
-      secret: this.config.tokenSecret,
+      expiresIn: config.refreshTokenTTL,
+      secret: config.tokenSecret,
     });
 
     await this.cacheManager.set(
       token.id,
       { AUTH_HASH: await hash(ACCESS_TOKEN) },
-      { ttl: this.config.accessTokenTTL },
+      { ttl: config.accessTokenTTL },
     );
 
     return { ACCESS_TOKEN, REFRESH_TOKEN };

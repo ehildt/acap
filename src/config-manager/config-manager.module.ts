@@ -4,9 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheManagerController } from './cache-manager.controller';
 import { ConfigManagerController } from './config-manager.controller';
-import { mongoConfigFactory } from './configs/mongo/mongo-config-factory.dbs';
+import { ConfigFactoryService } from './configs/config-factory.service';
 import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
-import { redisConfigFactory } from './configs/redis/redis-config-factory.dbs';
 import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
 import {
   ConfigManager,
@@ -24,7 +23,7 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
       useFactory: async (config: ConfigService) => {
         return {
           store: RedisStore,
-          ...redisConfigFactory(config),
+          ...new ConfigFactoryService(config).redis,
         };
       },
       inject: [ConfigService],
@@ -37,7 +36,7 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: mongoConfigFactory,
+      useFactory: (service) => new ConfigFactoryService(service).mongo,
     }),
     MongooseModule.forFeature([
       {
@@ -52,6 +51,7 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
     CacheManagerService,
     ConfigManagerRepository,
     AccessTokenStrategy,
+    ConfigFactoryService,
   ],
   controllers: [ConfigManagerController, CacheManagerController],
 })

@@ -1,5 +1,3 @@
-import { mongoConfigFactory } from '@/auth-manager/configs/mongo/mongo-config-factory.dbs';
-import { redisConfigFactory } from '@/auth-manager/configs/redis/redis-config-factory.dbs';
 import {
   ConsoleLogger,
   INestApplication,
@@ -7,23 +5,23 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { API_DOCS, API_DOCS_JSON } from './app.constants';
-import { appConfigFactory } from './configs/app-config-factory.dbs';
+import { ConfigFactoryService } from './configs/config-factory.service';
 
 @Injectable()
 export class AppService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly logger: ConsoleLogger,
+    private readonly configFactory: ConfigFactoryService,
   ) {}
 
   getConfig() {
     return {
-      APP_CONFIG: appConfigFactory(this.configService),
-      MONGO_CONFIG: mongoConfigFactory(this.configService),
-      REDIS_CONFIG: redisConfigFactory(this.configService),
+      APP_CONFIG: this.configFactory.app,
+      AUTH_MANGER: this.configFactory.authManager,
+      MONGO_CONFIG: this.configFactory.mongo,
+      REDIS_CONFIG: this.configFactory.redis,
     };
   }
 
