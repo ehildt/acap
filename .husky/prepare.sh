@@ -94,7 +94,7 @@ check_licenses() {
 }
 
 gittyleaks_scan() {
-    local GITTYLEAKS=$(~/.local/bin/gittyleaks -b -e $ $(cat .gittyleaks))
+    local GITTYLEAKS=$(~/.local/bin/gittyleaks --find-anything -b -e $ $(cat .gittyleaks))
     if [ ! $(echo "$GITTYLEAKS" | grep -o "No matches." | wc -m) -eq 12 ]; then
         info "gittyleaks_scan.. $(redfy error)"
         echo "$GITTYLEAKS"
