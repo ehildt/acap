@@ -3,5 +3,4 @@
 
 check_licenses
 check_lint_staged
-
-npm run gittyleaks
+gittyleaks_scan
