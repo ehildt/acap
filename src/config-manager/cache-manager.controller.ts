@@ -36,8 +36,8 @@ export class CacheManagerController {
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_Upsert()
   upsert(
-    @QueryTTLServiceId() ttl: number,
     @ParamServiceId() serviceId: string,
+    @QueryTTLServiceId() ttl: number,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
     return this.cacheManagerService.upsert(serviceId, req, ttl);

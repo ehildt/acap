@@ -1,4 +1,4 @@
-import { hash } from 'argon2';
+import { argon2i, hash } from 'argon2';
 import RedisStore from 'cache-manager-ioredis';
 import { validateOrReject } from 'class-validator';
 import { Model } from 'mongoose';
@@ -104,7 +104,7 @@ export class AuthManagerModule implements OnModuleInit {
       await this.authModal.create({
         username: document.username,
         email: document.email,
-        hash: await hash(document.password),
+        hash: await hash(document.password, { type: argon2i }),
         role: Role.superadmin,
       });
     } catch (error) {

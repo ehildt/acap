@@ -1,13 +1,10 @@
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { AuthManagerConfig } from '../configs/config-factory.modal';
 import { ConfigFactoryService } from '../configs/config-factory.service';
 
 @Injectable()
 export class ConfigManagerApi {
-  #config: AuthManagerConfig;
-
   constructor(
     private readonly httpService: HttpService,
     private readonly configFactory: ConfigFactoryService,

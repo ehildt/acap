@@ -25,8 +25,6 @@ export function OpenApi_Singup() {
 export function OpenApi_Signin() {
   return applyDecorators(
     ApiOkResponse(),
-    ApiQueryRefConfigIds(),
-    ApiQueryRefServiceId(),
     ApiBodyAuthManagerSignin(),
     ApiInternalServerErrorResponse(),
   );

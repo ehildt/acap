@@ -43,12 +43,8 @@ export class AuthManagerController {
   @PostSignin()
   @HttpCode(HttpStatus.OK)
   @OpenApi_Signin()
-  signin(
-    @Body() req: AuthManagerSigninReq,
-    @QueryRefServiceId() refServiceId?: string,
-    @QueryRefConfigIds() refConfigIds?: string[],
-  ) {
-    return this.authManagerService.signin(req, refServiceId, refConfigIds);
+  signin(@Body() req: AuthManagerSigninReq) {
+    return this.authManagerService.signin(req);
   }
 
   @PostConsumerToken()

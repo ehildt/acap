@@ -1,4 +1,4 @@
-import { hash, verify } from 'argon2';
+import { argon2i, hash, verify } from 'argon2';
 import { Cache } from 'cache-manager';
 import {
   CACHE_MANAGER,
@@ -34,16 +34,7 @@ export class AuthManagerService {
     }
   }
 
-  async signin(
-    req: AuthManagerSigninReq,
-    refServiceId?: string,
-    refConfigIds?: string[],
-  ) {
-    const result = await this.challengeOptionalConfigs(
-      refServiceId,
-      refConfigIds,
-    );
-
+  async signin(req: AuthManagerSigninReq) {
     const user = await this.userRepo.findOne(req);
 
     if (!user || !(await verify(user.hash, req.password)))
@@ -54,7 +45,6 @@ export class AuthManagerService {
       username: user.username,
       email: user.email,
       role: user.role,
-      configs: refServiceId && result,
     });
   }
 
@@ -114,7 +104,7 @@ export class AuthManagerService {
 
     await this.cacheManager.set(
       token.id,
-      { AUTH_HASH: await hash(ACCESS_TOKEN) },
+      { AUTH_HASH: await hash(ACCESS_TOKEN, { type: argon2i }) },
       { ttl: config.accessTokenTTL },
     );
 

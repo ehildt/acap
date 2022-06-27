@@ -46,8 +46,8 @@ export class ConfigManagerController {
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_Upsert()
   async upsert(
-    @QueryTTLServiceId() ttl: number,
     @ParamServiceId() serviceId: string,
+    @QueryTTLServiceId() ttl: number,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
     const entities = await this.configManagerService.upsert(serviceId, req);
