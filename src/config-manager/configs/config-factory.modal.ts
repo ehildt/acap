@@ -1,14 +1,3 @@
-export interface AuthManagerConfig {
-  username: string;
-  password: string;
-  accessTokenTTL: number;
-  refreshTokenTTL: number;
-  tokenSecret: string;
-  configManagerBaseUrl: string;
-  email: string;
-  consumerToken: string;
-}
-
 export interface MongoConfig {
   uri: string;
   ssl: boolean;
