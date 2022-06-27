@@ -17,5 +17,7 @@ import { AppService } from './app/app.service';
   appService.enableVersioning(app);
   appService.enableOpenApi(app);
 
+  const secret = 'my password is 1234';
+
   await app.listen(config.APP_CONFIG.port, () => appService.logOnServerStart());
 })();
