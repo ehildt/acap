@@ -28,9 +28,6 @@ export interface RedisConfig {
 }
 
 export interface AppConfig {
-  nodeEnv: string;
   port: string;
-  host: string;
   startSwagger: boolean;
-  httpProtocol: string;
 }

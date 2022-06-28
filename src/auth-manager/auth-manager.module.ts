@@ -101,12 +101,15 @@ export class AuthManagerModule implements OnModuleInit {
     }
 
     try {
-      await this.authModal.create({
-        username: document.username,
-        email: document.email,
-        hash: await hash(document.password, { type: argon2i }),
-        role: Role.superadmin,
-      });
+      const user = await this.authModal.findOne({ role: Role.superadmin });
+
+      if (!user)
+        await this.authModal.create({
+          username: document.username,
+          email: document.email,
+          hash: await hash(document.password, { type: argon2i }),
+          role: Role.superadmin,
+        });
     } catch (error) {
       if (error?.code !== 11000) throw new InternalServerErrorException(error);
     }

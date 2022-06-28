@@ -19,11 +19,8 @@ export class ConfigFactoryService {
   get app() {
     if (this.#appConfig) return this.#appConfig;
     return (this.#appConfig = <AppConfig>{
-      nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
       port: this.configService.get<string>('AppConfig.PORT'),
-      host: this.configService.get<string>('AppConfig.HOST'),
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
-      httpProtocol: this.configService.get<string>('AppConfig.HTTP_PROTOCOL'),
     });
   }
 

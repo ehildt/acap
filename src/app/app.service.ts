@@ -68,8 +68,8 @@ export class AppService {
     if (process.env.PRINT_ENV) this.logger.log(config, 'App-Configs');
 
     if (config.APP_CONFIG.startSwagger) {
-      const { nodeEnv, httpProtocol, host, port } = config.APP_CONFIG;
-      const swaggerPath = `(${nodeEnv}) => ${httpProtocol}://${host}:${port}`;
+      const { port } = config.APP_CONFIG;
+      const swaggerPath = `https://localhost:${port}`;
       this.logger.log(`${swaggerPath}/${API_DOCS_JSON}`);
       this.logger.log(`${swaggerPath}/${API_DOCS}`);
     }
