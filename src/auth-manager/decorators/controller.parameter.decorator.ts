@@ -20,6 +20,7 @@ const getTokenFromRequest = (_: string, ctx: ExecutionContext) => {
 };
 
 export const ParamServiceId = () => Param('serviceId');
+export const ParamRole = () => Param('role');
 
 export const QueryRefServiceId = () => Query('refServiceId');
 export const QueryRefConfigIds = () => Query('refConfigIds', parseArrayPipe);

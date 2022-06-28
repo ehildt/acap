@@ -6,6 +6,8 @@ import { RolesGuard } from '../guards/roles.guard';
 export const PostLogout = () => Post('logout');
 export const PostRefresh = () => Post('refresh');
 export const PostSignup = () => Post('signup');
+export const PostUpdate = () => Post('update');
+export const PostElevate = () => Post('/users/elevates/:role');
 export const PostSignin = () => Post('signin');
 export const PostConsumerToken = () => Post('consumers/tokens/:serviceId');
 
