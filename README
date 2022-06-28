@@ -106,6 +106,7 @@ config-manager  | [Nest] 36  - 06/27/2022, 10:29:47 AM     LOG [App-Configs] Obj
 config-manager  | {
 config-manager  |   "APP_CONFIG": {
 config-manager  |     "port": "3000",
+config-manager  |     "printEnv": true,
 config-manager  |     "startSwagger": true,
 config-manager  |   },
 config-manager  |   "AUTH_CONFIG": {
