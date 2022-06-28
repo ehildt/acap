@@ -5,15 +5,18 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigManagerApi } from '../api/config-manager.api';
 import { ConfigFactoryService } from '../configs/config-factory.service';
 import { Role } from '../constants/role.enum';
+import { AuthManagerElevateReq } from '../dtos/auth-manager-elevate-req.dto';
 import { AuthManagerSigninReq } from '../dtos/auth-manager-signin-req.dto';
 import { AuthManagerSignupReq } from '../dtos/auth-manager-signup-req.dto';
 import { AuthManagerToken } from '../dtos/auth-manager-token.dto';
+import { AuthManagerUpdateReq } from '../dtos/auth-manager-update-req.dto';
 import { AuthManagerUserRepository } from './auth-manager-user.repository';
 
 @Injectable()
@@ -28,9 +31,31 @@ export class AuthManagerService {
 
   async signup(req: AuthManagerSignupReq) {
     try {
-      return await this.userRepo.findOneAndUpdate(req);
+      await this.userRepo.create(req);
     } catch (error) {
       throw new ForbiddenException('email/username already exist');
+    }
+  }
+
+  async update(req: AuthManagerUpdateReq, token: AuthManagerToken) {
+    try {
+      await this.userRepo.update(req, token);
+    } catch (error) {
+      throw new ForbiddenException('Restricted or access denied');
+    }
+  }
+
+  async elevate(
+    req: AuthManagerElevateReq,
+    role: Role,
+    token: AuthManagerToken,
+  ) {
+    try {
+      if (token.role === Role.superadmin)
+        return await this.userRepo.elevate(req, role);
+      throw new ForbiddenException('Restricted or access denied');
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 
