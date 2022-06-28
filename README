@@ -5,10 +5,7 @@ By default the Config-Manager starts with the following setup:
 
 ```bash
 ENV PORT=3000
-ENV HOST='localhost'
-ENV HTTP_PROTOCOL='http'
 ENV START_SWAGGER='false'
-ENV NODE_ENV='docker:prod'
 ENV PRINT_ENV='true'
 
 ENV AUTH_MANAGER_USERNAME='superadmin' 
@@ -51,10 +48,7 @@ services:
       - redis
     environment:
       - PORT=3001
-      - HOST=localhost
-      - HTTP_PROTOCOL=http
       - START_SWAGGER=true
-      - NODE_ENV=docker:local
       - PRINT_ENV=true
       - AUTH_MANAGER_USERNAME=superadmin 
       - AUTH_MANAGER_PASSWORD=superadmin 
@@ -111,11 +105,8 @@ Running `docker compose up` should log:
 config-manager  | [Nest] 36  - 06/27/2022, 10:29:47 AM     LOG [App-Configs] Object:
 config-manager  | {
 config-manager  |   "APP_CONFIG": {
-config-manager  |     "nodeEnv": "docker:local",
 config-manager  |     "port": "3000",
-config-manager  |     "host": "localhost",
 config-manager  |     "startSwagger": true,
-config-manager  |     "httpProtocol": "http"
 config-manager  |   },
 config-manager  |   "AUTH_CONFIG": {
 config-manager  |     "username": "superadmin",
