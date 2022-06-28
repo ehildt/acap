@@ -88,7 +88,7 @@ check_licenses() {
         info "check_licenses.. $(yellowfy ok)"
     else
         info "check_licenses.. $(redfy error)"
-        debug "npm run check-licenses"
+        debug "resolve licenses (.lecensee.json)"
         exit 1
     fi
 }
@@ -97,6 +97,7 @@ gittyleaks_scan() {
     local GITTYLEAKS=$(~/.local/bin/gittyleaks --find-anything -b -e $ $(cat .gittyleaks))
     if [ ! $(echo "$GITTYLEAKS" | grep -o "No matches." | wc -m) -eq 12 ]; then
         info "gittyleaks_scan.. $(redfy error)"
+        debug "resolve credentials (.gittleaks)"
         echo "$GITTYLEAKS"
         exit 1
     else

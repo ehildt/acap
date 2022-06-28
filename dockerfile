@@ -9,10 +9,7 @@ FROM node:18-slim AS builder
 WORKDIR /app
 
 ENV PORT=3000
-ENV HOST='localhost'
-ENV HTTP_PROTOCOL='http'
 ENV START_SWAGGER='false'
-ENV NODE_ENV='docker:prod'
 ENV PRINT_ENV='true'
 
 ENV AUTH_MANAGER_USERNAME='superadmin' 
@@ -63,10 +60,7 @@ FROM node:18-slim AS prod
 WORKDIR /app
 
 ENV PORT=3000
-ENV HOST='localhost'
-ENV HTTP_PROTOCOL='http'
 ENV START_SWAGGER='false'
-ENV NODE_ENV='docker:prod'
 ENV PRINT_ENV='true'
 
 ENV AUTH_MANAGER_USERNAME='superadmin' 
