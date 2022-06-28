@@ -6,9 +6,7 @@ By default the Config-Manager starts with the following setup:
 ```bash
 ENV PORT=3000
 ENV HOST='localhost'
-ENV HTTP_PROTOCOL='http'
 ENV START_SWAGGER='false'
-ENV NODE_ENV='docker:prod'
 ENV PRINT_ENV='true'
 
 ENV AUTH_MANAGER_USERNAME='superadmin' 
