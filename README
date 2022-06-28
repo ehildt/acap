@@ -140,6 +140,36 @@ config-manager  | [Nest] 36  - 06/27/2022, 10:29:47 AM     LOG (docker:local) =>
 config-manager  | [Nest] 36  - 06/27/2022, 10:29:47 AM     LOG (docker:local) => http://localhost:3000/api-docs
 ```
 
-# How To Use
+# App Settings
 
-..wip
+No magic involved, keeping it simple :)
+
++ PORT=3000 `sets the port`
++ START_SWAGGER=true `enables the open-api`
++ PRINT_ENV=true `logs the envs`
+
+# Signin (superadmin)
+
+On startup, if not exists, the user **superadmin** is created.  To change the default credentials you might want to set some envs:
+
++ `AUTH_MANAGER_USERNAME`
++ `AUTH_MANAGER_PASSWORD`
++ `AUTH_MANAGER_EMAIL`  
+
+Otherwise you will need to signin and change those credentials at later time by using the REST API.
+
+> ALWAYS treat your credentials with upmost care and store them somewhere safe!
+
+# Session (powered by jwt)
+
+By default a session expires after 15 minutes: `AUTH_MANAGER_ACCESS_TOKEN_TTL=900` (seconds).
+A session can be refreshed for 7 days: `AUTH_MANAGER_REFRESH_TOKEN_TTL=604800` (seconds).
+Once a session cannot be refreshed, the user is forced to signin again. To refresh a session the refresh token is used,
+which generates a new access and refresh token pair.
+Thus an active user can stay signed in infinitely or is forced to re-signin after 7 days of idling. The config-manager verifies the tokens by signing them with the `AUTH_MANAGER_TOKEN_SECRET`. A common misunderstanding is that a JWT is encrypted. It's not!
+
+> NEVER store credentials in a JWT.
+
+# Consumer Token
+
+A consumer token is used by services, which don't need to authenticate but rather rely on some sort of an authorization. For example our config-manager is consumed by other microservices. Thus a microservice is not a **user** but a **consumer**! All it's interested in is fetch some configuration data and thus has no need for authentication. Funny thing is that the auth module in our config-manager is indeed a service which consumes the config module within the app. Henceforth it needs a consumer token which defaults to the `AUTH_MANAGER_PROVIDER_CONFIG_MANAGER_TOKEN`. It also requires the `AUTH_MANAGER_PROVIDER_CONFIG_MANAGER_BASE_URL` to be set. While you can safely ignore the url (it's an internal thingy), you should definitely provide your own consumer token. To achieve this simply start the config-manager, signin as the superadmin and create a plain consumer token. The consumer token does not need any additional settings or data. Finally shutdown the config-manager and update the token. On the next startup the new consumer token is used. Voilà!
