@@ -49,8 +49,10 @@ export class AuthManagerService {
     token: AuthManagerToken,
   ) {
     try {
-      if (token.role === Role.superadmin)
-        return await this.userRepo.elevate(req, role);
+      if (token.role === Role.superadmin) {
+        const entity = await this.userRepo.elevate(req, role);
+        if (entity) return this.cacheManager.del(entity.id);
+      }
       throw new ForbiddenException('Restricted Access');
     } catch (error) {
       throw new InternalServerErrorException(error);

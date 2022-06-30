@@ -104,12 +104,12 @@ export class AuthManagerController {
   @AccessTokenGuard()
   @Roles(Role.superadmin)
   @HttpCode(HttpStatus.NO_CONTENT)
-  elevate(
+  async elevate(
     @ParamRole() role: Role,
     @Token() token: AuthManagerToken,
     @Body() req: AuthManagerElevateReq,
   ) {
-    return this.authManagerService.elevate(req, role, token);
+    await this.authManagerService.elevate(req, role, token);
   }
 
   @PutConsumerToken()
