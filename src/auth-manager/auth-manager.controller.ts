@@ -4,25 +4,28 @@ import { Role } from './constants/role.enum';
 import { Roles } from './decorators/controller.custom.decorator';
 import {
   AccessTokenGuard,
-  PostConsumerToken,
-  PostElevate,
+  DeleteUser,
   PostLogout,
   PostRefresh,
   PostSignin,
-  PostSignup,
-  PostUpdate,
+  PutConsumerToken,
+  PutElevate,
+  PutSignup,
+  PutUpdate,
   RefreshTokenGuard,
 } from './decorators/controller.method.decorator';
 import {
   ParamRole,
   ParamServiceId,
-  QueryRefConfigIds,
-  QueryRefServiceId,
+  QueryEmail,
+  QueryPassword,
+  QueryUsername,
   RawToken,
   Token,
 } from './decorators/controller.parameter.decorator';
 import {
   OpenApi_ConsumerToken,
+  OpenApi_Delete,
   OpenApi_Elevate,
   OpenApi_RefreshToken,
   OpenApi_Signin,
@@ -49,14 +52,14 @@ export class AuthManagerController {
     return this.authManagerService.signin(req);
   }
 
-  @PostSignup()
+  @PutSignup()
   @OpenApi_Singup()
   @HttpCode(HttpStatus.NO_CONTENT)
   signup(@Body() req: AuthManagerSignupReq) {
     return this.authManagerService.signup(req);
   }
 
-  @PostUpdate()
+  @PutUpdate()
   @OpenApi_Update()
   @AccessTokenGuard()
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -83,35 +86,41 @@ export class AuthManagerController {
     return this.authManagerService.refresh(rawToken, token);
   }
 
-  @PostElevate()
+  @DeleteUser()
+  @OpenApi_Delete()
+  @AccessTokenGuard()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Roles(Role.superadmin, Role.moderator, Role.member)
+  async delete(
+    @QueryEmail() email: string,
+    @QueryUsername() username: string,
+    @QueryPassword() password: string,
+  ) {
+    await this.authManagerService.delete(username, email, password);
+  }
+
+  @PutElevate()
   @OpenApi_Elevate()
   @AccessTokenGuard()
   @Roles(Role.superadmin)
   @HttpCode(HttpStatus.NO_CONTENT)
-  elevate(
+  async elevate(
     @ParamRole() role: Role,
     @Token() token: AuthManagerToken,
     @Body() req: AuthManagerElevateReq,
   ) {
-    return this.authManagerService.elevate(req, role, token);
+    await this.authManagerService.elevate(req, role, token);
   }
 
-  @PostConsumerToken()
+  @PutConsumerToken()
   @AccessTokenGuard()
   @HttpCode(HttpStatus.OK)
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_ConsumerToken()
   consumerToken(
     @ParamServiceId() serviceId: string,
-    @QueryRefServiceId() refServiceId?: string,
-    @QueryRefConfigIds() refConfigIds?: string[],
     @Body() req?: Record<string, any>,
   ) {
-    return this.authManagerService.token(
-      serviceId,
-      refServiceId,
-      refConfigIds,
-      req,
-    );
+    return this.authManagerService.token(serviceId, req);
   }
 }

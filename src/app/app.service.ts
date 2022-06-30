@@ -16,15 +16,6 @@ export class AppService {
     private readonly configFactory: ConfigFactoryService,
   ) {}
 
-  getConfig() {
-    return {
-      APP_CONFIG: this.configFactory.app,
-      AUTH_CONFIG: this.configFactory.auth,
-      MONGO_CONFIG: this.configFactory.mongo,
-      REDIS_CONFIG: this.configFactory.redis,
-    };
-  }
-
   useGlobalPipes(app: INestApplication) {
     app.useGlobalPipes(
       new ValidationPipe({
@@ -48,8 +39,8 @@ export class AppService {
   }
 
   enableOpenApi(app: INestApplication) {
-    const { APP_CONFIG } = this.getConfig();
-    if (APP_CONFIG.startSwagger) {
+    const { startSwagger } = this.configFactory.app;
+    if (startSwagger) {
       const pickOpenApiObj = this.swaggerDocument();
       const openApiObj = SwaggerModule.createDocument(app, pickOpenApiObj);
       SwaggerModule.setup(API_DOCS, app, openApiObj, {
@@ -62,14 +53,24 @@ export class AppService {
     }
   }
 
-  logOnServerStart() {
-    const config = this.getConfig();
+  logOnServerStart(appFactory: any, authFactory: any) {
+    if (process.env.PRINT_ENV)
+      this.logger.log(
+        JSON.stringify(
+          {
+            APP_CONFIG: appFactory.app,
+            AUTH_CONFIG: authFactory.auth,
+            MONGO_CONFIG: authFactory.mongo,
+            REDIS_CONFIG: authFactory.redis,
+          },
+          null,
+          4,
+        ),
+        'AppConfiguration',
+      );
 
-    if (process.env.PRINT_ENV) this.logger.log(config, 'App-Configs');
-
-    if (config.APP_CONFIG.startSwagger) {
-      const { port } = config.APP_CONFIG;
-      const swaggerPath = `https://localhost:${port}`;
+    if (appFactory.app.startSwagger) {
+      const swaggerPath = `https://localhost:${appFactory.app.port}`;
       this.logger.log(`${swaggerPath}/${API_DOCS_JSON}`);
       this.logger.log(`${swaggerPath}/${API_DOCS}`);
     }

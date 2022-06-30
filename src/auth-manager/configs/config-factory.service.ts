@@ -14,7 +14,7 @@ export class ConfigFactoryService {
 
   constructor(private readonly configService: ConfigService) {}
 
-  get authManager() {
+  get auth() {
     if (this.#authConfig) return this.#authConfig;
     return (this.#authConfig = <AuthManagerConfig>{
       username: this.configService.get<string>('AuthManagerConfig.USERNAME'),
@@ -29,11 +29,8 @@ export class ConfigFactoryService {
       tokenSecret: this.configService.get<string>(
         'AuthManagerConfig.TOKEN_SECRET',
       ),
-      configManagerBaseUrl: this.configService.get<string>(
-        'AuthManagerConfig.CONFIG_MANAGER_BASE_URL',
-      ),
-      consumerToken: this.configService.get<string>(
-        'AuthManagerConfig.CONSUMER_TOKEN',
+      rejectUnauthorized: this.configService.get<boolean>(
+        'AuthManagerConfig.REJECT_UNAUTHORIZED',
       ),
     });
   }

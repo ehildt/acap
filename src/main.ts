@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { AppService } from './app/app.service';
+import { ConfigFactoryService as AppFactory } from './app/configs/config-factory.service';
+import { ConfigFactoryService as AuthFactory } from './auth-manager/configs/config-factory.service';
 
 const httpsOptions = {
   key: fs.readFileSync('./ssl/127.0.0.1.key'),
@@ -13,7 +15,8 @@ const httpsOptions = {
 (async () => {
   const app = await NestFactory.create(AppModule, { httpsOptions });
   const appService = app.get(AppService);
-  const config = appService.getConfig();
+  const appFactory = app.get(AppFactory);
+  const authFactory = app.get(AuthFactory);
 
   app.use(helmet());
   app.use(compression());
@@ -23,5 +26,7 @@ const httpsOptions = {
   appService.enableVersioning(app);
   appService.enableOpenApi(app);
 
-  await app.listen(config.APP_CONFIG.port, () => appService.logOnServerStart());
+  await app.listen(appFactory.app.port, () =>
+    appService.logOnServerStart(appFactory, authFactory),
+  );
 })();

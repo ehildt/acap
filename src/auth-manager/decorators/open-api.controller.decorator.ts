@@ -13,8 +13,9 @@ import {
   ApiBodyConsumerToken,
   ApiParamRole,
   ApiParamServiceId,
-  ApiQueryRefConfigIds,
-  ApiQueryRefServiceId,
+  ApiQueryEmail,
+  ApiQueryPassword,
+  ApiQueryUsername,
 } from './open-api.method.decorator';
 
 export function OpenApi_Singup() {
@@ -58,8 +59,17 @@ export function OpenApi_ConsumerToken() {
     ApiBearerAuth(),
     ApiParamServiceId(),
     ApiBodyConsumerToken(),
-    ApiQueryRefConfigIds(),
-    ApiQueryRefServiceId(),
+    ApiInternalServerErrorResponse(),
+  );
+}
+
+export function OpenApi_Delete() {
+  return applyDecorators(
+    ApiNoContentResponse(),
+    ApiBearerAuth(),
+    ApiQueryEmail(),
+    ApiQueryUsername(),
+    ApiQueryPassword(),
     ApiInternalServerErrorResponse(),
   );
 }

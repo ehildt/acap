@@ -6,15 +6,20 @@
     "words": [
         "auths",
         "bubbleprof",
+        "corpintra",
+        "credscan",
         "cultify",
         "depcruise",
         "dtos",
+        "eeagle",
         "Eugen",
         "foxundermoon",
+        "gitleaks",
         "gittyleaks",
         "graphviz",
         "Hildt",
         "hyperx",
+        "ideea",
         "INITDB",
         "loglevel",
         "logpath",
@@ -25,11 +30,13 @@
         "requirepass",
         "shiftleft",
         "signin",
+        "signout",
         "Singup",
         "sonarjs",
         "styl",
         "superadmin",
-        "Upsert"
+        "Upsert",
+        "zricethezav"
     ],
     "ignoreWords": [
         "dbaeumer"

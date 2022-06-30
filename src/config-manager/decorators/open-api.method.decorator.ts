@@ -1,4 +1,4 @@
-import { ApiBody, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 
 export const ApiParamServiceId = () =>
@@ -6,13 +6,6 @@ export const ApiParamServiceId = () =>
 
 export const ApiParamConfigId = () =>
   ApiParam({ name: 'configIds', type: String });
-
-export const ApiQueryTTLServiceId = () =>
-  ApiQuery({
-    type: Number,
-    required: false,
-    name: 'ttlServiceId',
-  });
 
 export const ApiBodyConfigManagerUpsert = () =>
   ApiBody({

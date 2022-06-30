@@ -1,4 +1,9 @@
-import { Controller, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Controller,
+  HttpCode,
+  HttpStatus,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Role } from './constants/role.enum';
 import { Roles } from './decorators/controller.custom.decorator';
@@ -11,7 +16,7 @@ import {
   PostServiceId,
 } from './decorators/controller.method.decorator';
 import {
-  ConfigManagerUpsertBody,
+  CacheManagerUpsertBody,
   ParamConfigIds,
   ParamServiceId,
   QueryTTLServiceId,
@@ -23,7 +28,7 @@ import {
   OpenApi_GetByServiceIdConfigIds,
   OpenApi_Upsert,
 } from './decorators/open-api.controller.decorator';
-import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
+import { CacheManagerUpsertReq } from './dtos/cache-manager-upsert-req.dto';
 import { CacheManagerService } from './services/cache-manager.service';
 
 @ApiTags('Cache-Manager')
@@ -38,7 +43,7 @@ export class CacheManagerController {
   upsert(
     @ParamServiceId() serviceId: string,
     @QueryTTLServiceId() ttl: number,
-    @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
+    @CacheManagerUpsertBody() req: CacheManagerUpsertReq[],
   ) {
     return this.cacheManagerService.upsert(serviceId, req, ttl);
   }
@@ -85,19 +90,21 @@ export class CacheManagerController {
   @AccessTokenGuard()
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
-  deleteByServiceId(@ParamServiceId() serviceId: string) {
-    return this.cacheManagerService.deleteByServiceId(serviceId);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteByServiceId(@ParamServiceId() serviceId: string) {
+    await this.cacheManagerService.deleteByServiceId(serviceId);
   }
 
   @DeleteConfigIds()
   @AccessTokenGuard()
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
-  deleteByServiceIdConfigIds(
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteByServiceIdConfigIds(
     @ParamServiceId() serviceId: string,
     @ParamConfigIds() configIds: string[],
   ) {
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    return this.cacheManagerService.deleteByServiceIdConfigId(serviceId, ids);
+    await this.cacheManagerService.deleteByServiceIdConfigId(serviceId, ids);
   }
 }

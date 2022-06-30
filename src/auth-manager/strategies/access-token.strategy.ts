@@ -3,7 +3,6 @@ import { Cache } from 'cache-manager';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import {
   CACHE_MANAGER,
-  ForbiddenException,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -28,14 +27,16 @@ export class AccessTokenStrategy extends PassportStrategy(
   }
 
   async validate(req: any, decodedAccessToken: AuthManagerToken) {
-    if (Role.consumer === decodedAccessToken.role)
-      throw new ForbiddenException('Access Denied');
+    if (Role.consumer === decodedAccessToken.role) return decodedAccessToken;
 
     const cache: any = await this.cacheManager.get(decodedAccessToken.id);
     const token = req.get('authorization').slice(7);
 
-    if (!cache?.AUTH_HASH || !(await verify(cache?.AUTH_HASH, token)))
-      throw new UnauthorizedException('Session Expired');
+    if (
+      !cache?.AUTH_ACCESS_HASH ||
+      !(await verify(cache?.AUTH_ACCESS_HASH, token))
+    )
+      throw new UnauthorizedException();
 
     return decodedAccessToken;
   }

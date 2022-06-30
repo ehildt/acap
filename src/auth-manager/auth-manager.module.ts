@@ -12,7 +12,6 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
-import { ConfigManagerApi } from './api/config-manager.api';
 import { AuthManagerController } from './auth-manager.controller';
 import { AuthManagerConfigRegistry } from './configs/auth-manager/auth-manager-config-registry.dbs';
 import { ConfigFactoryService } from './configs/config-factory.service';
@@ -72,7 +71,6 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     AuthManagerUserRepository,
     AccessTokenStrategy,
     RefreshTokenStrategy,
-    ConfigManagerApi,
     ConfigFactoryService,
   ],
 })
@@ -85,7 +83,7 @@ export class AuthManagerModule implements OnModuleInit {
 
   async onModuleInit() {
     let document: AuthManagerSignupReq;
-    const config = this.configFactory.authManager;
+    const config = this.configFactory.auth;
 
     try {
       document = new AuthManagerSignupReq({
@@ -107,7 +105,9 @@ export class AuthManagerModule implements OnModuleInit {
         await this.authModal.create({
           username: document.username,
           email: document.email,
-          hash: await hash(document.password, { type: argon2i }),
+          hash: await hash(document.password, {
+            type: argon2i,
+          }),
           role: Role.superadmin,
         });
     } catch (error) {

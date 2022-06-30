@@ -2,7 +2,6 @@ import RedisStore from 'cache-manager-ioredis';
 import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CacheManagerController } from './cache-manager.controller';
 import { ConfigManagerController } from './config-manager.controller';
 import { ConfigFactoryService } from './configs/config-factory.service';
 import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
@@ -11,7 +10,6 @@ import {
   ConfigManager,
   ConfigManagerSchema,
 } from './schemas/config-manager.schema';
-import { CacheManagerService } from './services/cache-manager.service';
 import { ConfigManagerRepository } from './services/config-manager.repository';
 import { ConfigManagerService } from './services/config-manager.service';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
@@ -48,11 +46,10 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
   ],
   providers: [
     ConfigManagerService,
-    CacheManagerService,
     ConfigManagerRepository,
     AccessTokenStrategy,
     ConfigFactoryService,
   ],
-  controllers: [ConfigManagerController, CacheManagerController],
+  controllers: [ConfigManagerController],
 })
 export class ConfigManagerModule {}

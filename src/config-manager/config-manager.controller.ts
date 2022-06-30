@@ -2,6 +2,8 @@ import { Cache } from 'cache-manager';
 import {
   CACHE_MANAGER,
   Controller,
+  HttpCode,
+  HttpStatus,
   Inject,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -20,7 +22,6 @@ import {
   ConfigManagerUpsertBody,
   ParamConfigIds,
   ParamServiceId,
-  QueryTTLServiceId,
 } from './decorators/controller.parameter.decorator';
 import {
   OpenApi_DeleteByServiceId,
@@ -47,16 +48,11 @@ export class ConfigManagerController {
   @OpenApi_Upsert()
   async upsert(
     @ParamServiceId() serviceId: string,
-    @QueryTTLServiceId() ttl: number,
     @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
   ) {
     const entities = await this.configManagerService.upsert(serviceId, req);
     const cache = (await this.cache.get(serviceId)) ?? ({} as any);
-    await this.cache.set(
-      serviceId,
-      { ...cache, ...reduceEntities(req) },
-      { ttl },
-    );
+    await this.cache.set(serviceId, { ...cache, ...reduceEntities(req) });
     return entities;
   }
 
@@ -111,15 +107,17 @@ export class ConfigManagerController {
   @AccessTokenGuard()
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteByServiceId(@ParamServiceId() serviceId: string) {
     await this.cache.del(serviceId);
-    return this.configManagerService.deleteByServiceId(serviceId);
+    await this.configManagerService.deleteByServiceId(serviceId);
   }
 
   @DeleteConfigIds()
   @AccessTokenGuard()
   @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteByConfigIds(
     @ParamServiceId() serviceId: string,
     @ParamConfigIds() configIds: string[],
@@ -132,6 +130,6 @@ export class ConfigManagerController {
 
     if (keys.length) await this.cache.set(serviceId, cache);
     else await this.cache.del(serviceId);
-    return this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
+    await this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
   }
 }

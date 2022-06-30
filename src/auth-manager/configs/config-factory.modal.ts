@@ -4,9 +4,8 @@ export interface AuthManagerConfig {
   accessTokenTTL: number;
   refreshTokenTTL: number;
   tokenSecret: string;
-  configManagerBaseUrl: string;
   email: string;
-  consumerToken: string;
+  rejectUnauthorized: boolean;
 }
 
 export interface MongoConfig {

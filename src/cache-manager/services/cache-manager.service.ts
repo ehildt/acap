@@ -5,14 +5,14 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
+import { CacheManagerUpsertReq } from '../dtos/cache-manager-upsert-req.dto';
 import { reduceEntities } from './helpers/reduce-entities.helper';
 
 @Injectable()
 export class CacheManagerService {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-  async upsert(serviceId: string, req: ConfigManagerUpsertReq[], ttl: number) {
+  async upsert(serviceId: string, req: CacheManagerUpsertReq[], ttl = 0) {
     const cache = (await this.cacheManager.get(serviceId)) ?? ({} as any);
     const data = { ...cache, ...reduceEntities(req) };
     await this.cacheManager.set(serviceId, data, { ttl });

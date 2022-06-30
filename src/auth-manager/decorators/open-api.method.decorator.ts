@@ -37,11 +37,9 @@ export const ApiBodyAuthManagerSignin = () =>
 
 export const ApiParamServiceId = () => ApiParam({ name: 'serviceId' });
 
-export const ApiQueryRefConfigIds = () =>
-  ApiQuery({ name: 'refConfigIds', isArray: true, required: false });
-
-export const ApiQueryRefServiceId = () =>
-  ApiQuery({ name: 'refServiceId', required: false });
+export const ApiQueryUsername = () => ApiQuery({ name: 'username' });
+export const ApiQueryPassword = () => ApiQuery({ name: 'password' });
+export const ApiQueryEmail = () => ApiQuery({ name: 'email' });
 
 export const ApiBodyConsumerToken = () =>
   ApiBody({

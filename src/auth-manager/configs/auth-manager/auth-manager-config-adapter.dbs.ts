@@ -37,14 +37,6 @@ export class AuthManagerConfigAdapter {
     );
   }
 
-  get CONFIG_MANAGER_BASE_URL(): string {
-    return (
-      this.copy?.CONFIG_MANAGER_BASE_URL ??
-      process.env.AUTH_MANAGER_PROVIDER_CONFIG_MANAGER_BASE_URL ??
-      'http://localhost:3000'
-    );
-  }
-
   get EMAIL(): string {
     return (
       this.copy?.EMAIL ??
@@ -53,11 +45,11 @@ export class AuthManagerConfigAdapter {
     );
   }
 
-  get CONSUMER_TOKEN(): string {
+  get REJECT_UNAUTHORIZED(): boolean {
     return (
-      this.copy?.CONSUMER_TOKEN ??
-      process.env.AUTH_MANAGER_PROVIDER_CONFIG_MANAGER_TOKEN ??
-      ''
+      this.copy?.REJECT_UNAUTHORIZED ??
+      process.env.AUTH_MANAGER_REJECT_UNAUTHORIZED === 'true' ??
+      false
     );
   }
 }

@@ -1,6 +1,10 @@
-import { argon2i, hash } from 'argon2';
+import { argon2i, hash, verify } from 'argon2';
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Role } from '../constants/role.enum';
 import { AuthManagerElevateReq } from '../dtos/auth-manager-elevate-req.dto';
@@ -21,9 +25,10 @@ export class AuthManagerUserRepository {
   ) {}
 
   async create(req: AuthManagerSignupReq) {
-    const passwordHash = await hash(req.password, { type: argon2i });
     return this.user.create({
-      hash: passwordHash,
+      hash: await hash(req.password, {
+        type: argon2i,
+      }),
       username: req.username,
       email: req.email,
       role: Role.member,
@@ -31,12 +36,12 @@ export class AuthManagerUserRepository {
   }
 
   async update(req: AuthManagerUpdateReq, token: AuthManagerToken) {
-    const passwordHash = await hash(req.password, { type: argon2i });
     return this.user
       .findByIdAndUpdate(token.id, {
-        hash: passwordHash,
-        username: req.username,
         email: req.email,
+        hash: await hash(req.password, {
+          type: argon2i,
+        }),
       })
       .exec();
   }
@@ -48,9 +53,25 @@ export class AuthManagerUserRepository {
   }
 
   findOne(req: AuthManagerSigninReq) {
-    return this.user
-      .findOne()
-      .or([{ email: req.usernameOrEmail }, { username: req.usernameOrEmail }])
-      .exec();
+    return this.user.findOne({ email: req.email }).exec();
+  }
+
+  async delete(username: string, email: string, password: string) {
+    const entity = await this.user.findOne({
+      username,
+      email,
+    });
+
+    if (!entity || !(await verify(entity?.hash, password)))
+      throw new UnprocessableEntityException(
+        `user<${username}, ${email}, ${password}>`,
+      );
+
+    if (entity?.role === Role.superadmin || entity?.role === Role.moderator)
+      throw new ForbiddenException(`role<${entity.role}>`);
+
+    await this.user.deleteOne({ username, email });
+
+    return entity;
   }
 }
