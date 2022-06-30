@@ -3,4 +3,4 @@
 
 check_licenses
 check_lint_staged
-gittyleaks_scan
+gitleaks_detect

@@ -7,7 +7,7 @@ services:
       dockerfile: dockerfile
       target: local
     volumes:
-      - ./:/app
+      - ./:/usr/src/app/
     depends_on:
       - mongo
       - redis
@@ -17,11 +17,13 @@ services:
       - '3000:3000'
 
   mongo:
-    command: mongod --logpath /dev/null
+    command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
     image: mongo
     container_name: mongo
-    env_file:
-      - env/docker.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+      - MONGO_INITDB_DATABASE=configs
     volumes:
       - mongo_data:/data/db
     ports:
@@ -32,7 +34,7 @@ services:
     container_name: redis
     ports:
       - '6379:6379'
-    command: redis-server --requirepass myRedisPass --loglevel warning
+    command: redis-server --requirepass "myRedisPass" --loglevel "warning"
 
 volumes:
   mongo_data:
