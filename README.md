@@ -13,6 +13,12 @@ ENV AUTH_MANAGER_ACCESS_TOKEN_TTL=900
 ENV AUTH_MANAGER_REFRESH_TOKEN_TTL=604800
 ENV AUTH_MANAGER_TOKEN_SECRET='d742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd9eb0'
 
+ENV CACHE_MANAGER_TTL=300
+ENV CACHE_MANAGER_NAMESPACE_PREFIX=''
+
+ENV CONFIG_MANAGER_TTL=300
+ENV CONFIG_MANAGER_NAMESPACE_PREFIX=''
+
 ENV REDIS_PASS='myRedisPass'
 ENV REDIS_HOST='redis'
 ENV REDIS_PORT=6379
@@ -52,6 +58,10 @@ services:
       - AUTH_MANAGER_ACCESS_TOKEN_TTL=900
       - AUTH_MANAGER_REFRESH_TOKEN_TTL=604800
       - AUTH_MANAGER_TOKEN_SECRET=d742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd9eb0
+      - CACHE_MANAGER_TTL=300
+      - CACHE_MANAGER_NAMESPACE_PREFIX=''
+      - CONFIG_MANAGER_TTL=300
+      - CONFIG_MANAGER_NAMESPACE_PREFIX=''
       - MONGO_USER=mongo
       - MONGO_PASS=mongo
       - MONGO_DB_NAME=config-manager
@@ -66,7 +76,7 @@ services:
       - 3000:3001
 
   mongo:
-    command: mongod --logpath /dev/null
+    command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
     image: mongo
     container_name: mongo
     environment:
@@ -96,12 +106,12 @@ networks:
 Running `docker compose up` should log:
 
 ```bash
-config-manager  | [Nest] 247  - 06/30/2022, 8:21:35 AM     LOG [AppConfiguration] {
+config-manager  | [Nest] 37  - 07/01/2022, 3:45:42 PM     LOG [AppConfiguration] {
 config-manager  |     "APP_CONFIG": {
 config-manager  |         "port": "3000",
 config-manager  |         "startSwagger": true
 config-manager  |     },
-config-manager  |     "AUTH_CONFIG": {
+config-manager  |     "AUTH_MANAGER_CONFIG": {
 config-manager  |         "username": "superadmin",
 config-manager  |         "password": "superadmin",
 config-manager  |         "email": "super@admin.com",
@@ -109,6 +119,14 @@ config-manager  |         "accessTokenTTL": 900,
 config-manager  |         "refreshTokenTTL": 604800,
 config-manager  |         "tokenSecret": "d742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd9eb0",
 config-manager  |         "rejectUnauthorized": false
+config-manager  |     },
+config-manager  |     "CACHE_MANAGER_CONFIG": {
+config-manager  |         "ttl": 300,
+config-manager  |         "namespacePrefix": ""
+config-manager  |     },
+config-manager  |     "CONFIG_MANAGER_CONFIG": {
+config-manager  |         "ttl": 300,
+config-manager  |         "namespacePrefix": ""
 config-manager  |     },
 config-manager  |     "MONGO_CONFIG": {
 config-manager  |         "uri": "mongodb://mongo:27017",
@@ -127,8 +145,8 @@ config-manager  |         "db": 0,
 config-manager  |         "password": "myRedisPass"
 config-manager  |     }
 config-manager  | }
-config-manager  | [Nest] 247  - 06/30/2022, 8:21:35 AM     LOG https://localhost:3000/api-docs-json
-config-manager  | [Nest] 247  - 06/30/2022, 8:21:35 AM     LOG https://localhost:3000/api-docs
+config-manager  | [Nest] 37  - 07/01/2022, 3:45:42 PM     LOG https://localhost:3000/api-docs-json
+config-manager  | [Nest] 37  - 07/01/2022, 3:45:42 PM     LOG https://localhost:3000/api-docs
 ```
 
 ## App Settings
@@ -145,7 +163,7 @@ On startup, if not exists, the user **superadmin** is created. To change the def
 - `AUTH_MANAGER_PASSWORD`
 - `AUTH_MANAGER_EMAIL`
 
-Otherwise you will need to signin and change those credentials at later time by using the REST API.
+Otherwise you will need to signin and change those credentials at a later time by using the REST API.
 
 There are four roles with different permissions:
 
@@ -161,10 +179,18 @@ A session can be refreshed for 7 days before expiring: `AUTH_MANAGER_REFRESH_TOK
 Once a session expires it cannot be refreshed and the user is forced to re-signin. To refresh a session the refresh token is used,
 which generates a new access/refresh token pair. Thus in our example an active user can stay signed in infinitely or is forced to re-signin if the session is not refreshed within 7 days. The config-manager verifies the tokens by signing them with the `AUTH_MANAGER_TOKEN_SECRET`. A common misunderstanding is that a JWT is encrypted. It's not!
 
-> NEVER store credentials in a JWT.
-
 A consumer token is used by services, which don't need to authenticate but rather rely on authorization. For example our config-manager is consumed by other microservices. Thus a microservice is not a **user** but a **consumer**! All it's interested in is fetch some configuration data and thus has no need for authentication.
 
 ## Databases
 
 The config-manager requires a mongo and redis database to operate. It's a straight forward approach. Simply provide the credentials via the envs as show above in the [Getting Started](#getting-started) example.
+
+## HTTPS (tls/ssl)
+
+The config-manager comes with a self-signed tls/ssl setup, which does not have an expiration date.
+It might be enough for you though for security reasons you might want to provide your own tls/ssl.
+Do to so replace the `127.0.0.1.crt` and `127.0.0.1.key` in the `ssl` folder. In docker you can map your tls/ssl setup with `-v $(pwd)/ssl:/usr/src/app/ssl`. If you use signed certificates you might also want to set `AUTH_MANAGER_REJECT_UNAUTHORIZED=true`.
+
+## Caching
+
+Every serviceId is stored for 300 seconds by default. To change this behavior set `CACHE_MANAGER_TTL` and `CONFIG_MANAGER_TTL` respectively. Whenever the config is altered, like by adding or removing a configId from it's serviceId (context), the ttl is being reset to 300 seconds (fallback) or whatever has been provided in the envs. There is a caveat though, namely if the envs `CACHE_MANAGER_NAMESPACE_PREFIX` and `CONFIG_MANAGER_NAMESPACE_PREFIX` share the same value. In this case when creating a serviceId using the **cache-manager**, the ttl coming from `CACHE_MANAGER_TTL` is used. However, if you alter this serviceId using the **config-manager**, then the ttl coming from the `CONFIG_MANAGER_TTL` is used. This is due to the fact that both managers share the same serviceId (context). Also, on the **cache-manager** upsert endpoint a custom ttl can be provided. As long as the serviceId (context) is not modified by any of the managers, the custom ttl is preserved. Thus if set to 0 the serviceId (context) never expires.

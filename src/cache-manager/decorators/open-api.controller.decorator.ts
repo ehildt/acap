@@ -13,11 +13,13 @@ import {
   ApiOkResponseConfigManagerUpsert,
   ApiParamConfigId,
   ApiParamServiceId,
+  ApiQueryTtlServiceId,
 } from './open-api.method.decorator';
 
 export function OpenApi_Upsert() {
   return applyDecorators(
     ApiBearerAuth(),
+    ApiQueryTtlServiceId(),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyConfigManagerUpsert(),

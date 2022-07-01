@@ -6,8 +6,8 @@ import {
   VersioningType,
 } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { API_DOCS, API_DOCS_JSON } from './app.constants';
 import { ConfigFactoryService } from './configs/config-factory.service';
+import { API_DOCS, API_DOCS_JSON } from './constants/app.constants';
 
 @Injectable()
 export class AppService {
@@ -53,13 +53,20 @@ export class AppService {
     }
   }
 
-  logOnServerStart(appFactory: any, authFactory: any) {
+  logOnServerStart(
+    appFactory: any,
+    authFactory: any,
+    cacheFactory: any,
+    configFactory: any,
+  ) {
     if (process.env.PRINT_ENV)
       this.logger.log(
         JSON.stringify(
           {
             APP_CONFIG: appFactory.app,
-            AUTH_CONFIG: authFactory.auth,
+            AUTH_MANAGER_CONFIG: authFactory.auth,
+            CACHE_MANAGER_CONFIG: cacheFactory.cache,
+            CONFIG_MANAGER_CONFIG: configFactory.config,
             MONGO_CONFIG: authFactory.mongo,
             REDIS_CONFIG: authFactory.redis,
           },

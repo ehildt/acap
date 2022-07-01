@@ -70,6 +70,7 @@
     "remove": "^0.1.5",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.5",
+    "short-uuid": "^4.2.0",
     "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {

@@ -6,6 +6,8 @@ import { AppModule } from './app/app.module';
 import { AppService } from './app/app.service';
 import { ConfigFactoryService as AppFactory } from './app/configs/config-factory.service';
 import { ConfigFactoryService as AuthFactory } from './auth-manager/configs/config-factory.service';
+import { ConfigFactoryService as CacheFactory } from './cache-manager/configs/config-factory.service';
+import { ConfigFactoryService as ConfigFactory } from './config-manager/configs/config-factory.service';
 
 const httpsOptions = {
   key: fs.readFileSync('./ssl/127.0.0.1.key'),
@@ -17,6 +19,8 @@ const httpsOptions = {
   const appService = app.get(AppService);
   const appFactory = app.get(AppFactory);
   const authFactory = app.get(AuthFactory);
+  const cacheFactory = app.get(CacheFactory);
+  const configFactory = app.get(ConfigFactory);
 
   app.use(helmet());
   app.use(compression());
@@ -27,6 +31,11 @@ const httpsOptions = {
   appService.enableOpenApi(app);
 
   await app.listen(appFactory.app.port, () =>
-    appService.logOnServerStart(appFactory, authFactory),
+    appService.logOnServerStart(
+      appFactory,
+      authFactory,
+      cacheFactory,
+      configFactory,
+    ),
   );
 })();

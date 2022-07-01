@@ -40,7 +40,7 @@
         "**/Thumbs.db": true,
         "node_modules": true,
         "dist": true,
-        "reports": false
+        "reports": true
     },
     "todo-tree.filtering.ignoreGitSubmodules": true,
     "todo-tree.filtering.useBuiltInExcludes": "file and search excludes",
@@ -158,4 +158,5 @@
     "[markdown]": {
         "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
+    "explorerExclude.backup": null,
 }

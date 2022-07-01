@@ -6,3 +6,8 @@ export interface RedisConfig {
   db: number;
   password: string;
 }
+
+export interface CacheManagerConfig {
+  namespacePrefix: string;
+  ttl: number;
+}
