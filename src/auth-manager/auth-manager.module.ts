@@ -13,10 +13,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { AuthManagerController } from './auth-manager.controller';
-import { AuthManagerConfigRegistry } from './configs/auth-manager/auth-manager-config-registry.dbs';
+import { AuthManagerConfigRegistry } from './configs/auth-manager/registry.dbs';
 import { ConfigFactoryService } from './configs/config-factory.service';
-import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
-import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
+import { MongoConfigRegistry } from './configs/mongo/registry.dbs';
+import { RedisConfigRegistry } from './configs/redis/registry.dbs';
 import { Role } from './constants/role.enum';
 import { AuthManagerSignupReq } from './dtos/auth-manager-signup-req.dto';
 import {

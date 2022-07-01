@@ -4,8 +4,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigManagerController } from './config-manager.controller';
 import { ConfigFactoryService } from './configs/config-factory.service';
-import { MongoConfigRegistry } from './configs/mongo/mongo-config-registry.dbs';
-import { RedisConfigRegistry } from './configs/redis/redis-config-registry.dbs';
+import { ConfigManagerRegistry } from './configs/config-manager/registry.dbs';
+import { MongoConfigRegistry } from './configs/mongo/registry.dbs';
+import { RedisConfigRegistry } from './configs/redis/registry.dbs';
 import {
   ConfigManager,
   ConfigManagerSchema,
@@ -29,7 +30,7 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
     ConfigModule.forRoot({
       cache: true,
       ignoreEnvFile: true,
-      load: [MongoConfigRegistry, RedisConfigRegistry],
+      load: [MongoConfigRegistry, RedisConfigRegistry, ConfigManagerRegistry],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { AuthManagerConfigAdapter } from './auth-manager-config-adapter.dbs';
+import { AuthManagerConfigAdapter } from './adapter.dbs';
 
 export const AuthManagerConfigRegistry = registerAs(
   'AuthManagerConfig',

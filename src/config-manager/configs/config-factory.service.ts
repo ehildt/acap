@@ -1,13 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MongoConfig, RedisConfig } from './config-factory.modal';
+import {
+  ConfigManagerConfig,
+  MongoConfig,
+  RedisConfig,
+} from './config-factory.modal';
 
 @Injectable()
 export class ConfigFactoryService {
   #mongoConfig: MongoConfig;
   #redisConfig: RedisConfig;
+  #configManager: ConfigManagerConfig;
 
   constructor(private readonly configService: ConfigService) {}
+
+  get config() {
+    if (this.#configManager) return this.#configManager;
+    return (this.#configManager = <ConfigManagerConfig>{
+      ttl: this.configService.get<number>('ConfigManagerConfig.TTL'),
+      namespacePrefix: this.configService.get<string>(
+        'ConfigManagerConfig.NAMESPACE_PREFIX',
+      ),
+    });
+  }
 
   get mongo() {
     if (this.#mongoConfig) return this.#mongoConfig;

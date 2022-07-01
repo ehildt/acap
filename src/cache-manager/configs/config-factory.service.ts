@@ -1,12 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RedisConfig } from './config-factory.modal';
+import { CacheManagerConfig, RedisConfig } from './config-factory.modal';
 
 @Injectable()
 export class ConfigFactoryService {
   #redisConfig: RedisConfig;
+  #cacheConfig: CacheManagerConfig;
 
   constructor(private readonly configService: ConfigService) {}
+
+  get cache() {
+    if (this.#cacheConfig) return this.#cacheConfig;
+    return (this.#cacheConfig = <CacheManagerConfig>{
+      ttl: this.configService.get<number>('CacheManagerConfig.TTL'),
+      namespacePrefix: this.configService.get<string>(
+        'CacheManagerConfig.NAMESPACE_PREFIX',
+      ),
+    });
+  }
 
   get redis() {
     if (this.#redisConfig) return this.#redisConfig;
