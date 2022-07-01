@@ -1,14 +1,21 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { Publisher } from '../constants/publisher.enum';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
 import { reduceConfigRes } from './helpers/reduce-config-res.helper';
 
+const { TOKEN } = Publisher;
+
 @Injectable()
 export class ConfigManagerService {
-  constructor(private readonly configRepo: ConfigManagerRepository) {}
+  constructor(private readonly configRepo: ConfigManagerRepository, @Inject(TOKEN) private client: ClientProxy) {}
 
   async upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
-    return this.configRepo.upsert(serviceId, req);
+    const entity = await this.configRepo.upsert(serviceId, req);
+    const configIds = req.map(({ configId }) => configId);
+    if (entity) this.client.emit(serviceId, configIds);
+    return entity;
   }
 
   async getByServiceId(serviceId: string) {
@@ -33,10 +40,14 @@ export class ConfigManagerService {
   }
 
   async deleteByServiceId(serviceId: string) {
-    return this.configRepo.delete(serviceId);
+    const entity = await this.configRepo.delete(serviceId);
+    if (entity) this.client.emit(serviceId, []);
+    return entity;
   }
 
   async deleteByServiceIdConfigId(serviceId: string, configIds?: string[]) {
-    return this.configRepo.delete(serviceId, configIds);
+    const entity = await this.configRepo.delete(serviceId, configIds);
+    if (entity) this.client.emit(serviceId, configIds);
+    return entity;
   }
 }

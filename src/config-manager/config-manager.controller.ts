@@ -1,28 +1,15 @@
 import { Cache } from 'cache-manager';
-import {
-  CACHE_MANAGER,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { CACHE_MANAGER, Controller, HttpCode, HttpStatus, Inject, UnprocessableEntityException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Role } from './constants/role.enum';
-import { Roles } from './decorators/controller.custom.decorator';
+import { ConfigFactoryService } from './configs/config-factory.service';
 import {
-  AccessTokenGuard,
   DeleteConfigIds,
   DeleteServiceId,
   GetConfigIds,
   GetServiceId,
   PostServiceId,
 } from './decorators/controller.method.decorator';
-import {
-  ConfigManagerUpsertBody,
-  ParamConfigIds,
-  ParamServiceId,
-} from './decorators/controller.parameter.decorator';
+import { ConfigManagerUpsertBody, ParamConfigIds, ParamServiceId } from './decorators/controller.parameter.decorator';
 import {
   OpenApi_DeleteByServiceId,
   OpenApi_DeleteByServiceIdConfigIds,
@@ -39,34 +26,30 @@ import { reduceEntities } from './services/helpers/reduce-entities.helper';
 export class ConfigManagerController {
   constructor(
     private readonly configManagerService: ConfigManagerService,
+    private readonly configFactory: ConfigFactoryService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
   @PostServiceId()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_Upsert()
-  async upsert(
-    @ParamServiceId() serviceId: string,
-    @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
-  ) {
+  async upsert(@ParamServiceId() serviceId: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
+    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const entities = await this.configManagerService.upsert(serviceId, req);
-    const cache = (await this.cache.get(serviceId)) ?? ({} as any);
-    await this.cache.set(serviceId, { ...cache, ...reduceEntities(req) });
+    const cache = (await this.cache.get(prefixId)) ?? ({} as any);
+    await this.cache.set(prefixId, { ...cache, ...reduceEntities(req) }, this.configFactory.config.ttl);
     return entities;
   }
 
   @GetServiceId()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   @OpenApi_GetByServiceId()
   async getByServiceId(@ParamServiceId() serviceId: string) {
+    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const entities = await this.configManagerService.getByServiceId(serviceId);
-    const cache = (await this.cache.get(serviceId)) ?? ({} as any);
+    const cache = (await this.cache.get(prefixId)) ?? ({} as any);
     const data = { ...cache, ...reduceEntities(entities) };
 
     if (Object.keys(data)?.length) {
-      await this.cache.set(serviceId, data);
+      await this.cache.set(prefixId, data, this.configFactory.config.ttl);
       return data;
     }
 
@@ -74,62 +57,43 @@ export class ConfigManagerController {
   }
 
   @GetConfigIds()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   @OpenApi_GetByServiceIdConfigIds()
-  async getByServiceIdConfigIds(
-    @ParamServiceId() serviceId: string,
-    @ParamConfigIds() configIds: string[],
-  ) {
+  async getByServiceIdConfigIds(@ParamServiceId() serviceId: string, @ParamConfigIds() configIds: string[]) {
+    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    let cache = (await this.cache.get(serviceId)) ?? ({} as any);
+    let cache = (await this.cache.get(prefixId)) ?? ({} as any);
     const matchedKeys = Object.keys(cache).filter((c) => ids.includes(c));
 
-    if (matchedKeys?.length)
-      cache = matchedKeys.reduce(
-        (acc, key) => ({ ...acc, [key]: cache[key] }),
-        {},
-      );
+    if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
 
     if (matchedKeys?.length === ids?.length) return cache;
 
-    const entities = await this.configManagerService.getByServiceIdConfigIds(
-      serviceId,
-      ids,
-    );
+    const entities = await this.configManagerService.getByServiceIdConfigIds(serviceId, ids);
 
     const upsertCache = { ...cache, ...entities };
-    await this.cache.set(serviceId, upsertCache);
+    await this.cache.set(prefixId, upsertCache, this.configFactory.config.ttl);
     return upsertCache;
   }
 
   @DeleteServiceId()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteByServiceId(@ParamServiceId() serviceId: string) {
-    await this.cache.del(serviceId);
+    await this.cache.del(`${this.configFactory.config.namespacePrefix}_${serviceId}`);
     await this.configManagerService.deleteByServiceId(serviceId);
   }
 
   @DeleteConfigIds()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteByConfigIds(
-    @ParamServiceId() serviceId: string,
-    @ParamConfigIds() configIds: string[],
-  ) {
+  async deleteByConfigIds(@ParamServiceId() serviceId: string, @ParamConfigIds() configIds: string[]) {
+    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    const cache = (await this.cache.get(serviceId)) ?? ({} as any);
-    const keys = Object.keys(cache).filter(
-      (key) => delete cache[configIds.find((id) => id === key)],
-    );
+    const cache = (await this.cache.get(prefixId)) ?? ({} as any);
+    const keys = Object.keys(cache).filter((key) => delete cache[configIds.find((id) => id === key)]);
 
-    if (keys.length) await this.cache.set(serviceId, cache);
-    else await this.cache.del(serviceId);
+    if (keys.length) await this.cache.set(prefixId, cache, this.configFactory.config.ttl);
+    else await this.cache.del(prefixId);
     await this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
   }
 }

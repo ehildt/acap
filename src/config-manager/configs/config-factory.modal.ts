@@ -15,3 +15,16 @@ export interface RedisConfig {
   db: number;
   password: string;
 }
+
+export interface ManagerConfig {
+  namespacePrefix: string;
+  ttl: number;
+}
+
+export interface PublisherConfig {
+  transport: number;
+  options: {
+    port: number;
+    host: string;
+  };
+}
