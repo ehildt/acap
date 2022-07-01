@@ -1,21 +1,15 @@
-import { maskString } from '../mask-string.helper';
-
 export class AuthManagerConfigAdapter {
   constructor(private copy?: AuthManagerConfigAdapter) {}
 
   get USERNAME(): string {
     return (
-      this.copy?.USERNAME ??
-      maskString(0, 2, process.env.AUTH_MANAGER_USERNAME) ??
-      maskString(0, 2, 'superadmin')
+      this.copy?.USERNAME ?? process.env.AUTH_MANAGER_USERNAME ?? 'superadmin'
     );
   }
 
   get PASSWORD(): string {
     return (
-      this.copy?.PASSWORD ??
-      maskString(0, 2, process.env.AUTH_MANAGER_PASSWORD) ??
-      maskString(0, 2, 'superadmin')
+      this.copy?.PASSWORD ?? process.env.AUTH_MANAGER_PASSWORD ?? 'superadmin'
     );
   }
 
@@ -38,12 +32,8 @@ export class AuthManagerConfigAdapter {
   get TOKEN_SECRET(): string {
     return (
       this.copy?.TOKEN_SECRET ??
-      maskString(0, 10, process.env.AUTH_MANAGER_TOKEN_SECRET) ??
-      maskString(
-        0,
-        10,
-        'd742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd9eb0',
-      )
+      process.env.AUTH_MANAGER_TOKEN_SECRET ??
+      'd742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd'
     );
   }
 
