@@ -63,6 +63,7 @@
     "class-validator": "^0.13.2",
     "compression": "^1.7.4",
     "helmet": "^5.1.0",
+    "maskdata": "^1.1.4",
     "mongoose": "^6.4.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
