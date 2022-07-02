@@ -33,7 +33,7 @@ export class AuthManagerConfigAdapter {
     return (
       this.copy?.TOKEN_SECRET ??
       process.env.AUTH_MANAGER_TOKEN_SECRET ??
-      'd742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd9eb0'
+      'd742181c71078eb527e4fce1d47a21785bac97cb86518bf43a73acd65dbd'
     );
   }
 

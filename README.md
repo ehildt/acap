@@ -181,10 +181,6 @@ which generates a new access/refresh token pair. Thus in our example an active u
 
 A consumer token is used by services, which don't need to authenticate but rather rely on authorization. For example our config-manager is consumed by other microservices. Thus a microservice is not a **user** but a **consumer**! All it's interested in is fetch some configuration data and thus has no need for authentication.
 
-## Databases
-
-The config-manager requires a mongo and redis database to operate. It's a straight forward approach. Simply provide the credentials via the envs as show above in the [Getting Started](#getting-started) example.
-
 ## HTTPS (tls/ssl)
 
 The config-manager comes with a self-signed tls/ssl setup, which does not have an expiration date.
@@ -194,3 +190,7 @@ Do to so replace the `127.0.0.1.crt` and `127.0.0.1.key` in the `ssl` folder. In
 ## Caching
 
 Every serviceId is stored for 300 seconds by default. To change this behavior set `CACHE_MANAGER_TTL` and `CONFIG_MANAGER_TTL` respectively. Whenever the config is altered, like by adding or removing a configId from it's serviceId (context), the ttl is being reset to 300 seconds (fallback) or whatever has been provided in the envs. There is a caveat though, namely if the envs `CACHE_MANAGER_NAMESPACE_PREFIX` and `CONFIG_MANAGER_NAMESPACE_PREFIX` share the same value. In this case when creating a serviceId using the **cache-manager**, the ttl coming from `CACHE_MANAGER_TTL` is used. However, if you alter this serviceId using the **config-manager**, then the ttl coming from the `CONFIG_MANAGER_TTL` is used. This is due to the fact that both managers share the same serviceId (context). Also, on the **cache-manager** upsert endpoint a custom ttl can be provided. As long as the serviceId (context) is not modified by any of the managers, the custom ttl is preserved. Thus if set to 0 the serviceId (context) never expires.
+
+## Databases
+
+The config-manager requires a mongo and redis database to operate. It's a straight forward approach. Simply provide the credentials via the envs as show above in the [Getting Started](#getting-started) example.
