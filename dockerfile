@@ -45,7 +45,8 @@ COPY shims.d.ts ./
 COPY src ./src
 COPY ssl ./ssl
 
-RUN npm ci --ignore-scripts --loglevel=error 
+RUN npm ci --ignore-scripts --loglevel=error
+RUN npm rebuild argon2
 
 # entrypoint for dev-stage
 FROM builder AS dev
@@ -99,6 +100,7 @@ COPY --from=prepare_prod ./usr/src/app/package*.json ./
 COPY --from=prepare_prod ./usr/src/app/ssl ./ssl
 
 RUN npm ci --ignore-scripts --loglevel=error --omit=dev
+RUN npm rebuild argon2
 
 USER node
 ENTRYPOINT ["npm", "run", "start:prod", "--silent"]
