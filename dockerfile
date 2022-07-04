@@ -1,12 +1,12 @@
 # entrypoint for local development
 FROM node:18 AS local
-WORKDIR /usr/src/app/
+WORKDIR /app
 EXPOSE 3000
 ENTRYPOINT [ "npm", "run", "start:dev"]
 
 # entrypoint for the app builder
 FROM node:18-slim AS builder
-WORKDIR /usr/src/app/
+WORKDIR /app
 
 ENV PORT 3000
 ENV START_SWAGGER "true"
@@ -41,19 +41,19 @@ RUN npm rebuild argon2
 
 # entrypoint for dev-stage
 FROM builder AS dev
-WORKDIR /usr/src/app/
+WORKDIR /app
 RUN npm run build
 USER node
 ENTRYPOINT ["npm", "run", "start"]
 
 # entrypoint for prepare-prod
 FROM builder AS prepare_prod
-WORKDIR /usr/src/app/
+WORKDIR /app
 RUN npm run build:prod
 
 # entrypoint for prod-stage
 FROM node:18-slim AS prod
-WORKDIR /usr/src/app/
+WORKDIR /app
 
 ENV PORT 3000
 ENV START_SWAGGER "false"
@@ -77,9 +77,9 @@ ENV MONGO_URI "mongodb://mongo:27017"
 
 EXPOSE ${PORT}
 
-COPY --from=prepare_prod ./usr/src/app/dist ./dist
-COPY --from=prepare_prod ./usr/src/app/package*.json ./
-COPY --from=prepare_prod ./usr/src/app/ssl ./ssl
+COPY --from=prepare_prod ./app/dist ./dist
+COPY --from=prepare_prod ./app/package*.json ./
+COPY --from=prepare_prod ./app/ssl ./ssl
 
 RUN npm ci --ignore-scripts --loglevel=error --omit=dev
 RUN npm rebuild argon2

@@ -7,13 +7,6 @@ ENV PORT 3000
 ENV START_SWAGGER "false"
 ENV PRINT_ENV "false"
 
-ENV AUTH_MANAGER_USERNAME "superadmin" 
-ENV AUTH_MANAGER_PASSWORD "superadmin" 
-ENV AUTH_MANAGER_EMAIL "super@admin.com"
-ENV AUTH_MANAGER_ACCESS_TOKEN_TTL 900                                                            
-ENV AUTH_MANAGER_REFRESH_TOKEN_TTL 604800                                                        
-ENV AUTH_MANAGER_TOKEN_SECRET "0b29d3b410b04d26a8c777db1ce8a241"  
-
 ENV CONFIG_MANAGER_TTL 300
 ENV CONFIG_MANAGER_NAMESPACE_PREFIX ""
 
@@ -39,20 +32,14 @@ services:
     container_name: config-manager
     image: cultify/config-manager
     depends_on:
-      - mongo
-      - redis
+      - auth-manager
     environment:
-      - PORT=3001
+      - PORT=3000
       - START_SWAGGER=true
       - PRINT_ENV=true
-      - AUTH_MANAGER_USERNAME=superadmin
-      - AUTH_MANAGER_PASSWORD=superadmin
-      - AUTH_MANAGER_EMAIL=super@admin.com
-      - AUTH_MANAGER_ACCESS_TOKEN_TTL=900
-      - AUTH_MANAGER_REFRESH_TOKEN_TTL=604800
-      - AUTH_MANAGER_TOKEN_SECRET=super-secret
       - CONFIG_MANAGER_TTL=300
       - CONFIG_MANAGER_NAMESPACE_PREFIX=''
+      - CONFIG_MANAGER_TOKEN_SECRET=super-secret
       - MONGO_USER=mongo
       - MONGO_PASS=mongo
       - MONGO_DB_NAME=configs
@@ -64,7 +51,21 @@ services:
       - REDIS_MAX_RESPONSES=100
       - REDIS_DB_INDEX=0
     ports:
-      - 3000:3001
+      - '3000:3000'
+
+  auth-manager:
+    container_name: auth-manager
+    image: cultify/auth-manager
+    environment:
+      - PORT=3001
+      - PRINT_ENV=true
+      - START_SWAGGER=true
+      - AUTH_MANAGER_TOKEN_SECRET=super-secret
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
+      - redis
 
   mongo:
     command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
@@ -77,14 +78,14 @@ services:
     volumes:
       - mongo_data:/data/db
     ports:
-      - 27017:27017
+      - '27017:27017'
 
   redis:
     image: redis
     container_name: redis
     ports:
-      - 6379:6379
-    command: redis-server --loglevel warning
+      - '6379:6379'
+    command: redis-server --loglevel "warning"
 
 volumes:
   mongo_data:
@@ -126,3 +127,9 @@ In docker you can map your tls/ssl setup with `-v $(pwd)/ssl:/app/ssl`.
 ## Caching Insights
 
 Every config object is represented by it's serviceId and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular serviceId. Whenever the config object is altered, the ttl is reset to 300 seconds (fallback) or whatever has been provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Any in-memory solution implements a simple key-value storage. This means there is no such thing as a namespace or context ales custom implemented. The prefix is such a custom implementation of a namespace/context. Let's say your key (serviceId) is test1234, then the prefix will be appended and your serviceId turns into \<prefix>_test1234. If the prefix-serviceId combination is not unique, then all applications which use the same in-memory cache will alienate the config object. A good example would be the config-manager and cache-manager used together. Namely if the envs `CACHE_MANAGER_NAMESPACE_PREFIX` and `CONFIG_MANAGER_NAMESPACE_PREFIX` share the same value. In this case when creating a serviceId using the **cache-manager**, the ttl coming from `CACHE_MANAGER_TTL` is used. However, if you alter this serviceId using the **cache-manager**, then the ttl coming from the `CONFIG_MANAGER_TTL` is used. This is due to the fact that now both managers see the same serviceId and both manipulate the config object. This might be desired or unwanted so keep an eye out on the prefixes.
+
+## Dependencies
+
+The config-manager depends on the auth-manager since it's the core where all the roles and permissions come to life.
+If you want to know more how to adapt your own services to follow the same roles and permission guidelines, or extend them even,
+then feel free to check out the auth-manager documentation.
