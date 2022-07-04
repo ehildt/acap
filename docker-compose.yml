@@ -9,12 +9,25 @@ services:
     volumes:
       - ./:/usr/src/app/
     depends_on:
-      - mongo
-      - redis
+      - auth-manager
     env_file:
       - env/defaults.env
     ports:
       - '3000:3000'
+
+  auth-manager:
+    container_name: auth-manager
+    image: cultify/auth-manager
+    environment:
+      - PORT=3001
+      - PRINT_ENV=true
+      - START_SWAGGER=true
+      - AUTH_MANAGER_TOKEN_SECRET=super-secret
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
+      - redis
 
   mongo:
     command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null

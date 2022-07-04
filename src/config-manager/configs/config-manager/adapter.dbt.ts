@@ -15,4 +15,8 @@ export class ConfigManagerConfigAdapter {
       this.copy?.TTL ?? parseInt(process.env.CONFIG_MANAGER_TTL ?? '360', 10)
     );
   }
+
+  get TOKEN_SECRET(): string {
+    return this.copy?.TOKEN_SECRET ?? process.env.CONFIG_MANAGER_TOKEN_SECRET;
+  }
 }

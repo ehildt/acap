@@ -21,7 +21,7 @@ export class AccessTokenStrategy extends PassportStrategy(
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.AUTH_MANAGER_TOKEN_SECRET,
+      secretOrKey: process.env.CONFIG_MANAGER_TOKEN_SECRET,
       passReqToCallback: true,
     });
   }
@@ -32,7 +32,10 @@ export class AccessTokenStrategy extends PassportStrategy(
     const cache: any = await this.cacheManager.get(decodedAccessToken.id);
     const token = req.get('authorization').slice(7);
 
-    if (!cache?.AUTH_HASH || !(await verify(cache?.AUTH_HASH, token)))
+    if (
+      !cache?.AUTH_ACCESS_HASH ||
+      !(await verify(cache?.AUTH_ACCESS_HASH, token))
+    )
       throw new UnauthorizedException('Session Expired');
 
     return decodedAccessToken;

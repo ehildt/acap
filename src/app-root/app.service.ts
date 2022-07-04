@@ -53,22 +53,15 @@ export class AppService {
     }
   }
 
-  logOnServerStart(
-    appFactory: any,
-    authFactory: any,
-    cacheFactory: any,
-    configFactory: any,
-  ) {
+  logOnServerStart(appFactory: any, configFactory: any) {
     if (process.env.PRINT_ENV)
       this.logger.log(
         JSON.stringify(
           {
             APP_CONFIG: appFactory.app,
-            AUTH_MANAGER_CONFIG: authFactory.auth,
-            CACHE_MANAGER_CONFIG: cacheFactory.cache,
             CONFIG_MANAGER_CONFIG: configFactory.config,
-            MONGO_CONFIG: authFactory.mongo,
-            REDIS_CONFIG: authFactory.redis,
+            MONGO_CONFIG: configFactory.mongo,
+            REDIS_CONFIG: configFactory.redis,
           },
           null,
           4,

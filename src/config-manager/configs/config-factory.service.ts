@@ -21,6 +21,9 @@ export class ConfigFactoryService {
       namespacePrefix: this.configService.get<string>(
         'ConfigManagerConfig.NAMESPACE_PREFIX',
       ),
+      tokenSecret: this.configService.get<string>(
+        'ConfigManagerConfig.TOKEN_SECRET',
+      ),
     });
   }
 

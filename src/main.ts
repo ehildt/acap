@@ -2,11 +2,9 @@ import compression from 'compression';
 import fs from 'fs';
 import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
-import { AppService } from './app/app.service';
-import { ConfigFactoryService as AppFactory } from './app/configs/config-factory.service';
-import { ConfigFactoryService as AuthFactory } from './auth-manager/configs/config-factory.service';
-import { ConfigFactoryService as CacheFactory } from './cache-manager/configs/config-factory.service';
+import { AppModule } from './app-root/app.module';
+import { AppService } from './app-root/app.service';
+import { ConfigFactoryService as AppFactory } from './app-root/configs/config-factory.service';
 import { ConfigFactoryService as ConfigFactory } from './config-manager/configs/config-factory.service';
 
 const httpsOptions = {
@@ -18,8 +16,6 @@ const httpsOptions = {
   const app = await NestFactory.create(AppModule, { httpsOptions });
   const appService = app.get(AppService);
   const appFactory = app.get(AppFactory);
-  const authFactory = app.get(AuthFactory);
-  const cacheFactory = app.get(CacheFactory);
   const configFactory = app.get(ConfigFactory);
 
   app.use(helmet());
@@ -31,11 +27,6 @@ const httpsOptions = {
   appService.enableOpenApi(app);
 
   await app.listen(appFactory.app.port, () =>
-    appService.logOnServerStart(
-      appFactory,
-      authFactory,
-      cacheFactory,
-      configFactory,
-    ),
+    appService.logOnServerStart(appFactory, configFactory),
   );
 })();
