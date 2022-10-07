@@ -30,7 +30,7 @@ version: '3.9'
 services:
   config-manager:
     container_name: config-manager
-    image: cultify/config-manager
+    image: docker.hub.ideea.app.corpintra.net/eeagle/services/config-manager
     depends_on:
       - auth-manager
     environment:
@@ -39,7 +39,6 @@ services:
       - PRINT_ENV=true
       - CONFIG_MANAGER_TTL=300
       - CONFIG_MANAGER_NAMESPACE_PREFIX=''
-      - CONFIG_MANAGER_TOKEN_SECRET=super-secret
       - MONGO_USER=mongo
       - MONGO_PASS=mongo
       - MONGO_DB_NAME=configs
@@ -55,7 +54,7 @@ services:
 
   auth-manager:
     container_name: auth-manager
-    image: cultify/auth-manager
+    image: docker.hub.ideea.app.corpintra.net/eeagle/services/auth-manager
     environment:
       - PORT=3001
       - PRINT_ENV=true
@@ -103,7 +102,6 @@ networks:
 
 - CONFIG_MANAGER_TTL `config object ttl`
 - CONFIG_MANAGER_NAMESPACE_PREFIX `the prefix for the serviceId; autogenerates if empty`
-- CONFIG_MANAGER_TOKEN_SECRET `the token secret`
 
 - REDIS_PASS `the redis password`
 - REDIS_HOST `the redis host aka localhost`
@@ -126,7 +124,7 @@ In docker you can map your tls/ssl setup with `-v $(pwd)/ssl:/app/ssl`.
 
 ## Caching Insights
 
-Every config object is represented by it's serviceId and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular serviceId. Whenever the config object is altered, the ttl is reset to 300 seconds (fallback) or whatever has been provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Any in-memory solution implements a simple key-value storage. This means there is no such thing as a namespace or context ales custom implemented. The prefix is such a custom implementation of a namespace/context. Let's say your key (serviceId) is test1234, then the prefix will be appended and your serviceId turns into \<prefix>_test1234. If the prefix-serviceId combination is not unique, then all applications which use the same in-memory cache will alienate the config object. A good example would be the config-manager and cache-manager used together. Namely if the envs `CACHE_MANAGER_NAMESPACE_PREFIX` and `CONFIG_MANAGER_NAMESPACE_PREFIX` share the same value. In this case when creating a serviceId using the **cache-manager**, the ttl coming from `CACHE_MANAGER_TTL` is used. However, if you alter this serviceId using the **cache-manager**, then the ttl coming from the `CONFIG_MANAGER_TTL` is used. This is due to the fact that now both managers see the same serviceId and both manipulate the config object. This might be desired or unwanted so keep an eye out on the prefixes.
+Every config object is represented by it's serviceId and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular serviceId. Whenever the config object is altered, the ttl is reset to 300 seconds (fallback) or whatever has been provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Any in-memory solution implements a simple key-value storage. This means there is no such thing as a namespace or context ales custom implemented. The prefix is such a custom implementation of a namespace/context. Let's say your key (serviceId) is test1234, then the prefix will be appended and your serviceId turns into \<prefix>\_test1234. If the prefix-serviceId combination is not unique, then all applications which use the same in-memory cache will alienate the config object. A good example would be the config-manager and cache-manager used together. Namely if the envs `CACHE_MANAGER_NAMESPACE_PREFIX` and `CONFIG_MANAGER_NAMESPACE_PREFIX` share the same value. In this case when creating a serviceId using the **cache-manager**, the ttl coming from `CACHE_MANAGER_TTL` is used. However, if you alter this serviceId using the **cache-manager**, then the ttl coming from the `CONFIG_MANAGER_TTL` is used. This is due to the fact that now both managers see the same serviceId and both manipulate the config object. This might be desired or unwanted so keep an eye out on the prefixes.
 
 ## Dependencies
 

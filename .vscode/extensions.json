@@ -1,14 +1,14 @@
 {
-    "recommendations": [
-        "mike-co.import-sorter",
-        "streetsidesoftware.code-spell-checker",
-        "dbaeumer.vscode-eslint",
-        "firsttris.vscode-jest-runner",
-        "rangav.vscode-thunder-client",
-        "redhat.vscode-yaml",
-        "foxundermoon.shell-format",
-        "mhutchie.git-graph",
-        "gruntfuggly.todo-tree",
-        "RedVanWorkshop.explorer-exclude-vscode-extension"
-    ]
+  "recommendations": [
+    "mike-co.import-sorter",
+    "streetsidesoftware.code-spell-checker",
+    "dbaeumer.vscode-eslint",
+    "firsttris.vscode-jest-runner",
+    "rangav.vscode-thunder-client",
+    "redhat.vscode-yaml",
+    "foxundermoon.shell-format",
+    "mhutchie.git-graph",
+    "gruntfuggly.todo-tree",
+    "RedVanWorkshop.explorer-exclude-vscode-extension"
+  ]
 }

@@ -1,29 +1,15 @@
 import { Cache } from 'cache-manager';
-import {
-  CACHE_MANAGER,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { CACHE_MANAGER, Controller, HttpCode, HttpStatus, Inject, UnprocessableEntityException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ConfigFactoryService } from './configs/config-factory.service';
-import { Role } from './constants/role.enum';
-import { Roles } from './decorators/controller.custom.decorator';
 import {
-  AccessTokenGuard,
   DeleteConfigIds,
   DeleteServiceId,
   GetConfigIds,
   GetServiceId,
   PostServiceId,
 } from './decorators/controller.method.decorator';
-import {
-  ConfigManagerUpsertBody,
-  ParamConfigIds,
-  ParamServiceId,
-} from './decorators/controller.parameter.decorator';
+import { ConfigManagerUpsertBody, ParamConfigIds, ParamServiceId } from './decorators/controller.parameter.decorator';
 import {
   OpenApi_DeleteByServiceId,
   OpenApi_DeleteByServiceIdConfigIds,
@@ -45,27 +31,16 @@ export class ConfigManagerController {
   ) {}
 
   @PostServiceId()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_Upsert()
-  async upsert(
-    @ParamServiceId() serviceId: string,
-    @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[],
-  ) {
+  async upsert(@ParamServiceId() serviceId: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
     const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const entities = await this.configManagerService.upsert(serviceId, req);
     const cache = (await this.cache.get(prefixId)) ?? ({} as any);
-    await this.cache.set(
-      prefixId,
-      { ...cache, ...reduceEntities(req) },
-      { ttl: this.configFactory.config.ttl },
-    );
+    await this.cache.set(prefixId, { ...cache, ...reduceEntities(req) }, { ttl: this.configFactory.config.ttl });
     return entities;
   }
 
   @GetServiceId()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   @OpenApi_GetByServiceId()
   async getByServiceId(@ParamServiceId() serviceId: string) {
     const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
@@ -84,30 +59,18 @@ export class ConfigManagerController {
   }
 
   @GetConfigIds()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator, Role.consumer)
   @OpenApi_GetByServiceIdConfigIds()
-  async getByServiceIdConfigIds(
-    @ParamServiceId() serviceId: string,
-    @ParamConfigIds() configIds: string[],
-  ) {
+  async getByServiceIdConfigIds(@ParamServiceId() serviceId: string, @ParamConfigIds() configIds: string[]) {
     const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     let cache = (await this.cache.get(prefixId)) ?? ({} as any);
     const matchedKeys = Object.keys(cache).filter((c) => ids.includes(c));
 
-    if (matchedKeys?.length)
-      cache = matchedKeys.reduce(
-        (acc, key) => ({ ...acc, [key]: cache[key] }),
-        {},
-      );
+    if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
 
     if (matchedKeys?.length === ids?.length) return cache;
 
-    const entities = await this.configManagerService.getByServiceIdConfigIds(
-      serviceId,
-      ids,
-    );
+    const entities = await this.configManagerService.getByServiceIdConfigIds(serviceId, ids);
 
     const upsertCache = { ...cache, ...entities };
     await this.cache.set(prefixId, upsertCache, {
@@ -117,32 +80,21 @@ export class ConfigManagerController {
   }
 
   @DeleteServiceId()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceId()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteByServiceId(@ParamServiceId() serviceId: string) {
-    await this.cache.del(
-      `${this.configFactory.config.namespacePrefix}_${serviceId}`,
-    );
+    await this.cache.del(`${this.configFactory.config.namespacePrefix}_${serviceId}`);
     await this.configManagerService.deleteByServiceId(serviceId);
   }
 
   @DeleteConfigIds()
-  @AccessTokenGuard()
-  @Roles(Role.superadmin, Role.moderator)
   @OpenApi_DeleteByServiceIdConfigIds()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteByConfigIds(
-    @ParamServiceId() serviceId: string,
-    @ParamConfigIds() configIds: string[],
-  ) {
+  async deleteByConfigIds(@ParamServiceId() serviceId: string, @ParamConfigIds() configIds: string[]) {
     const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     const cache = (await this.cache.get(prefixId)) ?? ({} as any);
-    const keys = Object.keys(cache).filter(
-      (key) => delete cache[configIds.find((id) => id === key)],
-    );
+    const keys = Object.keys(cache).filter((key) => delete cache[configIds.find((id) => id === key)]);
 
     if (keys.length)
       await this.cache.set(prefixId, cache, {

@@ -1,20 +1,11 @@
-import {
-  ConsoleLogger,
-  INestApplication,
-  Injectable,
-  ValidationPipe,
-  VersioningType,
-} from '@nestjs/common';
+import { ConsoleLogger, INestApplication, Injectable, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigFactoryService } from './configs/config-factory.service';
 import { API_DOCS, API_DOCS_JSON } from './constants/app.constants';
 
 @Injectable()
 export class AppService {
-  constructor(
-    private readonly logger: ConsoleLogger,
-    private readonly configFactory: ConfigFactoryService,
-  ) {}
+  constructor(private readonly logger: ConsoleLogger, private readonly configFactory: ConfigFactoryService) {}
 
   useGlobalPipes(app: INestApplication) {
     app.useGlobalPipes(
@@ -54,12 +45,13 @@ export class AppService {
   }
 
   logOnServerStart(appFactory: any, configFactory: any) {
-    if (process.env.PRINT_ENV)
+    if (process.env.PRINT_ENV === 'true')
       this.logger.log(
         JSON.stringify(
           {
             APP_CONFIG: appFactory.app,
             CONFIG_MANAGER_CONFIG: configFactory.config,
+            CONFIG_BROKER: configFactory.broker,
             MONGO_CONFIG: configFactory.mongo,
             REDIS_CONFIG: configFactory.redis,
           },
@@ -70,7 +62,7 @@ export class AppService {
       );
 
     if (appFactory.app.startSwagger) {
-      const swaggerPath = `https://localhost:${appFactory.app.port}`;
+      const swaggerPath = `http://localhost:${appFactory.app.port}`;
       this.logger.log(`${swaggerPath}/${API_DOCS_JSON}`);
       this.logger.log(`${swaggerPath}/${API_DOCS}`);
     }
@@ -81,10 +73,6 @@ export class AppService {
       .setTitle('Config-Manager')
       .setDescription('A simple and convenient way to config your apps ;)')
       .setVersion('1.0')
-      .addBearerAuth({
-        in: 'header',
-        type: 'http',
-      })
       .build();
   }
 }

@@ -14,9 +14,18 @@ export interface RedisConfig {
   max: number;
   db: number;
   password: string;
+  store: any;
 }
 
-export interface ConfigManagerConfig {
+export interface ManagerConfig {
   namespacePrefix: string;
   ttl: number;
+}
+
+export interface PublisherConfig {
+  transport: number;
+  options: {
+    port: number;
+    host: string;
+  };
 }

@@ -1,4 +1,4 @@
 export interface AppConfig {
-  port: string;
+  port: number;
   startSwagger: boolean;
 }

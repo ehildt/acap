@@ -6,10 +6,9 @@ module.exports = {
     /* rules from the 'recommended' preset: */
     {
       name: 'microservice-not-to-microservice',
-      comment:
-        "One microservice should not depend on another microservice's code base",
+      comment: "One microservice should not depend on another microservice's code base",
       severity: 'error',
-      from: { path: "(^src/)([^/]+)/", pathNot: '\\.module\\.ts$' },
+      from: { path: '(^src/)([^/]+)/', pathNot: '\\.module\\.ts$' },
       to: { path: '^$1', pathNot: '^$1$2' },
     },
     {
@@ -148,8 +147,7 @@ module.exports = {
         'from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration',
       from: {
         path: '^(src)',
-        pathNot:
-          '\\.(spec|test)\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$',
+        pathNot: '\\.(spec|test)\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$',
       },
       to: {
         dependencyTypes: ['npm-dev'],
@@ -190,14 +188,7 @@ module.exports = {
     */
     doNotFollow: {
       path: 'node_modules',
-      dependencyTypes: [
-        'npm',
-        'npm-dev',
-        'npm-optional',
-        'npm-peer',
-        'npm-bundled',
-        'npm-no-pkg',
-      ],
+      dependencyTypes: ['npm', 'npm-dev', 'npm-optional', 'npm-peer', 'npm-bundled', 'npm-no-pkg'],
     },
 
     /* conditions specifying which dependencies to exclude
@@ -367,8 +358,7 @@ module.exports = {
           dependency graph reporter (`archi`) you probably want to tweak
           this collapsePattern to your situation.
         */
-        collapsePattern:
-          '^(packages|src|lib|app|bin|test(s?)|spec(s?))/[^/]+|node_modules/[^/]+',
+        collapsePattern: '^(packages|src|lib|app|bin|test(s?)|spec(s?))/[^/]+|node_modules/[^/]+',
 
         /* Options to tweak the appearance of your graph.See
            https://github.com/sverweij/dependency-cruiser/blob/master/doc/options-reference.md#reporteroptions
