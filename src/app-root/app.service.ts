@@ -51,7 +51,6 @@ export class AppService {
           {
             APP_CONFIG: appFactory.app,
             CONFIG_MANAGER_CONFIG: configFactory.config,
-            CONFIG_BROKER: configFactory.broker,
             MONGO_CONFIG: configFactory.mongo,
             REDIS_CONFIG: configFactory.redis,
           },
