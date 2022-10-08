@@ -1,3 +1,4 @@
+import RedisStore from 'cache-manager-ioredis';
 import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
@@ -28,7 +29,7 @@ import { ConfigManagerService } from './services/config-manager.service';
       imports: [ConfigModule],
       inject: [ConfigFactoryService],
       extraProviders: [ConfigFactoryService],
-      useFactory: ({ redis }: ConfigFactoryService) => redis,
+      useFactory: ({ redis }: ConfigFactoryService) => ({ ...redis, store: RedisStore.create(redis) } as any),
     }),
     ConfigModule.forRoot({
       cache: true,

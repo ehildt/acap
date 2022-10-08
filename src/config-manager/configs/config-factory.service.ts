@@ -1,4 +1,3 @@
-import RedisStore from 'cache-manager-ioredis';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
@@ -47,7 +46,6 @@ export class ConfigFactoryService {
   get redis() {
     if (this.#redisConfig) return this.#redisConfig;
     return (this.#redisConfig = {
-      store: RedisStore,
       host: this.configService.get<string>('RedisConfig.HOST'),
       port: this.configService.get<number>('RedisConfig.PORT'),
       ttl: this.configService.get<number>('RedisConfig.TTL'),

@@ -14,7 +14,6 @@ export interface RedisConfig {
   max: number;
   db: number;
   password: string;
-  store: any;
 }
 
 export interface ManagerConfig {
