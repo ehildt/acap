@@ -36,7 +36,7 @@ export class ConfigManagerController {
     const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
     const entities = await this.configManagerService.upsert(serviceId, req);
     const cache = (await this.cache.get(prefixId)) ?? ({} as any);
-    await this.cache.set(prefixId, { ...cache, ...reduceEntities(req) }, { ttl: this.configFactory.config.ttl });
+    await this.cache.set(prefixId, { ...cache, ...reduceEntities(req) }, this.configFactory.config.ttl);
     return entities;
   }
 
@@ -49,9 +49,7 @@ export class ConfigManagerController {
     const data = { ...cache, ...reduceEntities(entities) };
 
     if (Object.keys(data)?.length) {
-      await this.cache.set(prefixId, data, {
-        ttl: this.configFactory.config.ttl,
-      });
+      await this.cache.set(prefixId, data, this.configFactory.config.ttl);
       return data;
     }
 
@@ -73,9 +71,7 @@ export class ConfigManagerController {
     const entities = await this.configManagerService.getByServiceIdConfigIds(serviceId, ids);
 
     const upsertCache = { ...cache, ...entities };
-    await this.cache.set(prefixId, upsertCache, {
-      ttl: this.configFactory.config.ttl,
-    });
+    await this.cache.set(prefixId, upsertCache, this.configFactory.config.ttl);
     return upsertCache;
   }
 
@@ -96,10 +92,7 @@ export class ConfigManagerController {
     const cache = (await this.cache.get(prefixId)) ?? ({} as any);
     const keys = Object.keys(cache).filter((key) => delete cache[configIds.find((id) => id === key)]);
 
-    if (keys.length)
-      await this.cache.set(prefixId, cache, {
-        ttl: this.configFactory.config.ttl,
-      });
+    if (keys.length) await this.cache.set(prefixId, cache, this.configFactory.config.ttl);
     else await this.cache.del(prefixId);
     await this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
   }
