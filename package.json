@@ -1,6 +1,6 @@
 {
   "name": "@cultify/config-manager",
-  "version": "0.5.20",
+  "version": "0.5.21",
   "description": "A simple and convenient way to config your apps ;)",
   "author": "Eugen Hildt",
   "private": false,
@@ -44,8 +44,6 @@
     "cache-manager-ioredis": "^2.1.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
-    "fastify-swagger": "^5.2.0",
-    "ioredis": "5.2.3",
     "mongoose": "6.6.5",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
