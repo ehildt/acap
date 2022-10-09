@@ -20,18 +20,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
+      "@/*": ["src/*"]
+    }
   },
-  "files": [
-    "shims.d.ts"
-  ],
-  "include": [
-    "./jest.config.ts",
-    "./init-mongo.js",
-    "src/**/*",
-    "test/**/*"
-  ]
+  "files": ["shims.d.ts"],
+  "include": ["./jest.config.ts", "./init-mongo.js", "src/**/*", "test/**/*"]
 }

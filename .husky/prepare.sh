@@ -5,7 +5,7 @@
 CURRENT_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 GIT_STATUS_PORCELAIN=$(git status --porcelain | head -1)
 REGEX_GIT_BRANCH_NAME="^(feat|fix|chore|bug|task|wiki)\/[0-9]{4,}-[a-zA-Z0-9_\.\-]+$"
-REGEX_GIT_COMMIT_MSG="^(feat|fix|chore|task|docs|test|style|ref|perf|build|ci|revert|wip)(\(.+?\))?: .{1,}$"
+REGEX_GIT_COMMIT_MSG="^(feat|fix|chore|task|docs|test|style|ref|perf|build|ci|revert|wip)(\(.+?\))?:?.{1,}$"
 REGEX_GIT_MSG_LENGTH="^.{1,88}$"
 
 # formators
@@ -85,16 +85,16 @@ check_package_dependencies() {
 # check licenses
 check_licenses() {
     if [ $(npx licensee --errors-only | wc -m) -eq 0 ]; then
-        info "check_licenses.. $(yellowfy ok)"
+        info "check-license.. $(yellowfy ok)"
     else
-        info "check_licenses.. $(redfy error)"
+        info "check-license.. $(redfy error)"
         debug "resolve licenses (.lecensee.json)"
         exit 1
     fi
 }
 
 gitleaks_detect() {
-    GITLEAKS_LEAKS=$(docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/config-manager/gitleaks.toml detect -v --source="/app/config-manager/" --no-git 2>/dev/null)
+    GITLEAKS_LEAKS=$(docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git 2>/dev/null)
     if [ "$?" -eq 1 ]; then
         info "gitleaks.. $(redfy error)"
         debug "see gitleaks.json to resolve credentials or whitelist in gitleaks.toml"

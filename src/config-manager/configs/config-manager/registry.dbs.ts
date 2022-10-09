@@ -1,7 +1,4 @@
 import { registerAs } from '@nestjs/config';
-import { ConfigManagerConfigAdapter } from './adapter.dbt';
+import { ManagerConfigAdapter } from './adapter.dbt';
 
-export const ConfigManagerRegistry = registerAs(
-  'ConfigManagerConfig',
-  () => new ConfigManagerConfigAdapter(),
-);
+export const ConfigManagerRegistry = registerAs('ManagerConfig', () => new ManagerConfigAdapter());

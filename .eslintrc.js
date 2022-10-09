@@ -1,30 +1,37 @@
+'use strict';
+
+/**
+ * @type {import('eslint'.Linter.Config)}
+ */
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: './tsconfig.json',
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'sonarjs'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'no-loops', 'prettier'],
   extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
     'plugin:sonarjs/recommended',
   ],
-  root: true,
-  env: {
-    node: true,
-    jest: true,
-  },
-  ignorePatterns: ['.eslintrc.js', 'dist/*', '.clinic/*'],
   rules: {
-    // nestjs defaults
+    'no-console': ['error'], 
+    'prettier/prettier': 'error',
+    'no-loops/no-loops': 'error',
+    '@typescript-eslint/no-floating-promises': 'warn',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-
-    // proposals
-    'no-console': ['error', { allow: ['warn', 'error', 'time', 'timeEnd'] }],
+  },
+  ignorePatterns: ['node_modules', '.clinic', 'dist', 'coverage', '.eslintrc.js', '**/*.config.js', '**/*.config.ts'],
+  env: {
+    node: true,
+    jest: true,
   },
 };

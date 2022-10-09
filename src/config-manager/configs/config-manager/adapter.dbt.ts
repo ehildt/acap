@@ -1,18 +1,13 @@
-import { generate } from 'short-uuid';
+import ShortUniqueId from 'short-unique-id';
 
-export class ConfigManagerConfigAdapter {
-  constructor(private copy?: ConfigManagerConfigAdapter) {}
+const shortUniqueId = new ShortUniqueId()(32);
 
+export class ManagerConfigAdapter {
   get NAMESPACE_PREFIX(): string {
-    return this.copy?.NAMESPACE_PREFIX ??
-      process.env.CONFIG_MANAGER_NAMESPACE_PREFIX?.length
-      ? process.env.CONFIG_MANAGER_NAMESPACE_PREFIX
-      : generate();
+    return process.env.CONFIG_MANAGER_NAMESPACE_PREFIX ?? shortUniqueId;
   }
 
   get TTL(): number {
-    return (
-      this.copy?.TTL ?? parseInt(process.env.CONFIG_MANAGER_TTL ?? '360', 10)
-    );
+    return parseInt(process.env.CONFIG_MANAGER_TTL ?? '360', 10);
   }
 }
