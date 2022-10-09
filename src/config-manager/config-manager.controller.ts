@@ -1,28 +1,57 @@
-import { Cache } from 'cache-manager';
-import { CACHE_MANAGER, Controller, HttpCode, HttpStatus, Inject, UnprocessableEntityException } from '@nestjs/common';
+import { MultipartFile } from '@fastify/multipart';
+import {
+  CACHE_MANAGER,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+  StreamableFile,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Cache } from 'cache-manager';
+
 import { ConfigFactoryService } from './configs/config-factory.service';
+import { JsonFile } from './decorators/class.property.values';
 import {
   DeleteConfigIds,
-  DeleteServiceId,
+  DeleteNamespace,
+  DownloadFile,
   GetConfigIds,
-  GetServiceId,
-  PostServiceId,
-} from './decorators/controller.method.decorator';
-import { ConfigManagerUpsertBody, ParamConfigIds, ParamServiceId } from './decorators/controller.parameter.decorator';
+  GetNamespace,
+  GetPagination,
+  PostFile,
+  PostNamespace,
+} from './decorators/controller.method.decorators';
 import {
-  OpenApi_DeleteByServiceId,
-  OpenApi_DeleteByServiceIdConfigIds,
-  OpenApi_GetByServiceId,
-  OpenApi_GetByServiceIdConfigIds,
+  ConfigManagerUpsertBody,
+  ConfigManagerUpsertNamespaceBody,
+  ParamNamespace,
+  QueryConfigIds,
+  QueryNamespaces,
+} from './decorators/controller.parameter.decorators';
+import { QuerySkip, QueryTake } from './decorators/controller.query.decorators';
+import {
+  OpenApi_DeleteNamespace,
+  OpenApi_DeleteNamespaceConfigIds,
+  OpenApi_DownloadFile,
+  OpenApi_GetNamespace,
+  OpenApi_GetNamespaceConfigIds,
+  OpenApi_GetNamespaces,
+  OpenApi_GetPagination,
+  OpenApi_PostFile,
   OpenApi_Upsert,
-} from './decorators/open-api.controller.decorator';
+  OpenApi_UpsertNamespaces,
+} from './decorators/open-api.controller.decorators';
+import { ConfigManagerUpsertNamespaceReq } from './dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
 import { ConfigManagerService } from './services/config-manager.service';
-import { reduceEntities } from './services/helpers/reduce-entities.helper';
+import { reduceToConfigs } from './services/helpers/reduce-to-configs.helper';
 
 @ApiTags('Config-Manager')
-@Controller('configs/services')
+@Controller('namespaces')
 export class ConfigManagerController {
   constructor(
     private readonly configManagerService: ConfigManagerService,
@@ -30,70 +59,100 @@ export class ConfigManagerController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
-  @PostServiceId()
+  @Post()
+  @OpenApi_UpsertNamespaces()
+  async upsertNamespaces(@ConfigManagerUpsertNamespaceBody() req: ConfigManagerUpsertNamespaceReq[]) {
+    return await this.configManagerService.upsertNamespaces(req);
+  }
+
+  @GetPagination()
+  @OpenApi_GetPagination()
+  async paginate(@QueryTake() take: number, @QuerySkip() skip: number) {
+    return await this.configManagerService.paginate(take, skip);
+  }
+
+  @PostFile()
+  @OpenApi_PostFile()
+  async uploadFile(@JsonFile() file: MultipartFile) {
+    const content = JSON.parse((await file.toBuffer()).toString());
+    return await this.configManagerService.upsertNamespaces(content);
+  }
+
+  @DownloadFile()
+  @OpenApi_DownloadFile()
+  async downloadConfigFile(@QueryNamespaces() namespaces?: string[]) {
+    const file = await this.configManagerService.downloadConfigFile(namespaces);
+    return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
+  }
+
+  @PostNamespace()
   @OpenApi_Upsert()
-  async upsert(@ParamServiceId() serviceId: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
-    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
-    const entities = await this.configManagerService.upsert(serviceId, req);
-    const cache = (await this.cache.get(prefixId)) ?? ({} as any);
-    await this.cache.set(prefixId, { ...cache, ...reduceEntities(req) }, this.configFactory.config.ttl);
+  async upsert(@ParamNamespace() namespace: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
+    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
+    const entities = await this.configManagerService.upsertNamespace(namespace, req);
+    const cache = (await this.cache.get(postfix)) ?? ({} as any);
+    await this.cache.set(
+      postfix,
+      { ...cache, ...reduceToConfigs(this.configFactory.config.resolveEnv, req) },
+      this.configFactory.config.ttl,
+    );
     return entities;
   }
 
-  @GetServiceId()
-  @OpenApi_GetByServiceId()
-  async getByServiceId(@ParamServiceId() serviceId: string) {
-    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
-    const entities = await this.configManagerService.getByServiceId(serviceId);
-    const cache = (await this.cache.get(prefixId)) ?? ({} as any);
-    const data = { ...cache, ...reduceEntities(entities) };
+  @GetNamespace()
+  @OpenApi_GetNamespace()
+  async getNamespace(@ParamNamespace() namespace: string) {
+    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
+    const cache = (await this.cache.get(postfix)) ?? ({} as any);
+    if (Object.keys(cache)?.length) return cache;
+    const data = reduceToConfigs(
+      this.configFactory.config.resolveEnv,
+      await this.configManagerService.getNamespace(namespace),
+    );
+    if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A namespace: ${namespace}`);
+    await this.cache.set(postfix, data, this.configFactory.config.ttl);
+    return data;
+  }
 
-    if (Object.keys(data)?.length) {
-      await this.cache.set(prefixId, data, this.configFactory.config.ttl);
-      return data;
-    }
-
-    throw new UnprocessableEntityException(`N/A serviceId: ${serviceId}`);
+  @Get()
+  @OpenApi_GetNamespaces()
+  async getNamespaces(@QueryNamespaces() namespaces: string[]) {
+    return await this.configManagerService.getNamespaces(namespaces);
   }
 
   @GetConfigIds()
-  @OpenApi_GetByServiceIdConfigIds()
-  async getByServiceIdConfigIds(@ParamServiceId() serviceId: string, @ParamConfigIds() configIds: string[]) {
-    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
+  @OpenApi_GetNamespaceConfigIds()
+  async getNamespaceConfigIds(@ParamNamespace() namespace: string, @QueryConfigIds() configIds: string[]) {
+    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    let cache = (await this.cache.get(prefixId)) ?? ({} as any);
+    let cache = (await this.cache.get(postfix)) ?? ({} as any);
     const matchedKeys = Object.keys(cache).filter((c) => ids.includes(c));
-
     if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
-
     if (matchedKeys?.length === ids?.length) return cache;
-
-    const entities = await this.configManagerService.getByServiceIdConfigIds(serviceId, ids);
-
-    const upsertCache = { ...cache, ...entities };
-    await this.cache.set(prefixId, upsertCache, this.configFactory.config.ttl);
-    return upsertCache;
+    const entities = await this.configManagerService.getNamespaceConfigIds(namespace, ids);
+    cache = { ...cache, ...entities };
+    await this.cache.set(postfix, cache, this.configFactory.config.ttl);
+    return cache;
   }
 
-  @DeleteServiceId()
-  @OpenApi_DeleteByServiceId()
+  @DeleteNamespace()
+  @OpenApi_DeleteNamespace()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteByServiceId(@ParamServiceId() serviceId: string) {
-    await this.cache.del(`${this.configFactory.config.namespacePrefix}_${serviceId}`);
-    await this.configManagerService.deleteByServiceId(serviceId);
+  async deleteNamespace(@ParamNamespace() namespace: string) {
+    await this.cache.del(`${namespace}_${this.configFactory.config.namespacePostfix}`);
+    await this.configManagerService.deleteNamespace(namespace);
   }
 
   @DeleteConfigIds()
-  @OpenApi_DeleteByServiceIdConfigIds()
+  @OpenApi_DeleteNamespaceConfigIds()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteByConfigIds(@ParamServiceId() serviceId: string, @ParamConfigIds() configIds: string[]) {
-    const prefixId = `${this.configFactory.config.namespacePrefix}_${serviceId}`;
+  async deleteNamespaceConfigIds(@ParamNamespace() namespace: string, @QueryConfigIds() configIds: string[]) {
+    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
-    const cache = (await this.cache.get(prefixId)) ?? ({} as any);
+    const cache = (await this.cache.get(postfix)) ?? ({} as any);
     const keys = Object.keys(cache).filter((key) => delete cache[configIds.find((id) => id === key)]);
-
-    if (keys.length) await this.cache.set(prefixId, cache, this.configFactory.config.ttl);
-    else await this.cache.del(prefixId);
-    await this.configManagerService.deleteByServiceIdConfigId(serviceId, ids);
+    await this.configManagerService.deleteNamespaceConfigIds(namespace, ids);
+    if (keys.length) await this.cache.set(postfix, cache, this.configFactory.config.ttl);
+    else await this.cache.del(postfix);
   }
 }

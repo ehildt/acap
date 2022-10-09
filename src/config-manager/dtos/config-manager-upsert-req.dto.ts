@@ -1,18 +1,22 @@
-import { IsDefined, IsString, IsUppercase } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ValueProperty } from '../decorators/class.property.decorator';
+import { IsDefined, IsString, IsUppercase } from 'class-validator';
 
 export class ConfigManagerUpsertReq {
-  constructor(copy?: ConfigManagerUpsertReq) {
-    Object.assign(this, copy);
-  }
-
   @IsString()
   @IsUppercase()
   @ApiProperty()
   configId: string;
 
   @IsDefined()
-  @ValueProperty()
-  value?: string | Record<string, unknown>;
+  @ApiProperty({
+    isArray: true,
+    type: () => ConfigManagerUpsertReq,
+    oneOf: [
+      { type: 'string', description: 'string or text' },
+      { type: 'string', description: 'environment variable identifier' },
+      { type: 'Object', description: 'plain old javascript object' },
+      { type: 'Array', description: 'a list of dreams & cookies' },
+    ],
+  })
+  value: string | Record<string, unknown> | Array<unknown>;
 }
