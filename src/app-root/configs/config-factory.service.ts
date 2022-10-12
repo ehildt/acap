@@ -10,9 +10,9 @@ export class ConfigFactoryService {
 
   get app() {
     if (this.#appConfig) return this.#appConfig;
-    return (this.#appConfig = {
+    return (this.#appConfig = Object.freeze({
       port: this.configService.get<number>('AppConfig.PORT'),
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
-    });
+    }));
   }
 }
