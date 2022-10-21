@@ -11,7 +11,7 @@ import {
   ApiBodyConfigManagerUpsert,
   ApiOkResponseConfigManagerUpsert,
   ApiParamConfigId,
-  ApiParamServiceId,
+  ApiParamNamespace,
 } from './open-api.method.decorator';
 
 export function OpenApi_Upsert() {
@@ -23,33 +23,33 @@ export function OpenApi_Upsert() {
   );
 }
 
-export function OpenApi_GetByServiceId() {
+export function OpenApi_GetByNamespace() {
   return applyDecorators(
-    ApiParamServiceId(),
+    ApiParamNamespace(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
     ApiOkResponseConfigManagerUpsert(),
   );
 }
 
-export function OpenApi_GetByServiceIdConfigIds() {
+export function OpenApi_GetByNamespaceConfigIds() {
   return applyDecorators(
     ApiOkResponse(),
     ApiParamConfigId(),
-    ApiParamServiceId(),
+    ApiParamNamespace(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
 }
 
-export function OpenApi_DeleteByServiceId() {
-  return applyDecorators(ApiParamServiceId(), ApiNoContentResponse(), ApiInternalServerErrorResponse());
+export function OpenApi_DeleteByNamespace() {
+  return applyDecorators(ApiParamNamespace(), ApiNoContentResponse(), ApiInternalServerErrorResponse());
 }
 
-export function OpenApi_DeleteByServiceIdConfigIds() {
+export function OpenApi_DeleteByNamespaceConfigIds() {
   return applyDecorators(
     ApiParamConfigId(),
-    ApiParamServiceId(),
+    ApiParamNamespace(),
     ApiNoContentResponse(),
     ApiInternalServerErrorResponse(),
   );

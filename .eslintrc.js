@@ -20,7 +20,7 @@ module.exports = {
     'plugin:sonarjs/recommended',
   ],
   rules: {
-    'no-console': ['error'], 
+    'no-console': 'error', 
     'prettier/prettier': 'error',
     'no-loops/no-loops': 'error',
     '@typescript-eslint/no-floating-promises': 'warn',

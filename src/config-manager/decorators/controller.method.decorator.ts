@@ -1,10 +1,10 @@
 import { Delete, Get, Post } from '@nestjs/common';
 
-const serviceId = ':serviceId';
-const serviceIdConfigIds = `${serviceId}/configs/:configIds`;
+const namespace = ':namespace';
+const serviceIdConfigIds = `${namespace}/configs/:configIds`;
 
-export const PostServiceId = () => Post(serviceId);
-export const GetServiceId = () => Get(serviceId);
+export const PostNamespace = () => Post(namespace);
+export const GetNamespace = () => Get(namespace);
 export const GetConfigIds = () => Get(serviceIdConfigIds);
-export const DeleteServiceId = () => Delete(serviceId);
+export const DeleteNamespace = () => Delete(namespace);
 export const DeleteConfigIds = () => Delete(serviceIdConfigIds);

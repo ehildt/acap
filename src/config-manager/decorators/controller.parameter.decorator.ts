@@ -6,6 +6,6 @@ const ParseConfigManagerPipe = new ParseArrayPipe({
   items: ConfigManagerUpsertReq,
 });
 
-export const ParamServiceId = () => Param('serviceId');
+export const ParamNamespace = () => Param('namespace');
 export const ConfigManagerUpsertBody = () => Body(ParseConfigManagerPipe);
 export const ParamConfigIds = () => Param('configIds', ParseParamConfigIdsPipe);

@@ -11,27 +11,27 @@ const { TOKEN } = Publisher;
 export class ConfigManagerService {
   constructor(private readonly configRepo: ConfigManagerRepository, @Inject(TOKEN) private client: ClientProxy) {}
 
-  async upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
-    const entity = await this.configRepo.upsert(serviceId, req);
+  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
+    const entity = await this.configRepo.upsert(namespace, req);
     const configIds = req.map(({ configId }) => configId);
-    if (entity) this.client.emit(serviceId, configIds);
+    if (entity) this.client.emit(namespace, configIds);
     return entity;
   }
 
-  async getByServiceId(serviceId: string) {
-    const entities = await this.configRepo.where({ serviceId });
+  async getByNamespace(namespace: string) {
+    const entities = await this.configRepo.where({ namespace });
     return entities ?? [];
   }
 
-  async getByServiceIdConfigIds(serviceId: string, ids: string[]) {
+  async getByNamespaceConfigIds(namespace: string, ids: string[]) {
     const entities = await this.configRepo.where({
-      serviceId,
+      namespace,
       configId: { $in: ids },
     });
 
     if (entities?.length < ids?.length)
       throw new UnprocessableEntityException(
-        `N/A [ serviceId: ${serviceId} | configId: ${ids.filter(
+        `N/A [ namespace: ${namespace} | configId: ${ids.filter(
           (id) => !entities.find(({ configId }) => configId === id),
         )} ]`,
       );
@@ -39,15 +39,15 @@ export class ConfigManagerService {
     return reduceConfigRes(entities);
   }
 
-  async deleteByServiceId(serviceId: string) {
-    const entity = await this.configRepo.delete(serviceId);
-    if (entity) this.client.emit(serviceId, []);
+  async deleteByNamespace(namespace: string) {
+    const entity = await this.configRepo.delete(namespace);
+    if (entity) this.client.emit(namespace, []);
     return entity;
   }
 
-  async deleteByServiceIdConfigId(serviceId: string, configIds?: string[]) {
-    const entity = await this.configRepo.delete(serviceId, configIds);
-    if (entity) this.client.emit(serviceId, configIds);
+  async deleteByNamespaceConfigId(namespace: string, configIds?: string[]) {
+    const entity = await this.configRepo.delete(namespace, configIds);
+    if (entity) this.client.emit(namespace, configIds);
     return entity;
   }
 }

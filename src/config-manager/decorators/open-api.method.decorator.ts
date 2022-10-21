@@ -1,7 +1,7 @@
 import { ApiBody, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 
-export const ApiParamServiceId = () => ApiParam({ name: 'serviceId', type: String });
+export const ApiParamNamespace = () => ApiParam({ name: 'namespace', type: String });
 
 export const ApiParamConfigId = () => ApiParam({ name: 'configIds', type: String });
 
