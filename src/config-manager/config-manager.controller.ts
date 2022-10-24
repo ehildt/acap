@@ -5,14 +5,17 @@ import { ConfigFactoryService } from './configs/config-factory.service';
 import {
   DeleteConfigIds,
   DeleteNamespace,
+  GetByPagination,
   GetConfigIds,
   GetNamespace,
   PostNamespace,
 } from './decorators/controller.method.decorator';
 import { ConfigManagerUpsertBody, ParamConfigIds, ParamNamespace } from './decorators/controller.parameter.decorator';
+import { QuerySkip, QueryTake } from './decorators/controller.query.decorators';
 import {
   OpenApi_DeleteByNamespace,
   OpenApi_DeleteByNamespaceConfigIds,
+  OpenApi_GetAllPagination,
   OpenApi_GetByNamespace,
   OpenApi_GetByNamespaceConfigIds,
   OpenApi_Upsert,
@@ -22,7 +25,7 @@ import { ConfigManagerService } from './services/config-manager.service';
 import { reduceEntities } from './services/helpers/reduce-entities.helper';
 
 @ApiTags('Config-Manager')
-@Controller('configs/namespaces')
+@Controller('namespaces')
 export class ConfigManagerController {
   constructor(
     private readonly configManagerService: ConfigManagerService,
@@ -38,6 +41,12 @@ export class ConfigManagerController {
     const cache = (await this.cache.get(prefixId)) ?? ({} as any);
     await this.cache.set(prefixId, { ...cache, ...reduceEntities(req) }, this.configFactory.config.ttl);
     return entities;
+  }
+
+  @GetByPagination()
+  @OpenApi_GetAllPagination()
+  async getByPagination(@QueryTake() take: number, @QuerySkip() skip: number) {
+    return await this.configManagerService.getByPagination(take, skip);
   }
 
   @GetNamespace()

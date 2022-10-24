@@ -12,6 +12,8 @@ import {
   ApiOkResponseConfigManagerUpsert,
   ApiParamConfigId,
   ApiParamNamespace,
+  ApiQuerySkip,
+  ApiQueryTake,
 } from './open-api.method.decorator';
 
 export function OpenApi_Upsert() {
@@ -21,6 +23,10 @@ export function OpenApi_Upsert() {
     ApiBodyConfigManagerUpsert(),
     ApiInternalServerErrorResponse(),
   );
+}
+
+export function OpenApi_GetAllPagination() {
+  return applyDecorators(ApiOkResponse(), ApiQueryTake(), ApiQuerySkip(), ApiInternalServerErrorResponse());
 }
 
 export function OpenApi_GetByNamespace() {

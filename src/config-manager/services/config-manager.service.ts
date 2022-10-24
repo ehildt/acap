@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Publisher } from '../constants/publisher.enum';
@@ -14,8 +15,12 @@ export class ConfigManagerService {
   async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
     const entity = await this.configRepo.upsert(namespace, req);
     const configIds = req.map(({ configId }) => configId);
-    if (entity) this.client.emit(namespace, configIds);
+    if (entity) await firstValueFrom(this.client.emit(namespace, configIds));
     return entity;
+  }
+
+  async getByPagination(take: number, skip: number) {
+    return await this.configRepo.find(take, skip);
   }
 
   async getByNamespace(namespace: string) {
@@ -41,13 +46,13 @@ export class ConfigManagerService {
 
   async deleteByNamespace(namespace: string) {
     const entity = await this.configRepo.delete(namespace);
-    if (entity) this.client.emit(namespace, []);
+    if (entity) await firstValueFrom(this.client.emit(namespace, null));
     return entity;
   }
 
   async deleteByNamespaceConfigId(namespace: string, configIds?: string[]) {
     const entity = await this.configRepo.delete(namespace, configIds);
-    if (entity) this.client.emit(namespace, configIds);
+    if (entity) await firstValueFrom(this.client.emit(namespace, configIds));
     return entity;
   }
 }

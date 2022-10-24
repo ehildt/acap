@@ -14,17 +14,21 @@ export class ConfigManagerRepository {
     private readonly configModel: Model<ConfigManagerDocument>,
   ) {}
 
-  upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
+  async find(take: number, skip: number) {
+    return await this.configModel.find({}, null, { limit: take, skip }).lean();
+  }
+
+  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
     const rowsToUpsert = prepareBulkWriteUpsert(req, namespace);
-    return this.configModel.bulkWrite(rowsToUpsert);
+    return await this.configModel.bulkWrite(rowsToUpsert);
   }
 
-  where(filter: FilterQuery<ConfigManagerGetReq>) {
-    return this.configModel.where(filter);
+  async where(filter: FilterQuery<ConfigManagerGetReq>) {
+    return await this.configModel.where(filter).lean();
   }
 
-  delete(namespace: string, req?: string[]) {
+  async delete(namespace: string, req?: string[]) {
     const rowsToDelete = prepareBulkWriteDelete(namespace, req);
-    return this.configModel.bulkWrite(rowsToDelete);
+    return await this.configModel.bulkWrite(rowsToDelete);
   }
 }
