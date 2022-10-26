@@ -1,5 +1,6 @@
 import { ApiBody, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
+import { ConfigManagerRes } from '../dtos/config-manager.res.dto';
 
 export const ApiParamNamespace = () => ApiParam({ name: 'namespace', type: String });
 
@@ -20,4 +21,10 @@ export const ApiOkResponseConfigManagerUpsert = () =>
   ApiOkResponse({
     isArray: true,
     type: ConfigManagerUpsertReq,
+  });
+
+export const ApiOkResponseGetByPagination = () =>
+  ApiOkResponse({
+    isArray: true,
+    type: ConfigManagerRes,
   });

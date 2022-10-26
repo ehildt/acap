@@ -10,6 +10,7 @@ import {
 import {
   ApiBodyConfigManagerUpsert,
   ApiOkResponseConfigManagerUpsert,
+  ApiOkResponseGetByPagination,
   ApiParamConfigId,
   ApiParamNamespace,
   ApiQuerySkip,
@@ -26,7 +27,12 @@ export function OpenApi_Upsert() {
 }
 
 export function OpenApi_GetAllPagination() {
-  return applyDecorators(ApiOkResponse(), ApiQueryTake(), ApiQuerySkip(), ApiInternalServerErrorResponse());
+  return applyDecorators(
+    ApiOkResponseGetByPagination(),
+    ApiQueryTake(),
+    ApiQuerySkip(),
+    ApiInternalServerErrorResponse(),
+  );
 }
 
 export function OpenApi_GetByNamespace() {
