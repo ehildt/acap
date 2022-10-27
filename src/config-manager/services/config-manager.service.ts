@@ -2,8 +2,10 @@ import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Publisher } from '../constants/publisher.enum';
+import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
+import { prepareBulkWriteUpsert } from './helpers/prepare-bulk-write-upsert.helper';
 import { reduceConfigRes } from './helpers/reduce-config-res.helper';
 
 const { TOKEN } = Publisher;
@@ -12,15 +14,25 @@ const { TOKEN } = Publisher;
 export class ConfigManagerService {
   constructor(private readonly configRepo: ConfigManagerRepository, @Inject(TOKEN) private client: ClientProxy) {}
 
-  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
+  async upsertByNamespace(namespace: string, req: ConfigManagerUpsertReq[]) {
     const entity = await this.configRepo.upsert(namespace, req);
     const configIds = req.map(({ configId }) => configId);
     if (entity) await firstValueFrom(this.client.emit(namespace, configIds));
     return entity;
   }
 
+  // TODO upsertPerNamespace
+  async upsertNamespaces(reqs: ConfigManagerUpsertNamespaceReq[]) {
+    return reqs.map((req) => prepareBulkWriteUpsert(req.configs, req.namespace));
+  }
+
   async getByPagination(take: number, skip: number) {
     return await this.configRepo.find(take, skip);
+  }
+
+  // TODO getByNamespaces
+  async getPerNamespaces(namespaces: string[]) {
+    return namespaces;
   }
 
   async getByNamespace(namespace: string) {

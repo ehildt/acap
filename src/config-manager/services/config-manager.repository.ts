@@ -15,7 +15,7 @@ export class ConfigManagerRepository {
   ) {}
 
   async find(take: number, skip: number) {
-    return await this.configModel.find({}, null, { limit: take, skip }).lean();
+    return await this.configModel.find({}, null, { limit: take, skip, sort: { updatedAt: 'desc' } }).lean();
   }
 
   async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {

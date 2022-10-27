@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ValueProperty } from '../decorators/class.property.decorator';
+import { oneOf } from '../decorators/class.property.values';
 
 export class ConfigManagerRes {
   @ApiProperty()
@@ -17,6 +17,6 @@ export class ConfigManagerRes {
   @ApiProperty()
   updatedAt: Date;
 
-  @ValueProperty()
-  value: string | Record<string, unknown>;
+  @ApiProperty(oneOf)
+  value: string | Record<string, unknown> | Array<unknown>;
 }

@@ -1,4 +1,5 @@
 import { ApiBody, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRes } from '../dtos/config-manager.res.dto';
 
@@ -15,6 +16,13 @@ export const ApiBodyConfigManagerUpsert = () =>
     isArray: true,
     required: true,
     type: ConfigManagerUpsertReq,
+  });
+
+export const ApiBodyConfigManagerUpsertPerNamespace = () =>
+  ApiBody({
+    isArray: true,
+    required: true,
+    type: ConfigManagerUpsertNamespaceReq,
   });
 
 export const ApiOkResponseConfigManagerUpsert = () =>

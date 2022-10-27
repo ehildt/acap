@@ -1,5 +1,13 @@
 import { Cache } from 'cache-manager';
-import { CACHE_MANAGER, Controller, HttpCode, HttpStatus, Inject, UnprocessableEntityException } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ConfigFactoryService } from './configs/config-factory.service';
 import {
@@ -9,17 +17,24 @@ import {
   GetConfigIds,
   GetNamespace,
   PostNamespace,
-} from './decorators/controller.method.decorator';
-import { ConfigManagerUpsertBody, ParamConfigIds, ParamNamespace } from './decorators/controller.parameter.decorator';
+} from './decorators/controller.method.decorators';
+import {
+  ConfigManagerUpsertBody,
+  ConfigManagerUpsertNamespaceBody,
+  ParamConfigIds,
+  ParamNamespace,
+} from './decorators/controller.parameter.decorators';
 import { QuerySkip, QueryTake } from './decorators/controller.query.decorators';
 import {
   OpenApi_DeleteByNamespace,
   OpenApi_DeleteByNamespaceConfigIds,
-  OpenApi_GetAllPagination,
   OpenApi_GetByNamespace,
   OpenApi_GetByNamespaceConfigIds,
+  OpenApi_GetByPagination,
   OpenApi_Upsert,
-} from './decorators/open-api.controller.decorator';
+  OpenApi_UpsertNamespaces,
+} from './decorators/open-api.controller.decorators';
+import { ConfigManagerUpsertNamespaceReq } from './dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
 import { ConfigManagerService } from './services/config-manager.service';
 import { reduceEntities } from './services/helpers/reduce-entities.helper';
@@ -33,18 +48,24 @@ export class ConfigManagerController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
+  @Post()
+  @OpenApi_UpsertNamespaces()
+  async upsertNamespaces(@ConfigManagerUpsertNamespaceBody() req: ConfigManagerUpsertNamespaceReq[]) {
+    return await this.configManagerService.upsertNamespaces(req);
+  }
+
   @PostNamespace()
   @OpenApi_Upsert()
   async upsert(@ParamNamespace() namespace: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
     const prefixId = `${this.configFactory.config.namespacePrefix}_${namespace}`;
-    const entities = await this.configManagerService.upsert(namespace, req);
+    const entities = await this.configManagerService.upsertByNamespace(namespace, req);
     const cache = (await this.cache.get(prefixId)) ?? ({} as any);
     await this.cache.set(prefixId, { ...cache, ...reduceEntities(req) }, this.configFactory.config.ttl);
     return entities;
   }
 
   @GetByPagination()
-  @OpenApi_GetAllPagination()
+  @OpenApi_GetByPagination()
   async getByPagination(@QueryTake() take: number, @QuerySkip() skip: number) {
     return await this.configManagerService.getByPagination(take, skip);
   }

@@ -9,13 +9,14 @@ import {
 } from '@nestjs/swagger';
 import {
   ApiBodyConfigManagerUpsert,
+  ApiBodyConfigManagerUpsertPerNamespace,
   ApiOkResponseConfigManagerUpsert,
   ApiOkResponseGetByPagination,
   ApiParamConfigId,
   ApiParamNamespace,
   ApiQuerySkip,
   ApiQueryTake,
-} from './open-api.method.decorator';
+} from './open-api.method.decorators';
 
 export function OpenApi_Upsert() {
   return applyDecorators(
@@ -26,7 +27,16 @@ export function OpenApi_Upsert() {
   );
 }
 
-export function OpenApi_GetAllPagination() {
+export function OpenApi_UpsertNamespaces() {
+  return applyDecorators(
+    ApiCreatedResponse(),
+    ApiBadRequestResponse(),
+    ApiBodyConfigManagerUpsertPerNamespace(),
+    ApiInternalServerErrorResponse(),
+  );
+}
+
+export function OpenApi_GetByPagination() {
   return applyDecorators(
     ApiOkResponseGetByPagination(),
     ApiQueryTake(),

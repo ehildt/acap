@@ -1,6 +1,6 @@
 import { IsDefined, IsString, IsUppercase } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ValueProperty } from '../decorators/class.property.decorator';
+import { oneOf } from '../decorators/class.property.values';
 
 export class ConfigManagerUpsertReq {
   @IsString()
@@ -9,6 +9,6 @@ export class ConfigManagerUpsertReq {
   configId: string;
 
   @IsDefined()
-  @ValueProperty()
-  value: string | Record<string, unknown>;
+  @ApiProperty(oneOf)
+  value: string | Record<string, unknown> | Array<unknown>;
 }
