@@ -11,9 +11,10 @@ import {
   ApiBodyConfigManagerUpsert,
   ApiBodyConfigManagerUpsertPerNamespace,
   ApiOkResponseConfigManagerUpsert,
-  ApiOkResponseGetByPagination,
-  ApiParamConfigId,
+  ApiOkResponsePagination,
   ApiParamNamespace,
+  ApiQueryConfigIds,
+  ApiQueryNamespaces,
   ApiQuerySkip,
   ApiQueryTake,
 } from './open-api.method.decorators';
@@ -36,16 +37,11 @@ export function OpenApi_UpsertNamespaces() {
   );
 }
 
-export function OpenApi_GetByPagination() {
-  return applyDecorators(
-    ApiOkResponseGetByPagination(),
-    ApiQueryTake(),
-    ApiQuerySkip(),
-    ApiInternalServerErrorResponse(),
-  );
+export function OpenApi_GetPagination() {
+  return applyDecorators(ApiOkResponsePagination(), ApiQueryTake(), ApiQuerySkip(), ApiInternalServerErrorResponse());
 }
 
-export function OpenApi_GetByNamespace() {
+export function OpenApi_GetNamespace() {
   return applyDecorators(
     ApiParamNamespace(),
     ApiInternalServerErrorResponse(),
@@ -54,23 +50,32 @@ export function OpenApi_GetByNamespace() {
   );
 }
 
-export function OpenApi_GetByNamespaceConfigIds() {
+export function OpenApi_GetNamespaceConfigIds() {
   return applyDecorators(
     ApiOkResponse(),
-    ApiParamConfigId(),
+    ApiQueryConfigIds(),
     ApiParamNamespace(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
 }
 
-export function OpenApi_DeleteByNamespace() {
+export function OpenApi_GetNamespaces() {
+  return applyDecorators(
+    ApiOkResponse(),
+    ApiQueryNamespaces(),
+    ApiInternalServerErrorResponse(),
+    ApiUnprocessableEntityResponse(),
+  );
+}
+
+export function OpenApi_DeleteNamespace() {
   return applyDecorators(ApiParamNamespace(), ApiNoContentResponse(), ApiInternalServerErrorResponse());
 }
 
-export function OpenApi_DeleteByNamespaceConfigIds() {
+export function OpenApi_DeleteNamespaceConfigIds() {
   return applyDecorators(
-    ApiParamConfigId(),
+    ApiQueryConfigIds(),
     ApiParamNamespace(),
     ApiNoContentResponse(),
     ApiInternalServerErrorResponse(),

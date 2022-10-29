@@ -13,7 +13,7 @@ services:
       - START_SWAGGER=true
       - PRINT_ENV=true
       - CONFIG_MANAGER_TTL=300
-      - CONFIG_MANAGER_NAMESPACE_PREFIX=''
+      - CONFIG_MANAGER_NAMESPACE_POSTFIX=''
       - MONGO_USER=mongo
       - MONGO_PASS=mongo
       - MONGO_DB_NAME=configs
@@ -62,7 +62,7 @@ networks:
 - PRINT_ENV `logs the envs`
 
 - CONFIG_MANAGER_TTL `config object ttl`
-- CONFIG_MANAGER_NAMESPACE_PREFIX `the prefix for the namespace; autogenerates if empty`
+- CONFIG_MANAGER_NAMESPACE_POSTFIX `the prefix for the namespace; autogenerates if empty`
 
 - REDIS_PASS `the redis password`
 - REDIS_HOST `the redis host aka localhost`

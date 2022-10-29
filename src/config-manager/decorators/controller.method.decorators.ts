@@ -1,11 +1,11 @@
 import { Delete, Get, Post } from '@nestjs/common';
 
 const namespace = ':namespace';
-const serviceIdConfigIds = `${namespace}/configs/:configIds`;
+const namespaceConfigIds = `${namespace}/configs/:configIds`;
 
-export const GetByPagination = () => Get();
+export const GetPagination = () => Get('pagination');
 export const PostNamespace = () => Post(namespace);
 export const GetNamespace = () => Get(namespace);
-export const GetConfigIds = () => Get(serviceIdConfigIds);
+export const GetConfigIds = () => Get(namespaceConfigIds);
 export const DeleteNamespace = () => Delete(namespace);
-export const DeleteConfigIds = () => Delete(serviceIdConfigIds);
+export const DeleteConfigIds = () => Delete(namespaceConfigIds);

@@ -2,10 +2,11 @@ import { FilterQuery, Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ConfigManagerGetReq } from '../dtos/config-manager-get-req.dto';
+import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManager, ConfigManagerDocument } from '../schemas/config-manager.schema';
 import { prepareBulkWriteDelete } from './helpers/prepare-bulk-write-delete.helper';
-import { prepareBulkWriteUpsert } from './helpers/prepare-bulk-write-upsert.helper';
+import { prepareBulkWrite } from './helpers/prepare-bulk-write-upsert.helper';
 
 @Injectable()
 export class ConfigManagerRepository {
@@ -18,8 +19,13 @@ export class ConfigManagerRepository {
     return await this.configModel.find({}, null, { limit: take, skip, sort: { updatedAt: 'desc' } }).lean();
   }
 
+  async upsertMany(reqs: ConfigManagerUpsertNamespaceReq[]) {
+    const preparedUpserts = reqs.map((req) => prepareBulkWrite(req.configs, req.namespace)).flat();
+    return await this.configModel.bulkWrite(preparedUpserts);
+  }
+
   async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
-    const rowsToUpsert = prepareBulkWriteUpsert(req, namespace);
+    const rowsToUpsert = prepareBulkWrite(req, namespace);
     return await this.configModel.bulkWrite(rowsToUpsert);
   }
 

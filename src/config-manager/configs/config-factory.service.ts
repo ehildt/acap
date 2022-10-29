@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
-import { ManagerConfig, MongoConfig, PublisherConfig, RedisConfig } from './config-factory.modal';
+import { ConfigManager, MongoConfig, PublisherConfig, RedisConfig } from './config-factory.modal';
 
 @Injectable()
 export class ConfigFactoryService {
   #mongoConfig: MongoConfig;
   #publisherConfig: PublisherConfig;
   #redisConfig: RedisConfig;
-  #managerConfig: ManagerConfig;
+  #managerConfig: ConfigManager;
 
   constructor(private readonly configService: ConfigService) {}
 
@@ -26,8 +26,8 @@ export class ConfigFactoryService {
   get config() {
     if (this.#managerConfig) return this.#managerConfig;
     return (this.#managerConfig = Object.freeze({
-      ttl: this.configService.get<number>('ManagerConfig.TTL'),
-      namespacePrefix: this.configService.get<string>('ManagerConfig.NAMESPACE_PREFIX'),
+      ttl: this.configService.get<number>('ConfigManager.TTL'),
+      namespacePostfix: this.configService.get<string>('ConfigManager.NAMESPACE_POSTFIX'),
     }));
   }
 

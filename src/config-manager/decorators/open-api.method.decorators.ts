@@ -5,7 +5,9 @@ import { ConfigManagerRes } from '../dtos/config-manager.res.dto';
 
 export const ApiParamNamespace = () => ApiParam({ name: 'namespace', type: String });
 
-export const ApiParamConfigId = () => ApiParam({ name: 'configIds', type: String });
+export const ApiQueryConfigIds = () => ApiQuery({ name: 'configIds', type: String, isArray: true });
+
+export const ApiQueryNamespaces = () => ApiQuery({ name: 'namespaces', type: String, isArray: true });
 
 export const ApiQueryTake = () => ApiQuery({ name: 'take', example: '100' });
 
@@ -31,7 +33,7 @@ export const ApiOkResponseConfigManagerUpsert = () =>
     type: ConfigManagerUpsertReq,
   });
 
-export const ApiOkResponseGetByPagination = () =>
+export const ApiOkResponsePagination = () =>
   ApiOkResponse({
     isArray: true,
     type: ConfigManagerRes,

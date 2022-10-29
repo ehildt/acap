@@ -1,46 +1,81 @@
+import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
-import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ConfigFactoryService } from '../configs/config-factory.service';
 import { Publisher } from '../constants/publisher.enum';
 import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
-import { prepareBulkWriteUpsert } from './helpers/prepare-bulk-write-upsert.helper';
-import { reduceConfigRes } from './helpers/reduce-config-res.helper';
-
-const { TOKEN } = Publisher;
+import { reduceEntities } from './helpers/reduce-entities.helper';
+import { reduceToNamespaces } from './helpers/reduce-to-namespaces.helper';
 
 @Injectable()
 export class ConfigManagerService {
-  constructor(private readonly configRepo: ConfigManagerRepository, @Inject(TOKEN) private client: ClientProxy) {}
+  constructor(
+    private readonly configRepo: ConfigManagerRepository,
+    @Inject(Publisher.TOKEN) private client: ClientProxy,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+    private readonly factory: ConfigFactoryService,
+  ) {}
 
-  async upsertByNamespace(namespace: string, req: ConfigManagerUpsertReq[]) {
-    const entity = await this.configRepo.upsert(namespace, req);
+  async upsertNamespace(namespace: string, req: ConfigManagerUpsertReq[]) {
+    const result = await this.configRepo.upsert(namespace, req);
     const configIds = req.map(({ configId }) => configId);
-    if (entity) await firstValueFrom(this.client.emit(namespace, configIds));
-    return entity;
+    if (result?.ok) {
+      const data = await this.configRepo.where({ namespace });
+      await this.cache.set(namespace, data, this.factory.redis.ttl);
+      await firstValueFrom(this.client.emit(namespace, configIds));
+    }
+    return result;
   }
 
-  // TODO upsertPerNamespace
   async upsertNamespaces(reqs: ConfigManagerUpsertNamespaceReq[]) {
-    return reqs.map((req) => prepareBulkWriteUpsert(req.configs, req.namespace));
+    const result = await this.configRepo.upsertMany(reqs);
+
+    if (result?.ok) {
+      const namespaces = reqs.map(({ namespace }) => namespace);
+      const entities = await this.configRepo.where({ namespace: { $in: namespaces } });
+      const data = entities.reduce(reduceToNamespaces, {});
+
+      await Promise.all(
+        Object.keys(data).map(async (namespace) => {
+          const postfix = `$${namespace} @${this.factory.config.namespacePostfix}`;
+          await this.cache.set(postfix, data[namespace], this.factory.redis.ttl);
+        }),
+      );
+
+      await Promise.all(
+        reqs.map(
+          async (req) =>
+            await firstValueFrom(
+              this.client.emit(
+                req.namespace,
+                req.configs.map(({ configId }) => configId),
+              ),
+            ),
+        ),
+      );
+    }
+
+    return result;
   }
 
-  async getByPagination(take: number, skip: number) {
+  async paginate(take: number, skip: number) {
     return await this.configRepo.find(take, skip);
   }
 
-  // TODO getByNamespaces
-  async getPerNamespaces(namespaces: string[]) {
-    return namespaces;
+  async getNamespaces(namespaces: string[]) {
+    const entities = await this.configRepo.where({ namespace: { $in: namespaces } });
+    return entities?.reduce(reduceToNamespaces, {});
   }
 
-  async getByNamespace(namespace: string) {
-    const entities = await this.configRepo.where({ namespace });
-    return entities ?? [];
+  async getNamespace(namespace: string) {
+    const entity = await this.configRepo.where({ namespace });
+    return entity ?? [];
   }
 
-  async getByNamespaceConfigIds(namespace: string, ids: string[]) {
+  async getNamespaceConfigIds(namespace: string, ids: string[]) {
     const entities = await this.configRepo.where({
       namespace,
       configId: { $in: ids },
@@ -53,16 +88,16 @@ export class ConfigManagerService {
         )} ]`,
       );
 
-    return reduceConfigRes(entities);
+    return reduceEntities(entities);
   }
 
-  async deleteByNamespace(namespace: string) {
+  async deleteNamespace(namespace: string) {
     const entity = await this.configRepo.delete(namespace);
-    if (entity) await firstValueFrom(this.client.emit(namespace, null));
+    if (entity) await firstValueFrom(this.client.emit(namespace, {}));
     return entity;
   }
 
-  async deleteByNamespaceConfigId(namespace: string, configIds?: string[]) {
+  async deleteNamespaceConfigIds(namespace: string, configIds?: string[]) {
     const entity = await this.configRepo.delete(namespace, configIds);
     if (entity) await firstValueFrom(this.client.emit(namespace, configIds));
     return entity;
