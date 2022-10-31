@@ -4,6 +4,7 @@ const namespace = ':namespace';
 const namespaceConfigIds = `${namespace}/configs/:configIds`;
 
 export const GetPagination = () => Get('pagination');
+export const PostFile = () => Post('files');
 export const PostNamespace = () => Post(namespace);
 export const GetNamespace = () => Get(namespace);
 export const GetConfigIds = () => Get(namespaceConfigIds);

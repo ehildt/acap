@@ -19,6 +19,10 @@ export class ConfigManagerRepository {
     return await this.configModel.find({}, null, { limit: take, skip, sort: { updatedAt: 'desc' } }).lean();
   }
 
+  async where(filter: FilterQuery<ConfigManagerGetReq>) {
+    return await this.configModel.where(filter).lean();
+  }
+
   async upsertMany(reqs: ConfigManagerUpsertNamespaceReq[]) {
     const preparedUpserts = reqs.map((req) => prepareBulkWrite(req.configs, req.namespace)).flat();
     return await this.configModel.bulkWrite(preparedUpserts);
@@ -27,10 +31,6 @@ export class ConfigManagerRepository {
   async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
     const rowsToUpsert = prepareBulkWrite(req, namespace);
     return await this.configModel.bulkWrite(rowsToUpsert);
-  }
-
-  async where(filter: FilterQuery<ConfigManagerGetReq>) {
-    return await this.configModel.where(filter).lean();
   }
 
   async delete(namespace: string, req?: string[]) {

@@ -14,9 +14,9 @@ import { reduceToNamespaces } from './helpers/reduce-to-namespaces.helper';
 export class ConfigManagerService {
   constructor(
     private readonly configRepo: ConfigManagerRepository,
+    private readonly factory: ConfigFactoryService,
     @Inject(Publisher.TOKEN) private client: ClientProxy,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
-    private readonly factory: ConfigFactoryService,
   ) {}
 
   async upsertNamespace(namespace: string, req: ConfigManagerUpsertReq[]) {
@@ -71,8 +71,7 @@ export class ConfigManagerService {
   }
 
   async getNamespace(namespace: string) {
-    const entity = await this.configRepo.where({ namespace });
-    return entity ?? [];
+    return await this.configRepo.where({ namespace });
   }
 
   async getNamespaceConfigIds(namespace: string, ids: string[]) {
@@ -97,7 +96,7 @@ export class ConfigManagerService {
     return entity;
   }
 
-  async deleteNamespaceConfigIds(namespace: string, configIds?: string[]) {
+  async deleteNamespaceConfigIds(namespace: string, configIds: string[]) {
     const entity = await this.configRepo.delete(namespace, configIds);
     if (entity) await firstValueFrom(this.client.emit(namespace, configIds));
     return entity;

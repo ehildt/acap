@@ -32,6 +32,7 @@
     "ncu:validate": "npx npm-check-updates -e 2 --packageFile=./package.json"
   },
   "dependencies": {
+    "@fastify/multipart": "^7.3.0",
     "@fastify/static": "^6.5.0",
     "@nestjs/common": "9.1.6",
     "@nestjs/config": "2.2.0",

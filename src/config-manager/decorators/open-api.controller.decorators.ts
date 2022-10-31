@@ -1,6 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
@@ -18,6 +20,28 @@ import {
   ApiQuerySkip,
   ApiQueryTake,
 } from './open-api.method.decorators';
+
+export function OpenApi_PostFile() {
+  return applyDecorators(
+    ApiCreatedResponse(),
+    ApiBadRequestResponse(),
+    ApiInternalServerErrorResponse(),
+    ApiConsumes('multipart/form-data'),
+    ApiBody({
+      schema: {
+        type: 'object',
+        required: ['config.json'],
+        properties: {
+          'config.json': {
+            description: 'a json file, which contains the configuration(s) for the namespace(s)',
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    }),
+  );
+}
 
 export function OpenApi_Upsert() {
   return applyDecorators(

@@ -1,4 +1,5 @@
 import { Cache } from 'cache-manager';
+import { MultipartFile } from '@fastify/multipart';
 import {
   CACHE_MANAGER,
   Controller,
@@ -11,12 +12,14 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ConfigFactoryService } from './configs/config-factory.service';
+import { JsonFile } from './decorators/class.property.values';
 import {
   DeleteConfigIds,
   DeleteNamespace,
   GetConfigIds,
   GetNamespace,
   GetPagination,
+  PostFile,
   PostNamespace,
 } from './decorators/controller.method.decorators';
 import {
@@ -34,6 +37,7 @@ import {
   OpenApi_GetNamespaceConfigIds,
   OpenApi_GetNamespaces,
   OpenApi_GetPagination,
+  OpenApi_PostFile,
   OpenApi_Upsert,
   OpenApi_UpsertNamespaces,
 } from './decorators/open-api.controller.decorators';
@@ -55,6 +59,13 @@ export class ConfigManagerController {
   @OpenApi_UpsertNamespaces()
   async upsertNamespaces(@ConfigManagerUpsertNamespaceBody() req: ConfigManagerUpsertNamespaceReq[]) {
     return await this.configManagerService.upsertNamespaces(req);
+  }
+
+  @PostFile()
+  @OpenApi_PostFile()
+  async uploadFile(@JsonFile() file: MultipartFile) {
+    const content = JSON.parse((await file.toBuffer()).toString());
+    return await this.configManagerService.upsertNamespaces(content);
   }
 
   @PostNamespace()
@@ -101,9 +112,9 @@ export class ConfigManagerController {
     if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
     if (matchedKeys?.length === ids?.length) return cache;
     const entities = await this.configManagerService.getNamespaceConfigIds(namespace, ids);
-    const upsertCache = { ...cache, ...entities };
-    await this.cache.set(postfix, upsertCache, this.configFactory.config.ttl);
-    return upsertCache;
+    cache = { ...cache, ...entities };
+    await this.cache.set(postfix, cache, this.configFactory.config.ttl);
+    return cache;
   }
 
   @DeleteNamespace()
