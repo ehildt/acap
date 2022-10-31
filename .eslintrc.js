@@ -14,15 +14,15 @@ module.exports = {
   plugins: ['@typescript-eslint/eslint-plugin', 'no-loops', 'prettier'],
   extends: [
     'eslint:recommended',
+    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
     'plugin:sonarjs/recommended',
   ],
   rules: {
-    'no-console': ['error'], 
-    'prettier/prettier': 'error',
+    'no-console': 'error',
     'no-loops/no-loops': 'error',
+    'prettier/prettier': 'error',
     '@typescript-eslint/no-floating-promises': 'warn',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

@@ -1,3 +1,4 @@
+import fastifyMultipart from '@fastify/multipart';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app-root/app.module';
@@ -15,6 +16,7 @@ void (async () => {
   appService.enableVersioning(app);
   appService.enableOpenApi(app);
 
+  await app.register(fastifyMultipart);
   await app.listen(appFactory.app.port, '0.0.0.0');
   appService.logOnServerStart(appFactory, configFactory);
 })();

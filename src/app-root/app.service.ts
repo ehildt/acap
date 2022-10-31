@@ -44,6 +44,8 @@ export class AppService {
       SwaggerModule.setup(API_DOCS, app, openApiObj, {
         swaggerOptions: {
           explorer: true,
+          apisSorter: 'alpha',
+          operationsSorter: 'alpha',
           tagsSorter: 'alpha',
         },
       });

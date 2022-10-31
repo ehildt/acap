@@ -2,10 +2,11 @@ import { FilterQuery, Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ConfigManagerGetReq } from '../dtos/config-manager-get-req.dto';
+import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManager, ConfigManagerDocument } from '../schemas/config-manager.schema';
 import { prepareBulkWriteDelete } from './helpers/prepare-bulk-write-delete.helper';
-import { prepareBulkWriteUpsert } from './helpers/prepare-bulk-write-upsert.helper';
+import { prepareBulkWrite } from './helpers/prepare-bulk-write-upsert.helper';
 
 @Injectable()
 export class ConfigManagerRepository {
@@ -14,17 +15,26 @@ export class ConfigManagerRepository {
     private readonly configModel: Model<ConfigManagerDocument>,
   ) {}
 
-  upsert(serviceId: string, req: ConfigManagerUpsertReq[]) {
-    const rowsToUpsert = prepareBulkWriteUpsert(req, serviceId);
-    return this.configModel.bulkWrite(rowsToUpsert);
+  async find(take: number, skip: number) {
+    return await this.configModel.find({}, null, { limit: take, skip, sort: { updatedAt: 'desc' } }).lean();
   }
 
-  where(filter: FilterQuery<ConfigManagerGetReq>) {
-    return this.configModel.where(filter);
+  async where(filter: FilterQuery<ConfigManagerGetReq>) {
+    return await this.configModel.where(filter).lean();
   }
 
-  delete(serviceId: string, req?: string[]) {
-    const rowsToDelete = prepareBulkWriteDelete(serviceId, req);
-    return this.configModel.bulkWrite(rowsToDelete);
+  async upsertMany(reqs: ConfigManagerUpsertNamespaceReq[]) {
+    const preparedUpserts = reqs.map((req) => prepareBulkWrite(req.configs, req.namespace)).flat();
+    return await this.configModel.bulkWrite(preparedUpserts);
+  }
+
+  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
+    const rowsToUpsert = prepareBulkWrite(req, namespace);
+    return await this.configModel.bulkWrite(rowsToUpsert);
+  }
+
+  async delete(namespace: string, req?: string[]) {
+    const rowsToDelete = prepareBulkWriteDelete(namespace, req);
+    return await this.configModel.bulkWrite(rowsToDelete);
   }
 }

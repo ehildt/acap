@@ -13,7 +13,7 @@ services:
       - START_SWAGGER=true
       - PRINT_ENV=true
       - CONFIG_MANAGER_TTL=300
-      - CONFIG_MANAGER_NAMESPACE_PREFIX=''
+      - CONFIG_MANAGER_NAMESPACE_POSTFIX=''
       - MONGO_USER=mongo
       - MONGO_PASS=mongo
       - MONGO_DB_NAME=configs
@@ -62,7 +62,7 @@ networks:
 - PRINT_ENV `logs the envs`
 
 - CONFIG_MANAGER_TTL `config object ttl`
-- CONFIG_MANAGER_NAMESPACE_PREFIX `the prefix for the serviceId; autogenerates if empty`
+- CONFIG_MANAGER_NAMESPACE_POSTFIX `the prefix for the namespace; autogenerates if empty`
 
 - REDIS_PASS `the redis password`
 - REDIS_HOST `the redis host aka localhost`
@@ -78,4 +78,4 @@ networks:
 
 ## Caching Insights
 
-Every config object is represented by it's serviceId and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular serviceId. Whenever the config object is altered, the ttl is reset to 300 seconds (fallback) or whatever has been provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Any in-memory solution implements a simple key-value storage. This means there is no such thing as a namespace or context ales custom implemented. The prefix is such a custom implementation of a namespace/context. Let's say your key (serviceId) is test1234, then the prefix will be appended and your serviceId turns into \<prefix>\_test1234. If the prefix-serviceId combination is not unique, then all applications which use the same in-memory cache will alienate the config object.
+Every config object is represented by it's namespace and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular namespace. Whenever the config object is altered, the ttl is reset to 300 seconds (fallback) or whatever has been provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Any in-memory solution implements a simple key-value storage. This means there is no such thing as a namespace or context ales custom implemented. The prefix is such a custom implementation of a namespace/context. Let's say your key (namespace) is test1234, then the prefix will be appended and your namespace turns into \<prefix>\_test1234. If the prefix-namespace combination is not unique, then all applications which use the same in-memory cache will alienate the config object.

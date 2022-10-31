@@ -1,8 +1,9 @@
-export class ConfigManagerGetReq {
-  constructor(copy?: ConfigManagerGetReq) {
-    Object.assign(this, copy);
-  }
+import { ApiProperty } from '@nestjs/swagger';
 
-  serviceId: string;
+export class ConfigManagerGetReq {
+  @ApiProperty()
+  namespace: string;
+
+  @ApiProperty()
   configId: string;
 }

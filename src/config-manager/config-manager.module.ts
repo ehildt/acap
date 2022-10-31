@@ -29,7 +29,7 @@ import { ConfigManagerService } from './services/config-manager.service';
       imports: [ConfigModule],
       inject: [ConfigFactoryService],
       extraProviders: [ConfigFactoryService],
-      useFactory: ({ redis }: ConfigFactoryService) => ({ ...redis, store: RedisStore.create(redis) } as any),
+      useFactory: ({ redis }: ConfigFactoryService) => ({ ...redis, store: RedisStore }),
     }),
     ConfigModule.forRoot({
       cache: true,

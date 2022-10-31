@@ -16,8 +16,8 @@ export interface RedisConfig {
   password: string;
 }
 
-export interface ManagerConfig {
-  namespacePrefix: string;
+export interface ConfigManager {
+  namespacePostfix: string;
   ttl: number;
 }
 
