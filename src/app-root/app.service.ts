@@ -41,14 +41,7 @@ export class AppService {
           .setVersion('1.0')
           .build(),
       );
-      SwaggerModule.setup(API_DOCS, app, openApiObj, {
-        swaggerOptions: {
-          explorer: true,
-          apisSorter: 'alpha',
-          operationsSorter: 'alpha',
-          tagsSorter: 'alpha',
-        },
-      });
+      SwaggerModule.setup(API_DOCS, app, openApiObj);
     }
   }
 
@@ -61,6 +54,7 @@ export class AppService {
             CONFIG_MANAGER_CONFIG: configFactory.config,
             MONGO_CONFIG: configFactory.mongo,
             REDIS_CONFIG: configFactory.redis,
+            REDIS_PUBLISHER_CONFIG: configFactory.publisher,
           },
           null,
           4,

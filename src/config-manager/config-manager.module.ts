@@ -10,9 +10,11 @@ import { ConfigPublisherRegistry } from './configs/config-publisher/registry.dbs
 import { MongoConfigRegistry } from './configs/mongo/registry.dbs';
 import { RedisConfigRegistry } from './configs/redis/registry.dbs';
 import { Publisher } from './constants/publisher.enum';
-import { ConfigManager, ConfigManagerSchema } from './schemas/config-manager.schema';
+import { ConfigManagerConfigs, ConfigManagerConfigsSchema } from './schemas/configs.schema';
+import { ConfigManagerNamespaces, ConfigManagerNamespacesSchema } from './schemas/namespaces.schema';
 import { ConfigManagerRepository } from './services/config-manager.repository';
 import { ConfigManagerService } from './services/config-manager.service';
+import { envValidationSchema } from './validations/env.validation.schema';
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { ConfigManagerService } from './services/config-manager.service';
       cache: true,
       ignoreEnvFile: true,
       load: [MongoConfigRegistry, RedisConfigRegistry, ConfigManagerRegistry, ConfigPublisherRegistry],
+      validationSchema: envValidationSchema,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -43,9 +46,14 @@ import { ConfigManagerService } from './services/config-manager.service';
     }),
     MongooseModule.forFeature([
       {
-        name: ConfigManager.name,
-        schema: ConfigManagerSchema,
+        name: ConfigManagerConfigs.name,
+        schema: ConfigManagerConfigsSchema,
         collection: 'configs',
+      },
+      {
+        name: ConfigManagerNamespaces.name,
+        schema: ConfigManagerNamespacesSchema,
+        collection: 'namespaces',
       },
     ]),
   ],

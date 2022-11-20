@@ -1,6 +1,6 @@
+import { AppConfig } from '@/config.yml.modal';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AppConfig } from './config-factory.modal';
 
 @Injectable()
 export class ConfigFactoryService {
@@ -13,6 +13,7 @@ export class ConfigFactoryService {
     return (this.#appConfig = Object.freeze({
       port: this.configService.get<number>('AppConfig.PORT'),
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
+      printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
     }));
   }
 }

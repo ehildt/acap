@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppService } from './app.service';
 import { AppConfigRegistry } from './configs/app-config/app-config-registry.dbs';
 import { ConfigFactoryService } from './configs/config-factory.service';
+import { envValidationSchema } from './validations/env.validation.schema';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ConfigFactoryService } from './configs/config-factory.service';
       cache: true,
       ignoreEnvFile: true,
       load: [AppConfigRegistry],
+      validationSchema: envValidationSchema,
     }),
   ],
   providers: [AppService, ConsoleLogger, ConfigFactoryService],

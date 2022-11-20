@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Inject,
   Post,
+  StreamableFile,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,6 +17,7 @@ import { JsonFile } from './decorators/class.property.values';
 import {
   DeleteConfigIds,
   DeleteNamespace,
+  DownloadFile,
   GetConfigIds,
   GetNamespace,
   GetPagination,
@@ -33,6 +35,7 @@ import { QuerySkip, QueryTake } from './decorators/controller.query.decorators';
 import {
   OpenApi_DeleteNamespace,
   OpenApi_DeleteNamespaceConfigIds,
+  OpenApi_DownloadFile,
   OpenApi_GetNamespace,
   OpenApi_GetNamespaceConfigIds,
   OpenApi_GetNamespaces,
@@ -61,11 +64,25 @@ export class ConfigManagerController {
     return await this.configManagerService.upsertNamespaces(req);
   }
 
+  @GetPagination()
+  @OpenApi_GetPagination()
+  async paginate(@QueryTake() take: number, @QuerySkip() skip: number) {
+    return await this.configManagerService.paginate(take, skip);
+  }
+
   @PostFile()
   @OpenApi_PostFile()
   async uploadFile(@JsonFile() file: MultipartFile) {
     const content = JSON.parse((await file.toBuffer()).toString());
     return await this.configManagerService.upsertNamespaces(content);
+  }
+
+  @DownloadFile()
+  @OpenApi_DownloadFile()
+  async downloadFile(@QueryNamespaces() namespaces: string[]) {
+    return new StreamableFile(
+      Buffer.from(JSON.stringify(await this.configManagerService.getNamespaces(namespaces), null, 4)),
+    );
   }
 
   @PostNamespace()
@@ -76,12 +93,6 @@ export class ConfigManagerController {
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     await this.cache.set(postfix, { ...cache, ...reduceToConfigs(req) }, this.configFactory.config.ttl);
     return entities;
-  }
-
-  @GetPagination()
-  @OpenApi_GetPagination()
-  async paginate(@QueryTake() take: number, @QuerySkip() skip: number) {
-    return await this.configManagerService.paginate(take, skip);
   }
 
   @GetNamespace()

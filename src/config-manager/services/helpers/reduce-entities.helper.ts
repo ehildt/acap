@@ -1,12 +1,15 @@
 import { LeanDocumentOrArray } from 'mongoose';
-import { ConfigManagerDocument } from '@/config-manager/schemas/config-manager.schema';
+import { ConfigManagerConfigsDocument } from '@/config-manager/schemas/configs.schema';
 import { challengeConfigValue } from './challenge-config-source.helper';
 
-const entityReducer = (previous: Record<string, unknown>, document: ConfigManagerDocument) => ({
+const entityReducer = (
+  previous: Record<string, unknown>,
+  document: LeanDocumentOrArray<ConfigManagerConfigsDocument>,
+) => ({
   ...previous,
   [document.configId]: challengeConfigValue(document.value),
 });
 
-export function reduceEntities(documents?: LeanDocumentOrArray<ConfigManagerDocument[]>) {
-  return documents.reduce(entityReducer, {});
+export function reduceEntities(documents?: LeanDocumentOrArray<ConfigManagerConfigsDocument[]>) {
+  return documents?.reduce(entityReducer, {});
 }
