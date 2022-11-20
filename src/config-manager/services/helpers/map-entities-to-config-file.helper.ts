@@ -1,7 +1,7 @@
 import { LeanDocument } from 'mongoose';
 import { ConfigManagerConfigs } from '@/config-manager/schemas/configs.schema';
 
-export function mapEntitiesToConfigFile(namespaces: string[], entities: LeanDocument<ConfigManagerConfigs>[]) {
+export function mapEntitiesToConfigFile(entities: LeanDocument<ConfigManagerConfigs>[], namespaces?: string[]) {
   return namespaces?.map((namespace) => ({
     namespace,
     configs: entities

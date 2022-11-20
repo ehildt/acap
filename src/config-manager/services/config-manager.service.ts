@@ -72,10 +72,16 @@ export class ConfigManagerService {
     return entities?.reduce(reduceToNamespaces, {});
   }
 
-  async downloadConfigFile(namespaces: string[]) {
+  async downloadConfigFile(namespaces?: string[]) {
+    if (!namespaces) {
+      const entities = await this.configRepo.findAll();
+      const namespaces = Array.from(new Set(entities.map(({ namespace }) => namespace)));
+      return mapEntitiesToConfigFile(entities, namespaces);
+    }
+
     const spaces = Array.from(new Set(namespaces.map((space) => space.trim())));
     const entities = await this.configRepo.where({ namespace: { $in: spaces } });
-    return mapEntitiesToConfigFile(namespaces, entities);
+    return mapEntitiesToConfigFile(entities, namespaces);
   }
 
   async getNamespace(namespace: string) {

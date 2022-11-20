@@ -79,7 +79,7 @@ export class ConfigManagerController {
 
   @DownloadFile()
   @OpenApi_DownloadFile()
-  async downloadFile(@QueryNamespaces() namespaces: string[]) {
+  async downloadConfigFile(@QueryNamespaces() namespaces?: string[]) {
     const file = await this.configManagerService.downloadConfigFile(namespaces);
     return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
   }

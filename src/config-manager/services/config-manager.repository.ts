@@ -20,6 +20,10 @@ export class ConfigManagerRepository {
     private readonly namespaceModel: Model<ConfigManagerNamespacesDocument>,
   ) {}
 
+  async findAll() {
+    return await this.configsModel.find().sort({ namespace: 'desc', updatedAt: 'desc' }).lean();
+  }
+
   async find(take: number, skip: number) {
     const namespaces = (await this.namespaceModel.find({}, null, { limit: take, skip }).lean()).map(
       ({ namespace }) => namespace,
