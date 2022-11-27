@@ -41,6 +41,6 @@ export interface ConfigYml {
   appConfig: AppConfig;
   mongoConfig: MongoConfig;
   redisConfig: RedisConfig;
-  redisPublisherConfig: RedisPublisherConfig;
   managerConfig: ManagerConfig;
+  redisPublisherConfig: RedisPublisherConfig;
 }
