@@ -14,5 +14,5 @@ info 'npm run test -- --silent' && npm run test -- --silent
 # no unused exports
 info 'npm run ts-unused-exports' && npm run ts-unused-exports
 
-# add known orphans to .dependency-orphans.json
-info 'npm run dependency-cruiser' && npm run dependency-cruiser
+# add known orphans to .depcruiserrc.json
+info 'npm run depcruiser' && npm run depcruiser

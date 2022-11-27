@@ -85,9 +85,9 @@ check_package_dependencies() {
 # check licenses
 check_licenses() {
     if [ $(npx licensee --errors-only | wc -m) -eq 0 ]; then
-        info "check-license.. $(yellowfy ok)"
+        info "license.. $(yellowfy ok)"
     else
-        info "check-license.. $(redfy error)"
+        info "license.. $(redfy error)"
         debug "resolve licenses (.lecensee.json)"
         exit 1
     fi
