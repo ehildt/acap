@@ -1,6 +1,7 @@
 import fastifyMultipart from '@fastify/multipart';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+
 import { AppModule } from './app-root/app.module';
 import { AppService } from './app-root/app.service';
 import { ConfigFactoryService as AppFactory } from './app-root/configs/config-factory.service';

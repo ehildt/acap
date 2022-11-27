@@ -1,0 +1,6 @@
+dist
+.husky
+.gitlab
+.vscode
+node_modules
+.json

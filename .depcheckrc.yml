@@ -1,0 +1,12 @@
+skip-missing: true
+ignores: 
+  - "@nestjs/schematics"
+  - "@types/eslint"
+  - "@types/jest"
+  - "@types/prettier"
+  - dependency-cruiser
+  - jest-junit
+  - source-map-support
+  - ts-jest
+  - ts-loader
+  - tsconfig-paths

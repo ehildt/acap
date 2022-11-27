@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
-import { ConfigManager, MongoConfig, PublisherConfig, RedisConfig } from './config-factory.modal';
+
+import { ManagerConfig, MongoConfig, RedisConfig, RedisPublisherConfig } from '@/config.yml.modal';
 
 @Injectable()
 export class ConfigFactoryService {
   #mongoConfig: MongoConfig;
-  #publisherConfig: PublisherConfig;
+  #publisherConfig: RedisPublisherConfig;
   #redisConfig: RedisConfig;
-  #managerConfig: ConfigManager;
+  #managerConfig: ManagerConfig;
 
   constructor(private readonly configService: ConfigService) {}
 

@@ -1,16 +1,9 @@
-const orphans = require('./.dependency-orphans.json');
+const WHITELIST = require('./.depcruiserrc.json');
 
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
   forbidden: [
     /* rules from the 'recommended' preset: */
-    {
-      name: 'microservice-not-to-microservice',
-      comment: "One microservice should not depend on another microservice's code base",
-      severity: 'error',
-      from: { path: '(^src/)([^/]+)/', pathNot: '\\.module\\.ts$' },
-      to: { path: '^$1', pathNot: '^$1$2' },
-    },
     {
       name: 'no-circular',
       severity: 'warn',
@@ -38,7 +31,7 @@ module.exports = {
           '\\.d\\.ts$', // TypeScript declaration files
           '(^|/)tsconfig\\.json$', // TypeScript config
           '(^|/)(babel|webpack)\\.config\\.(js|cjs|mjs|ts|json)$', // other configs
-        ].concat(orphans),
+        ].concat(WHITELIST.notToUnresolvable),
       },
       to: {},
     },
@@ -105,7 +98,7 @@ module.exports = {
         "This module depends on a module that cannot be found ('resolved to disk'). If it's an npm " +
         'module: add it to your package.json. In all other cases you likely already know what to do.',
       severity: 'error',
-      from: {},
+      from: { pathNot: WHITELIST.notToUnresolvable },
       to: {
         couldNotResolve: true,
       },
@@ -147,7 +140,9 @@ module.exports = {
         'from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration',
       from: {
         path: '^(src)',
-        pathNot: '\\.(spec|test)\\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$',
+        pathNot: ['\\.(spec|test|stories)\\.(jsx|tsx|js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\\.md)$'].concat(
+          WHITELIST.notToDevDep,
+        ),
       },
       to: {
         dependencyTypes: ['npm-dev'],

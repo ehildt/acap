@@ -1,6 +1,6 @@
 import { ConfigManagerUpsertReq } from '@/config-manager/dtos/config-manager-upsert-req.dto';
 
-export function prepareBulkWrite(req: ConfigManagerUpsertReq[], namespace: string) {
+export function prepareBulkWriteConfigs(req: ConfigManagerUpsertReq[], namespace: string) {
   return req.map((config) => ({
     updateOne: {
       upsert: true,

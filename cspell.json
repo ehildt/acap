@@ -12,8 +12,10 @@
     "cultify",
     "depcruise",
     "dtos",
+    "Eugen",
     "Fastify",
     "gitleaks",
+    "Hildt",
     "INITDB",
     "loglevel",
     "logpath",
@@ -24,10 +26,16 @@
     "reqs",
     "saithodev",
     "sonarjs",
+    "Streamable",
     "styl",
     "Upserts",
     "zricethezav"
   ],
-  "ignoreWords": [],
+  "ignoreWords": [
+    "depcruiser",
+    "depcruiserrc",
+    "ehildt",
+    "litlbyte"
+  ],
   "import": []
 }
