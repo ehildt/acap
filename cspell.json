@@ -1,8 +1,15 @@
 {
-  "version": "0.2",
-  "ignorePaths": [],
-  "dictionaryDefinitions": [],
   "dictionaries": [],
+  "dictionaryDefinitions": [],
+  "ignorePaths": [],
+  "ignoreWords": [
+    "depcruiser",
+    "depcruiserrc",
+    "ehildt",
+    "litlbyte"
+  ],
+  "import": [],
+  "version": "0.2",
   "words": [
     "backmerge",
     "cobertura",
@@ -12,8 +19,10 @@
     "cultify",
     "depcruise",
     "dtos",
+    "Eugen",
     "Fastify",
     "gitleaks",
+    "Hildt",
     "INITDB",
     "loglevel",
     "logpath",
@@ -24,10 +33,9 @@
     "reqs",
     "saithodev",
     "sonarjs",
+    "Streamable",
     "styl",
     "Upserts",
     "zricethezav"
-  ],
-  "ignoreWords": [],
-  "import": []
+  ]
 }

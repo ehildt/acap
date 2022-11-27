@@ -7,8 +7,11 @@ import {
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiProduces,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
+
+import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import {
   ApiBodyConfigManagerUpsert,
   ApiBodyConfigManagerUpsertPerNamespace,
@@ -38,6 +41,24 @@ export function OpenApi_PostFile() {
             format: 'binary',
           },
         },
+      },
+    }),
+  );
+}
+
+export function OpenApi_DownloadFile() {
+  return applyDecorators(
+    ApiProduces('application/json'),
+    ApiBadRequestResponse(),
+    ApiInternalServerErrorResponse(),
+    ApiQueryNamespaces(),
+    ApiUnprocessableEntityResponse(),
+    ApiOkResponse({
+      type: ConfigManagerUpsertNamespaceReq,
+      isArray: true,
+      schema: {
+        type: 'string',
+        format: 'binary',
       },
     }),
   );

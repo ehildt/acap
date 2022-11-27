@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { oneOf } from '../decorators/class.property.values';
+
+import { ConfigManagerUpsertReq } from './config-manager-upsert-req.dto';
 
 export class ConfigManagerRes {
   @ApiProperty()
@@ -17,6 +18,15 @@ export class ConfigManagerRes {
   @ApiProperty()
   updatedAt: Date;
 
-  @ApiProperty(oneOf)
+  @ApiProperty({
+    isArray: true,
+    type: () => ConfigManagerUpsertReq,
+    oneOf: [
+      { type: 'string', description: 'string or text' },
+      { type: 'string', description: 'environment variable identifier' },
+      { type: 'Object', description: 'plain old javascript object' },
+      { type: 'Array', description: 'a list of dreams & cookies' },
+    ],
+  })
   value: string | Record<string, unknown> | Array<unknown>;
 }

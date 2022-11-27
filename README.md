@@ -7,30 +7,24 @@ version: '3.9'
 services:
   config-manager:
     container_name: config-manager
-    image: @cultify/config-manager
-    environment:
-      - PORT=3000
-      - START_SWAGGER=true
-      - PRINT_ENV=true
-      - CONFIG_MANAGER_TTL=300
-      - CONFIG_MANAGER_NAMESPACE_POSTFIX=''
-      - MONGO_USER=mongo
-      - MONGO_PASS=mongo
-      - MONGO_DB_NAME=configs
-      - MONGO_URI=mongodb://mongo:27017
-      - REDIS_PASS=''
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_TTL=600
-      - REDIS_MAX_RESPONSES=100
-      - REDIS_DB_INDEX=0
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: local
+    volumes:
+      - ./:/app
+    depends_on:
+      - mongo
+      - redis
+    env_file:
+      - env/defaults.env
     ports:
-      - '3000:3000'
+      - '3001:3001'
 
   mongo:
+    command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
     image: mongo
     container_name: mongo
-    command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo
       - MONGO_INITDB_ROOT_PASSWORD=mongo
@@ -55,27 +49,39 @@ networks:
     name: CONFIG_MANAGER_NETWORK
 ```
 
-## App Settings
+And let's suppose your `env/defaults.env` got the following config:
 
-- PORT `sets the port`
-- START_SWAGGER `toggles the open-api`
-- PRINT_ENV `logs the envs`
+PORT=3001
+PRINT_ENV=true
+START_SWAGGER=true
 
-- CONFIG_MANAGER_TTL `config object ttl`
-- CONFIG_MANAGER_NAMESPACE_POSTFIX `the prefix for the namespace; autogenerates if empty`
+CONFIG_MANAGER_TTL=300
+CONFIG_MANAGER_NAMESPACE_POSTFIX='ConfigManager'
 
-- REDIS_PASS `the redis password`
-- REDIS_HOST `the redis host aka localhost`
-- REDIS_PORT `the redis port`
-- REDIS_TTL `the time how long redis keeps a response in cache; default 5 seconds`
-- REDIS_MAX_RESPONSES `maximum number of responses to store in the cache; default 100`
-- REDIS_DB_INDEX `the redis database index; range 1-12`
+REDIS_PUBLISHER_PORT=6379
+REDIS_PUBLISHER_HOST='redis'
 
-- MONGO_USER `the mondo user`
-- MONGO_PASS `the mongo password`
-- MONGO_DB_NAME `the mongo database name`
-- MONGO_URI `the mongo uri`
+MONGO_USER='mongo'
+MONGO_PASS='mongo'
+MONGO_DB_NAME='configs'
+MONGO_URI='mongodb://mongo:27017'
+MONGO_SSL=false
+MONGO_SSL_VALIDATE=false
+
+\# REDIS_PASS=''
+REDIS_HOST='redis'
+REDIS_PORT=6379
+REDIS_TTL=600
+REDIS_MAX_RESPONSES=100
+REDIS_DB_INDEX=0
+
+Then you should be able to start the application via `docker compose up`.
+Alternatively or in conjunction with the `env/defaults` the `src/config.yml` can be used.
+
+## Whats in the box?
+
+..to be continue
 
 ## Caching Insights
 
-Every config object is represented by it's namespace and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular namespace. Whenever the config object is altered, the ttl is reset to 300 seconds (fallback) or whatever has been provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Any in-memory solution implements a simple key-value storage. This means there is no such thing as a namespace or context ales custom implemented. The prefix is such a custom implementation of a namespace/context. Let's say your key (namespace) is test1234, then the prefix will be appended and your namespace turns into \<prefix>\_test1234. If the prefix-namespace combination is not unique, then all applications which use the same in-memory cache will alienate the config object.
+Every config object is represented by it's namespace and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular namespace. Whenever the config object is altered, the ttl is being reset to 300 seconds (fallback) or whatever you have provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Redis cache is a simple in-memory key-value storage. This means there is no such thing as a namespace ales custom implemented. The postfix is such a custom implementation of a namespace. Let's say your namespace is MY_TEST_CONFIG, then the postfix will be appended and your namespace turns into MY_TEST_CONFIG_\<postfix>\. If the namespace-postfix combination is not unique, then all the services which use the same redis in-memory cache will alienate to use the same config object aka namespace. In other words, the same redis cache can be used in multiple services and it does not care for any namespaces nor does it provide any solution for handling nested objects. All it does is plainly save key-value pairs. This config-manager tries to address the namespace issue and implements a naive way to handle the key-value pairs inside namespace-postfix combination.

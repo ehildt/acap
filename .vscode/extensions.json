@@ -1,14 +1,15 @@
 {
   "recommendations": [
-    "mike-co.import-sorter",
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
-    "firsttris.vscode-jest-runner",
-    "rangav.vscode-thunder-client",
     "redhat.vscode-yaml",
-    "foxundermoon.shell-format",
-    "mhutchie.git-graph",
-    "gruntfuggly.todo-tree",
-    "PeterSchmalfeldt.explorer-exclude"
+    "peterschmalfeldt.explorer-exclude",
+    "richie5um2.vscode-sort-json",
+    "adpyke.codesnap",
+    "oderwat.indent-rainbow",
+    "dotenv.dotenv-vscode",
+    "mikestead.dotenv",
+    "hangxingliu.vscode-nginx-conf-hint",
+    "tamasfe.even-better-toml"
   ]
 }

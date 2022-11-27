@@ -1,12 +1,14 @@
-import { Cache } from 'cache-manager';
-import { firstValueFrom } from 'rxjs';
 import { CACHE_MANAGER, Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { Cache } from 'cache-manager';
+import { firstValueFrom } from 'rxjs';
+
 import { ConfigFactoryService } from '../configs/config-factory.service';
 import { Publisher } from '../constants/publisher.enum';
 import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
+import { mapEntitiesToConfigFile } from './helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from './helpers/reduce-entities.helper';
 import { reduceToNamespaces } from './helpers/reduce-to-namespaces.helper';
 
@@ -66,8 +68,21 @@ export class ConfigManagerService {
   }
 
   async getNamespaces(namespaces: string[]) {
-    const entities = await this.configRepo.where({ namespace: { $in: namespaces } });
+    const spaces = Array.from(new Set(namespaces.map((space) => space.trim())));
+    const entities = await this.configRepo.where({ namespace: { $in: spaces } });
     return entities?.reduce(reduceToNamespaces, {});
+  }
+
+  async downloadConfigFile(namespaces?: string[]) {
+    if (!namespaces) {
+      const entities = await this.configRepo.findAll();
+      const namespaces = Array.from(new Set(entities.map(({ namespace }) => namespace)));
+      return mapEntitiesToConfigFile(entities, namespaces);
+    }
+
+    const spaces = Array.from(new Set(namespaces.map((space) => space.trim())));
+    const entities = await this.configRepo.where({ namespace: { $in: spaces } });
+    return mapEntitiesToConfigFile(entities, namespaces);
   }
 
   async getNamespace(namespace: string) {
