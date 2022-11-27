@@ -1,8 +1,15 @@
 {
-  "version": "0.2",
-  "ignorePaths": [],
-  "dictionaryDefinitions": [],
   "dictionaries": [],
+  "dictionaryDefinitions": [],
+  "ignorePaths": [],
+  "ignoreWords": [
+    "depcruiser",
+    "depcruiserrc",
+    "ehildt",
+    "litlbyte"
+  ],
+  "import": [],
+  "version": "0.2",
   "words": [
     "backmerge",
     "cobertura",
@@ -30,12 +37,5 @@
     "styl",
     "Upserts",
     "zricethezav"
-  ],
-  "ignoreWords": [
-    "depcruiser",
-    "depcruiserrc",
-    "ehildt",
-    "litlbyte"
-  ],
-  "import": []
+  ]
 }

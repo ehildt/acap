@@ -9,7 +9,6 @@
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
-    "source.organizeImports": true,
     "source.sortMembers": true,
     "source.fixAll.markdownlint": true
   },
@@ -19,14 +18,6 @@
     "typescript",
     "typescriptreact"
   ],
-  "eslint.options": {
-    "extensions": [
-      ".js",
-      ".jsx",
-      ".ts",
-      ".tsx"
-    ]
-  },
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -50,10 +41,4 @@
     "sortJSONValues": false,
     "sortJSONValuesReverse": false
   },
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  }
 }

@@ -8,7 +8,7 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiProduces,
-  ApiUnprocessableEntityResponse
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
@@ -21,7 +21,7 @@ import {
   ApiQueryConfigIds,
   ApiQueryNamespaces,
   ApiQuerySkip,
-  ApiQueryTake
+  ApiQueryTake,
 } from './open-api.method.decorators';
 
 export function OpenApi_PostFile() {
