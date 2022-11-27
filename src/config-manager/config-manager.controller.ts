@@ -8,7 +8,7 @@ import {
   Inject,
   Post,
   StreamableFile,
-  UnprocessableEntityException,
+  UnprocessableEntityException
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
@@ -23,14 +23,14 @@ import {
   GetNamespace,
   GetPagination,
   PostFile,
-  PostNamespace,
+  PostNamespace
 } from './decorators/controller.method.decorators';
 import {
   ConfigManagerUpsertBody,
   ConfigManagerUpsertNamespaceBody,
   ParamNamespace,
   QueryConfigIds,
-  QueryNamespaces,
+  QueryNamespaces
 } from './decorators/controller.parameter.decorators';
 import { QuerySkip, QueryTake } from './decorators/controller.query.decorators';
 import {
@@ -43,7 +43,7 @@ import {
   OpenApi_GetPagination,
   OpenApi_PostFile,
   OpenApi_Upsert,
-  OpenApi_UpsertNamespaces,
+  OpenApi_UpsertNamespaces
 } from './decorators/open-api.controller.decorators';
 import { ConfigManagerUpsertNamespaceReq } from './dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
