@@ -76,6 +76,7 @@ REDIS_MAX_RESPONSES=100
 REDIS_DB_INDEX=0
 
 Then you should be able to start the application via `docker compose up`.
+Alternatively or in conjunction with the `env/defaults` the `src/config.yml` can be used.
 
 ## Whats in the box?
 
