@@ -1,4 +1,3 @@
-import { Cache } from 'cache-manager';
 import { MultipartFile } from '@fastify/multipart';
 import {
   CACHE_MANAGER,
@@ -12,6 +11,8 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Cache } from 'cache-manager';
+
 import { ConfigFactoryService } from './configs/config-factory.service';
 import { JsonFile } from './decorators/class.property.values';
 import {

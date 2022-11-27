@@ -9,7 +9,7 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 .clinic
-.dependency-graph.png
+.depcruiser-graph.png
 .gitleaks.json
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

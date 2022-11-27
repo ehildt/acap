@@ -1,4 +1,5 @@
 import { LeanDocument } from 'mongoose';
+
 import { ConfigManagerConfigs } from '@/config-manager/schemas/configs.schema';
 
 export function mapEntitiesToConfigFile(entities: LeanDocument<ConfigManagerConfigs>[], namespaces?: string[]) {

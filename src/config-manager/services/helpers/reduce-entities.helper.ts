@@ -1,5 +1,7 @@
 import { LeanDocumentOrArray } from 'mongoose';
+
 import { ConfigManagerConfigsDocument } from '@/config-manager/schemas/configs.schema';
+
 import { challengeConfigValue } from './challenge-config-source.helper';
 
 const entityReducer = (

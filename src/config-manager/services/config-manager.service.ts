@@ -1,7 +1,8 @@
-import { Cache } from 'cache-manager';
-import { firstValueFrom } from 'rxjs';
 import { CACHE_MANAGER, Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { Cache } from 'cache-manager';
+import { firstValueFrom } from 'rxjs';
+
 import { ConfigFactoryService } from '../configs/config-factory.service';
 import { Publisher } from '../constants/publisher.enum';
 import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';

@@ -1,6 +1,7 @@
-import { AppConfig } from '@/config.yml.modal';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
+import { AppConfig } from '@/config.yml.modal';
 
 @Injectable()
 export class ConfigFactoryService {

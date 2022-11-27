@@ -12,8 +12,10 @@
     "cultify",
     "depcruise",
     "dtos",
+    "Eugen",
     "Fastify",
     "gitleaks",
+    "Hildt",
     "INITDB",
     "loglevel",
     "logpath",
@@ -29,6 +31,11 @@
     "Upserts",
     "zricethezav"
   ],
-  "ignoreWords": [],
+  "ignoreWords": [
+    "depcruiser",
+    "depcruiserrc",
+    "ehildt",
+    "litlbyte"
+  ],
   "import": []
 }

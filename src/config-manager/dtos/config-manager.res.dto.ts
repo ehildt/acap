@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { ConfigManagerUpsertReq } from './config-manager-upsert-req.dto';
 
 export class ConfigManagerRes {

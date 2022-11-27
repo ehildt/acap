@@ -3,6 +3,13 @@
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
     "redhat.vscode-yaml",
-    "PeterSchmalfeldt.explorer-exclude"
+    "peterschmalfeldt.explorer-exclude",
+    "richie5um2.vscode-sort-json",
+    "adpyke.codesnap",
+    "oderwat.indent-rainbow",
+    "dotenv.dotenv-vscode",
+    "mikestead.dotenv",
+    "hangxingliu.vscode-nginx-conf-hint",
+    "tamasfe.even-better-toml"
   ]
 }

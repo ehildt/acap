@@ -1,16 +1,20 @@
 {
-  "name": "@cultify/config-manager-server",
+  "name": "@litlbyte/config-manager",
   "version": "0.6.4",
   "description": "A simple and convenient way to config your apps ;)",
-  "author": "Eugen Hildt",
-  "private": false,
+  "repository": "git@github.com:ehildt/config-manager-server.git",
+  "author": {
+    "name": "Eugen Hildt",
+    "email": "eugen.hildt@gmail.com"
+  },
   "license": "MIT",
+  "bugs": {
+    "email": "eugen.hildt@gmail.com"
+  },
   "scripts": {
     "build:prod": "nest build --path ./tsconfig.build.prod.json",
     "build": "nest build",
-    "check-license": "licensee --errors-only",
-    "dependency-cruiser:graph": "npx depcruise -c .dependency-cruiser.js -x \".+.spec.ts\" -T dot ./src | dot -T png > .dependency-graph.png",
-    "dependency-cruiser": "npx depcruise -c .dependency-cruiser.js --ts-config tsconfig.json src",
+    "licensee": "licensee --errors-only",
     "format": "prettier --write .",
     "gitleaks": "docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git",
     "lint-staged": "npx lint-staged --allow-empty",
@@ -29,7 +33,10 @@
     "test": "jest --passWithNoTests",
     "ts-unused-exports": "npx ts-unused-exports ./tsconfig.json",
     "ncu:update": "npx npm-check-updates --doctor -u",
-    "ncu:validate": "npx npm-check-updates -e 2 --packageFile=./package.json"
+    "ncu:validate": "npx npm-check-updates -e 2 --packageFile=./package.json",
+    "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src",
+    "depcruiser:graph": "npx depcruise -c .depcruiser.cjs -x \".+.spec.ts\" -T dot ./src | dot -T png > .depcruiser-graph.png",
+    "depcheck": "npx depcheck ."
   },
   "dependencies": {
     "@fastify/multipart": "^7.3.0",
@@ -46,6 +53,7 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
     "joi": "^17.7.0",
+    "js-yaml": "^4.1.0",
     "mongoose": "6.7.2",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
@@ -61,18 +69,20 @@
     "@types/cache-manager-ioredis": "2.0.3",
     "@types/eslint": "8.4.10",
     "@types/jest": "29.2.3",
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "18.11.9",
     "@types/prettier": "2.7.1",
     "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "5.43.0",
     "@typescript-eslint/parser": "5.43.0",
+    "depcheck": "^1.4.3",
     "dependency-cruiser": "12.0.0",
     "dotenv-cli": "6.0.0",
     "eslint": "8.28.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.26.0",
     "eslint-plugin-no-loops": "0.3.0",
     "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "eslint-plugin-sonarjs": "0.16.0",
     "husky": "8.0.2",
     "jest": "29.3.1",

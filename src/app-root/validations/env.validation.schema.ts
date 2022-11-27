@@ -1,4 +1,5 @@
 import Joi from 'joi';
+
 import { CONFIG_YML } from '@/config.yml.loader';
 
 export const envValidationSchema = Joi.object({

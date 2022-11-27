@@ -1,8 +1,9 @@
-import RedisStore from 'cache-manager-ioredis';
 import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
+import RedisStore from 'cache-manager-ioredis';
+
 import { ConfigManagerController } from './config-manager.controller';
 import { ConfigFactoryService } from './configs/config-factory.service';
 import { ConfigManagerRegistry } from './configs/config-manager/registry.dbs';
