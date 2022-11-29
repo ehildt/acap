@@ -46,6 +46,7 @@ check_commit_msg_format() {
     if ! head -1 "$1" | grep -qE "$REGEX_GIT_COMMIT_MSG"; then
         info "check_commit_msg_format.. $(redfy error)"
         debug "commit message must follow the conventional style!"
+        debug "please conventionalize: $(redfy $(head -1 "$1"))" 
         exit 1
     else
         info "check_commit_msg_format.. $(yellowfy ok)"
