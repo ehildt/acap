@@ -41,7 +41,4 @@
     "sortJSONValues": false,
     "sortJSONValuesReverse": false
   },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
 }
