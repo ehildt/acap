@@ -19,12 +19,14 @@ bolderfy() { echo "\e[1m$*\e[0m"; }
 info() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(magentafy $(echo $0 | cut -c 8-))$(bolderfy \])$(bolderfy ':') $(cyanfy $*)"; }
 debug() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(yellowfy debug)$(bolderfy \])$(bolderfy ':') $(bluefy $*)"; }
 
-check_docker() {
+check_docker_service() {
     if ! docker info > /dev/null 2>&1; then
         info "This script uses docker, and it's not running.. $(redfy error)"
         debug "Is docker installed and running?"
         debug "WSL - sudo service docker start"
         exit 1
+    else
+        info "checking docker service.. $(yellowfy ok)"
     fi
 }
 
@@ -35,7 +37,7 @@ check_working_directory() {
         debug "no uncommitted changes!"
         exit 1
     else
-        info "check_working_directory.. $(yellowfy ok)"
+        info "checking working directory.. $(yellowfy ok)"
     fi
 }
 
@@ -46,7 +48,7 @@ check_branch_identifier() {
         debug "not permitted working on top of branch $(yellowfy $CURRENT_BRANCH_NAME)!"
         exit 1
     else
-        info "check_branch_identifier.. $(yellowfy ok)"
+        info "checking branch indentifier.. $(yellowfy ok)"
     fi
 }
 
@@ -58,7 +60,7 @@ check_commit_msg_format() {
         debug "resolve your commit message: $(redfy $(head -1 "$1"))" 
         exit 1
     else
-        info "check_commit_msg_format.. $(yellowfy ok)"
+        info "checking commit message.. $(yellowfy ok)"
     fi
 }
 
@@ -70,7 +72,7 @@ check_commit_msg_length() {
         debug "commit message length exceeded $(bolderfy \[)$(redfy $COMMIT_MSG_LENGTH)/88$(bolderfy \])"
         exit 1
     else
-        info "check_commit_msg_length.. $(yellowfy ok)"
+        info "checking commit message length.. $(yellowfy ok)"
     fi
 }
 
@@ -95,9 +97,9 @@ check_package_dependencies() {
 # check licenses
 check_licenses() {
     if [ $(npx licensee --errors-only | wc -m) -eq 0 ]; then
-        info "license.. $(yellowfy ok)"
+        info "checking licenses.. $(yellowfy ok)"
     else
-        info "license.. $(redfy error)"
+        info "licensee.. $(redfy error)"
         debug "resolve licenses (.lecensee.json)"
         exit 1
     fi
@@ -111,14 +113,14 @@ gitleaks_detect() {
         debug "see gitleaks.json to resolve credentials or whitelist in gitleaks.toml"
         exit 1
     else
-        info "gitleaks.. $(yellowfy ok)"
+        info "checking credentials.. $(yellowfy ok)"
     fi
 }
 
 # lint staged files
 check_lint_staged() {
     if [ -n '$(npx lint-staged --allow-empty | tail -1 | grep -E "No staged files|[SUCCESS]"' ]; then
-        info "check_lint_staged.. $(yellowfy ok)"
+        info "checking lint-staged.. $(yellowfy ok)"
     else
         info "check_lint_staged.. $(redfy error)"
         debug "npm run lint-staged"
