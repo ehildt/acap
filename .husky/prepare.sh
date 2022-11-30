@@ -19,6 +19,15 @@ bolderfy() { echo "\e[1m$*\e[0m"; }
 info() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(magentafy $(echo $0 | cut -c 8-))$(bolderfy \])$(bolderfy ':') $(cyanfy $*)"; }
 debug() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(yellowfy debug)$(bolderfy \])$(bolderfy ':') $(bluefy $*)"; }
 
+check_docker() {
+    if ! docker info > /dev/null 2>&1; then
+        info "This script uses docker, and it's not running.. $(redfy error)"
+        debug "Is docker installed and running?"
+        debug "WSL - sudo service docker start"
+        exit 1
+    fi
+}
+
 # all files must be stagged and commited!
 check_working_directory() {
     if [ -n "$GIT_STATUS_PORCELAIN" ]; then
@@ -46,7 +55,7 @@ check_commit_msg_format() {
     if ! head -1 "$1" | grep -qE "$REGEX_GIT_COMMIT_MSG"; then
         info "check_commit_msg_format.. $(redfy error)"
         debug "commit message must follow the conventional style!"
-        debug "please conventionalize: $(redfy $(head -1 "$1"))" 
+        debug "resolve your commit message: $(redfy $(head -1 "$1"))" 
         exit 1
     else
         info "check_commit_msg_format.. $(yellowfy ok)"
@@ -94,6 +103,7 @@ check_licenses() {
     fi
 }
 
+# check gitleaks
 gitleaks_detect() {
     GITLEAKS_LEAKS=$(docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git 2>/dev/null)
     if [ "$?" -eq 1 ]; then
@@ -105,7 +115,7 @@ gitleaks_detect() {
     fi
 }
 
-# lint staged filess
+# lint staged files
 check_lint_staged() {
     if [ -n '$(npx lint-staged --allow-empty | tail -1 | grep -E "No staged files|[SUCCESS]"' ]; then
         info "check_lint_staged.. $(yellowfy ok)"
