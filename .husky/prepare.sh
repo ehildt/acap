@@ -21,7 +21,7 @@ debug() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(yellowfy debug)
 
 check_docker_service() {
     if ! docker info > /dev/null 2>&1; then
-        info "This script uses docker, and it's not running.. $(redfy error)"
+        info "This husky script uses docker, and it's not running.. $(redfy error)"
         debug "Is docker installed and running?"
         debug "WSL - sudo service docker start"
         exit 1

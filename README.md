@@ -51,6 +51,7 @@ networks:
 
 And let's suppose your `env/defaults.env` got the following config:
 
+``` ts
 PORT=3001
 PRINT_ENV=true
 START_SWAGGER=true
@@ -68,12 +69,13 @@ MONGO_URI='mongodb://mongo:27017'
 MONGO_SSL=false
 MONGO_SSL_VALIDATE=false
 
-\# REDIS_PASS=''
+# REDIS_PASS=''
 REDIS_HOST='redis'
 REDIS_PORT=6379
 REDIS_TTL=600
 REDIS_MAX_RESPONSES=100
 REDIS_DB_INDEX=0
+```
 
 Then you should be able to start the application via `docker compose up`.
 Alternatively or in conjunction with the `env/defaults` the `src/config.yml` can be used.
