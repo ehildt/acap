@@ -70,6 +70,7 @@ CONFIG_MANAGER_NAMESPACE_POSTFIX='ConfigManager'
 
 REDIS_PUBLISHER_PORT=6379
 REDIS_PUBLISHER_HOST='redis'
+REDIS_PUBLISHER_PUBLISH_EVENTS=true
 
 MONGO_USER='mongo'
 MONGO_PASS='mongo'
@@ -90,7 +91,7 @@ Then you should be able to start the application via `docker compose up`.
 Alternatively to setting the environment variables (`env/defaults`) or in conjunction with them,
 the `src/config.yml` can be used. The config.yml serves as the fallback.
 So whenever an environment variable is missing, the app checks for its fallback in the config.yml file.
-An equivalent config.tml example to the `env/defaults` looks like this:
+An equivalent config.yml example to the `env/defaults` looks like this:
 
 ``` yml
 appConfig:
@@ -118,6 +119,7 @@ redisConfig:
   db: 0
 
 redisPublisherConfig: 
+  publishEvents: true
   options:
     port: 6379
     host: redis
