@@ -7,6 +7,12 @@ export function mapEntitiesToConfigFile(entities: LeanDocument<ConfigManagerConf
     namespace,
     configs: entities
       .filter((entity) => entity.namespace === namespace)
-      .map((config) => ({ configId: config.configId, value: config.value })),
+      .map((config) => {
+        try {
+          return { configId: config.configId, value: JSON.parse(config.value) };
+        } catch {
+          return { configId: config.configId, value: config.value };
+        }
+      }),
   }));
 }

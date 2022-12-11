@@ -1,4 +1,13 @@
-# Getting Started
+
+# Config-Manager
+
+A simple and convenient way to config your apps ;)
+
+## Whats in the box?
+
+..to be continue
+
+## Getting Started
 
 Let's assume your docker-compose.yml looks like this:
 
@@ -49,7 +58,7 @@ networks:
     name: CONFIG_MANAGER_NETWORK
 ```
 
-And let's suppose your `env/defaults.env` got the following config:
+And let's suppose the system environment variables in `env/defaults.env` got the following config:
 
 ``` ts
 PORT=3001
@@ -78,11 +87,41 @@ REDIS_DB_INDEX=0
 ```
 
 Then you should be able to start the application via `docker compose up`.
-Alternatively or in conjunction with the `env/defaults` the `src/config.yml` can be used.
+Alternatively to setting the environment variables (`env/defaults`) or in conjunction with them,
+the `src/config.yml` can be used. The config.yml serves as the fallback.
+So whenever an environment variable is missing, the app checks for its fallback in the config.yml file.
+An equivalent config.tml example to the `env/defaults` looks like this:
 
-## Whats in the box?
+``` yml
+appConfig:
+  printEnv: true
+  startSwagger: true
+  port: 3001
 
-..to be continue
+managerConfig:
+  ttl: 300
+  namespacePostfix: ConfigManager
+
+mongoConfig:
+  uri: mongodb://mongo:27017
+  ssl: false
+  sslValidate: false
+  dbName: configs
+  user: mongo
+  pass: mongo
+
+redisConfig:
+  host: redis
+  port: 6379
+  ttl: 600
+  max: 100
+  db: 0
+
+redisPublisherConfig: 
+  options:
+    port: 6379
+    host: redis
+```
 
 ## Caching Insights
 

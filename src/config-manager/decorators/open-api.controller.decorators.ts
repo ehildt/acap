@@ -11,6 +11,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
+import { ConfigManagerGetNamespacesRes } from '../dtos/config-manager-get-namespaces.dto.res';
 import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import {
   ApiBodyConfigManagerUpsert,
@@ -107,8 +108,8 @@ export function OpenApi_GetNamespaceConfigIds() {
 
 export function OpenApi_GetNamespaces() {
   return applyDecorators(
-    ApiOkResponse(),
-    ApiQueryNamespaces(),
+    ApiOkResponse({ type: ConfigManagerGetNamespacesRes }),
+    ApiQueryNamespaces(true),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );

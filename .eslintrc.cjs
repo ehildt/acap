@@ -1,6 +1,6 @@
 'use strict';
 
-// @type {import('eslint'.Linter.Config)}
+/** @type {import('eslint'.Linter.Config)} */
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -29,7 +29,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
   },
-  ignorePatterns: ['node_modules', '.clinic', 'dist', 'coverage', '.eslintrc.js', '**/*.config.js', '**/*.config.ts'],
+  ignorePatterns: ['node_modules', 'dist', 'coverage', '.eslintrc.js', '**/*.config.js', '**/*.config.ts'],
   env: {
     node: true,
     jest: true,
