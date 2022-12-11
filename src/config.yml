@@ -1,2 +1,28 @@
 appConfig:
-  printEnv: false
+  printEnv: true
+  startSwagger: true
+  port: 3001
+
+managerConfig:
+  ttl: 300
+  namespacePostfix: ConfigManager
+
+mongoConfig:
+  uri: mongodb://mongo:27017
+  ssl: false
+  sslValidate: false
+  dbName: configs
+  user: mongo
+  pass: mongo
+
+redisConfig:
+  host: redis
+  port: 6379
+  ttl: 600
+  max: 100
+  db: 0
+
+redisPublisherConfig: 
+  options:
+    port: 6379
+    host: redis

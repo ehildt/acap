@@ -2,22 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { ConfigManagerUpsertReq } from './config-manager-upsert-req.dto';
 
-export class ConfigManagerLeanRes {
-  @ApiProperty()
-  _id: string;
-
-  @ApiProperty()
-  namespace: string;
-
-  @ApiProperty()
-  configId: string;
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
-
+class ConfigManagerKeyValuePair {
   @ApiProperty({
     isArray: true,
     type: () => ConfigManagerUpsertReq,
@@ -28,5 +13,12 @@ export class ConfigManagerLeanRes {
       { type: 'Array', description: 'a list of dreams & cookies' },
     ],
   })
-  value: string | Record<string, unknown> | Array<unknown>;
+  configId: string | Record<string, unknown> | Array<unknown>;
+}
+
+export class ConfigManagerGetNamespacesRes {
+  @ApiProperty({
+    type: ConfigManagerKeyValuePair,
+  })
+  namespace: Record<string, unknown>;
 }

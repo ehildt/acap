@@ -64,7 +64,13 @@ export class ConfigManagerService {
   }
 
   async paginate(take: number, skip: number) {
-    return await this.configRepo.find(take, skip);
+    return (await this.configRepo.find(take, skip)).map(({ value, ...rest }) => {
+      try {
+        return { ...rest, value: JSON.parse(value) };
+      } catch {
+        return { ...rest, value };
+      }
+    });
   }
 
   async getNamespaces(namespaces: string[]) {

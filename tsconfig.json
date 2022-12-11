@@ -30,7 +30,8 @@
   ],
   "include": [
     "./jest.config.ts",
-    ".eslintrc.js",
+    ".eslintrc.cjs",
+    ".prettierrc.cjs",
     "src/**/*",
     "test/**/*"
   ]

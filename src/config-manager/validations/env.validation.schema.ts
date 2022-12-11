@@ -9,9 +9,10 @@ export const envValidationSchema = Joi.object({
     ? Joi.string().default(CONFIG_YML.managerConfig?.namespacePostfix)
     : Joi.string().required(),
 
-  CONFIG_MANAGER_TTL: CONFIG_YML?.managerConfig?.ttl
-    ? Joi.number().default(CONFIG_YML.managerConfig.ttl)
-    : Joi.number().required(),
+  CONFIG_MANAGER_TTL:
+    CONFIG_YML?.managerConfig?.ttl !== undefined
+      ? Joi.number().default(CONFIG_YML.managerConfig.ttl)
+      : Joi.number().required(),
 
   // mongo config
 
@@ -69,7 +70,8 @@ export const envValidationSchema = Joi.object({
     ? Joi.number().default(CONFIG_YML.redisConfig.port)
     : Joi.number().required(),
 
-  REDIS_DB_INDEX: CONFIG_YML?.redisConfig?.db
-    ? Joi.number().default(CONFIG_YML.redisConfig.db)
-    : Joi.number().required(),
+  REDIS_DB_INDEX:
+    CONFIG_YML?.redisConfig?.db !== undefined
+      ? Joi.number().default(CONFIG_YML.redisConfig.db)
+      : Joi.number().required(),
 });
