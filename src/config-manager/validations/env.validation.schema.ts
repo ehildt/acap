@@ -50,6 +50,11 @@ export const envValidationSchema = Joi.object({
     ? Joi.number().default(CONFIG_YML.redisPublisherConfig.options.port)
     : Joi.number().required(),
 
+  REDIS_PUBLISHER_PUBLISH_EVENTS:
+    CONFIG_YML?.redisPublisherConfig?.publishEvents !== undefined
+      ? Joi.boolean().default(CONFIG_YML.redisPublisherConfig?.publishEvents)
+      : Joi.boolean().required(),
+
   // redis config
 
   REDIS_TTL: CONFIG_YML?.redisConfig?.ttl ? Joi.number().default(CONFIG_YML.redisConfig.ttl) : Joi.number().required(),
