@@ -23,6 +23,7 @@ redisConfig:
   db: 0
 
 redisPublisherConfig: 
+  publishEvents: true
   options:
     port: 6379
     host: redis

@@ -70,6 +70,7 @@ CONFIG_MANAGER_NAMESPACE_POSTFIX='ConfigManager'
 
 REDIS_PUBLISHER_PORT=6379
 REDIS_PUBLISHER_HOST='redis'
+REDIS_PUBLISHER_PUBLISH_EVENTS=true
 
 MONGO_USER='mongo'
 MONGO_PASS='mongo'
@@ -90,7 +91,7 @@ Then you should be able to start the application via `docker compose up`.
 Alternatively to setting the environment variables (`env/defaults`) or in conjunction with them,
 the `src/config.yml` can be used. The config.yml serves as the fallback.
 So whenever an environment variable is missing, the app checks for its fallback in the config.yml file.
-An equivalent config.tml example to the `env/defaults` looks like this:
+An equivalent config.yml example to the `env/defaults` looks like this:
 
 ``` yml
 appConfig:
@@ -118,6 +119,7 @@ redisConfig:
   db: 0
 
 redisPublisherConfig: 
+  publishEvents: true
   options:
     port: 6379
     host: redis
@@ -125,4 +127,16 @@ redisPublisherConfig:
 
 ## Caching Insights
 
-Every config object is represented by it's namespace and is stored for 300 seconds by default. To change this behavior simply update the `CACHE_MANAGER_TTL`. Setting it to 0 disables the expiration (ttl) for that particular namespace. Whenever the config object is altered, the ttl is being reset to 300 seconds (fallback) or whatever you have provided in the `CACHE_MANAGER_TTL`. There is a caveat though. Redis cache is a simple in-memory key-value storage. This means there is no such thing as a namespace ales custom implemented. The postfix is such a custom implementation of a namespace. Let's say your namespace is MY_TEST_CONFIG, then the postfix will be appended and your namespace turns into MY_TEST_CONFIG_\<postfix>\. If the namespace-postfix combination is not unique, then all the services which use the same redis in-memory cache will alienate to use the same config object aka namespace. In other words, the same redis cache can be used in multiple services and it does not care for any namespaces nor does it provide any solution for handling nested objects. All it does is plainly save key-value pairs. This config-manager tries to address the namespace issue and implements a naive way to handle the key-value pairs inside namespace-postfix combination.
+1. Every config object is represented by it's **realm**.
+   1. A realm is a simple combination of a namespace and a postfix.
+   2. Sharing the same postfix with other services will leak the namespaces and thus make the realms available to those services (aka Redis default behaviour). 
+2. The realm is cached for 300 seconds by default and stored in the database till it's entirely deleted. 
+3. The config objects can be added or deleted at any time. 
+4. Adding or deleting a config object will also remove it from the database. 
+5. If the last config object is deleted, then the realm is also deleted. 
+6. If a realm expires, then it's removed from cache only and re-cached again on the next fetch. 
+   1. To change this behavior simply update the `CACHE_MANAGER_TTL`. 
+   2. Setting `CACHE_MANAGER_TTL` to 0 disables the expiration (ttl) for that particular **realm**. 
+   3. Whenever a config object is altered, the ttl is being reset to 300 seconds (fallback) or whatever you have provided in the `CACHE_MANAGER_TTL` 
+ 
+  The Redis cache is a simple in-memory key-value storage. This means that by default there is no such thing as a realm. Everything is stored per key. The namespace-postfix combination is a naive approach which tries to mitigate key-coaliltion when multiple services need to use the same redis cache and therefor need to be distinct.

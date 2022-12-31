@@ -6,4 +6,8 @@ export class ConfigPublisherAdapter {
   get HOST(): string {
     return process.env.REDIS_PUBLISHER_HOST;
   }
+
+  get PUBLISH_EVENTS(): boolean {
+    return process.env.REDIS_PUBLISHER_PUBLISH_EVENTS === 'true';
+  }
 }

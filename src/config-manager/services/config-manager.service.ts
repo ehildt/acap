@@ -27,7 +27,7 @@ export class ConfigManagerService {
     if (result?.ok) {
       const data = await this.configRepo.where({ namespace });
       await this.cache.set(namespace, data, this.factory.redis.ttl);
-      await firstValueFrom(this.client.emit(namespace, configIds));
+      this.factory.publisher.publishEvents && (await firstValueFrom(this.client.emit(namespace, configIds)));
     }
     return result;
   }
@@ -48,15 +48,17 @@ export class ConfigManagerService {
       );
 
       await Promise.all(
-        reqs.map(
-          async (req) =>
-            await firstValueFrom(
+        reqs.map(async (req) => {
+          return (
+            this.factory.publisher.publishEvents &&
+            (await firstValueFrom(
               this.client.emit(
                 req.namespace,
                 req.configs.map(({ configId }) => configId),
               ),
-            ),
-        ),
+            ))
+          );
+        }),
       );
     }
 
@@ -113,13 +115,13 @@ export class ConfigManagerService {
 
   async deleteNamespace(namespace: string) {
     const entity = await this.configRepo.delete(namespace);
-    if (entity) await firstValueFrom(this.client.emit(namespace, {}));
+    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(namespace, {}));
     return entity;
   }
 
   async deleteNamespaceConfigIds(namespace: string, configIds: string[]) {
     const entity = await this.configRepo.delete(namespace, configIds);
-    if (entity) await firstValueFrom(this.client.emit(namespace, configIds));
+    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(namespace, configIds));
     return entity;
   }
 }

@@ -17,6 +17,7 @@ export class ConfigFactoryService {
     if (this.#publisherConfig) return this.#publisherConfig;
     return (this.#publisherConfig = Object.freeze({
       transport: Transport.REDIS,
+      publishEvents: this.configService.get<boolean>('ConfigPublisher.PUBLISH_EVENTS'),
       options: {
         port: this.configService.get<number>('ConfigPublisher.PORT'),
         host: this.configService.get<string>('ConfigPublisher.HOST'),
