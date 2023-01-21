@@ -31,7 +31,7 @@ WORKDIR /app
 RUN npm run build:prod
 
 # entrypoint for prod-stage
-FROM node:18 AS prod
+FROM node:18-alpine AS prod
 WORKDIR /app
 
 ENV PORT 3000
