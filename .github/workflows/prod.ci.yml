@@ -6,8 +6,6 @@ name: Node.js CI
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
   build:
@@ -28,6 +26,7 @@ jobs:
         cache: 'npm'
     # we don't run tests here since we never push branches directly to master
     # branch => dev => qa => master
+    - run: npm install -g @nestjs/cli
     - run: npm ci --omit=dev --ignore-scripts
     - run: npm run build:prod --if-present
   
