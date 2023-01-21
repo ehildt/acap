@@ -24,6 +24,7 @@ import {
   GetPagination,
   PostFile,
   PostNamespace,
+  PostPassThroughPubSub,
 } from './decorators/controller.method.decorators';
 import {
   ConfigManagerUpsertBody,
@@ -41,6 +42,7 @@ import {
   OpenApi_GetNamespaceConfigIds,
   OpenApi_GetNamespaces,
   OpenApi_GetPagination,
+  OpenApi_PassThrough,
   OpenApi_PostFile,
   OpenApi_Upsert,
   OpenApi_UpsertNamespaces,
@@ -58,6 +60,12 @@ export class ConfigManagerController {
     private readonly configFactory: ConfigFactoryService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
+
+  @PostPassThroughPubSub()
+  @OpenApi_PassThrough()
+  async upsertPassThroughCaching(@ConfigManagerUpsertNamespaceBody() req: ConfigManagerUpsertNamespaceReq[]) {
+    return await this.configManagerService.passThrough(req);
+  }
 
   @Post()
   @OpenApi_UpsertNamespaces()

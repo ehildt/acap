@@ -3,22 +3,19 @@ import Joi from 'joi';
 import { CONFIG_YML } from '@/config.yml.loader';
 
 export const envValidationSchema = Joi.object({
-  // config manager config
-
   CONFIG_MANAGER_NAMESPACE_POSTFIX: CONFIG_YML?.managerConfig?.namespacePostfix
     ? Joi.string().default(CONFIG_YML.managerConfig?.namespacePostfix)
     : Joi.string().required(),
 
-  CONFIG_MANAGER_RESOLVE_ENV: CONFIG_YML?.managerConfig?.resolveEnv
-    ? Joi.boolean().default(CONFIG_YML.managerConfig?.resolveEnv)
-    : Joi.boolean().required(),
+  CONFIG_MANAGER_RESOLVE_ENV:
+    CONFIG_YML?.managerConfig?.resolveEnv !== undefined
+      ? Joi.boolean().default(CONFIG_YML.managerConfig?.resolveEnv)
+      : Joi.boolean().required(),
 
   CONFIG_MANAGER_TTL:
     CONFIG_YML?.managerConfig?.ttl !== undefined
       ? Joi.number().default(CONFIG_YML.managerConfig.ttl)
       : Joi.number().required(),
-
-  // mongo config
 
   MONGO_SSL:
     CONFIG_YML?.mongoConfig?.ssl !== undefined
@@ -44,10 +41,16 @@ export const envValidationSchema = Joi.object({
 
   MONGO_URI: CONFIG_YML?.mongoConfig?.uri ? Joi.string().default(CONFIG_YML.mongoConfig.uri) : Joi.string().required(),
 
-  // redis publisher config
-
   REDIS_PUBLISHER_HOST: CONFIG_YML?.redisPublisherConfig?.options.host
     ? Joi.string().default(CONFIG_YML.redisPublisherConfig.options.host)
+    : Joi.string().required(),
+
+  REDIS_PUBLISHER_PASS: CONFIG_YML?.redisPublisherConfig?.options.password
+    ? Joi.string().default(CONFIG_YML.redisPublisherConfig.options.password)
+    : Joi.string().required(),
+
+  REDIS_PUBLISHER_USER: CONFIG_YML?.redisPublisherConfig?.options.username
+    ? Joi.string().default(CONFIG_YML.redisPublisherConfig.options.username)
     : Joi.string().required(),
 
   REDIS_PUBLISHER_PORT: CONFIG_YML?.redisPublisherConfig?.options.port
@@ -58,8 +61,6 @@ export const envValidationSchema = Joi.object({
     CONFIG_YML?.redisPublisherConfig?.publishEvents !== undefined
       ? Joi.boolean().default(CONFIG_YML.redisPublisherConfig?.publishEvents)
       : Joi.boolean().required(),
-
-  // redis config
 
   REDIS_TTL: CONFIG_YML?.redisConfig?.ttl ? Joi.number().default(CONFIG_YML.redisConfig.ttl) : Joi.number().required(),
 
@@ -73,6 +74,10 @@ export const envValidationSchema = Joi.object({
 
   REDIS_PASS: CONFIG_YML?.redisConfig?.password
     ? Joi.string().default(CONFIG_YML.redisConfig.password)
+    : Joi.string().optional(),
+
+  REDIS_USER: CONFIG_YML?.redisConfig?.username
+    ? Joi.string().default(CONFIG_YML.redisConfig.username)
     : Joi.string().optional(),
 
   REDIS_PORT: CONFIG_YML?.redisConfig?.port

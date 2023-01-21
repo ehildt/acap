@@ -22,9 +22,13 @@ redisConfig:
   ttl: 600
   max: 100
   db: 0
+  password: redis
+  username: default
 
 redisPublisherConfig: 
   publishEvents: true
   options:
     port: 6379
     host: redis
+    password: redis
+    username: default

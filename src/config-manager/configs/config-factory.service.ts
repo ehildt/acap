@@ -17,10 +17,12 @@ export class ConfigFactoryService {
     if (this.#publisherConfig) return this.#publisherConfig;
     return (this.#publisherConfig = Object.freeze({
       transport: Transport.REDIS,
-      publishEvents: this.configService.get<boolean>('ConfigPublisher.PUBLISH_EVENTS'),
+      publishEvents: this.configService.get<boolean>('ConfigPublisher.EVENTS'),
       options: {
         port: this.configService.get<number>('ConfigPublisher.PORT'),
         host: this.configService.get<string>('ConfigPublisher.HOST'),
+        password: this.configService.get<string>('ConfigPublisher.PASS'),
+        username: this.configService.get<string>('ConfigPublisher.USER'),
       },
     }));
   }
@@ -55,6 +57,7 @@ export class ConfigFactoryService {
       max: this.configService.get<number>('RedisConfig.MAX'),
       db: this.configService.get<number>('RedisConfig.DB_INDEX'),
       password: this.configService.get<string>('RedisConfig.PASS'),
+      username: this.configService.get<string>('RedisConfig.USER'),
     }));
   }
 }

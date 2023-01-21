@@ -8,6 +8,7 @@ import { Publisher } from '../constants/publisher.enum';
 import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerRepository } from './config-manager.repository';
+import { challengeConfigValue } from './helpers/challenge-config-source.helper';
 import { mapEntitiesToConfigFile } from './helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from './helpers/reduce-entities.helper';
 import { reduceToNamespaces } from './helpers/reduce-to-namespaces.helper';
@@ -63,6 +64,25 @@ export class ConfigManagerService {
     }
 
     return result;
+  }
+
+  async passThrough(reqs: ConfigManagerUpsertNamespaceReq[]) {
+    await Promise.all(
+      reqs.map(async (req) => {
+        return (
+          this.factory.publisher.publishEvents &&
+          (await firstValueFrom(
+            this.client.emit(
+              req.namespace,
+              req.configs.map(({ configId, value }) => ({
+                configId,
+                value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
+              })),
+            ),
+          ))
+        );
+      }),
+    );
   }
 
   async paginate(take: number, skip: number) {

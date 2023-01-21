@@ -14,7 +14,8 @@ EXPOSE ${PORT}
 COPY package*.json ./
 COPY tsconfig*.json ./
 COPY shims.d.ts ./
-COPY src ./src
+COPY src/ ./src/
+COPY src/config.yml ./dist/config.yml
 
 RUN npm ci --ignore-scripts --loglevel=error
 
