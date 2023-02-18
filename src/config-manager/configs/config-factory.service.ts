@@ -31,7 +31,6 @@ export class ConfigFactoryService {
       ttl: this.configService.get<number>('ConfigManager.TTL'),
       namespacePostfix: this.configService.get<string>('ConfigManager.NAMESPACE_POSTFIX'),
       resolveEnv: this.configService.get<boolean>('ConfigManager.RESOLVE_ENV'),
-      persist: this.configService.get<boolean>('ConfigManager.PERSIST'),
     }));
   }
 

@@ -14,8 +14,4 @@ export class ConfigManagerAdapter {
   get RESOLVE_ENV() {
     return process.env.CONFIG_MANAGER_RESOLVE_ENV === 'true';
   }
-
-  get PERSIST() {
-    return process.env.CONFIG_MANAGER_PERSIST === 'true';
-  }
 }
