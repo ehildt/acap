@@ -106,16 +106,16 @@ check_licenses() {
 }
 
 # check gitleaks
-# gitleaks_detect() {
-#     GITLEAKS_LEAKS=$(docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git 2>/dev/null)
-#     if [ "$?" -eq 1 ]; then
-#         info "$(redfy error): gitleaks"
-#         debug "see gitleaks.json to resolve credentials or whitelist in gitleaks.toml"
-#         exit 1
-#     else
-#         info "$(yellowfy ok): gitleaks"
-#     fi
-# }
+ gitleaks_detect() {
+     GITLEAKS_LEAKS=$(npm run gitleaks)
+     if [ "$?" -eq 1 ]; then
+         info "$(redfy error): gitleaks"
+         debug "see gitleaks.json to resolve credentials or whitelist in gitleaks.toml"
+         exit 1
+     else
+         info "$(yellowfy ok): gitleaks"
+     fi
+ }
 
 # lint staged files
 check_lint_staged() {
