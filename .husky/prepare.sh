@@ -107,7 +107,7 @@ check_licenses() {
 
 # check gitleaks
  gitleaks_detect() {
-     GITLEAKS_LEAKS=$(npm run gitleaks)
+     GITLEAKS_LEAKS=$(npm run gitleaks 2>/dev/null)
      if [ "$?" -eq 1 ]; then
          info "$(redfy error): gitleaks"
          debug "see gitleaks.json to resolve credentials or whitelist in gitleaks.toml"
