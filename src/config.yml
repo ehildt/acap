@@ -5,6 +5,8 @@ appConfig:
 
 managerConfig:
   ttl: 300
+  resolveEnv: false
+  persist: false
   namespacePostfix: ConfigManager
 
 mongoConfig:

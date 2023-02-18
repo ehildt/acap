@@ -9,6 +9,14 @@ export const envValidationSchema = Joi.object({
     ? Joi.string().default(CONFIG_YML.managerConfig?.namespacePostfix)
     : Joi.string().required(),
 
+  CONFIG_MANAGER_RESOLVE_ENV: CONFIG_YML?.managerConfig?.resolveEnv
+    ? Joi.boolean().default(CONFIG_YML.managerConfig?.resolveEnv)
+    : Joi.boolean().required(),
+
+  CONFIG_MANAGER_PERSIST: CONFIG_YML?.managerConfig?.persist
+    ? Joi.boolean().default(CONFIG_YML.managerConfig?.persist)
+    : Joi.boolean().required(),
+
   CONFIG_MANAGER_TTL:
     CONFIG_YML?.managerConfig?.ttl !== undefined
       ? Joi.number().default(CONFIG_YML.managerConfig.ttl)
