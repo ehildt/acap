@@ -8,6 +8,7 @@ export interface AppConfig {
 
 export interface ManagerConfig {
   namespacePostfix: string;
+  resolveEnv: boolean;
   ttl: number;
 }
 

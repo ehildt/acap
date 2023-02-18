@@ -30,6 +30,7 @@ export class ConfigFactoryService {
     return (this.#managerConfig = Object.freeze({
       ttl: this.configService.get<number>('ConfigManager.TTL'),
       namespacePostfix: this.configService.get<string>('ConfigManager.NAMESPACE_POSTFIX'),
+      resolveEnv: this.configService.get<boolean>('ConfigManager.RESOLVE_ENV'),
     }));
   }
 

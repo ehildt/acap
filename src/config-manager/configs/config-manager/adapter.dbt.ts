@@ -10,4 +10,8 @@ export class ConfigManagerAdapter {
   get TTL(): number {
     return parseInt(process.env.CONFIG_MANAGER_TTL ?? '360', 10);
   }
+
+  get RESOLVE_ENV() {
+    return process.env.CONFIG_MANAGER_RESOLVE_ENV === 'true';
+  }
 }
