@@ -91,7 +91,11 @@ export class ConfigManagerController {
     const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
     const entities = await this.configManagerService.upsertNamespace(namespace, req);
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
-    await this.cache.set(postfix, { ...cache, ...reduceToConfigs(req) }, this.configFactory.config.ttl);
+    await this.cache.set(
+      postfix,
+      { ...cache, ...reduceToConfigs(this.configFactory.config.resolveEnv, req) },
+      this.configFactory.config.ttl,
+    );
     return entities;
   }
 
@@ -101,7 +105,10 @@ export class ConfigManagerController {
     const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     if (Object.keys(cache)?.length) return cache;
-    const data = reduceToConfigs(await this.configManagerService.getNamespace(namespace));
+    const data = reduceToConfigs(
+      this.configFactory.config.resolveEnv,
+      await this.configManagerService.getNamespace(namespace),
+    );
     if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A namespace: ${namespace}`);
     await this.cache.set(postfix, data, this.configFactory.config.ttl);
     return data;
