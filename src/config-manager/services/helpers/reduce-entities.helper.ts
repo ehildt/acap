@@ -7,11 +7,12 @@ import { challengeConfigValue } from './challenge-config-source.helper';
 const entityReducer = (
   previous: Record<string, unknown>,
   document: LeanDocumentOrArray<ConfigManagerConfigsDocument>,
+  resolveEnv: boolean,
 ) => ({
   ...previous,
-  [document.configId]: challengeConfigValue(document.value),
+  [document.configId]: challengeConfigValue(document.value, resolveEnv),
 });
 
-export function reduceEntities(documents?: LeanDocumentOrArray<ConfigManagerConfigsDocument[]>) {
-  return documents?.reduce(entityReducer, {});
+export function reduceEntities(resolveEnv: boolean, documents?: LeanDocumentOrArray<ConfigManagerConfigsDocument[]>) {
+  return documents?.reduce((acc, val) => entityReducer(acc, val, resolveEnv), {});
 }
