@@ -66,6 +66,7 @@ PRINT_ENV=true
 START_SWAGGER=true
 
 CONFIG_MANAGER_TTL=300
+CONFIG_MANAGER_RESOLVE_ENV=true
 CONFIG_MANAGER_NAMESPACE_POSTFIX='ConfigManager'
 
 REDIS_PUBLISHER_PORT=6379
@@ -101,6 +102,7 @@ appConfig:
 
 managerConfig:
   ttl: 300
+  resolveEnv: true
   namespacePostfix: ConfigManager
 
 mongoConfig:

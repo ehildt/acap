@@ -38,7 +38,7 @@ export class ConfigManagerService {
     if (result?.ok) {
       const namespaces = reqs.map(({ namespace }) => namespace);
       const entities = await this.configRepo.where({ namespace: { $in: namespaces } });
-      const data = entities.reduce(reduceToNamespaces, {});
+      const data = entities.reduce((acc, val) => reduceToNamespaces(acc, val, this.factory.config.resolveEnv), {});
 
       await Promise.all(
         Object.keys(data).map(async (namespace) => {
@@ -78,7 +78,7 @@ export class ConfigManagerService {
   async getNamespaces(namespaces: string[]) {
     const spaces = Array.from(new Set(namespaces.map((space) => space.trim())));
     const entities = await this.configRepo.where({ namespace: { $in: spaces } });
-    return entities?.reduce(reduceToNamespaces, {});
+    return entities?.reduce((acc, val) => reduceToNamespaces(acc, val, this.factory.config.resolveEnv), {});
   }
 
   async downloadConfigFile(namespaces?: string[]) {
@@ -110,7 +110,7 @@ export class ConfigManagerService {
         )} ]`,
       );
 
-    return reduceEntities(entities);
+    return reduceEntities(this.factory.config.resolveEnv, entities);
   }
 
   async deleteNamespace(namespace: string) {
