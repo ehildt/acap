@@ -83,6 +83,15 @@ export function OpenApi_UpsertNamespaces() {
   );
 }
 
+export function OpenApi_PassThrough() {
+  return applyDecorators(
+    ApiOkResponse(),
+    ApiBadRequestResponse(),
+    ApiBodyConfigManagerUpsertPerNamespace(),
+    ApiInternalServerErrorResponse(),
+  );
+}
+
 export function OpenApi_GetPagination() {
   return applyDecorators(ApiOkResponsePagination(), ApiQueryTake(), ApiQuerySkip(), ApiInternalServerErrorResponse());
 }
