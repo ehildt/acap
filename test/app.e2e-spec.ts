@@ -21,6 +21,6 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET)', async () => {
-    return await request(app.getHttpServer()).get('/api/v1/namespaces/pagination?take=100&skip=0').expect(200);
+    return await request(app.getHttpServer()).get('/api/v1/realms/pagination?take=100&skip=0').expect(200);
   });
 });
