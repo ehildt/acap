@@ -7,7 +7,15 @@ export class ConfigPublisherAdapter {
     return process.env.REDIS_PUBLISHER_HOST;
   }
 
-  get PUBLISH_EVENTS(): boolean {
+  get EVENTS(): boolean {
     return process.env.REDIS_PUBLISHER_PUBLISH_EVENTS === 'true';
+  }
+
+  get PASS(): string {
+    return process.env.REDIS_PUBLISHER_PASS;
+  }
+
+  get USER(): string {
+    return process.env.REDIS_PUBLISHER_USER;
   }
 }

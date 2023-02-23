@@ -11,7 +11,7 @@ export class ConfigManagerAdapter {
     return parseInt(process.env.CONFIG_MANAGER_TTL ?? '360', 10);
   }
 
-  get RESOLVE_ENV() {
+  get RESOLVE_ENV(): boolean {
     return process.env.CONFIG_MANAGER_RESOLVE_ENV === 'true';
   }
 }

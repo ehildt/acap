@@ -3,6 +3,10 @@ export class RedisConfigAdapter {
     return process.env.REDIS_PASS;
   }
 
+  get USER(): string {
+    return process.env.REDIS_USER;
+  }
+
   get HOST(): string {
     return process.env.REDIS_HOST;
   }
