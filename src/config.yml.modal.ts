@@ -27,6 +27,8 @@ export interface RedisPublisherConfig {
   options: {
     port: number;
     host: string;
+    password: string;
+    username: string;
   };
 }
 
@@ -35,6 +37,7 @@ export interface RedisConfig {
   host: string;
   port: number;
   password: string;
+  username: string;
   ttl: number;
   max: number;
 }
