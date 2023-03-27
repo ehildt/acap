@@ -94,6 +94,7 @@
   },
   "packages": {
     "cli-table": "0.3.11",
+    "path-scurry": "1.6.3",
     "scss-parser": "1.0.6",
     "semver-utils": "1.1.4"
   }
