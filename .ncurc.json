@@ -1,5 +1,7 @@
 {
-  "reject": [],
+  "reject": [
+    "typescript"
+  ],
   "target": "latest",
   "upgrade": true
 }
