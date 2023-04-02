@@ -41,7 +41,8 @@
     "sortJSONValues": false,
     "sortJSONValuesReverse": false
   },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  "sortJSON.excludedPaths": [
+    "package.json",
+    "package-lock.json"
+  ]
 }
