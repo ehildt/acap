@@ -1,6 +1,6 @@
 import { MultipartFile } from '@fastify/multipart';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
-  CACHE_MANAGER,
   Controller,
   Get,
   HttpCode,

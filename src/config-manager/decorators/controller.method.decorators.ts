@@ -1,7 +1,7 @@
 import { Delete, Get, Post } from '@nestjs/common';
 
 const namespace = ':namespace';
-const namespaceConfigIds = `${namespace}/configs/:configIds`;
+const namespaceConfigIds = `${namespace}/configs`;
 const files = 'files/config.json';
 
 export const GetPagination = () => Get('pagination');

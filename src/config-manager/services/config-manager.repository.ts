@@ -54,9 +54,14 @@ export class ConfigManagerRepository {
   }
 
   async delete(namespace: string, req?: string[]) {
-    const namespaces = prepareBulkWriteDeleteNamespaces([namespace]);
-    await this.namespaceModel.bulkWrite(namespaces);
     const rowsToDelete = prepareBulkWriteDeleteConfigs(namespace, req);
-    return await this.configsModel.bulkWrite(rowsToDelete);
+    const rowsDeleted = await this.configsModel.bulkWrite(rowsToDelete);
+    const isNotEmpty = Boolean(await this.configsModel.count().where({ namespace }));
+    if (!isNotEmpty) {
+      const namespaces = prepareBulkWriteDeleteNamespaces([namespace]);
+      await this.namespaceModel.bulkWrite(namespaces);
+    }
+
+    return rowsDeleted;
   }
 }
