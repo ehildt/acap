@@ -1,4 +1,5 @@
-import { CACHE_MANAGER, Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
