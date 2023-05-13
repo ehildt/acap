@@ -1,4 +1,5 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -15,7 +16,7 @@ import { ConfigManagerConfigs, ConfigManagerConfigsSchema } from './schemas/conf
 import { ConfigManagerNamespaces, ConfigManagerNamespacesSchema } from './schemas/namespaces.schema';
 import { ConfigManagerRepository } from './services/config-manager.repository';
 import { ConfigManagerService } from './services/config-manager.service';
-import { envValidationSchema } from './validations/env.validation.schema';
+import { envValidationSchema } from './validations/validation.schema';
 
 @Module({
   imports: [
