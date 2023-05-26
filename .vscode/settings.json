@@ -44,5 +44,8 @@
   "sortJSON.excludedPaths": [
     "package.json",
     "package-lock.json"
-  ]
+  ],
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }
