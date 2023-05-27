@@ -2,16 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 
-import { ManagerConfig, MongoConfig, RedisConfig, RedisPublisherConfig } from '@/config.yml.modal';
+import { AppConfig, ManagerConfig, MongoConfig, RedisConfig, RedisPublisherConfig } from '@/config.yml.modal';
 
 @Injectable()
 export class ConfigFactoryService {
+  #appConfig: AppConfig;
   #mongoConfig: MongoConfig;
   #publisherConfig: RedisPublisherConfig;
   #redisConfig: RedisConfig;
   #managerConfig: ManagerConfig;
 
   constructor(private readonly configService: ConfigService) {}
+
+  get app() {
+    if (this.#appConfig) return this.#appConfig;
+    return (this.#appConfig = Object.freeze({
+      port: this.configService.get<number>('AppConfig.PORT'),
+      startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
+      printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
+    }));
+  }
 
   get publisher() {
     if (this.#publisherConfig) return this.#publisherConfig;

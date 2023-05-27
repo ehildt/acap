@@ -7,10 +7,10 @@ import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-b
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 import { ConfigManagerConfigs, ConfigManagerConfigsDocument } from '../schemas/configs.schema';
 import { ConfigManagerNamespaces, ConfigManagerNamespacesDocument } from '../schemas/namespaces.schema';
-import { prepareBulkWriteDeleteConfigs } from './helpers/prepare-bulk-write-delete-configs.helper';
-import { prepareBulkWriteDeleteNamespaces } from './helpers/prepare-bulk-write-delete-namespaces.helper';
-import { prepareBulkWriteConfigs } from './helpers/prepare-bulk-write-upsert-configs.helper';
-import { prepareBulkWriteNamespaces } from './helpers/prepare-bulk-write-upsert-namespace.helper';
+import { prepareBulkWriteDeleteConfigs } from '../helpers/config-manager/prepare-bulk-write-delete-configs.helper';
+import { prepareBulkWriteDeleteNamespaces } from '../helpers/config-manager/prepare-bulk-write-delete-namespaces.helper';
+import { prepareBulkWriteConfigs } from '../helpers/config-manager/prepare-bulk-write-upsert-configs.helper';
+import { prepareBulkWriteNamespaces } from '../helpers/config-manager/prepare-bulk-write-upsert-namespace.helper';
 
 @Injectable()
 export class ConfigManagerRepository {

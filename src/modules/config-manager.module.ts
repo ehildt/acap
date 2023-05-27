@@ -1,22 +1,25 @@
 import { CacheModule } from '@nestjs/cache-manager';
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import RedisStore from 'cache-manager-ioredis';
 
-import { ConfigManagerController } from './config-manager.controller';
-import { ConfigFactoryService } from './configs/config-factory.service';
-import { ConfigManagerRegistry } from './configs/config-manager/registry.dbs';
-import { ConfigPublisherRegistry } from './configs/config-publisher/registry.dbs';
-import { MongoConfigRegistry } from './configs/mongo/registry.dbs';
-import { RedisConfigRegistry } from './configs/redis/registry.dbs';
-import { Publisher } from './constants/publisher.enum';
-import { ConfigManagerConfigs, ConfigManagerConfigsSchema } from './schemas/configs.schema';
-import { ConfigManagerNamespaces, ConfigManagerNamespacesSchema } from './schemas/namespaces.schema';
-import { ConfigManagerRepository } from './services/config-manager.repository';
-import { ConfigManagerService } from './services/config-manager.service';
-import { envValidationSchema } from './validations/validation.schema';
+import { AppService } from '@/services/app.service';
+
+import { AppConfigRegistry } from '../configs/app-config/app-config-registry.dbs';
+import { ConfigFactoryService } from '../configs/config-factory.service';
+import { ConfigManagerRegistry } from '../configs/config-manager/registry.dbs';
+import { ConfigPublisherRegistry } from '../configs/config-publisher/registry.dbs';
+import { MongoConfigRegistry } from '../configs/mongo/registry.dbs';
+import { RedisConfigRegistry } from '../configs/redis/registry.dbs';
+import { Publisher } from '../constants/publisher.enum';
+import { ConfigManagerController } from '../controllers/config-manager.controller';
+import { ConfigManagerRepository } from '../repositories/config-manager.repository';
+import { ConfigManagerConfigs, ConfigManagerConfigsSchema } from '../schemas/configs.schema';
+import { ConfigManagerNamespaces, ConfigManagerNamespacesSchema } from '../schemas/namespaces.schema';
+import { ConfigManagerService } from '../services/config-manager.service';
+import { envValidationSchema } from '../validations/validation.schema';
 
 @Module({
   imports: [
@@ -38,7 +41,13 @@ import { envValidationSchema } from './validations/validation.schema';
     ConfigModule.forRoot({
       cache: true,
       ignoreEnvFile: true,
-      load: [MongoConfigRegistry, RedisConfigRegistry, ConfigManagerRegistry, ConfigPublisherRegistry],
+      load: [
+        AppConfigRegistry,
+        MongoConfigRegistry,
+        RedisConfigRegistry,
+        ConfigManagerRegistry,
+        ConfigPublisherRegistry,
+      ],
       validationSchema: envValidationSchema,
     }),
     MongooseModule.forRootAsync({
@@ -59,7 +68,7 @@ import { envValidationSchema } from './validations/validation.schema';
       },
     ]),
   ],
-  providers: [ConfigManagerService, ConfigManagerRepository, ConfigFactoryService],
+  providers: [ConfigManagerService, ConfigManagerRepository, ConfigFactoryService, AppService, ConsoleLogger],
   controllers: [ConfigManagerController],
 })
 export class ConfigManagerModule {}
