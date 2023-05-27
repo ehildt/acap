@@ -4,15 +4,16 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
 
-import { ConfigFactoryService } from '../configs/config-factory.service';
-import { Publisher } from '../constants/publisher.enum';
-import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
-import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
-import { challengeConfigValue } from '../helpers/config-manager/challenge-config-source.helper';
-import { mapEntitiesToConfigFile } from '../helpers/config-manager/map-entities-to-config-file.helper';
-import { reduceEntities } from '../helpers/config-manager/reduce-entities.helper';
-import { reduceToNamespaces } from '../helpers/config-manager/reduce-to-namespaces.helper';
-import { ConfigManagerRepository } from '../repositories/config-manager.repository';
+import { Publisher } from '@/constants/publisher.enum';
+import { ConfigManagerUpsertNamespaceReq } from '@/dtos/config-manager-upsert-by-namespace.dto.req';
+import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
+import { challengeConfigValue } from '@/helpers/challenge-config-source.helper';
+import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
+import { reduceEntities } from '@/helpers/reduce-entities.helper';
+import { reduceToNamespaces } from '@/helpers/reduce-to-namespaces.helper';
+import { ConfigManagerRepository } from '@/repositories/config-manager.repository';
+
+import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
 export class ConfigManagerService {

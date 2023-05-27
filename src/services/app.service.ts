@@ -2,9 +2,8 @@ import { ConsoleLogger, Injectable, ValidationPipe, VersioningType } from '@nest
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { ConfigFactoryService } from '@/configs/config-factory.service';
-
 import { API_DOCS, API_DOCS_JSON } from '../constants/app.constants';
+import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
 export class AppService {

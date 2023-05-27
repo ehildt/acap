@@ -2,9 +2,9 @@ import fastifyMultipart from '@fastify/multipart';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
-import { ConfigFactoryService } from './configs/config-factory.service';
 import { AppModule } from './modules/app.module';
 import { AppService } from './services/app.service';
+import { ConfigFactoryService } from './services/config-factory.service';
 
 void (async () => {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());

@@ -6,7 +6,7 @@ import { MONGOOSE_SCHEMA } from './mongoose.schema';
 import { REDIS_SCHEMA } from './redis.schema';
 import { REDIS_PUBLISHER_SCHEMA } from './redis-publisher.schema';
 
-export const envValidationSchema = Joi.object({
+export const validationSchema = Joi.object({
   ...APP_SCHEMA,
   ...REDIS_SCHEMA,
   ...MONGOOSE_SCHEMA,
