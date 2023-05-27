@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { CONFIG_YML } from '@/config.yml.loader';
+import { CONFIG_YML } from '@/configs/config-yml/loader';
 
 export const REDIS_SCHEMA = {
   REDIS_TTL: CONFIG_YML?.redisConfig?.ttl ? Joi.number().default(CONFIG_YML.redisConfig.ttl) : Joi.number().required(),

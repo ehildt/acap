@@ -1,4 +1,4 @@
-import { ConfigManagerConfigs } from '@/config-manager/schemas/configs.schema';
+import { ConfigManagerConfigs } from '@/schemas/configs.schema';
 
 export function mapEntitiesToConfigFile(entities: ConfigManagerConfigs[], namespaces?: string[]) {
   return namespaces?.map((namespace) => ({

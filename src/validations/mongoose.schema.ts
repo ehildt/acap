@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { CONFIG_YML } from '@/config.yml.loader';
+import { CONFIG_YML } from '@/configs/config-yml/loader';
 
 export const MONGOOSE_SCHEMA = {
   MONGO_SSL:

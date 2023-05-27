@@ -42,7 +42,7 @@ export interface RedisConfig {
   max: number;
 }
 
-export interface ConfigYml {
+export interface Config {
   appConfig: AppConfig;
   mongoConfig: MongoConfig;
   redisConfig: RedisConfig;

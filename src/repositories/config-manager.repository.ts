@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 
-import { ConfigManagerGetReq } from '../dtos/config-manager-get-req.dto';
-import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
-import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
-import { ConfigManagerConfigs, ConfigManagerConfigsDocument } from '../schemas/configs.schema';
-import { ConfigManagerNamespaces, ConfigManagerNamespacesDocument } from '../schemas/namespaces.schema';
-import { prepareBulkWriteDeleteConfigs } from './helpers/prepare-bulk-write-delete-configs.helper';
-import { prepareBulkWriteDeleteNamespaces } from './helpers/prepare-bulk-write-delete-namespaces.helper';
-import { prepareBulkWriteConfigs } from './helpers/prepare-bulk-write-upsert-configs.helper';
-import { prepareBulkWriteNamespaces } from './helpers/prepare-bulk-write-upsert-namespace.helper';
+import { ConfigManagerGetReq } from '@/dtos/config-manager-get-req.dto';
+import { ConfigManagerUpsertNamespaceReq } from '@/dtos/config-manager-upsert-by-namespace.dto.req';
+import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
+import { prepareBulkWriteDeleteConfigs } from '@/helpers/prepare-bulk-write-delete-configs.helper';
+import { prepareBulkWriteDeleteNamespaces } from '@/helpers/prepare-bulk-write-delete-namespaces.helper';
+import { prepareBulkWriteConfigs } from '@/helpers/prepare-bulk-write-upsert-configs.helper';
+import { prepareBulkWriteNamespaces } from '@/helpers/prepare-bulk-write-upsert-namespace.helper';
+import { ConfigManagerConfigs, ConfigManagerConfigsDocument } from '@/schemas/configs.schema';
+import { ConfigManagerNamespaces, ConfigManagerNamespacesDocument } from '@/schemas/namespaces.schema';
 
 @Injectable()
 export class ConfigManagerRepository {

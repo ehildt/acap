@@ -1,8 +1,8 @@
 import Joi from 'joi';
 
-import { CONFIG_YML } from '@/config.yml.loader';
+import { CONFIG_YML } from '@/configs/config-yml/loader';
 
-export const envValidationSchema = Joi.object({
+export const APP_SCHEMA = {
   PORT: CONFIG_YML?.appConfig?.port ? Joi.number().default(CONFIG_YML.appConfig.port) : Joi.number().required(),
 
   PRINT_ENV:
@@ -14,4 +14,4 @@ export const envValidationSchema = Joi.object({
     CONFIG_YML?.appConfig?.startSwagger !== undefined
       ? Joi.boolean().default(CONFIG_YML.appConfig.startSwagger)
       : Joi.boolean().required(),
-});
+};

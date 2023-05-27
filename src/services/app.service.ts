@@ -2,8 +2,8 @@ import { ConsoleLogger, Injectable, ValidationPipe, VersioningType } from '@nest
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { ConfigFactoryService } from './configs/config-factory.service';
-import { API_DOCS, API_DOCS_JSON } from './constants/app.constants';
+import { API_DOCS, API_DOCS_JSON } from '../constants/app.constants';
+import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
 export class AppService {
@@ -32,35 +32,29 @@ export class AppService {
   }
 
   enableOpenApi(app: NestFastifyApplication) {
-    const { startSwagger } = this.configFactory.app;
-    if (startSwagger) {
-      const openApiObj = SwaggerModule.createDocument(
-        app,
-        new DocumentBuilder()
-          .setTitle('Config-Manager')
-          .setDescription('A simple and convenient way to config your apps ;)')
-          .setVersion('1.0')
-          .build(),
-      );
-      SwaggerModule.setup(API_DOCS, app, openApiObj);
-    }
+    if (!this.configFactory.app.startSwagger) return;
+    const openApiObj = SwaggerModule.createDocument(
+      app,
+      new DocumentBuilder()
+        .setTitle('Config-Manager')
+        .setDescription('A simple and convenient way to config your apps ;)')
+        .setVersion('1.0')
+        .build(),
+    );
+    SwaggerModule.setup(API_DOCS, app, openApiObj);
   }
 
-  logOnServerStart(appFactory: any, configFactory: any) {
+  logOnServerStart(appFactory: ConfigFactoryService) {
     if (process.env.PRINT_ENV === 'true')
-      this.logger.log(
-        JSON.stringify(
-          {
-            APP_CONFIG: appFactory.app,
-            CONFIG_MANAGER_CONFIG: configFactory.config,
-            MONGO_CONFIG: configFactory.mongo,
-            REDIS_CONFIG: configFactory.redis,
-            REDIS_PUBLISHER_CONFIG: configFactory.publisher,
-          },
-          null,
-          4,
-        ),
-        'AppConfiguration',
+      this.logger.verbose(
+        {
+          APP_CONFIG: appFactory.app,
+          CONFIG_MANAGER_CONFIG: appFactory.config,
+          MONGO_CONFIG: appFactory.mongo,
+          REDIS_CONFIG: appFactory.redis,
+          REDIS_PUBLISHER_CONFIG: appFactory.publisher,
+        },
+        'Config',
       );
 
     if (appFactory.app.startSwagger) {

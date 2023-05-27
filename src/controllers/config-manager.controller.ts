@@ -13,8 +13,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import { ConfigFactoryService } from './configs/config-factory.service';
-import { JsonFile } from './decorators/class.property.values';
+import { JsonFile } from '@/decorators/class.property.values';
 import {
   DeleteConfigIds,
   DeleteNamespace,
@@ -25,15 +24,15 @@ import {
   PostFile,
   PostNamespace,
   PostPassThroughPubSub,
-} from './decorators/controller.method.decorators';
+} from '@/decorators/controller.method.decorators';
 import {
   ConfigManagerUpsertBody,
   ConfigManagerUpsertNamespaceBody,
   ParamNamespace,
   QueryConfigIds,
   QueryNamespaces,
-} from './decorators/controller.parameter.decorators';
-import { QuerySkip, QueryTake } from './decorators/controller.query.decorators';
+} from '@/decorators/controller.parameter.decorators';
+import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteNamespace,
   OpenApi_DeleteNamespaceConfigIds,
@@ -46,11 +45,12 @@ import {
   OpenApi_PostFile,
   OpenApi_Upsert,
   OpenApi_UpsertNamespaces,
-} from './decorators/open-api.controller.decorators';
-import { ConfigManagerUpsertNamespaceReq } from './dtos/config-manager-upsert-by-namespace.dto.req';
-import { ConfigManagerUpsertReq } from './dtos/config-manager-upsert-req.dto';
-import { ConfigManagerService } from './services/config-manager.service';
-import { reduceToConfigs } from './services/helpers/reduce-to-configs.helper';
+} from '@/decorators/open-api.controller.decorators';
+import { ConfigManagerUpsertNamespaceReq } from '@/dtos/config-manager-upsert-by-namespace.dto.req';
+import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
+import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
+import { ConfigFactoryService } from '@/services/config-factory.service';
+import { ConfigManagerService } from '@/services/config-manager.service';
 
 @ApiTags('Config-Manager')
 @Controller('namespaces')

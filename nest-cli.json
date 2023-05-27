@@ -4,7 +4,7 @@
   "compilerOptions": {
     "assets": [
       {
-        "include": "./config.yml",
+        "include": "./configs/config-yml/config.yml",
         "outDir": "./dist",
         "watchAssets": true
       }
