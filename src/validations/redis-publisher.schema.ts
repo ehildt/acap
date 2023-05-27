@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { CONFIG_YML } from '@/config.yml.loader';
+import { CONFIG_YML } from '@/configs/config-yml/loader';
 
 export const REDIS_PUBLISHER_SCHEMA = {
   REDIS_PUBLISHER_HOST: CONFIG_YML?.redisPublisherConfig?.options.host

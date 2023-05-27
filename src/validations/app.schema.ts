@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { CONFIG_YML } from '@/config.yml.loader';
+import { CONFIG_YML } from '@/configs/config-yml/loader';
 
 export const APP_SCHEMA = {
   PORT: CONFIG_YML?.appConfig?.port ? Joi.number().default(CONFIG_YML.appConfig.port) : Joi.number().required(),

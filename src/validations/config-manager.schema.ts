@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { CONFIG_YML } from '@/config.yml.loader';
+import { CONFIG_YML } from '@/configs/config-yml/loader';
 
 export const CONFIG_MANAGER_SCHEMA = {
   CONFIG_MANAGER_NAMESPACE_POSTFIX: CONFIG_YML?.managerConfig?.namespacePostfix

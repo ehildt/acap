@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 
-import { AppConfig, ManagerConfig, MongoConfig, RedisConfig, RedisPublisherConfig } from '@/config.yml.modal';
+import {
+  AppConfig,
+  ManagerConfig,
+  MongoConfig,
+  RedisConfig,
+  RedisPublisherConfig,
+} from '@/configs/config-yml/config.modal';
 
 @Injectable()
 export class ConfigFactoryService {

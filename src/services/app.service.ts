@@ -46,19 +46,15 @@ export class AppService {
 
   logOnServerStart(appFactory: ConfigFactoryService) {
     if (process.env.PRINT_ENV === 'true')
-      this.logger.log(
-        JSON.stringify(
-          {
-            APP_CONFIG: appFactory.app,
-            CONFIG_MANAGER_CONFIG: appFactory.config,
-            MONGO_CONFIG: appFactory.mongo,
-            REDIS_CONFIG: appFactory.redis,
-            REDIS_PUBLISHER_CONFIG: appFactory.publisher,
-          },
-          null,
-          4,
-        ),
-        'AppConfiguration',
+      this.logger.verbose(
+        {
+          APP_CONFIG: appFactory.app,
+          CONFIG_MANAGER_CONFIG: appFactory.config,
+          MONGO_CONFIG: appFactory.mongo,
+          REDIS_CONFIG: appFactory.redis,
+          REDIS_PUBLISHER_CONFIG: appFactory.publisher,
+        },
+        'Config',
       );
 
     if (appFactory.app.startSwagger) {
