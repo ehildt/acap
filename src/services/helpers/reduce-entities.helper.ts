@@ -1,4 +1,4 @@
-import { ConfigManagerConfigsDocument } from '@/config-manager/schemas/configs.schema';
+import { ConfigManagerConfigsDocument } from '@/schemas/configs.schema';
 
 import { challengeConfigValue } from './challenge-config-source.helper';
 
