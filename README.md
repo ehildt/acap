@@ -127,6 +127,11 @@ redisPublisherConfig:
     host: redis
 ```
 
+
+## API-Interfaces
+
+All of the api interfaces are well documented in the swagger open-api. There, you will find a description to any of the endpoints. The open-api can be toggled by setting the `START_SWAGGER` environment.
+
 ## Caching Insights
 
 1. Every config object is represented by it's **realm**.

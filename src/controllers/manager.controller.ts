@@ -23,7 +23,6 @@ import {
   GetPagination,
   PostFile,
   PostNamespace,
-  PostPassThroughPubSub,
 } from '@/decorators/controller.method.decorators';
 import {
   ConfigManagerUpsertBody,
@@ -41,7 +40,6 @@ import {
   OpenApi_GetNamespaceConfigIds,
   OpenApi_GetNamespaces,
   OpenApi_GetPagination,
-  OpenApi_PassThrough,
   OpenApi_PostFile,
   OpenApi_Upsert,
   OpenApi_UpsertNamespaces,
@@ -50,22 +48,16 @@ import { ConfigManagerUpsertNamespaceReq } from '@/dtos/config-manager-upsert-by
 import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ConfigFactoryService } from '@/services/config-factory.service';
-import { ConfigManagerService } from '@/services/config-manager.service';
+import { ManagerService } from '@/services/manager.service';
 
 @ApiTags('Config-Manager')
 @Controller('namespaces')
 export class ConfigManagerController {
   constructor(
-    private readonly configManagerService: ConfigManagerService,
+    private readonly configManagerService: ManagerService,
     private readonly configFactory: ConfigFactoryService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
-
-  @PostPassThroughPubSub()
-  @OpenApi_PassThrough()
-  async upsertPassThroughCaching(@ConfigManagerUpsertNamespaceBody() req: ConfigManagerUpsertNamespaceReq[]) {
-    return await this.configManagerService.passThrough(req);
-  }
 
   @Post()
   @OpenApi_UpsertNamespaces()

@@ -16,7 +16,7 @@ import { ConfigManagerRepository } from '@/repositories/config-manager.repositor
 import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
-export class ConfigManagerService {
+export class ManagerService {
   constructor(
     private readonly configRepo: ConfigManagerRepository,
     private readonly factory: ConfigFactoryService,
