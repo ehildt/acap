@@ -6,12 +6,14 @@ import RedisStore from 'cache-manager-ioredis';
 import { AppService } from '@/services/app.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 
+import { ClientsGlobalModule } from './clients.module';
 import { ConfigFactoryGlobalModule } from './config-factory.module';
 import { ManagerModule } from './manager.module';
 import { PubSubGlobalModule } from './pubsub.module';
 
 @Module({
   imports: [
+    ClientsGlobalModule,
     ConfigFactoryGlobalModule,
     PubSubGlobalModule,
     ManagerModule,
