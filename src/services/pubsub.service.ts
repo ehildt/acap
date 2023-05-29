@@ -3,7 +3,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { Publisher } from '@/constants/publisher.enum';
-import { ConfigManagerUpsertRealmReq } from '@/dtos/config-manager-upsert-by-realm.dto.req';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { challengeConfigValue } from '@/helpers/challenge-config-source.helper';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -12,7 +12,7 @@ import { ConfigFactoryService } from './config-factory.service';
 export class PubSubService {
   constructor(private readonly factory: ConfigFactoryService, @Inject(Publisher.TOKEN) private client: ClientProxy) {}
 
-  async passThrough(reqs: ConfigManagerUpsertRealmReq[]) {
+  async passThrough(reqs: Array<RealmsUpsertReq>) {
     await Promise.all(
       reqs.map(async (req) => {
         return (

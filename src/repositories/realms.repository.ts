@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 
-import { ConfigManagerGetReq } from '@/dtos/config-manager-get-req.dto';
-import { ConfigManagerUpsertRealmReq } from '@/dtos/config-manager-upsert-by-realm.dto.req';
-import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
+import { RealmReq } from '@/dtos/realm-req.dto';
+import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { prepareBulkWriteDeleteConfigs } from '@/helpers/prepare-bulk-write-delete-configs.helper';
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
 import { prepareBulkWriteConfigs } from '@/helpers/prepare-bulk-write-upsert-configs.helper';
@@ -33,18 +33,18 @@ export class RealmsRepository {
       .lean();
   }
 
-  async where(filter: FilterQuery<ConfigManagerGetReq>) {
+  async where(filter: FilterQuery<RealmReq>) {
     return await this.configsModel.where(filter).lean();
   }
 
-  async upsertMany(reqs: ConfigManagerUpsertRealmReq[]) {
+  async upsertMany(reqs: RealmsUpsertReq[]) {
     const realms = prepareBulkWriteRealms(reqs.map(({ realm }) => realm));
     await this.namespaceModel.bulkWrite(realms);
     const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.configs, req.realm)).flat();
     return await this.configsModel.bulkWrite(preparedUpserts);
   }
 
-  async upsert(realm: string, req: ConfigManagerUpsertReq[]) {
+  async upsert(realm: string, req: RealmUpsertReq[]) {
     const realms = prepareBulkWriteRealms([realm]);
     await this.namespaceModel.bulkWrite(realms);
     const rowsToUpsert = prepareBulkWriteConfigs(req, realm);

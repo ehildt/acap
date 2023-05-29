@@ -67,7 +67,7 @@ START_SWAGGER=true
 
 CONFIG_MANAGER_TTL=300
 CONFIG_MANAGER_RESOLVE_ENV=true
-CONFIG_MANAGER_NAMESPACE_POSTFIX='ConfigManager'
+CONFIG_MANAGER_NAMESPACE_POSTFIX='Realm'
 
 REDIS_PUBLISHER_PORT=6379
 REDIS_PUBLISHER_HOST='redis'
@@ -103,7 +103,7 @@ appConfig:
 managerConfig:
   ttl: 300
   resolveEnv: true
-  namespacePostfix: ConfigManager
+  namespacePostfix: Realm
 
 mongoConfig:
   uri: mongodb://mongo:27017

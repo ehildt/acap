@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ConfigManagerUpsertReq } from './config-manager-upsert-req.dto';
+import { RealmUpsertReq } from './realm-upsert-req.dto';
 
-class ConfigManagerKeyValuePair {
+class RealmKeyValuePair {
   @ApiProperty({
     isArray: true,
-    type: () => ConfigManagerUpsertReq,
+    type: () => RealmUpsertReq,
     oneOf: [
       { type: 'string', description: 'string or text' },
-      { type: 'string', description: 'environment variable identifier' },
+      { type: 'number', description: 'a number' },
+      { type: 'boolean', description: 'a boolean' },
       { type: 'Object', description: 'plain old javascript object' },
       { type: 'Array', description: 'a list of dreams & cookies' },
     ],
@@ -16,9 +17,9 @@ class ConfigManagerKeyValuePair {
   configId: string | Record<string, unknown> | Array<unknown>;
 }
 
-export class ConfigManagerGetRealmsRes {
+export class RealmsRes {
   @ApiProperty({
-    type: ConfigManagerKeyValuePair,
+    type: RealmKeyValuePair,
   })
   realm: Record<string, unknown>;
 }

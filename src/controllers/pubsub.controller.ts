@@ -2,9 +2,9 @@ import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { PostPassThroughPubSub } from '@/decorators/controller.method.decorators';
-import { ConfigManagerUpsertRealmBody } from '@/decorators/controller.parameter.decorators';
+import { RealmUpsertRealmBody } from '@/decorators/controller.parameter.decorators';
 import { OpenApi_PassThrough } from '@/decorators/open-api.controller.decorators';
-import { ConfigManagerUpsertRealmReq } from '@/dtos/config-manager-upsert-by-realm.dto.req';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { PubSubService } from '@/services/pubsub.service';
 
 @ApiTags('PubSub')
@@ -14,7 +14,7 @@ export class PubSubController {
 
   @PostPassThroughPubSub()
   @OpenApi_PassThrough()
-  async upsertPassThroughCaching(@ConfigManagerUpsertRealmBody() req: ConfigManagerUpsertRealmReq[]) {
+  async upsertPassThroughCaching(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
     return await this.pubsubService.passThrough(req);
   }
 }

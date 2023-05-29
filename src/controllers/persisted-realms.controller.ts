@@ -5,10 +5,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { JsonFile } from '@/decorators/class.property.values';
 import { DownloadFile, GetPagination, PostFile, PostRealm } from '@/decorators/controller.method.decorators';
 import {
-  ConfigManagerUpsertBody,
-  ConfigManagerUpsertRealmBody,
   ParamRealm,
   QueryRealms,
+  RealmUpsertBody,
+  RealmUpsertRealmBody,
 } from '@/decorators/controller.parameter.decorators';
 import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
@@ -19,8 +19,8 @@ import {
   OpenApi_Upsert,
   OpenApi_UpsertRealms,
 } from '@/decorators/open-api.controller.decorators';
-import { ConfigManagerUpsertRealmReq } from '@/dtos/config-manager-upsert-by-realm.dto.req';
-import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
+import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { RealmsService } from '@/services/realms.service';
 
 @ApiTags('Persisted')
@@ -30,13 +30,13 @@ export class PersistedRealmsController {
 
   @PostRealm()
   @OpenApi_Upsert()
-  async upsert(@ParamRealm() realm: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
+  async upsert(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
     return await this.realmsService.upsertRealm(realm, req);
   }
 
   @Post()
   @OpenApi_UpsertRealms()
-  async upsertRealms(@ConfigManagerUpsertRealmBody() req: ConfigManagerUpsertRealmReq[]) {
+  async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
     return await this.realmsService.upsertRealms(req);
   }
 

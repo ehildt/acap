@@ -11,13 +11,13 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-import { ConfigManagerGetRealmsRes } from '../dtos/config-manager-get-realms.dto.res';
-import { ConfigManagerUpsertRealmReq } from '../dtos/config-manager-upsert-by-realm.dto.req';
+import { RealmsRes } from '../dtos/realms-res.dto.res';
+import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 import {
-  ApiBodyConfigManagerUpsert,
-  ApiBodyConfigManagerUpsertPerRealm,
-  ApiOkResponseConfigManagerUpsert,
+  ApiBodyRealmUpsert,
+  ApiBodyRealmUpsertPerRealm,
   ApiOkResponsePagination,
+  ApiOkResponseRealmUpsert,
   ApiParamRealm,
   ApiQueryConfigIds,
   ApiQueryRealms,
@@ -55,7 +55,7 @@ export function OpenApi_DownloadFile() {
     ApiQueryRealms(),
     ApiUnprocessableEntityResponse(),
     ApiOkResponse({
-      type: ConfigManagerUpsertRealmReq,
+      type: RealmsUpsertReq,
       isArray: true,
       schema: {
         type: 'string',
@@ -69,7 +69,7 @@ export function OpenApi_Upsert() {
   return applyDecorators(
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsert(),
+    ApiBodyRealmUpsert(),
     ApiInternalServerErrorResponse(),
   );
 }
@@ -78,7 +78,7 @@ export function OpenApi_UpsertRealms() {
   return applyDecorators(
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsertPerRealm(),
+    ApiBodyRealmUpsertPerRealm(),
     ApiInternalServerErrorResponse(),
   );
 }
@@ -87,7 +87,7 @@ export function OpenApi_PassThrough() {
   return applyDecorators(
     ApiOkResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsertPerRealm(),
+    ApiBodyRealmUpsertPerRealm(),
     ApiInternalServerErrorResponse(),
   );
 }
@@ -101,7 +101,7 @@ export function OpenApi_GetRealm() {
     ApiParamRealm(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
-    ApiOkResponseConfigManagerUpsert(),
+    ApiOkResponseRealmUpsert(),
   );
 }
 
@@ -117,7 +117,7 @@ export function OpenApi_GetRealmConfigIds() {
 
 export function OpenApi_GetRealms() {
   return applyDecorators(
-    ApiOkResponse({ type: ConfigManagerGetRealmsRes }),
+    ApiOkResponse({ type: RealmsRes }),
     ApiQueryRealms(true),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),

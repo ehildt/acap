@@ -5,8 +5,8 @@ import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
 
 import { Publisher } from '@/constants/publisher.enum';
-import { ConfigManagerUpsertRealmReq } from '@/dtos/config-manager-upsert-by-realm.dto.req';
-import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
+import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { challengeConfigValue } from '@/helpers/challenge-config-source.helper';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
@@ -24,7 +24,7 @@ export class RealmsService {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
-  async upsertRealm(realm: string, req: ConfigManagerUpsertReq[]) {
+  async upsertRealm(realm: string, req: RealmUpsertReq[]) {
     const result = await this.configRepo.upsert(realm, req);
     const configIds = req.map(({ configId }) => configId);
     if (result?.ok) {
@@ -34,7 +34,7 @@ export class RealmsService {
     return result;
   }
 
-  async upsertRealms(reqs: ConfigManagerUpsertRealmReq[]) {
+  async upsertRealms(reqs: RealmsUpsertReq[]) {
     const result = await this.configRepo.upsertMany(reqs);
 
     if (result?.ok) {
@@ -56,7 +56,7 @@ export class RealmsService {
     return result;
   }
 
-  async passThrough(reqs: ConfigManagerUpsertRealmReq[]) {
+  async passThrough(reqs: RealmsUpsertReq[]) {
     await Promise.all(
       reqs.map(async (req) => {
         return (
