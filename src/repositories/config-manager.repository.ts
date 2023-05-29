@@ -3,35 +3,33 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 
 import { ConfigManagerGetReq } from '@/dtos/config-manager-get-req.dto';
-import { ConfigManagerUpsertNamespaceReq } from '@/dtos/config-manager-upsert-by-namespace.dto.req';
+import { ConfigManagerUpsertRealmReq } from '@/dtos/config-manager-upsert-by-realm.dto.req';
 import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
 import { prepareBulkWriteDeleteConfigs } from '@/helpers/prepare-bulk-write-delete-configs.helper';
-import { prepareBulkWriteDeleteNamespaces } from '@/helpers/prepare-bulk-write-delete-namespaces.helper';
+import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
 import { prepareBulkWriteConfigs } from '@/helpers/prepare-bulk-write-upsert-configs.helper';
-import { prepareBulkWriteNamespaces } from '@/helpers/prepare-bulk-write-upsert-namespace.helper';
+import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
 import { ConfigManagerConfigs, ConfigManagerConfigsDocument } from '@/schemas/configs.schema';
-import { ConfigManagerNamespaces, ConfigManagerNamespacesDocument } from '@/schemas/namespaces.schema';
+import { ConfigManagerRealms, ConfigManagerRealmsDocument } from '@/schemas/realms.schema';
 
 @Injectable()
 export class ConfigManagerRepository {
   constructor(
     @InjectModel(ConfigManagerConfigs.name)
     private readonly configsModel: Model<ConfigManagerConfigsDocument>,
-    @InjectModel(ConfigManagerNamespaces.name)
-    private readonly namespaceModel: Model<ConfigManagerNamespacesDocument>,
+    @InjectModel(ConfigManagerRealms.name)
+    private readonly namespaceModel: Model<ConfigManagerRealmsDocument>,
   ) {}
 
   async findAll() {
-    return await this.configsModel.find().sort({ namespace: 'desc', updatedAt: 'desc' }).lean();
+    return await this.configsModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
   }
 
   async find(take: number, skip: number) {
-    const namespaces = (await this.namespaceModel.find({}, null, { limit: take, skip }).lean()).map(
-      ({ namespace }) => namespace,
-    );
+    const realms = (await this.namespaceModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configsModel
-      .where({ namespace: { $in: namespaces } })
-      .sort({ namespace: 'desc', updatedAt: 'desc' })
+      .where({ realm: { $in: realms } })
+      .sort({ realm: 'desc', updatedAt: 'desc' })
       .lean();
   }
 
@@ -39,27 +37,27 @@ export class ConfigManagerRepository {
     return await this.configsModel.where(filter).lean();
   }
 
-  async upsertMany(reqs: ConfigManagerUpsertNamespaceReq[]) {
-    const namespaces = prepareBulkWriteNamespaces(reqs.map(({ namespace }) => namespace));
-    await this.namespaceModel.bulkWrite(namespaces);
-    const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.configs, req.namespace)).flat();
+  async upsertMany(reqs: ConfigManagerUpsertRealmReq[]) {
+    const realms = prepareBulkWriteRealms(reqs.map(({ realm }) => realm));
+    await this.namespaceModel.bulkWrite(realms);
+    const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.configs, req.realm)).flat();
     return await this.configsModel.bulkWrite(preparedUpserts);
   }
 
-  async upsert(namespace: string, req: ConfigManagerUpsertReq[]) {
-    const namespaces = prepareBulkWriteNamespaces([namespace]);
-    await this.namespaceModel.bulkWrite(namespaces);
-    const rowsToUpsert = prepareBulkWriteConfigs(req, namespace);
+  async upsert(realm: string, req: ConfigManagerUpsertReq[]) {
+    const realms = prepareBulkWriteRealms([realm]);
+    await this.namespaceModel.bulkWrite(realms);
+    const rowsToUpsert = prepareBulkWriteConfigs(req, realm);
     return await this.configsModel.bulkWrite(rowsToUpsert);
   }
 
-  async delete(namespace: string, req?: string[]) {
-    const rowsToDelete = prepareBulkWriteDeleteConfigs(namespace, req);
+  async delete(realm: string, req?: string[]) {
+    const rowsToDelete = prepareBulkWriteDeleteConfigs(realm, req);
     const rowsDeleted = await this.configsModel.bulkWrite(rowsToDelete);
-    const isNotEmpty = Boolean(await this.configsModel.count().where({ namespace }));
+    const isNotEmpty = Boolean(await this.configsModel.count().where({ realm }));
     if (!isNotEmpty) {
-      const namespaces = prepareBulkWriteDeleteNamespaces([namespace]);
-      await this.namespaceModel.bulkWrite(namespaces);
+      const realms = prepareBulkWriteDeleteRealms([realm]);
+      await this.namespaceModel.bulkWrite(realms);
     }
 
     return rowsDeleted;

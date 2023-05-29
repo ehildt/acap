@@ -16,43 +16,43 @@ import { Cache } from 'cache-manager';
 import { JsonFile } from '@/decorators/class.property.values';
 import {
   DeleteConfigIds,
-  DeleteNamespace,
+  DeleteRealm,
   DownloadFile,
   GetConfigIds,
-  GetNamespace,
   GetPagination,
+  GetRealm,
   PostFile,
-  PostNamespace,
+  PostRealm,
 } from '@/decorators/controller.method.decorators';
 import {
   ConfigManagerUpsertBody,
-  ConfigManagerUpsertNamespaceBody,
-  ParamNamespace,
+  ConfigManagerUpsertRealmBody,
+  ParamRealm,
   QueryConfigIds,
-  QueryNamespaces,
+  QueryRealms,
 } from '@/decorators/controller.parameter.decorators';
 import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
-  OpenApi_DeleteNamespace,
-  OpenApi_DeleteNamespaceConfigIds,
+  OpenApi_DeleteRealm,
+  OpenApi_DeleteRealmConfigIds,
   OpenApi_DownloadFile,
-  OpenApi_GetNamespace,
-  OpenApi_GetNamespaceConfigIds,
-  OpenApi_GetNamespaces,
   OpenApi_GetPagination,
+  OpenApi_GetRealm,
+  OpenApi_GetRealmConfigIds,
+  OpenApi_GetRealms,
   OpenApi_PostFile,
   OpenApi_Upsert,
-  OpenApi_UpsertNamespaces,
+  OpenApi_UpsertRealms,
 } from '@/decorators/open-api.controller.decorators';
-import { ConfigManagerUpsertNamespaceReq } from '@/dtos/config-manager-upsert-by-namespace.dto.req';
+import { ConfigManagerUpsertRealmReq } from '@/dtos/config-manager-upsert-by-realm.dto.req';
 import { ConfigManagerUpsertReq } from '@/dtos/config-manager-upsert-req.dto';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { ManagerService } from '@/services/manager.service';
 
-@ApiTags('Config-Manager')
-@Controller('namespaces')
-export class ConfigManagerController {
+@ApiTags('CachedRealms')
+@Controller('realms')
+export class CachedRealmsController {
   constructor(
     private readonly configManagerService: ManagerService,
     private readonly configFactory: ConfigFactoryService,
@@ -60,9 +60,9 @@ export class ConfigManagerController {
   ) {}
 
   @Post()
-  @OpenApi_UpsertNamespaces()
-  async upsertNamespaces(@ConfigManagerUpsertNamespaceBody() req: ConfigManagerUpsertNamespaceReq[]) {
-    return await this.configManagerService.upsertNamespaces(req);
+  @OpenApi_UpsertRealms()
+  async upsertRealms(@ConfigManagerUpsertRealmBody() req: ConfigManagerUpsertRealmReq[]) {
+    return await this.configManagerService.upsertRealms(req);
   }
 
   @GetPagination()
@@ -75,21 +75,21 @@ export class ConfigManagerController {
   @OpenApi_PostFile()
   async uploadFile(@JsonFile() file: MultipartFile) {
     const content = JSON.parse((await file.toBuffer()).toString());
-    return await this.configManagerService.upsertNamespaces(content);
+    return await this.configManagerService.upsertRealms(content);
   }
 
   @DownloadFile()
   @OpenApi_DownloadFile()
-  async downloadConfigFile(@QueryNamespaces() namespaces?: string[]) {
-    const file = await this.configManagerService.downloadConfigFile(namespaces);
+  async downloadConfigFile(@QueryRealms() realms?: string[]) {
+    const file = await this.configManagerService.downloadConfigFile(realms);
     return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
   }
 
-  @PostNamespace()
+  @PostRealm()
   @OpenApi_Upsert()
-  async upsert(@ParamNamespace() namespace: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
-    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
-    const entities = await this.configManagerService.upsertNamespace(namespace, req);
+  async upsert(@ParamRealm() realm: string, @ConfigManagerUpsertBody() req: ConfigManagerUpsertReq[]) {
+    const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
+    const entities = await this.configManagerService.upsertRealm(realm, req);
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     await this.cache.set(
       postfix,
@@ -99,59 +99,56 @@ export class ConfigManagerController {
     return entities;
   }
 
-  @GetNamespace()
-  @OpenApi_GetNamespace()
-  async getNamespace(@ParamNamespace() namespace: string) {
-    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
+  @GetRealm()
+  @OpenApi_GetRealm()
+  async getRealm(@ParamRealm() realm: string) {
+    const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     if (Object.keys(cache)?.length) return cache;
-    const data = reduceToConfigs(
-      this.configFactory.config.resolveEnv,
-      await this.configManagerService.getNamespace(namespace),
-    );
-    if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A namespace: ${namespace}`);
+    const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.configManagerService.getRealm(realm));
+    if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
     await this.cache.set(postfix, data, this.configFactory.config.ttl);
     return data;
   }
 
   @Get()
-  @OpenApi_GetNamespaces()
-  async getNamespaces(@QueryNamespaces() namespaces: string[]) {
-    return await this.configManagerService.getNamespaces(namespaces);
+  @OpenApi_GetRealms()
+  async getRealms(@QueryRealms() realms: string[]) {
+    return await this.configManagerService.getRealms(realms);
   }
 
   @GetConfigIds()
-  @OpenApi_GetNamespaceConfigIds()
-  async getNamespaceConfigIds(@ParamNamespace() namespace: string, @QueryConfigIds() configIds: string[]) {
-    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
+  @OpenApi_GetRealmConfigIds()
+  async getRealmConfigIds(@ParamRealm() realm: string, @QueryConfigIds() configIds: string[]) {
+    const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     let cache = (await this.cache.get(postfix)) ?? ({} as any);
     const matchedKeys = Object.keys(cache).filter((c) => ids.includes(c));
     if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
     if (matchedKeys?.length === ids?.length) return cache;
-    const entities = await this.configManagerService.getNamespaceConfigIds(namespace, ids);
+    const entities = await this.configManagerService.getRealmConfigIds(realm, ids);
     cache = { ...cache, ...entities };
     await this.cache.set(postfix, cache, this.configFactory.config.ttl);
     return cache;
   }
 
-  @DeleteNamespace()
-  @OpenApi_DeleteNamespace()
+  @DeleteRealm()
+  @OpenApi_DeleteRealm()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteNamespace(@ParamNamespace() namespace: string) {
-    await this.cache.del(`${namespace}_${this.configFactory.config.namespacePostfix}`);
-    await this.configManagerService.deleteNamespace(namespace);
+  async deleteRealm(@ParamRealm() realm: string) {
+    await this.cache.del(`${realm}_${this.configFactory.config.namespacePostfix}`);
+    await this.configManagerService.deleteRealm(realm);
   }
 
   @DeleteConfigIds()
-  @OpenApi_DeleteNamespaceConfigIds()
+  @OpenApi_DeleteRealmConfigIds()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteNamespaceConfigIds(@ParamNamespace() namespace: string, @QueryConfigIds() configIds: string[]) {
-    const postfix = `$${namespace} @${this.configFactory.config.namespacePostfix}`;
+  async deleteRealmConfigIds(@ParamRealm() realm: string, @QueryConfigIds() configIds: string[]) {
+    const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
     const ids = Array.from(new Set(configIds.filter((e) => e)));
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     const keys = Object.keys(cache).filter((key) => delete cache[configIds.find((id) => id === key)]);
-    await this.configManagerService.deleteNamespaceConfigIds(namespace, ids);
+    await this.configManagerService.deleteRealmConfigIds(realm, ids);
     if (keys.length) await this.cache.set(postfix, cache, this.configFactory.config.ttl);
     else await this.cache.del(postfix);
   }

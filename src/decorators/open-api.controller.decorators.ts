@@ -11,16 +11,16 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-import { ConfigManagerGetNamespacesRes } from '../dtos/config-manager-get-namespaces.dto.res';
-import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
+import { ConfigManagerGetRealmsRes } from '../dtos/config-manager-get-realms.dto.res';
+import { ConfigManagerUpsertRealmReq } from '../dtos/config-manager-upsert-by-realm.dto.req';
 import {
   ApiBodyConfigManagerUpsert,
-  ApiBodyConfigManagerUpsertPerNamespace,
+  ApiBodyConfigManagerUpsertPerRealm,
   ApiOkResponseConfigManagerUpsert,
   ApiOkResponsePagination,
-  ApiParamNamespace,
+  ApiParamRealm,
   ApiQueryConfigIds,
-  ApiQueryNamespaces,
+  ApiQueryRealms,
   ApiQuerySkip,
   ApiQueryTake,
 } from './open-api.method.decorators';
@@ -37,7 +37,7 @@ export function OpenApi_PostFile() {
         required: ['config.json'],
         properties: {
           'config.json': {
-            description: 'a json file, which contains the configuration(s) for the namespace(s)',
+            description: 'a json file, which contains the configuration(s) for the realm(s)',
             type: 'string',
             format: 'binary',
           },
@@ -52,10 +52,10 @@ export function OpenApi_DownloadFile() {
     ApiProduces('application/json'),
     ApiBadRequestResponse(),
     ApiInternalServerErrorResponse(),
-    ApiQueryNamespaces(),
+    ApiQueryRealms(),
     ApiUnprocessableEntityResponse(),
     ApiOkResponse({
-      type: ConfigManagerUpsertNamespaceReq,
+      type: ConfigManagerUpsertRealmReq,
       isArray: true,
       schema: {
         type: 'string',
@@ -74,11 +74,11 @@ export function OpenApi_Upsert() {
   );
 }
 
-export function OpenApi_UpsertNamespaces() {
+export function OpenApi_UpsertRealms() {
   return applyDecorators(
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsertPerNamespace(),
+    ApiBodyConfigManagerUpsertPerRealm(),
     ApiInternalServerErrorResponse(),
   );
 }
@@ -87,7 +87,7 @@ export function OpenApi_PassThrough() {
   return applyDecorators(
     ApiOkResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsertPerNamespace(),
+    ApiBodyConfigManagerUpsertPerRealm(),
     ApiInternalServerErrorResponse(),
   );
 }
@@ -96,42 +96,42 @@ export function OpenApi_GetPagination() {
   return applyDecorators(ApiOkResponsePagination(), ApiQueryTake(), ApiQuerySkip(), ApiInternalServerErrorResponse());
 }
 
-export function OpenApi_GetNamespace() {
+export function OpenApi_GetRealm() {
   return applyDecorators(
-    ApiParamNamespace(),
+    ApiParamRealm(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
     ApiOkResponseConfigManagerUpsert(),
   );
 }
 
-export function OpenApi_GetNamespaceConfigIds() {
+export function OpenApi_GetRealmConfigIds() {
   return applyDecorators(
     ApiOkResponse(),
     ApiQueryConfigIds(),
-    ApiParamNamespace(),
+    ApiParamRealm(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
 }
 
-export function OpenApi_GetNamespaces() {
+export function OpenApi_GetRealms() {
   return applyDecorators(
-    ApiOkResponse({ type: ConfigManagerGetNamespacesRes }),
-    ApiQueryNamespaces(true),
+    ApiOkResponse({ type: ConfigManagerGetRealmsRes }),
+    ApiQueryRealms(true),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
 }
 
-export function OpenApi_DeleteNamespace() {
-  return applyDecorators(ApiParamNamespace(), ApiNoContentResponse(), ApiInternalServerErrorResponse());
+export function OpenApi_DeleteRealm() {
+  return applyDecorators(ApiParamRealm(), ApiNoContentResponse(), ApiInternalServerErrorResponse());
 }
 
-export function OpenApi_DeleteNamespaceConfigIds() {
+export function OpenApi_DeleteRealmConfigIds() {
   return applyDecorators(
     ApiQueryConfigIds(),
-    ApiParamNamespace(),
+    ApiParamRealm(),
     ApiNoContentResponse(),
     ApiInternalServerErrorResponse(),
   );

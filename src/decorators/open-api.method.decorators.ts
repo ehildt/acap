@@ -1,15 +1,14 @@
 import { ApiBody, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 
 import { ConfigManagerLeanRes } from '../dtos/config-manager.res.dto';
-import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
+import { ConfigManagerUpsertRealmReq } from '../dtos/config-manager-upsert-by-realm.dto.req';
 import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
 
-export const ApiParamNamespace = () => ApiParam({ name: 'namespace', type: String });
+export const ApiParamRealm = () => ApiParam({ name: 'realm', type: String });
 export const ApiQueryConfigIds = () => ApiQuery({ name: 'configIds', type: String, isArray: true });
 export const ApiQueryTake = () => ApiQuery({ name: 'take', example: '100' });
 export const ApiQuerySkip = () => ApiQuery({ name: 'skip', example: '0' });
-export const ApiQueryNamespaces = (required = false) =>
-  ApiQuery({ name: 'namespaces', type: String, isArray: true, required });
+export const ApiQueryRealms = (required = false) => ApiQuery({ name: 'realms', type: String, isArray: true, required });
 
 export const ApiBodyConfigManagerUpsert = () =>
   ApiBody({
@@ -18,11 +17,11 @@ export const ApiBodyConfigManagerUpsert = () =>
     type: ConfigManagerUpsertReq,
   });
 
-export const ApiBodyConfigManagerUpsertPerNamespace = () =>
+export const ApiBodyConfigManagerUpsertPerRealm = () =>
   ApiBody({
     isArray: true,
     required: true,
-    type: ConfigManagerUpsertNamespaceReq,
+    type: ConfigManagerUpsertRealmReq,
   });
 
 export const ApiOkResponseConfigManagerUpsert = () =>

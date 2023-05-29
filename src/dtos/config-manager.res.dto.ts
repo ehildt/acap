@@ -7,7 +7,7 @@ export class ConfigManagerLeanRes {
   _id: string;
 
   @ApiProperty()
-  namespace: string;
+  realm: string;
 
   @ApiProperty()
   configId: string;

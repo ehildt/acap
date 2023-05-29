@@ -135,8 +135,8 @@ All of the api interfaces are well documented in the swagger open-api. There, yo
 ## Caching Insights
 
 1. Every config object is represented by it's **realm**.
-   1. A realm is a simple combination of a namespace and a postfix.
-   2. Sharing the same postfix with other services will leak the namespaces and thus make the realms available to those services (aka Redis default behaviour). 
+   1. A realm is a simple combination of a realm and a postfix.
+   2. Sharing the same postfix with other services will leak the realms and thus make the realms available to those services (aka Redis default behaviour). 
 2. The realm is cached for 300 seconds by default and stored in the database till it's entirely deleted. 
 3. The config objects can be added or deleted at any time. 
 4. Adding or deleting a config object will also remove it from the database. 
@@ -146,4 +146,4 @@ All of the api interfaces are well documented in the swagger open-api. There, yo
    2. Setting `CACHE_MANAGER_TTL` to 0 disables the expiration (ttl) for that particular **realm**. 
    3. Whenever a config object is altered, the ttl is being reset to 300 seconds (fallback) or whatever you have provided in the `CACHE_MANAGER_TTL` 
  
-  The Redis cache is a simple in-memory key-value storage. This means that by default there is no such thing as a realm. Everything is stored per key. The namespace-postfix combination is a naive approach which tries to mitigate key-coaliltion when multiple services need to use the same redis cache and therefor need to be distinct.
+  The Redis cache is a simple in-memory key-value storage. This means that by default there is no such thing as a realm. Everything is stored per key. The realm-postfix combination is a naive approach which tries to mitigate key-coaliltion when multiple services need to use the same redis cache and therefor need to be distinct.

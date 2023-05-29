@@ -16,9 +16,9 @@ class ConfigManagerKeyValuePair {
   configId: string | Record<string, unknown> | Array<unknown>;
 }
 
-export class ConfigManagerGetNamespacesRes {
+export class ConfigManagerGetRealmsRes {
   @ApiProperty({
     type: ConfigManagerKeyValuePair,
   })
-  namespace: Record<string, unknown>;
+  realm: Record<string, unknown>;
 }

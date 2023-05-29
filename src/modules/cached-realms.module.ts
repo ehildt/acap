@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { ConfigManagerController } from '@/controllers/manager.controller';
+import { CachedRealmsController } from '@/controllers/cached-realms.controller';
 import { ConfigManagerRepository } from '@/repositories/config-manager.repository';
 import { ConfigManagerConfigs, ConfigManagerConfigsSchema } from '@/schemas/configs.schema';
-import { ConfigManagerNamespaces, ConfigManagerNamespacesSchema } from '@/schemas/namespaces.schema';
+import { ConfigManagerRealms, ConfigManagerRealmsSchema } from '@/schemas/realms.schema';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { ManagerService } from '@/services/manager.service';
 
@@ -23,13 +23,13 @@ import { ManagerService } from '@/services/manager.service';
         collection: 'configs',
       },
       {
-        name: ConfigManagerNamespaces.name,
-        schema: ConfigManagerNamespacesSchema,
-        collection: 'namespaces',
+        name: ConfigManagerRealms.name,
+        schema: ConfigManagerRealmsSchema,
+        collection: 'realms',
       },
     ]),
   ],
   providers: [ManagerService, ConfigManagerRepository],
-  controllers: [ConfigManagerController],
+  controllers: [CachedRealmsController],
 })
-export class ManagerModule {}
+export class CachedRealmsModule {}

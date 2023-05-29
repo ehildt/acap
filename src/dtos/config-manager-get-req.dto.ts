@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ConfigManagerGetReq {
   @ApiProperty()
-  namespace: string;
+  realm: string;
 
   @ApiProperty()
   configId: string;

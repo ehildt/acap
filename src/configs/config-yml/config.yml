@@ -3,10 +3,10 @@ appConfig:
   startSwagger: true
   port: 3001
 
-managerConfig:
+realmConfig:
   ttl: 300
   resolveEnv: false
-  namespacePostfix: ConfigManager
+  namespacePostfix: REALM
 
 mongoConfig:
   uri: mongodb://mongo:27017

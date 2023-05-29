@@ -6,7 +6,7 @@ export type ConfigManagerConfigsDocument = ConfigManagerConfigs & Document;
 @Schema({ timestamps: true, autoIndex: true })
 export class ConfigManagerConfigs {
   @Prop({ required: true, uppercase: true })
-  namespace: string;
+  realm: string;
 
   @Prop({ required: true, uppercase: true })
   configId: string;
@@ -17,4 +17,4 @@ export class ConfigManagerConfigs {
 
 export const ConfigManagerConfigsSchema = SchemaFactory.createForClass(ConfigManagerConfigs);
 
-ConfigManagerConfigsSchema.index({ namespace: 1, configId: 1 }, { unique: true });
+ConfigManagerConfigsSchema.index({ realm: 1, configId: 1 }, { unique: true });

@@ -4,8 +4,8 @@ import { Transport } from '@nestjs/microservices';
 
 import {
   AppConfig,
-  ManagerConfig,
   MongoConfig,
+  RealmConfig,
   RedisConfig,
   RedisPublisherConfig,
 } from '@/configs/config-yml/config.modal';
@@ -23,10 +23,10 @@ export class ConfigFactoryService {
   }
 
   get config() {
-    return Object.freeze<ManagerConfig>({
-      ttl: this.configService.get<number>('Manager.TTL'),
-      namespacePostfix: this.configService.get<string>('Manager.NAMESPACE_POSTFIX'),
-      resolveEnv: this.configService.get<boolean>('Manager.RESOLVE_ENV'),
+    return Object.freeze<RealmConfig>({
+      ttl: this.configService.get<number>('Realm.TTL'),
+      namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
+      resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
     });
   }
 

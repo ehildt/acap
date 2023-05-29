@@ -6,7 +6,7 @@ export interface AppConfig {
   startSwagger: boolean;
 }
 
-export interface ManagerConfig {
+export interface RealmConfig {
   namespacePostfix: string;
   resolveEnv: boolean;
   ttl: number;
@@ -46,6 +46,6 @@ export interface Config {
   appConfig: AppConfig;
   mongoConfig: MongoConfig;
   redisConfig: RedisConfig;
-  managerConfig: ManagerConfig;
+  realmConfig: RealmConfig;
   redisPublisherConfig: RedisPublisherConfig;
 }

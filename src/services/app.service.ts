@@ -38,7 +38,7 @@ export class AppService {
       new DocumentBuilder()
         .setTitle('Config-Manager')
         .setDescription('A simple and convenient way to config your apps ;)')
-        .setVersion('1.0')
+        .setVersion('0.8.1')
         .build(),
     );
     SwaggerModule.setup(API_DOCS, app, openApiObj);
@@ -49,7 +49,7 @@ export class AppService {
       this.logger.verbose(
         {
           APP_CONFIG: appFactory.app,
-          CONFIG_MANAGER_CONFIG: appFactory.config,
+          REALM_CONFIG: appFactory.config,
           MONGO_CONFIG: appFactory.mongo,
           REDIS_CONFIG: appFactory.redis,
           REDIS_PUBLISHER_CONFIG: appFactory.publisher,

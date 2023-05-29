@@ -6,9 +6,9 @@ import RedisStore from 'cache-manager-ioredis';
 import { AppService } from '@/services/app.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 
+import { CachedRealmsModule } from './cached-realms.module';
 import { ClientsGlobalModule } from './clients.module';
 import { ConfigFactoryGlobalModule } from './config-factory.module';
-import { ManagerModule } from './manager.module';
 import { PubSubGlobalModule } from './pubsub.module';
 
 @Module({
@@ -16,7 +16,7 @@ import { PubSubGlobalModule } from './pubsub.module';
     ClientsGlobalModule,
     ConfigFactoryGlobalModule,
     PubSubGlobalModule,
-    ManagerModule,
+    CachedRealmsModule,
     CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],

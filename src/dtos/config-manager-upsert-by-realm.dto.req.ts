@@ -3,11 +3,11 @@ import { ArrayNotEmpty, IsString, IsUppercase } from 'class-validator';
 
 import { ConfigManagerUpsertReq } from './config-manager-upsert-req.dto';
 
-export class ConfigManagerUpsertNamespaceReq {
+export class ConfigManagerUpsertRealmReq {
   @IsString()
   @IsUppercase()
   @ApiProperty()
-  namespace: string;
+  realm: string;
 
   @ArrayNotEmpty()
   @ApiProperty({ isArray: true, type: () => ConfigManagerUpsertReq })
