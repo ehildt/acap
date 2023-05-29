@@ -9,16 +9,16 @@ import { prepareBulkWriteDeleteConfigs } from '@/helpers/prepare-bulk-write-dele
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
 import { prepareBulkWriteConfigs } from '@/helpers/prepare-bulk-write-upsert-configs.helper';
 import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
-import { ConfigManagerConfigs, ConfigManagerConfigsDocument } from '@/schemas/configs.schema';
-import { ConfigManagerRealms, ConfigManagerRealmsDocument } from '@/schemas/realms.schema';
+import { RealmConfigs, RealmConfigsDocument } from '@/schemas/configs.schema';
+import { Realms, RealmsDocument } from '@/schemas/realms.schema';
 
 @Injectable()
-export class ConfigManagerRepository {
+export class RealmsRepository {
   constructor(
-    @InjectModel(ConfigManagerConfigs.name)
-    private readonly configsModel: Model<ConfigManagerConfigsDocument>,
-    @InjectModel(ConfigManagerRealms.name)
-    private readonly namespaceModel: Model<ConfigManagerRealmsDocument>,
+    @InjectModel(RealmConfigs.name)
+    private readonly configsModel: Model<RealmConfigsDocument>,
+    @InjectModel(Realms.name)
+    private readonly namespaceModel: Model<RealmsDocument>,
   ) {}
 
   async findAll() {

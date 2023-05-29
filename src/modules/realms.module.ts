@@ -3,11 +3,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CachedRealmsController } from '@/controllers/cached-realms.controller';
-import { ConfigManagerRepository } from '@/repositories/config-manager.repository';
-import { ConfigManagerConfigs, ConfigManagerConfigsSchema } from '@/schemas/configs.schema';
-import { ConfigManagerRealms, ConfigManagerRealmsSchema } from '@/schemas/realms.schema';
+import { PersistedRealmsController } from '@/controllers/persisted-realms.controller';
+import { RealmsRepository } from '@/repositories/realms.repository';
+import { RealmConfigs, RealmConfigsSchema } from '@/schemas/configs.schema';
+import { Realms, RealmsSchema } from '@/schemas/realms.schema';
 import { ConfigFactoryService } from '@/services/config-factory.service';
-import { ManagerService } from '@/services/manager.service';
+import { RealmsService } from '@/services/realms.service';
 
 @Module({
   imports: [
@@ -18,18 +19,18 @@ import { ManagerService } from '@/services/manager.service';
     }),
     MongooseModule.forFeature([
       {
-        name: ConfigManagerConfigs.name,
-        schema: ConfigManagerConfigsSchema,
+        name: RealmConfigs.name,
+        schema: RealmConfigsSchema,
         collection: 'configs',
       },
       {
-        name: ConfigManagerRealms.name,
-        schema: ConfigManagerRealmsSchema,
+        name: Realms.name,
+        schema: RealmsSchema,
         collection: 'realms',
       },
     ]),
   ],
-  providers: [ManagerService, ConfigManagerRepository],
-  controllers: [CachedRealmsController],
+  providers: [RealmsService, RealmsRepository],
+  controllers: [CachedRealmsController, PersistedRealmsController],
 })
 export class CachedRealmsModule {}

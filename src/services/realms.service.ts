@@ -11,14 +11,14 @@ import { challengeConfigValue } from '@/helpers/challenge-config-source.helper';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
-import { ConfigManagerRepository } from '@/repositories/config-manager.repository';
+import { RealmsRepository } from '@/repositories/realms.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
-export class ManagerService {
+export class RealmsService {
   constructor(
-    private readonly configRepo: ConfigManagerRepository,
+    private readonly configRepo: RealmsRepository,
     private readonly factory: ConfigFactoryService,
     @Inject(Publisher.TOKEN) private client: ClientProxy,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
@@ -28,8 +28,7 @@ export class ManagerService {
     const result = await this.configRepo.upsert(realm, req);
     const configIds = req.map(({ configId }) => configId);
     if (result?.ok) {
-      const data = await this.configRepo.where({ realm });
-      await this.cache.set(realm, data, this.factory.config.ttl);
+      await this.configRepo.where({ realm });
       this.factory.publisher.publishEvents && (await firstValueFrom(this.client.emit(realm, configIds)));
     }
     return result;
@@ -39,17 +38,6 @@ export class ManagerService {
     const result = await this.configRepo.upsertMany(reqs);
 
     if (result?.ok) {
-      const realms = reqs.map(({ realm }) => realm);
-      const entities = await this.configRepo.where({ realm: { $in: realms } });
-      const data = entities.reduce((acc, val) => reduceToRealms(acc, val, this.factory.config.resolveEnv), {});
-
-      await Promise.all(
-        Object.keys(data).map(async (realm) => {
-          const postfix = `$${realm} @${this.factory.config.namespacePostfix}`;
-          await this.cache.set(postfix, data[realm], this.factory.config.ttl);
-        }),
-      );
-
       await Promise.all(
         reqs.map(async (req) => {
           return (
@@ -98,8 +86,8 @@ export class ManagerService {
   }
 
   async getRealms(realms: string[]) {
-    const spaces = Array.from(new Set(realms.map((space) => space.trim())));
-    const entities = await this.configRepo.where({ realm: { $in: spaces } });
+    const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
+    const entities = await this.configRepo.where({ realm: { $in: realmSet } });
     return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.config.resolveEnv), {});
   }
 
@@ -110,8 +98,8 @@ export class ManagerService {
       return mapEntitiesToConfigFile(entities, realms);
     }
 
-    const spaces = Array.from(new Set(realms.map((space) => space.trim())));
-    const entities = await this.configRepo.where({ realm: { $in: spaces } });
+    const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
+    const entities = await this.configRepo.where({ realm: { $in: realmSet } });
     return mapEntitiesToConfigFile(entities, realms);
   }
 

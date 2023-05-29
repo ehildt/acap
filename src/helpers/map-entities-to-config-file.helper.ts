@@ -1,6 +1,6 @@
-import { ConfigManagerConfigs } from '@/schemas/configs.schema';
+import { RealmConfigs } from '@/schemas/configs.schema';
 
-export function mapEntitiesToConfigFile(entities: ConfigManagerConfigs[], realms?: string[]) {
+export function mapEntitiesToConfigFile(entities: RealmConfigs[], realms?: string[]) {
   return realms?.map((realm) => ({
     realm,
     configs: entities

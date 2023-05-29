@@ -6,10 +6,10 @@ import RedisStore from 'cache-manager-ioredis';
 import { AppService } from '@/services/app.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 
-import { CachedRealmsModule } from './cached-realms.module';
 import { ClientsGlobalModule } from './clients.module';
 import { ConfigFactoryGlobalModule } from './config-factory.module';
 import { PubSubGlobalModule } from './pubsub.module';
+import { CachedRealmsModule } from './realms.module';
 
 @Module({
   imports: [
