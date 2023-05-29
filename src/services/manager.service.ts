@@ -29,7 +29,7 @@ export class ManagerService {
     const configIds = req.map(({ configId }) => configId);
     if (result?.ok) {
       const data = await this.configRepo.where({ namespace });
-      await this.cache.set(namespace, data, this.factory.redis.ttl);
+      await this.cache.set(namespace, data, this.factory.config.ttl);
       this.factory.publisher.publishEvents && (await firstValueFrom(this.client.emit(namespace, configIds)));
     }
     return result;
@@ -46,7 +46,7 @@ export class ManagerService {
       await Promise.all(
         Object.keys(data).map(async (namespace) => {
           const postfix = `$${namespace} @${this.factory.config.namespacePostfix}`;
-          await this.cache.set(postfix, data[namespace], this.factory.redis.ttl);
+          await this.cache.set(postfix, data[namespace], this.factory.config.ttl);
         }),
       );
 
