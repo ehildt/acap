@@ -24,21 +24,6 @@ export const ApiBodyRealmUpsertPerRealm = () =>
     type: RealmsUpsertReq,
   });
 
-export const ApiBodyPubSub = () =>
-  ApiBody({
-    type: 'object',
-    required: true,
-    schema: {
-      oneOf: [
-        { type: 'string', description: 'string or text' },
-        { type: 'number', description: 'a number' },
-        { type: 'boolean', description: 'a boolean' },
-        { type: 'Object', description: 'plain old javascript object' },
-        { type: 'Array', description: 'a list of dreams & cookies' },
-      ],
-    },
-  });
-
 export const ApiOkResponseRealmUpsert = () =>
   ApiOkResponse({
     isArray: true,
