@@ -116,10 +116,6 @@ export function OpenApi_GetRealms() {
 }
 
 export function OpenApi_DeleteRealm() {
-  return applyDecorators(ApiParamRealm(), ApiNoContentResponse(), ApiInternalServerErrorResponse());
-}
-
-export function OpenApi_DeleteRealmConfigIds() {
   return applyDecorators(
     ApiQueryConfigIds(),
     ApiParamRealm(),
