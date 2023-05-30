@@ -33,4 +33,4 @@ import { RealmsService } from '@/services/realms.service';
   providers: [RealmsService, RealmsRepository],
   controllers: [CachedRealmsController, PersistedRealmsController],
 })
-export class CachedRealmsModule {}
+export class RealmsModule {}

@@ -17,9 +17,9 @@ import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
   ApiOkResponsePagination,
-  ApiOkResponseRealmUpsert,
   ApiParamRealm,
   ApiQueryConfigIds,
+  ApiQueryRealm,
   ApiQueryRealms,
   ApiQuerySkip,
   ApiQueryTake,
@@ -98,18 +98,9 @@ export function OpenApi_GetPagination() {
 
 export function OpenApi_GetRealm() {
   return applyDecorators(
-    ApiParamRealm(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
-    ApiOkResponseRealmUpsert(),
-  );
-}
-
-export function OpenApi_GetRealmConfigIds() {
-  return applyDecorators(
     ApiOkResponse(),
     ApiQueryConfigIds(),
-    ApiParamRealm(),
+    ApiQueryRealm(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );

@@ -1,12 +1,13 @@
 import { Body, Param, ParseArrayPipe, Query } from '@nestjs/common';
 
-import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 import { RealmUpsertReq } from '../dtos/realm-upsert-req.dto';
+import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 
 const ParseQueryStrings = new ParseArrayPipe({ items: String, optional: true });
 const ParseRealmPipe = new ParseArrayPipe({ items: RealmUpsertReq });
 const ParseRealmUpsertByRealmPipe = new ParseArrayPipe({ items: RealmsUpsertReq });
 
+export const QueryRealm = () => Query('realm');
 export const ParamRealm = () => Param('realm');
 export const QueryConfigIds = () => Query('configIds', ParseQueryStrings);
 export const QueryRealms = () => Query('realms', ParseQueryStrings);

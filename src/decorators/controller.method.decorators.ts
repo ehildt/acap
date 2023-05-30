@@ -10,6 +10,5 @@ export const DownloadFile = () => Get(files);
 export const PostPassThroughPubSub = () => Post();
 export const PostRealm = () => Post(realm);
 export const GetRealm = () => Get(realm);
-export const GetConfigIds = () => Get(namespaceConfigIds);
 export const DeleteRealm = () => Delete(realm);
 export const DeleteConfigIds = () => Delete(namespaceConfigIds);
