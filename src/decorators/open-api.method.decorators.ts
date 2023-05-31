@@ -1,6 +1,5 @@
-import { ApiBody, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
 
-import { RealmRes } from '../dtos/realm-res.dto';
 import { RealmUpsertReq } from '../dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 
