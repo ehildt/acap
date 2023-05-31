@@ -16,7 +16,6 @@ import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
-  ApiOkResponsePagination,
   ApiParamRealm,
   ApiQueryConfigIds,
   ApiQueryRealm,

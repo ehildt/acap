@@ -24,9 +24,3 @@ export const ApiBodyRealmUpsertPerRealm = () =>
     required: true,
     type: RealmsUpsertReq,
   });
-
-export const ApiOkResponsePagination = () =>
-  ApiOkResponse({
-    isArray: true,
-    type: RealmRes,
-  });
