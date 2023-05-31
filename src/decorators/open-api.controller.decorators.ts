@@ -7,6 +7,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiProduces,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -82,8 +83,11 @@ export function OpenApi_UpsertRealms() {
   );
 }
 
-export function OpenApi_PassThrough() {
+export function OpenApi_PubSub() {
   return applyDecorators(
+    ApiOperation({
+      description: 'Immediately publishes the payload. The cache and database are bypassed',
+    }),
     ApiOkResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),
@@ -93,6 +97,10 @@ export function OpenApi_PassThrough() {
 
 export function OpenApi_GetRealm() {
   return applyDecorators(
+    ApiOperation({
+      description:
+        'Returns the realm from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
+    }),
     ApiOkResponse(),
     ApiQueryConfigIds(),
     ApiQueryRealm(),
@@ -103,6 +111,10 @@ export function OpenApi_GetRealm() {
 
 export function OpenApi_GetRealms() {
   return applyDecorators(
+    ApiOperation({
+      description:
+        'If a value for realms is provided, then take and skip are ignored. Otherwise all realms are paginated.',
+    }),
     ApiOkResponse({ type: RealmsRes }),
     ApiQueryRealms(false),
     ApiQueryTake(),
@@ -114,6 +126,11 @@ export function OpenApi_GetRealms() {
 
 export function OpenApi_DeleteRealm() {
   return applyDecorators(
+    ApiOperation({
+      description: `If a value for realm is provided, then the whole realm is deleted from cache AND database. 
+        Otherwise if also configIds are provided, then only the configIds are deleted from cache AND the database. 
+        If a realm has no more configIds, then the realm is also deleted.`,
+    }),
     ApiQueryConfigIds(),
     ApiParamRealm(),
     ApiNoContentResponse(),
