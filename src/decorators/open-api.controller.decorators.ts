@@ -92,10 +92,6 @@ export function OpenApi_PassThrough() {
   );
 }
 
-export function OpenApi_GetPagination() {
-  return applyDecorators(ApiOkResponsePagination(), ApiQueryTake(), ApiQuerySkip(), ApiInternalServerErrorResponse());
-}
-
 export function OpenApi_GetRealm() {
   return applyDecorators(
     ApiOkResponse(),
@@ -109,7 +105,9 @@ export function OpenApi_GetRealm() {
 export function OpenApi_GetRealms() {
   return applyDecorators(
     ApiOkResponse({ type: RealmsRes }),
-    ApiQueryRealms(true),
+    ApiQueryRealms(false),
+    ApiQueryTake(),
+    ApiQuerySkip(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );

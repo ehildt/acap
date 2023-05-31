@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CachedRealmsController } from '@/controllers/cached-realms.controller';
+import { FilesController } from '@/controllers/files.controller';
 import { PersistedRealmsController } from '@/controllers/persisted-realms.controller';
 import { RealmsRepository } from '@/repositories/realms.repository';
 import { RealmConfigs, RealmConfigsSchema } from '@/schemas/configs.schema';
@@ -31,6 +32,6 @@ import { RealmsService } from '@/services/realms.service';
     ]),
   ],
   providers: [RealmsService, RealmsRepository],
-  controllers: [CachedRealmsController, PersistedRealmsController],
+  controllers: [CachedRealmsController, PersistedRealmsController, FilesController],
 })
 export class RealmsModule {}

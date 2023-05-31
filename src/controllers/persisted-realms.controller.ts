@@ -1,9 +1,7 @@
-import { MultipartFile } from '@fastify/multipart';
-import { Controller, Get, Post, StreamableFile } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { JsonFile } from '@/decorators/class.property.values';
-import { DownloadFile, GetPagination, PostFile, PostRealm } from '@/decorators/controller.method.decorators';
+import { PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamRealm,
   QueryRealms,
@@ -11,14 +9,7 @@ import {
   RealmUpsertRealmBody,
 } from '@/decorators/controller.parameter.decorators';
 import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
-import {
-  OpenApi_DownloadFile,
-  OpenApi_GetPagination,
-  OpenApi_GetRealms,
-  OpenApi_PostFile,
-  OpenApi_Upsert,
-  OpenApi_UpsertRealms,
-} from '@/decorators/open-api.controller.decorators';
+import { OpenApi_GetRealms, OpenApi_Upsert, OpenApi_UpsertRealms } from '@/decorators/open-api.controller.decorators';
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { RealmsService } from '@/services/realms.service';
@@ -40,29 +31,10 @@ export class PersistedRealmsController {
     return await this.realmsService.upsertRealms(req);
   }
 
-  @GetPagination()
-  @OpenApi_GetPagination()
-  async paginate(@QueryTake() take: number, @QuerySkip() skip: number) {
-    return await this.realmsService.paginate(take, skip);
-  }
-
-  @PostFile()
-  @OpenApi_PostFile()
-  async uploadFile(@JsonFile() file: MultipartFile) {
-    const content = JSON.parse((await file.toBuffer()).toString());
-    return await this.realmsService.upsertRealms(content);
-  }
-
-  @DownloadFile()
-  @OpenApi_DownloadFile()
-  async downloadConfigFile(@QueryRealms() realms?: string[]) {
-    const file = await this.realmsService.downloadConfigFile(realms);
-    return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
-  }
-
   @Get()
   @OpenApi_GetRealms()
-  async getRealms(@QueryRealms() realms: string[]) {
+  async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
+    if (!realms) return await this.realmsService.paginate(take ?? 100, skip ?? 0);
     return await this.realmsService.getRealms(realms);
   }
 }
