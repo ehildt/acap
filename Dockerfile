@@ -1,11 +1,11 @@
 # entrypoint for local development
-FROM node:18 AS local
+FROM node:20 AS local
 WORKDIR /app
 EXPOSE 3000
 ENTRYPOINT [ "npm", "run", "start:dev"]
 
 # entrypoint for the app builder
-FROM node:18 AS builder
+FROM node:20 AS builder
 WORKDIR /app
 
 ENV PORT 3000
@@ -15,7 +15,7 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY shims.d.ts ./
 COPY src/ ./src/
-COPY src/config.yml ./dist/config.yml
+# COPY src/config.yml ./dist/config.yml
 
 RUN npm ci --ignore-scripts --loglevel=error
 
@@ -32,7 +32,7 @@ WORKDIR /app
 RUN npm run build:prod
 
 # entrypoint for prod-stage
-FROM node:18-alpine AS prod
+FROM node:20-alpine AS prod
 WORKDIR /app
 
 ENV PORT 3000
