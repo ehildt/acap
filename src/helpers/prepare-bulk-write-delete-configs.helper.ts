@@ -1,7 +1,7 @@
 export function prepareBulkWriteDeleteConfigs(realm: string, req?: string[]) {
   return req
-    ? req.map((configId) => ({
-        deleteOne: { filter: { realm, configId } },
+    ? req.map((id) => ({
+        deleteOne: { filter: { realm, id } },
       }))
     : [{ deleteMany: { filter: { realm } } }];
 }

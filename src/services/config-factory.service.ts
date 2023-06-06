@@ -17,6 +17,7 @@ export class ConfigFactoryService {
   get app() {
     return Object.freeze<AppConfig>({
       port: this.configService.get<number>('AppConfig.PORT'),
+      address: this.configService.get<string>('AppConfig.ADDRESS'),
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
     });
