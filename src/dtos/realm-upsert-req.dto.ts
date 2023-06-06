@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsString, IsUppercase } from 'class-validator';
 
-export class ConfigManagerUpsertReq {
+export class RealmUpsertReq {
   @IsString()
   @IsUppercase()
   @ApiProperty()
@@ -10,13 +10,14 @@ export class ConfigManagerUpsertReq {
   @IsDefined()
   @ApiProperty({
     isArray: true,
-    type: () => ConfigManagerUpsertReq,
+    type: () => RealmUpsertReq,
     oneOf: [
       { type: 'string', description: 'string or text' },
-      { type: 'string', description: 'environment variable identifier' },
+      { type: 'number', description: 'a number' },
+      { type: 'boolean', description: 'a boolean' },
       { type: 'Object', description: 'plain old javascript object' },
       { type: 'Array', description: 'a list of dreams & cookies' },
     ],
   })
-  value: string | Record<string, unknown> | Array<unknown>;
+  value: string | number | boolean | Record<string, unknown> | Array<unknown>;
 }

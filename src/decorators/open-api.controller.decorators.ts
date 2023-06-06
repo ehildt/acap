@@ -7,26 +7,29 @@ import {
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiProduces,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-import { ConfigManagerGetNamespacesRes } from '../dtos/config-manager-get-namespaces.dto.res';
-import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
+import { RealmsRes } from '../dtos/realms-res.dto.res';
+import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 import {
-  ApiBodyConfigManagerUpsert,
-  ApiBodyConfigManagerUpsertPerNamespace,
-  ApiOkResponseConfigManagerUpsert,
-  ApiOkResponsePagination,
-  ApiParamNamespace,
+  ApiBodyRealmUpsert,
+  ApiBodyRealmUpsertPerRealm,
+  ApiParamRealm,
   ApiQueryConfigIds,
-  ApiQueryNamespaces,
+  ApiQueryRealm,
+  ApiQueryRealms,
   ApiQuerySkip,
   ApiQueryTake,
 } from './open-api.method.decorators';
 
 export function OpenApi_PostFile() {
   return applyDecorators(
+    ApiOperation({
+      description: 'Uploads a json file containing the realms',
+    }),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiInternalServerErrorResponse(),
@@ -37,7 +40,7 @@ export function OpenApi_PostFile() {
         required: ['config.json'],
         properties: {
           'config.json': {
-            description: 'a json file, which contains the configuration(s) for the namespace(s)',
+            description: 'a json file, which contains the configuration(s) for the realm(s)',
             type: 'string',
             format: 'binary',
           },
@@ -49,13 +52,16 @@ export function OpenApi_PostFile() {
 
 export function OpenApi_DownloadFile() {
   return applyDecorators(
+    ApiOperation({
+      description: 'Downloads the realms as a json file',
+    }),
     ApiProduces('application/json'),
     ApiBadRequestResponse(),
     ApiInternalServerErrorResponse(),
-    ApiQueryNamespaces(),
+    ApiQueryRealms(),
     ApiUnprocessableEntityResponse(),
     ApiOkResponse({
-      type: ConfigManagerUpsertNamespaceReq,
+      type: RealmsUpsertReq,
       isArray: true,
       schema: {
         type: 'string',
@@ -67,71 +73,80 @@ export function OpenApi_DownloadFile() {
 
 export function OpenApi_Upsert() {
   return applyDecorators(
+    ApiOperation({
+      description:
+        'Upserts a realm in the database. The realm is not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
+    }),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsert(),
+    ApiBodyRealmUpsert(),
     ApiInternalServerErrorResponse(),
   );
 }
 
-export function OpenApi_UpsertNamespaces() {
+export function OpenApi_UpsertRealms() {
   return applyDecorators(
+    ApiOperation({
+      description:
+        'Upserts realms in the database. The realms are not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
+    }),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsertPerNamespace(),
+    ApiBodyRealmUpsertPerRealm(),
     ApiInternalServerErrorResponse(),
   );
 }
 
-export function OpenApi_PassThrough() {
+export function OpenApi_PubSub() {
   return applyDecorators(
+    ApiOperation({
+      description: 'Immediately publishes the payload. The cache and database are bypassed',
+    }),
     ApiOkResponse(),
     ApiBadRequestResponse(),
-    ApiBodyConfigManagerUpsertPerNamespace(),
+    ApiBodyRealmUpsertPerRealm(),
     ApiInternalServerErrorResponse(),
   );
 }
 
-export function OpenApi_GetPagination() {
-  return applyDecorators(ApiOkResponsePagination(), ApiQueryTake(), ApiQuerySkip(), ApiInternalServerErrorResponse());
-}
-
-export function OpenApi_GetNamespace() {
+export function OpenApi_GetRealm() {
   return applyDecorators(
-    ApiParamNamespace(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
-    ApiOkResponseConfigManagerUpsert(),
-  );
-}
-
-export function OpenApi_GetNamespaceConfigIds() {
-  return applyDecorators(
+    ApiOperation({
+      description:
+        'Returns the realm from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
+    }),
     ApiOkResponse(),
     ApiQueryConfigIds(),
-    ApiParamNamespace(),
+    ApiQueryRealm(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
 }
 
-export function OpenApi_GetNamespaces() {
+export function OpenApi_GetRealms() {
   return applyDecorators(
-    ApiOkResponse({ type: ConfigManagerGetNamespacesRes }),
-    ApiQueryNamespaces(true),
+    ApiOperation({
+      description:
+        'If a value for realms is provided, then take and skip are ignored. Otherwise all realms are paginated.',
+    }),
+    ApiOkResponse({ type: RealmsRes }),
+    ApiQueryRealms(false),
+    ApiQueryTake(),
+    ApiQuerySkip(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
 }
 
-export function OpenApi_DeleteNamespace() {
-  return applyDecorators(ApiParamNamespace(), ApiNoContentResponse(), ApiInternalServerErrorResponse());
-}
-
-export function OpenApi_DeleteNamespaceConfigIds() {
+export function OpenApi_DeleteRealm() {
   return applyDecorators(
+    ApiOperation({
+      description: `If a value for realm is provided, then the whole realm is deleted from cache AND database. 
+        Otherwise if also configIds are provided, then only the configIds are deleted from cache AND the database. 
+        If a realm has no more configIds, then the realm is also deleted.`,
+    }),
     ApiQueryConfigIds(),
-    ApiParamNamespace(),
+    ApiParamRealm(),
     ApiNoContentResponse(),
     ApiInternalServerErrorResponse(),
   );

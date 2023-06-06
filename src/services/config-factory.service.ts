@@ -4,8 +4,8 @@ import { Transport } from '@nestjs/microservices';
 
 import {
   AppConfig,
-  ManagerConfig,
   MongoConfig,
+  RealmConfig,
   RedisConfig,
   RedisPublisherConfig,
 } from '@/configs/config-yml/config.modal';
@@ -23,10 +23,10 @@ export class ConfigFactoryService {
   }
 
   get config() {
-    return Object.freeze<ManagerConfig>({
-      ttl: this.configService.get<number>('ConfigManager.TTL'),
-      namespacePostfix: this.configService.get<string>('ConfigManager.NAMESPACE_POSTFIX'),
-      resolveEnv: this.configService.get<boolean>('ConfigManager.RESOLVE_ENV'),
+    return Object.freeze<RealmConfig>({
+      ttl: this.configService.get<number>('Realm.TTL'),
+      namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
+      resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
     });
   }
 
@@ -56,12 +56,12 @@ export class ConfigFactoryService {
   get publisher() {
     return Object.freeze<RedisPublisherConfig>({
       transport: Transport.REDIS,
-      publishEvents: this.configService.get<boolean>('ConfigPublisher.EVENTS'),
+      publishEvents: this.configService.get<boolean>('Publisher.EVENTS'),
       options: {
-        port: this.configService.get<number>('ConfigPublisher.PORT'),
-        host: this.configService.get<string>('ConfigPublisher.HOST'),
-        password: this.configService.get<string>('ConfigPublisher.PASS'),
-        username: this.configService.get<string>('ConfigPublisher.USER'),
+        port: this.configService.get<number>('Publisher.PORT'),
+        host: this.configService.get<string>('Publisher.HOST'),
+        password: this.configService.get<string>('Publisher.PASS'),
+        username: this.configService.get<string>('Publisher.USER'),
       },
     });
   }
