@@ -27,6 +27,9 @@ import {
 
 export function OpenApi_PostFile() {
   return applyDecorators(
+    ApiOperation({
+      description: 'Uploads a json file containing the realms',
+    }),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiInternalServerErrorResponse(),
@@ -49,6 +52,9 @@ export function OpenApi_PostFile() {
 
 export function OpenApi_DownloadFile() {
   return applyDecorators(
+    ApiOperation({
+      description: 'Downloads the realms as a json file',
+    }),
     ApiProduces('application/json'),
     ApiBadRequestResponse(),
     ApiInternalServerErrorResponse(),
@@ -67,6 +73,10 @@ export function OpenApi_DownloadFile() {
 
 export function OpenApi_Upsert() {
   return applyDecorators(
+    ApiOperation({
+      description:
+        'Upserts a realm in the database. The realm is not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
+    }),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsert(),
@@ -76,6 +86,10 @@ export function OpenApi_Upsert() {
 
 export function OpenApi_UpsertRealms() {
   return applyDecorators(
+    ApiOperation({
+      description:
+        'Upserts realms in the database. The realms are not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
+    }),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),
