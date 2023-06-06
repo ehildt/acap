@@ -1,0 +1,34 @@
+appConfig:
+  printEnv: true
+  startSwagger: true
+  port: 3001
+
+realmConfig:
+  ttl: 300
+  resolveEnv: false
+  namespacePostfix: REALM
+
+mongoConfig:
+  uri: mongodb://mongo:27017
+  ssl: false
+  sslValidate: false
+  dbName: configs
+  user: mongo
+  pass: mongo
+
+redisConfig:
+  host: redis
+  port: 6379
+  ttl: 600
+  max: 100
+  db: 0
+  password: redis
+  username: default
+
+redisPublisherConfig: 
+  publishEvents: true
+  options:
+    port: 6379
+    host: redis
+    password: redis
+    username: default
