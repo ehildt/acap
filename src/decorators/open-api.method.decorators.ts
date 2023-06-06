@@ -1,38 +1,25 @@
-import { ApiBody, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
 
-import { ConfigManagerLeanRes } from '../dtos/config-manager.res.dto';
-import { ConfigManagerUpsertNamespaceReq } from '../dtos/config-manager-upsert-by-namespace.dto.req';
-import { ConfigManagerUpsertReq } from '../dtos/config-manager-upsert-req.dto';
+import { RealmUpsertReq } from '../dtos/realm-upsert-req.dto';
+import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 
-export const ApiParamNamespace = () => ApiParam({ name: 'namespace', type: String });
-export const ApiQueryConfigIds = () => ApiQuery({ name: 'configIds', type: String, isArray: true });
-export const ApiQueryTake = () => ApiQuery({ name: 'take', example: '100' });
-export const ApiQuerySkip = () => ApiQuery({ name: 'skip', example: '0' });
-export const ApiQueryNamespaces = (required = false) =>
-  ApiQuery({ name: 'namespaces', type: String, isArray: true, required });
+export const ApiQueryRealm = () => ApiQuery({ name: 'realm', type: String });
+export const ApiParamRealm = () => ApiParam({ name: 'realm', type: String });
+export const ApiQueryConfigIds = () => ApiQuery({ name: 'configIds', type: String, isArray: true, required: false });
+export const ApiQueryTake = () => ApiQuery({ name: 'take', example: '100', required: false });
+export const ApiQuerySkip = () => ApiQuery({ name: 'skip', example: '0', required: false });
+export const ApiQueryRealms = (required = false) => ApiQuery({ name: 'realms', type: String, isArray: true, required });
 
-export const ApiBodyConfigManagerUpsert = () =>
+export const ApiBodyRealmUpsert = () =>
   ApiBody({
     isArray: true,
     required: true,
-    type: ConfigManagerUpsertReq,
+    type: RealmUpsertReq,
   });
 
-export const ApiBodyConfigManagerUpsertPerNamespace = () =>
+export const ApiBodyRealmUpsertPerRealm = () =>
   ApiBody({
     isArray: true,
     required: true,
-    type: ConfigManagerUpsertNamespaceReq,
-  });
-
-export const ApiOkResponseConfigManagerUpsert = () =>
-  ApiOkResponse({
-    isArray: true,
-    type: ConfigManagerUpsertReq,
-  });
-
-export const ApiOkResponsePagination = () =>
-  ApiOkResponse({
-    isArray: true,
-    type: ConfigManagerLeanRes,
+    type: RealmsUpsertReq,
   });

@@ -1,4 +1,4 @@
-export class ConfigPublisherAdapter {
+export class PublisherAdapter {
   get PORT(): number {
     return parseInt(process.env.REDIS_PUBLISHER_PORT, 10);
   }
