@@ -1,6 +1,6 @@
 {
   "name": "@litlbyte/config-manager",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "A simple and convenient way to config your apps ;)",
   "repository": "git@github.com:ehildt/config-manager-server.git",
   "author": {
