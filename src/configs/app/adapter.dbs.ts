@@ -3,6 +3,10 @@ export class AppConfigAdapter {
     return parseInt(process.env.PORT, 10);
   }
 
+  get ADDRESS(): string {
+    return process.env.ADDRESS;
+  }
+
   get START_SWAGGER(): boolean {
     return process.env.START_SWAGGER == 'true';
   }

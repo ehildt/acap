@@ -5,6 +5,10 @@ import { CONFIG_YML } from '@/configs/config-yml/loader';
 export const APP_SCHEMA = {
   PORT: CONFIG_YML?.appConfig?.port ? Joi.number().default(CONFIG_YML.appConfig.port) : Joi.number().required(),
 
+  ADDRESS: CONFIG_YML?.appConfig?.address
+    ? Joi.string().default(CONFIG_YML.appConfig.address)
+    : Joi.string().required(),
+
   PRINT_ENV:
     CONFIG_YML?.appConfig?.printEnv !== undefined
       ? Joi.boolean().default(CONFIG_YML.appConfig.printEnv)

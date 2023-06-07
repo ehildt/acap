@@ -2,6 +2,7 @@ import { Transport } from '@nestjs/microservices';
 
 export interface AppConfig {
   port: number;
+  address: string;
   printEnv: boolean;
   startSwagger: boolean;
 }
