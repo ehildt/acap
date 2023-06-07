@@ -16,6 +16,6 @@ void (async () => {
   appService.enableOpenApi(app);
 
   await app.register(fastifyMultipart);
-  await app.listen(factory.app.port, '0.0.0.0');
+  await app.listen(factory.app.port, factory.app.address);
   appService.logOnServerStart(factory);
 })();

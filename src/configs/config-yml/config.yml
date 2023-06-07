@@ -1,7 +1,8 @@
 appConfig:
+  port: 3001
+  address: 0.0.0.0
   printEnv: true
   startSwagger: true
-  port: 3001
 
 realmConfig:
   ttl: 300
