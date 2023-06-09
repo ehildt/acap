@@ -21,11 +21,11 @@ export class CachedRealmsController {
 
   @GetRealm()
   @OpenApi_GetRealm()
-  async getRealm(@QueryRealm() realm: string, @QueryConfigIds() configIds?: string[]) {
+  async getRealm(@QueryRealm() realm: string, @QueryConfigIds() ids?: string[]) {
     const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
     let cache = (await this.cache.get(postfix)) ?? ({} as any);
 
-    if (!configIds) {
+    if (!ids) {
       if (Object.keys(cache)?.length) return cache;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmsService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
@@ -33,11 +33,11 @@ export class CachedRealmsController {
       return data;
     }
 
-    const ids = Array.from(new Set(configIds.filter((e) => e)));
-    const matchedKeys = Object.keys(cache).filter((c) => ids.includes(c));
+    const filteredIds = Array.from(new Set(ids?.filter((e) => e)));
+    const matchedKeys = Object.keys(cache).filter((c) => filteredIds.includes(c));
     if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
-    if (matchedKeys?.length === ids?.length) return cache;
-    const entities = await this.realmsService.getRealmConfigIds(realm, ids);
+    if (matchedKeys?.length === filteredIds?.length) return cache;
+    const entities = await this.realmsService.getRealmConfigIds(realm, filteredIds);
     cache = { ...cache, ...entities };
     await this.cache.set(postfix, cache, this.configFactory.config.ttl);
     return cache;
@@ -46,18 +46,18 @@ export class CachedRealmsController {
   @DeleteRealm()
   @OpenApi_DeleteRealm()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteRealm(@ParamRealm() realm: string, @QueryConfigIds() configIds?: string[]) {
+  async deleteRealm(@ParamRealm() realm: string, @QueryConfigIds() ids?: string[]) {
     const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
 
-    if (!configIds) {
+    if (!ids) {
       await this.cache.del(`${realm}_${this.configFactory.config.namespacePostfix}`);
       return await this.realmsService.deleteRealm(realm);
     }
 
-    const ids = Array.from(new Set(configIds.filter((e) => e)));
+    const filteredIds = Array.from(new Set(ids.filter((e) => e)));
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
-    const keys = Object.keys(cache).filter((key) => delete cache[configIds.find((id) => id === key)]);
-    await this.realmsService.deleteRealmConfigIds(realm, ids);
+    const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
+    await this.realmsService.deleteRealmConfigIds(realm, filteredIds);
     if (keys.length) await this.cache.set(postfix, cache, this.configFactory.config.ttl);
     else return await this.cache.del(postfix);
   }

@@ -9,7 +9,7 @@ import { OpenApi_DownloadFile, OpenApi_PostFile } from '@/decorators/open-api.co
 import { RealmsService } from '@/services/realms.service';
 
 @ApiTags('Files')
-@Controller('realms')
+@Controller('files')
 export class FilesController {
   constructor(private readonly realmsService: RealmsService) {}
 

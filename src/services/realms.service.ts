@@ -1,7 +1,5 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
 
 import { Publisher } from '@/constants/publisher.enum';
@@ -21,16 +19,12 @@ export class RealmsService {
     private readonly configRepo: RealmsRepository,
     private readonly factory: ConfigFactoryService,
     @Inject(Publisher.TOKEN) private client: ClientProxy,
-    @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
   async upsertRealm(realm: string, req: RealmUpsertReq[]) {
     const result = await this.configRepo.upsert(realm, req);
-    const configIds = req.map(({ configId }) => configId);
-    if (result?.ok) {
-      await this.configRepo.where({ realm });
-      this.factory.publisher.publishEvents && (await firstValueFrom(this.client.emit(realm, configIds)));
-    }
+    const ids = req.map(({ id }) => id);
+    if (result?.ok) this.factory.publisher.publishEvents && (await firstValueFrom(this.client.emit(realm, ids)));
     return result;
   }
 
@@ -45,7 +39,7 @@ export class RealmsService {
             (await firstValueFrom(
               this.client.emit(
                 req.realm,
-                req.configs.map(({ configId }) => configId),
+                req.configs.map(({ id }) => id),
               ),
             ))
           );
@@ -64,8 +58,8 @@ export class RealmsService {
           (await firstValueFrom(
             this.client.emit(
               req.realm,
-              req.configs.map(({ configId, value }) => ({
-                configId,
+              req.configs.map(({ id, value }) => ({
+                id,
                 value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
               })),
             ),
@@ -110,12 +104,12 @@ export class RealmsService {
   async getRealmConfigIds(realm: string, ids: string[]) {
     const entities = await this.configRepo.where({
       realm,
-      configId: { $in: ids },
+      id: { $in: ids },
     });
 
     if (entities?.length < ids?.length)
       throw new UnprocessableEntityException(
-        `N/A [ realm: ${realm} | configId: ${ids.filter((id) => !entities.find(({ configId }) => configId === id))} ]`,
+        `N/A [ realm: ${realm} | id: ${ids.filter((id) => !entities.find(({ _id }) => _id === id))} ]`,
       );
 
     return reduceEntities(this.factory.config.resolveEnv, entities);
@@ -127,9 +121,9 @@ export class RealmsService {
     return entity;
   }
 
-  async deleteRealmConfigIds(realm: string, configIds: string[]) {
-    const entity = await this.configRepo.delete(realm, configIds);
-    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(realm, configIds));
+  async deleteRealmConfigIds(realm: string, ids: string[]) {
+    const entity = await this.configRepo.delete(realm, ids);
+    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(realm, ids));
     return entity;
   }
 }

@@ -10,11 +10,11 @@ class RealmKeyValuePair {
       { type: 'string', description: 'string or text' },
       { type: 'number', description: 'a number' },
       { type: 'boolean', description: 'a boolean' },
-      { type: 'Object', description: 'plain old javascript object' },
-      { type: 'Array', description: 'a list of dreams & cookies' },
+      { type: 'object', description: 'plain old javascript object' },
+      { type: 'array', description: 'a list of dreams & cookies' },
     ],
   })
-  configId: string | Record<string, unknown> | Array<unknown>;
+  id: string | Record<string, unknown> | Array<unknown>;
 }
 
 export class RealmsRes {
