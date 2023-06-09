@@ -1,18 +1,34 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Controller, HttpCode, HttpStatus, Inject, UnprocessableEntityException } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Inject, Post, UnprocessableEntityException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import { DeleteRealm, GetRealm } from '@/decorators/controller.method.decorators';
-import { ParamRealm, QueryConfigIds, QueryRealm } from '@/decorators/controller.parameter.decorators';
-import { OpenApi_DeleteRealm, OpenApi_GetRealm } from '@/decorators/open-api.controller.decorators';
+import { DeleteRealm, GetRealm, PostRealm } from '@/decorators/controller.method.decorators';
+import {
+  ParamRealm,
+  QueryConfigIds,
+  QueryRealm,
+  QueryRealms,
+  RealmUpsertBody,
+  RealmUpsertRealmBody,
+} from '@/decorators/controller.parameter.decorators';
+import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
+import {
+  OpenApi_DeleteRealm,
+  OpenApi_GetRealm,
+  OpenApi_GetRealms,
+  OpenApi_Upsert,
+  OpenApi_UpsertRealms,
+} from '@/decorators/open-api.controller.decorators';
+import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { RealmsService } from '@/services/realms.service';
 
-@ApiTags('Cached')
+@ApiTags('Realm')
 @Controller('realms')
-export class CachedRealmsController {
+export class RealmController {
   constructor(
     private readonly realmsService: RealmsService,
     private readonly configFactory: ConfigFactoryService,
@@ -22,7 +38,7 @@ export class CachedRealmsController {
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryConfigIds() ids?: string[]) {
-    const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
     let cache = (await this.cache.get(postfix)) ?? ({} as any);
 
     if (!ids) {
@@ -47,7 +63,7 @@ export class CachedRealmsController {
   @OpenApi_DeleteRealm()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRealm(@ParamRealm() realm: string, @QueryConfigIds() ids?: string[]) {
-    const postfix = `$${realm} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
 
     if (!ids) {
       await this.cache.del(`${realm}_${this.configFactory.config.namespacePostfix}`);
@@ -60,5 +76,24 @@ export class CachedRealmsController {
     await this.realmsService.deleteRealmConfigIds(realm, filteredIds);
     if (keys.length) await this.cache.set(postfix, cache, this.configFactory.config.ttl);
     else return await this.cache.del(postfix);
+  }
+
+  @PostRealm()
+  @OpenApi_Upsert()
+  async upsert(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
+    return await this.realmsService.upsertRealm(realm, req);
+  }
+
+  @Post()
+  @OpenApi_UpsertRealms()
+  async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
+    return await this.realmsService.upsertRealms(req);
+  }
+
+  @Get()
+  @OpenApi_GetRealms()
+  async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
+    if (!realms) return await this.realmsService.paginate(take ?? 100, skip ?? 0);
+    return await this.realmsService.getRealms(realms);
   }
 }

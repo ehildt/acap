@@ -46,13 +46,15 @@ export class JsonSchemaController {
   @GetSchema()
   @OpenApi_GetSchema()
   async getRealm(@QueryRealm() schema: string, @QueryConfigId() id: string) {
-    const postfix = `$SCHEMA:${schema} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = `$SCHEMA:${schema}_${id} @${this.configFactory.config.namespacePostfix}`;
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     const matchedKey = Object.keys(cache).find((key) => key === id);
     if (matchedKey) return cache[matchedKey];
     const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.schemaService.getRealm(schema));
     if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A schema: ${schema}`);
     await this.cache.set(postfix, data, this.configFactory.config.ttl);
-    return data[id];
+    const value = data[id];
+    if (value) return value;
+    throw new UnprocessableEntityException(`N/A schema: ${schema} | id: ${id}`);
   }
 }

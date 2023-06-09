@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { CachedRealmsController } from '@/controllers/cached-realms.controller';
 import { FilesController } from '@/controllers/files.controller';
 import { JsonSchemaController } from '@/controllers/json-schema.controller';
-import { PersistedRealmsController } from '@/controllers/persisted-realms.controller';
+import { RealmController } from '@/controllers/realm.controller';
 import { RealmsRepository } from '@/repositories/realms.repository';
 import { SchemaRepository } from '@/repositories/schema.repository';
 import { JsonSchemaConfigsDefinition, JsonSchemaConfigsSchema } from '@/schemas/json-schema-config-definition.schema';
@@ -27,26 +26,26 @@ import { SchemaService } from '@/services/schema.service';
       {
         name: RealmsSchemaDefinition.name,
         schema: RealmsSchema,
-        collection: 'realms',
+        collection: 'REALM',
       },
       {
         name: RealmConfigsSchemaDefinition.name,
         schema: RealmConfigsSchema,
-        collection: 'realmConfigs',
+        collection: 'REALM_CONFIG',
       },
       {
         name: JsonSchemaDefinition.name,
         schema: JsonSchema,
-        collection: 'schemas',
+        collection: 'SCHEMA',
       },
       {
         name: JsonSchemaConfigsDefinition.name,
         schema: JsonSchemaConfigsSchema,
-        collection: 'schemaConfigs',
+        collection: 'SCHEMA_CONFIG',
       },
     ]),
   ],
   providers: [RealmsService, RealmsRepository, SchemaService, SchemaRepository],
-  controllers: [CachedRealmsController, PersistedRealmsController, FilesController, JsonSchemaController],
+  controllers: [RealmController, FilesController, JsonSchemaController],
 })
 export class RealmsModule {}
