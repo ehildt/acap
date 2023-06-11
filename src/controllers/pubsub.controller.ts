@@ -7,7 +7,7 @@ import { OpenApi_PubSub } from '@/decorators/open-api.controller.decorators';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { PubSubService } from '@/services/pubsub.service';
 
-@ApiTags('PubSub')
+@ApiTags('PubSubs')
 @Controller('pubsubs')
 export class PubSubController {
   constructor(private readonly pubsubService: PubSubService) {}

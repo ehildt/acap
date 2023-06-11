@@ -3,10 +3,11 @@ import { Controller, Get, HttpCode, HttpStatus, Inject, Post, UnprocessableEntit
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import { DeleteRealm, GetRealm, PostRealm } from '@/decorators/controller.method.decorators';
+import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamRealm,
-  QueryConfigIds,
+  QueryId,
+  QueryIds,
   QueryRealm,
   QueryRealms,
   RealmUpsertBody,
@@ -16,6 +17,7 @@ import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
+  OpenApi_GetRealmConfig,
   OpenApi_GetRealms,
   OpenApi_Upsert,
   OpenApi_UpsertRealms,
@@ -26,8 +28,8 @@ import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { RealmsService } from '@/services/realms.service';
 
-@ApiTags('Realm')
-@Controller('realms')
+@ApiTags('Configs')
+@Controller('configs')
 export class RealmController {
   constructor(
     private readonly realmsService: RealmsService,
@@ -35,9 +37,24 @@ export class RealmController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
+  @GetRealmConfig()
+  @OpenApi_GetRealmConfig()
+  async getRealmConfig(@QueryRealm() realm: string, @QueryId() id: string) {
+    const postfix = `$REALM:${realm}_${id} @${this.configFactory.config.namespacePostfix}`;
+    const cache = (await this.cache.get(postfix)) ?? ({} as any);
+    const matchedKey = Object.keys(cache).find((key) => key === id);
+    if (matchedKey) return cache[matchedKey];
+    const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmsService.getRealm(realm));
+    if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
+    await this.cache.set(postfix, data, this.configFactory.config.ttl);
+    const value = data[id];
+    if (value) return value;
+    throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
+  }
+
   @GetRealm()
   @OpenApi_GetRealm()
-  async getRealm(@QueryRealm() realm: string, @QueryConfigIds() ids?: string[]) {
+  async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
     let cache = (await this.cache.get(postfix)) ?? ({} as any);
 
@@ -62,7 +79,7 @@ export class RealmController {
   @DeleteRealm()
   @OpenApi_DeleteRealm()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteRealm(@ParamRealm() realm: string, @QueryConfigIds() ids?: string[]) {
+  async deleteRealm(@ParamRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
 
     if (!ids) {

@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { Publisher } from '@/constants/publisher.enum';
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
 import { SchemaRepository } from '@/repositories/schema.repository';
@@ -70,5 +71,39 @@ export class SchemaService {
       );
 
     return reduceEntities(this.factory.config.resolveEnv, entities);
+  }
+
+  async paginate(take: number, skip: number) {
+    return (await this.schemaRepository.find(take, skip)).map(({ value, ...rest }) => {
+      try {
+        return { ...rest, value: JSON.parse(value) };
+      } catch {
+        return { ...rest, value };
+      }
+    });
+  }
+
+  async deleteRealm(realm: string) {
+    const entity = await this.schemaRepository.delete(realm);
+    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(realm, {}));
+    return entity;
+  }
+
+  async deleteRealmConfigIds(realm: string, ids: string[]) {
+    const entity = await this.schemaRepository.delete(realm, ids);
+    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(realm, ids));
+    return entity;
+  }
+
+  async downloadConfigFile(realms?: string[]) {
+    if (!realms) {
+      const entities = await this.schemaRepository.findAll();
+      const realms = Array.from(new Set(entities.map(({ realm }) => realm)));
+      return mapEntitiesToConfigFile(entities, realms);
+    }
+
+    const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
+    const entities = await this.schemaRepository.where({ realm: { $in: realmSet } });
+    return mapEntitiesToConfigFile(entities, realms);
   }
 }

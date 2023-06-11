@@ -150,6 +150,20 @@ export function OpenApi_GetSchema() {
   );
 }
 
+export function OpenApi_GetRealmConfig() {
+  return applyDecorators(
+    ApiOperation({
+      description:
+        'Returns the realm config a from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
+    }),
+    ApiOkResponse(),
+    ApiQueryConfigId(),
+    ApiQueryRealm(),
+    ApiInternalServerErrorResponse(),
+    ApiUnprocessableEntityResponse(),
+  );
+}
+
 export function OpenApi_GetRealms() {
   return applyDecorators(
     ApiOperation({
