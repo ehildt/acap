@@ -1,11 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDefined, IsString, IsUppercase } from 'class-validator';
 
-import { RealmUpsertReq } from './realm-upsert-req.dto';
+export class SchemaUpsertReq {
+  @IsString()
+  @IsUppercase()
+  @ApiProperty()
+  id: string;
 
-class RealmKeyValuePair {
+  @IsDefined()
   @ApiProperty({
     isArray: true,
-    type: () => RealmUpsertReq,
+    type: () => SchemaUpsertReq,
     oneOf: [
       { type: 'string', description: 'string or text' },
       { type: 'number', description: 'a number' },
@@ -14,12 +19,5 @@ class RealmKeyValuePair {
       { type: 'array', description: 'a list of dreams & cookies' },
     ],
   })
-  id: string | Record<string, unknown> | Array<unknown>;
-}
-
-export class RealmsRes {
-  @ApiProperty({
-    type: RealmKeyValuePair,
-  })
-  realm: Record<string, unknown>;
+  value: string | number | boolean | Record<string, unknown> | Array<unknown>;
 }

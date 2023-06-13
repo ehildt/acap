@@ -1,15 +1,19 @@
-import { RealmConfigs } from '@/schemas/configs.schema';
+import { JsonSchemaConfigsDocument } from '@/schemas/json-schema-config-definition.schema';
+import { RealmConfigsDocument } from '@/schemas/realm-configs-definition.schema';
 
-export function mapEntitiesToConfigFile(entities: RealmConfigs[], realms?: string[]) {
+export function mapEntitiesToConfigFile(
+  entities: RealmConfigsDocument[] | JsonSchemaConfigsDocument[],
+  realms?: string[],
+) {
   return realms?.map((realm) => ({
     realm,
     configs: entities
       .filter((entity) => entity.realm === realm)
       .map((config) => {
         try {
-          return { configId: config.configId, value: JSON.parse(config.value) };
+          return { id: config.id, value: JSON.parse(config.value) };
         } catch {
-          return { configId: config.configId, value: config.value };
+          return { id: config.id, value: config.value };
         }
       }),
   }));

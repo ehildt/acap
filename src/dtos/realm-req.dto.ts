@@ -5,5 +5,5 @@ export class RealmReq {
   realm: string;
 
   @ApiProperty()
-  configId: string;
+  id: string;
 }
