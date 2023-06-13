@@ -1,20 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type RealmConfigsDocument = RealmConfigs & Document;
+export type RealmConfigsDocument = RealmConfigsSchemaDefinition & Document;
 
 @Schema({ timestamps: true, autoIndex: true })
-export class RealmConfigs {
+export class RealmConfigsSchemaDefinition {
   @Prop({ required: true, uppercase: true })
   realm: string;
 
   @Prop({ required: true, uppercase: true })
-  configId: string;
+  id: string;
 
   @Prop({ required: true })
   value: string;
 }
 
-export const RealmConfigsSchema = SchemaFactory.createForClass(RealmConfigs);
+export const RealmConfigsSchema = SchemaFactory.createForClass(RealmConfigsSchemaDefinition);
 
-RealmConfigsSchema.index({ realm: 1, configId: 1 }, { unique: true });
+RealmConfigsSchema.index({ realm: 1, id: 1 }, { unique: true });

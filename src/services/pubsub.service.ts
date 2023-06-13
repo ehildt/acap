@@ -20,8 +20,8 @@ export class PubSubService {
           (await firstValueFrom(
             this.client.emit(
               req.realm,
-              req.configs.map(({ configId, value }) => ({
-                configId,
+              req.configs.map(({ id, value }) => ({
+                id,
                 value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
               })),
             ),

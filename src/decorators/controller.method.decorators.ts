@@ -1,11 +1,17 @@
 import { Delete, Get, Post } from '@nestjs/common';
 
 const realm = ':realm';
-const files = 'files/config.json';
+const realm_id = ':realm/:id';
+const realmFiles = 'realm-config.json';
+const schemaFiles = 'schema-config.json';
 
-export const PostFile = () => Post(files);
-export const DownloadFile = () => Get(files);
+export const PostFile = () => Post(realmFiles);
+export const DownloadFile = () => Get(realmFiles);
+export const PostSchemaFile = () => Post(schemaFiles);
+export const DownloadSchemaFile = () => Get(schemaFiles);
 export const PostPubSubPubSub = () => Post();
 export const PostRealm = () => Post(realm);
 export const GetRealm = () => Get(realm);
+export const GetSchema = () => Get(realm_id);
+export const GetRealmConfig = () => Get(realm_id);
 export const DeleteRealm = () => Delete(realm);
