@@ -10,7 +10,6 @@ const ParseRealmUpsertByRealmPipe = new ParseArrayPipe({ items: RealmsUpsertReq 
 export const QueryRealm = () => Query('realm');
 export const ParamRealm = () => Param('realm');
 export const QueryIds = () => Query('ids', ParseQueryStrings);
-export const QueryId = () => Query('id');
 export const ParamId = () => Param('id');
 export const QueryRealms = () => Query('realms', ParseQueryStrings);
 export const RealmUpsertBody = () => Body(ParseRealmPipe);
