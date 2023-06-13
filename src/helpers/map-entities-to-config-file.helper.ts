@@ -2,14 +2,14 @@ import { JsonSchemaConfigsDocument } from '@/schemas/json-schema-config-definiti
 import { RealmConfigsDocument } from '@/schemas/realm-configs-definition.schema';
 
 export function mapEntitiesToConfigFile(
-  entities: RealmConfigsDocument[] | JsonSchemaConfigsDocument[],
+  entities: (RealmConfigsDocument | JsonSchemaConfigsDocument)[],
   realms?: string[],
 ) {
   return realms?.map((realm) => ({
     realm,
     configs: entities
-      .filter((entity: JsonSchemaConfigsDocument & RealmConfigsDocument) => entity.realm === realm)
-      .map((config: JsonSchemaConfigsDocument & RealmConfigsDocument) => {
+      .filter((entity) => entity.realm === realm)
+      .map((config) => {
         try {
           return { id: config.id, value: JSON.parse(config.value) };
         } catch {
