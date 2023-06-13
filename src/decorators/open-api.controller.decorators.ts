@@ -17,8 +17,8 @@ import { RealmsUpsertReq } from '../dtos/realms-upsert.dto.req';
 import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
+  ApiParamConfigId,
   ApiParamRealm,
-  ApiQueryConfigId,
   ApiQueryConfigIds,
   ApiQueryRealm,
   ApiQueryRealms,
@@ -143,8 +143,8 @@ export function OpenApi_GetSchema() {
         'Returns the json schema from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
     }),
     ApiOkResponse(),
-    ApiQueryConfigId(),
-    ApiQueryRealm(),
+    ApiParamConfigId(),
+    ApiParamRealm(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
@@ -157,8 +157,8 @@ export function OpenApi_GetRealmConfig() {
         'Returns the realm config a from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
     }),
     ApiOkResponse(),
-    ApiQueryConfigId(),
-    ApiQueryRealm(),
+    ApiParamConfigId(),
+    ApiParamRealm(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );
