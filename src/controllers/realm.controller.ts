@@ -5,8 +5,8 @@ import { Cache } from 'cache-manager';
 
 import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
 import {
+  ParamId,
   ParamRealm,
-  QueryId,
   QueryIds,
   QueryRealm,
   QueryRealms,
@@ -39,7 +39,7 @@ export class RealmController {
 
   @GetRealmConfig()
   @OpenApi_GetRealmConfig()
-  async getRealmConfig(@QueryRealm() realm: string, @QueryId() id: string) {
+  async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
     const postfix = `$REALM:${realm}_${id} @${this.configFactory.config.namespacePostfix}`;
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     const matchedKey = Object.keys(cache).find((key) => key === id);
