@@ -102,7 +102,7 @@ export class JsonSchemaController {
     const postfix = `$SCHEMA:${realm} @${this.configFactory.config.namespacePostfix}`;
 
     if (!ids) {
-      await this.cache.del(`${realm}_${this.configFactory.config.namespacePostfix}`);
+      await this.cache.del(postfix);
       return await this.schemaService.deleteRealm(realm);
     }
 

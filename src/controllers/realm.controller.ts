@@ -83,7 +83,7 @@ export class RealmController {
     const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
 
     if (!ids) {
-      await this.cache.del(`${realm}_${this.configFactory.config.namespacePostfix}`);
+      await this.cache.del(postfix);
       return await this.realmsService.deleteRealm(realm);
     }
 

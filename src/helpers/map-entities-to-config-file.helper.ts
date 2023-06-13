@@ -1,6 +1,10 @@
+import { JsonSchemaConfigsDocument } from '@/schemas/json-schema-config-definition.schema';
 import { RealmConfigsDocument } from '@/schemas/realm-configs-definition.schema';
 
-export function mapEntitiesToConfigFile(entities: RealmConfigsDocument[], realms?: string[]) {
+export function mapEntitiesToConfigFile(
+  entities: RealmConfigsDocument[] | JsonSchemaConfigsDocument[],
+  realms?: string[],
+) {
   return realms?.map((realm) => ({
     realm,
     configs: entities
