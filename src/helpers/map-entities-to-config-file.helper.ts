@@ -8,8 +8,8 @@ export function mapEntitiesToConfigFile(
   return realms?.map((realm) => ({
     realm,
     configs: entities
-      .filter((entity) => entity.realm === realm)
-      .map((config) => {
+      .filter((entity: JsonSchemaConfigsDocument & RealmConfigsDocument) => entity.realm === realm)
+      .map((config: JsonSchemaConfigsDocument & RealmConfigsDocument) => {
         try {
           return { id: config.id, value: JSON.parse(config.value) };
         } catch {
