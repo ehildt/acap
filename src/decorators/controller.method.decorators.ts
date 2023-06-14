@@ -1,7 +1,7 @@
 import { Delete, Get, Post } from '@nestjs/common';
 
 const realm = ':realm';
-const realm_id = ':realm/:id';
+const realm_id = ':realm/collections/:id';
 const realmFiles = 'realm-config.json';
 const schemaFiles = 'schema-config.json';
 
