@@ -8,7 +8,6 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiProduces,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
@@ -20,6 +19,7 @@ import {
   ApiParamConfigId,
   ApiParamRealm,
   ApiQueryConfigIds,
+  ApiQueryFormat,
   ApiQueryRealm,
   ApiQueryRealms,
   ApiQuerySkip,
@@ -41,10 +41,10 @@ export function OpenApi_PostFile() {
     ApiBody({
       schema: {
         type: 'object',
-        required: ['realm-config.json'],
+        required: ['file'],
         properties: {
-          'realm-config.json': {
-            description: 'a json file, which contains the configuration(s) for the realm(s)',
+          file: {
+            description: 'a json/yaml file, which contains the configuration(s) for the realm(s)',
             type: 'string',
             format: 'binary',
           },
@@ -59,10 +59,11 @@ export function OpenApi_DownloadFile() {
     ApiOperation({
       description: 'Downloads the realms as a json file',
     }),
-    ApiProduces('application/json'),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiBadRequestResponse(),
     ApiInternalServerErrorResponse(),
     ApiQueryRealms(),
+    ApiQueryFormat(),
     ApiUnprocessableEntityResponse(),
     ApiOkResponse({
       type: RealmsUpsertReq,

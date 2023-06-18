@@ -12,5 +12,6 @@ export const ParamRealm = () => Param('realm');
 export const QueryIds = () => Query('ids', ParseQueryStrings);
 export const ParamId = () => Param('id');
 export const QueryRealms = () => Query('realms', ParseQueryStrings);
+export const QueryFormat = () => Query('format');
 export const RealmUpsertBody = () => Body(ParseRealmPipe);
 export const RealmUpsertRealmBody = () => Body(ParseRealmUpsertByRealmPipe);

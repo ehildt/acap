@@ -1,10 +1,10 @@
-import { MultipartFile } from '@fastify/multipart';
 import { Controller, StreamableFile } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import * as yaml from 'js-yaml';
 
-import { JsonFile } from '@/decorators/class.property.values';
+import { JsonYamlContent } from '@/decorators/class.property.values';
 import { DownloadFile, DownloadSchemaFile, PostFile, PostSchemaFile } from '@/decorators/controller.method.decorators';
-import { QueryRealms } from '@/decorators/controller.parameter.decorators';
+import { QueryFormat, QueryRealms } from '@/decorators/controller.parameter.decorators';
 import { OpenApi_DownloadFile, OpenApi_PostFile } from '@/decorators/open-api.controller.decorators';
 import { RealmsService } from '@/services/realms.service';
 import { SchemaService } from '@/services/schema.service';
@@ -16,22 +16,21 @@ export class FilesController {
 
   @PostFile()
   @OpenApi_PostFile()
-  async uploadRealmFile(@JsonFile() file: MultipartFile) {
-    const content = JSON.parse((await file.toBuffer()).toString());
+  async uploadRealmFile(@JsonYamlContent() content: any) {
     return await this.realmsService.upsertRealms(content);
   }
 
   @DownloadFile()
   @OpenApi_DownloadFile()
-  async downloadRealmFile(@QueryRealms() realms?: string[]) {
+  async downloadRealmFile(@QueryFormat() format: string, @QueryRealms() realms?: string[]) {
     const file = await this.realmsService.downloadConfigFile(realms);
-    return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
+    if (format === 'json') return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
+    return new StreamableFile(Buffer.from(yaml.dump(file)));
   }
 
   @PostSchemaFile()
   @OpenApi_PostFile()
-  async uploadSchemaFile(@JsonFile() file: MultipartFile) {
-    const content = JSON.parse((await file.toBuffer()).toString());
+  async uploadSchemaFile(@JsonYamlContent() content: any) {
     return await this.schemaService.upsertRealms(content);
   }
 
