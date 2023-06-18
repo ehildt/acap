@@ -26,6 +26,9 @@ import {
   ApiQueryTake,
 } from './open-api.method.decorators';
 
+const APPLICATION_YAML = 'application/x-yaml';
+const APPLICATION_JSON = 'application/json';
+
 export function OpenApi_PostFile() {
   return applyDecorators(
     ApiOperation({
@@ -78,6 +81,7 @@ export function OpenApi_Upsert() {
       description:
         'Upserts a realm in the database. The realm is not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsert(),
@@ -90,6 +94,7 @@ export function OpenApi_SchemaUpsert() {
     ApiOperation({
       description: 'Upserts a schema in the database. The schema is not cached',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsert(),
@@ -103,6 +108,7 @@ export function OpenApi_UpsertRealms() {
       description:
         'Upserts realms in the database. The realms are not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),
@@ -115,6 +121,7 @@ export function OpenApi_PubSub() {
     ApiOperation({
       description: 'Immediately publishes the payload. The cache and database are bypassed',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiOkResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),
@@ -157,6 +164,22 @@ export function OpenApi_GetRealmConfig() {
         'Returns the realm config a from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
     }),
     ApiOkResponse(),
+    ApiParamConfigId(),
+    ApiParamRealm(),
+    ApiInternalServerErrorResponse(),
+    ApiUnprocessableEntityResponse(),
+  );
+}
+
+export function OpenApi_GetRealmCherryPick() {
+  return applyDecorators(
+    ApiOperation({
+      description:
+        'Returns the realm config a from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
+    }),
+    ApiOkResponse(),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
+    ApiBody({ type: () => String, required: false }),
     ApiParamConfigId(),
     ApiParamRealm(),
     ApiInternalServerErrorResponse(),

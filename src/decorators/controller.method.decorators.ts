@@ -2,6 +2,7 @@ import { Delete, Get, Post } from '@nestjs/common';
 
 const realm = ':realm';
 const realm_id = ':realm/collections/:id';
+export const realmCherryPick = ':realm/collections/:id/cherry-pick';
 const realmFiles = 'realm-config.json';
 const schemaFiles = 'schema-config.json';
 
@@ -12,6 +13,7 @@ export const DownloadSchemaFile = () => Get(schemaFiles);
 export const PostPubSubPubSub = () => Post();
 export const PostRealm = () => Post(realm);
 export const GetRealm = () => Get(realm);
+export const GetRealmCherryPick = () => Post(realmCherryPick);
 export const GetSchema = () => Get(realm_id);
 export const GetRealmConfig = () => Get(realm_id);
 export const DeleteRealm = () => Delete(realm);

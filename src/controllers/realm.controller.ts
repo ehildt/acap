@@ -1,9 +1,25 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Controller, Get, HttpCode, HttpStatus, Inject, Post, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+  UnprocessableEntityException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
+import {
+  DeleteRealm,
+  GetRealm,
+  GetRealmCherryPick,
+  GetRealmConfig,
+  PostRealm,
+} from '@/decorators/controller.method.decorators';
 import {
   ParamId,
   ParamRealm,
@@ -17,6 +33,7 @@ import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
+  OpenApi_GetRealmCherryPick,
   OpenApi_GetRealmConfig,
   OpenApi_GetRealms,
   OpenApi_Upsert,
@@ -25,6 +42,7 @@ import {
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
+import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { RealmsService } from '@/services/realms.service';
 
@@ -37,10 +55,36 @@ export class RealmController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
+  @GetRealmCherryPick()
+  @OpenApi_GetRealmCherryPick()
+  @UseInterceptors(ParseYmlInterceptor)
+  async getRealmCherryPick(@ParamRealm() realm: string, @ParamId() id: string, @Body() body: any) {
+    const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
+    const cache = (await this.cache.get(postfix)) ?? ({} as any);
+    let value = cache[Object.keys(cache).find((key) => key === id)];
+    if (value) {
+      // handle cherry-picking on value;
+      console.log(value, '1', body);
+      return value;
+    }
+
+    const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmsService.getRealm(realm));
+    if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
+    await this.cache.set(postfix, data, this.configFactory.config.ttl);
+    value = data[id];
+    if (value) {
+      // handle cherry-picking on value;
+      console.log(value, '2', body);
+      return value;
+    }
+
+    throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
+  }
+
   @GetRealmConfig()
   @OpenApi_GetRealmConfig()
   async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = `$REALM:${realm}_${id} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     const matchedKey = Object.keys(cache).find((key) => key === id);
     if (matchedKey) return cache[matchedKey];
@@ -97,12 +141,14 @@ export class RealmController {
 
   @PostRealm()
   @OpenApi_Upsert()
+  @UseInterceptors(ParseYmlInterceptor)
   async upsert(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
     return await this.realmsService.upsertRealm(realm, req);
   }
 
   @Post()
   @OpenApi_UpsertRealms()
+  @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
     return await this.realmsService.upsertRealms(req);
   }
