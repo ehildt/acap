@@ -3,11 +3,13 @@ appConfig:
   address: 0.0.0.0
   printEnv: true
   startSwagger: true
+  nodeEnv: 'local'
 
 realmConfig:
   ttl: 300
   resolveEnv: false
   namespacePostfix: REALM
+  gzipThreshold: 20
 
 mongoConfig:
   uri: mongodb://mongo:27017

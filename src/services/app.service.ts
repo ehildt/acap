@@ -41,10 +41,19 @@ export class AppService {
       new DocumentBuilder()
         .setTitle('Config-Manager')
         .setDescription('A simple and convenient way to config your apps ;)')
-        .setVersion('0.8.1')
+        .setVersion('0.8.7')
         .build(),
     );
     SwaggerModule.setup(API_DOCS, app, openApiObj);
+  }
+
+  addYamlContentType(app: NestFastifyApplication) {
+    app
+      .getHttpAdapter()
+      .getInstance()
+      .addContentTypeParser('application/x-yaml', { parseAs: 'string' }, (_, body, done) => {
+        done(null, body);
+      });
   }
 
   logOnServerStart(appFactory: ConfigFactoryService) {

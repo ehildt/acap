@@ -5,9 +5,11 @@ export interface AppConfig {
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
+  nodeEnv: string;
 }
 
 export interface RealmConfig {
+  gzipThreshold: number;
   namespacePostfix: string;
   resolveEnv: boolean;
   ttl: number;

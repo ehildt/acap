@@ -20,6 +20,7 @@ export class ConfigFactoryService {
       address: this.configService.get<string>('AppConfig.ADDRESS'),
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
+      nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
     });
   }
 
@@ -28,6 +29,7 @@ export class ConfigFactoryService {
       ttl: this.configService.get<number>('Realm.TTL'),
       namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
       resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
+      gzipThreshold: this.configService.get<number>('Realm.GZIP_THRESHOLD'),
     });
   }
 
