@@ -1,6 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
@@ -13,13 +12,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import {
-  DeleteRealm,
-  GetRealm,
-  GetRealmCherryPick,
-  GetRealmConfig,
-  PostRealm,
-} from '@/decorators/controller.method.decorators';
+import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamId,
   ParamRealm,
@@ -33,7 +26,6 @@ import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
-  OpenApi_GetRealmCherryPick,
   OpenApi_GetRealmConfig,
   OpenApi_GetRealms,
   OpenApi_Upsert,
@@ -54,32 +46,6 @@ export class RealmController {
     private readonly configFactory: ConfigFactoryService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
-
-  @GetRealmCherryPick()
-  @OpenApi_GetRealmCherryPick()
-  @UseInterceptors(ParseYmlInterceptor)
-  async getRealmCherryPick(@ParamRealm() realm: string, @ParamId() id: string, @Body() body: any) {
-    const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
-    const cache = (await this.cache.get(postfix)) ?? ({} as any);
-    let value = cache[Object.keys(cache).find((key) => key === id)];
-    if (value) {
-      // handle cherry-picking on value;
-      console.log(value, '1', body);
-      return value;
-    }
-
-    const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmsService.getRealm(realm));
-    if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-    await this.cache.set(postfix, data, this.configFactory.config.ttl);
-    value = data[id];
-    if (value) {
-      // handle cherry-picking on value;
-      console.log(value, '2', body);
-      return value;
-    }
-
-    throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
-  }
 
   @GetRealmConfig()
   @OpenApi_GetRealmConfig()

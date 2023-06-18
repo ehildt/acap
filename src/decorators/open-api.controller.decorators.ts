@@ -172,22 +172,6 @@ export function OpenApi_GetRealmConfig() {
   );
 }
 
-export function OpenApi_GetRealmCherryPick() {
-  return applyDecorators(
-    ApiOperation({
-      description:
-        'Returns the realm config a from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
-    }),
-    ApiOkResponse(),
-    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
-    ApiBody({ type: () => String, required: false }),
-    ApiParamConfigId(),
-    ApiParamRealm(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
-  );
-}
-
 export function OpenApi_GetRealms() {
   return applyDecorators(
     ApiOperation({
