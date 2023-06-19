@@ -14,6 +14,7 @@ void (async () => {
   appService.useGlobalPipes(app);
   appService.enableVersioning(app);
   appService.enableOpenApi(app);
+  appService.addYamlContentType(app);
 
   await app.register(fastifyMultipart);
   await app.listen(factory.app.port, factory.app.address);
