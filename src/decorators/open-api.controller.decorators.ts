@@ -8,7 +8,6 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiProduces,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
@@ -20,11 +19,15 @@ import {
   ApiParamConfigId,
   ApiParamRealm,
   ApiQueryConfigIds,
+  ApiQueryFormat,
   ApiQueryRealm,
   ApiQueryRealms,
   ApiQuerySkip,
   ApiQueryTake,
 } from './open-api.method.decorators';
+
+const APPLICATION_YAML = 'application/x-yaml';
+const APPLICATION_JSON = 'application/json';
 
 export function OpenApi_PostFile() {
   return applyDecorators(
@@ -38,10 +41,10 @@ export function OpenApi_PostFile() {
     ApiBody({
       schema: {
         type: 'object',
-        required: ['realm-config.json'],
+        required: ['file'],
         properties: {
-          'realm-config.json': {
-            description: 'a json file, which contains the configuration(s) for the realm(s)',
+          file: {
+            description: 'a json/yaml file, which contains the configuration(s) for the realm(s)',
             type: 'string',
             format: 'binary',
           },
@@ -56,10 +59,11 @@ export function OpenApi_DownloadFile() {
     ApiOperation({
       description: 'Downloads the realms as a json file',
     }),
-    ApiProduces('application/json'),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiBadRequestResponse(),
     ApiInternalServerErrorResponse(),
     ApiQueryRealms(),
+    ApiQueryFormat(),
     ApiUnprocessableEntityResponse(),
     ApiOkResponse({
       type: RealmsUpsertReq,
@@ -78,6 +82,7 @@ export function OpenApi_Upsert() {
       description:
         'Upserts a realm in the database. The realm is not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsert(),
@@ -90,6 +95,7 @@ export function OpenApi_SchemaUpsert() {
     ApiOperation({
       description: 'Upserts a schema in the database. The schema is not cached',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsert(),
@@ -103,6 +109,7 @@ export function OpenApi_UpsertRealms() {
       description:
         'Upserts realms in the database. The realms are not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),
@@ -115,6 +122,7 @@ export function OpenApi_PubSub() {
     ApiOperation({
       description: 'Immediately publishes the payload. The cache and database are bypassed',
     }),
+    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiOkResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),

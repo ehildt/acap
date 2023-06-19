@@ -44,6 +44,15 @@ export class AppService {
     SwaggerModule.setup(API_DOCS, app, openApiObj);
   }
 
+  addYamlContentType(app: NestFastifyApplication) {
+    app
+      .getHttpAdapter()
+      .getInstance()
+      .addContentTypeParser('application/x-yaml', { parseAs: 'string' }, (_, body, done) => {
+        done(null, body);
+      });
+  }
+
   logOnServerStart(appFactory: ConfigFactoryService) {
     if (process.env.PRINT_ENV === 'true')
       this.logger.verbose(

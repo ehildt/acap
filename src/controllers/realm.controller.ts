@@ -1,5 +1,14 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Controller, Get, HttpCode, HttpStatus, Inject, Post, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+  UnprocessableEntityException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -25,6 +34,7 @@ import {
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
+import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { RealmsService } from '@/services/realms.service';
 
@@ -40,7 +50,7 @@ export class RealmController {
   @GetRealmConfig()
   @OpenApi_GetRealmConfig()
   async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = `$REALM:${realm}_${id} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = `$REALM:${realm} @${this.configFactory.config.namespacePostfix}`;
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     const matchedKey = Object.keys(cache).find((key) => key === id);
     if (matchedKey) return cache[matchedKey];
@@ -97,12 +107,14 @@ export class RealmController {
 
   @PostRealm()
   @OpenApi_Upsert()
+  @UseInterceptors(ParseYmlInterceptor)
   async upsert(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
     return await this.realmsService.upsertRealm(realm, req);
   }
 
   @Post()
   @OpenApi_UpsertRealms()
+  @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
     return await this.realmsService.upsertRealms(req);
   }
