@@ -10,6 +10,7 @@
     "dotenv.dotenv-vscode",
     "mikestead.dotenv",
     "hangxingliu.vscode-nginx-conf-hint",
-    "tamasfe.even-better-toml"
+    "tamasfe.even-better-toml",
+    "wallabyjs.console-ninja"
   ]
 }

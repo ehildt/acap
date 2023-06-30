@@ -1,8 +1,8 @@
 import Joi from 'joi';
 
 import { APP_SCHEMA } from './app.schema';
-import { REALM_SCHEMA } from './config-manager.schema';
 import { MONGOOSE_SCHEMA } from './mongoose.schema';
+import { REALM_SCHEMA } from './realm.schema';
 import { REDIS_SCHEMA } from './redis.schema';
 import { REDIS_PUBLISHER_SCHEMA } from './redis-publisher.schema';
 

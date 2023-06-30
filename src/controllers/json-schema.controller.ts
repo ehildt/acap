@@ -33,6 +33,7 @@ import {
 } from '@/decorators/open-api.controller.decorators';
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
 import { ConfigFactoryService } from '@/services/config-factory.service';
@@ -64,7 +65,7 @@ export class JsonSchemaController {
   @GetSchema()
   @OpenApi_GetSchema()
   async getSchemaConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = `$SCHEMA:${realm} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
     const cache = (await this.cache.get(postfix)) ?? ({} as any);
     const matchedKey = Object.keys(cache).find((key) => key === id);
     if (matchedKey) return cache[matchedKey];
@@ -79,7 +80,7 @@ export class JsonSchemaController {
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = `$SCHEMA:${realm} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
     let cache = (await this.cache.get(postfix)) ?? ({} as any);
 
     if (!ids) {
@@ -111,7 +112,7 @@ export class JsonSchemaController {
   @OpenApi_DeleteRealm()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRealm(@ParamRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = `$SCHEMA:${realm} @${this.configFactory.config.namespacePostfix}`;
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
 
     if (!ids) {
       await this.cache.del(postfix);
