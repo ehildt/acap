@@ -16,4 +16,8 @@ export const REALM_SCHEMA = {
     CONFIG_YML?.realmConfig?.ttl !== undefined
       ? Joi.number().default(CONFIG_YML.realmConfig.ttl)
       : Joi.number().required(),
+
+  REALM_GZIP_THRESHOLD: CONFIG_YML?.realmConfig?.gzipThreshold
+    ? Joi.number().default(CONFIG_YML.realmConfig.gzipThreshold)
+    : Joi.number().required(),
 };

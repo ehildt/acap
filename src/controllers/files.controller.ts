@@ -2,8 +2,13 @@ import { Controller, StreamableFile } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import * as yaml from 'js-yaml';
 
-import { JsonYamlContent } from '@/decorators/class.property.values';
-import { DownloadFile, DownloadSchemaFile, PostFile, PostSchemaFile } from '@/decorators/controller.method.decorators';
+import {
+  DownloadFile,
+  DownloadSchemaFile,
+  JsonYamlContentParser,
+  PostFile,
+  PostSchemaFile,
+} from '@/decorators/controller.method.decorators';
 import { QueryFormat, QueryRealms } from '@/decorators/controller.parameter.decorators';
 import { OpenApi_DownloadFile, OpenApi_PostFile } from '@/decorators/open-api.controller.decorators';
 import { RealmsService } from '@/services/realms.service';
@@ -16,7 +21,7 @@ export class FilesController {
 
   @PostFile()
   @OpenApi_PostFile()
-  async uploadRealmFile(@JsonYamlContent() content: any) {
+  async uploadRealmFile(@JsonYamlContentParser() content: any) {
     return await this.realmsService.upsertRealms(content);
   }
 
@@ -30,7 +35,7 @@ export class FilesController {
 
   @PostSchemaFile()
   @OpenApi_PostFile()
-  async uploadSchemaFile(@JsonYamlContent() content: any) {
+  async uploadSchemaFile(@JsonYamlContentParser() content: any) {
     return await this.schemaService.upsertRealms(content);
   }
 
