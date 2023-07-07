@@ -11,6 +11,6 @@
     "mikestead.dotenv",
     "hangxingliu.vscode-nginx-conf-hint",
     "tamasfe.even-better-toml",
-    "wallabyjs.console-ninja"
+    "aaron-bond.better-comments"
   ]
 }

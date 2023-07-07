@@ -33,6 +33,8 @@ import {
 } from '@/decorators/open-api.controller.decorators';
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-object.helper';
+import { gzipSyncCacheObject } from '@/helpers/gzip-sync-cache-object.helper';
 import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
@@ -66,14 +68,14 @@ export class JsonSchemaController {
   @OpenApi_GetSchema()
   async getSchemaConfig(@ParamRealm() realm: string, @ParamId() id: string) {
     const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
-    const cache = (await this.cache.get(postfix)) ?? ({} as any);
+    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const matchedKey = Object.keys(cache).find((key) => key === id);
     if (matchedKey) return cache[matchedKey];
-    const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.schemaService.getRealm(realm));
+    const data = await this.schemaService.getRealmConfigIds(realm, [id]);
     if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-    await this.cache.set(postfix, data, this.configFactory.config.ttl);
-    const value = data[id];
-    if (value) return value;
+    const cacheData = gzipSyncCacheObject({ ...cache, ...data }, this.configFactory.config.gzipThreshold);
+    await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
+    if (data[id]) return data[id];
     throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
   }
 
@@ -81,13 +83,18 @@ export class JsonSchemaController {
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
-    let cache = (await this.cache.get(postfix)) ?? ({} as any);
+    let cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
 
     if (!ids) {
       if (Object.keys(cache)?.length) return cache;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.schemaService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-      await this.cache.set(postfix, data, this.configFactory.config.ttl);
+      // ! if cache is empty, do we really want to fetch and populate it
+      // yes because we fetch for a realm and thus need all configs on it
+      // but we might want to keep track of how many configs are loaded
+      // and in case not all are in ram, only then fetch for the whole realm
+      const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold);
+      await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
       return data;
     }
 
@@ -95,8 +102,9 @@ export class JsonSchemaController {
     const matchedKeys = Object.keys(cache).filter((c) => filteredIds.includes(c));
     if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
     if (matchedKeys?.length === filteredIds?.length) return cache;
+    // ! we have matchedKeys so only fetch those which did not match, not the whole filteredIds
     const entities = await this.schemaService.getRealmConfigIds(realm, filteredIds);
-    cache = { ...cache, ...entities };
+    cache = gzipSyncCacheObject({ ...cache, ...entities }, this.configFactory.config.gzipThreshold);
     await this.cache.set(postfix, cache, this.configFactory.config.ttl);
     return cache;
   }

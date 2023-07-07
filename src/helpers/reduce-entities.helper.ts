@@ -12,6 +12,9 @@ const entityReducer = (
   [document.id]: challengeConfigValue(document.value, resolveEnv),
 });
 
-export function reduceEntities(resolveEnv: boolean, documents?: RealmConfigsDocument[] | JsonSchemaConfigsDocument[]) {
+export function reduceEntities(
+  resolveEnv: boolean,
+  documents?: Array<RealmConfigsDocument | JsonSchemaConfigsDocument>,
+) {
   return documents?.reduce((acc, val) => entityReducer(acc, val, resolveEnv), {});
 }
