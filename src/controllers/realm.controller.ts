@@ -12,13 +12,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import {
-  DeleteRealm,
-  GetRealm,
-  GetRealmConfig,
-  PostRealm,
-  RequestPayloadSizeInKilobyte,
-} from '@/decorators/controller.method.decorators';
+import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamId,
   ParamRealm,
@@ -58,11 +52,7 @@ export class RealmController {
 
   @GetRealmConfig()
   @OpenApi_GetRealmConfig()
-  async getRealmConfig(
-    @ParamRealm() realm: string,
-    @ParamId() id: string,
-    // @RequestPayloadSizeInKilobyte() payloadKB: number,
-  ) {
+  async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const matchedKey = Object.keys(cache).find((key) => key === id);
@@ -86,9 +76,7 @@ export class RealmController {
       if (Object.keys(cache)?.length) return cache;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmsService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-      // ! if cache is empty, do we really want to fetch and populate it
-      // yes because we fetch for a realm and thus need all configs on it
-      // but we might want to keep track of how many configs are loaded
+      // ! we might want to keep track of how many configs are loaded
       // and in case not all are in ram, only then fetch for the whole realm
       const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
@@ -106,6 +94,32 @@ export class RealmController {
     return cache;
   }
 
+  @PostRealm()
+  @OpenApi_Upsert()
+  @UseInterceptors(ParseYmlInterceptor)
+  async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
+    const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
+    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
+    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    return await this.realmsService.upsertRealm(realm, req);
+  }
+
+  @Post()
+  @OpenApi_UpsertRealms()
+  @UseInterceptors(ParseYmlInterceptor)
+  async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
+    req.forEach(async ({ realm, configs }) => {
+      const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
+      const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+      configs.forEach(({ id, value }) => cache[id] && (cache[id] = value));
+      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    });
+    return await this.realmsService.upsertRealms(req);
+  }
+
   @DeleteRealm()
   @OpenApi_DeleteRealm()
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -118,27 +132,13 @@ export class RealmController {
     }
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
-    const cache = (await this.cache.get(postfix)) ?? ({} as any);
+    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
     await this.realmsService.deleteRealmConfigIds(realm, filteredIds);
-    if (keys.length) await this.cache.set(postfix, cache, this.configFactory.config.ttl);
-    else return await this.cache.del(postfix);
-  }
-
-  @PostRealm()
-  @OpenApi_Upsert()
-  @UseInterceptors(ParseYmlInterceptor)
-  // * check if config is in ram and update, skip otherwise
-  async upsert(@ParamRealm() realm: string, @RealmUpsertBody() payload: RealmUpsertReq[]) {
-    return await this.realmsService.upsertRealm(realm, payload);
-  }
-
-  @Post()
-  @OpenApi_UpsertRealms()
-  @UseInterceptors(ParseYmlInterceptor)
-  // * check if config is in ram and update, skip otherwise
-  async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
-    return await this.realmsService.upsertRealms(req);
+    if (keys.length) {
+      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    } else return await this.cache.del(postfix);
   }
 
   @Get()

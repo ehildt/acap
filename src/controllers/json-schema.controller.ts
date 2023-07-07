@@ -53,7 +53,12 @@ export class JsonSchemaController {
   @PostRealm()
   @OpenApi_SchemaUpsert()
   @UseInterceptors(ParseYmlInterceptor)
-  async upsert(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
+  async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
+    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
+    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     return await this.schemaService.upsertRealm(realm, req);
   }
 
@@ -61,6 +66,13 @@ export class JsonSchemaController {
   @OpenApi_UpsertRealms()
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
+    req.forEach(async ({ realm, configs }) => {
+      const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
+      const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+      configs.forEach(({ id, value }) => cache[id] && (cache[id] = value));
+      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    });
     return await this.schemaService.upsertRealms(req);
   }
 
@@ -89,9 +101,7 @@ export class JsonSchemaController {
       if (Object.keys(cache)?.length) return cache;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.schemaService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-      // ! if cache is empty, do we really want to fetch and populate it
-      // yes because we fetch for a realm and thus need all configs on it
-      // but we might want to keep track of how many configs are loaded
+      // ! we might want to keep track of how many configs are loaded
       // and in case not all are in ram, only then fetch for the whole realm
       const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
@@ -128,10 +138,12 @@ export class JsonSchemaController {
     }
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
-    const cache = (await this.cache.get(postfix)) ?? ({} as any);
+    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
     await this.schemaService.deleteRealmConfigIds(realm, filteredIds);
-    if (keys.length) await this.cache.set(postfix, cache, this.configFactory.config.ttl);
-    else return await this.cache.del(postfix);
+    if (keys.length) {
+      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    } else return await this.cache.del(postfix);
   }
 }

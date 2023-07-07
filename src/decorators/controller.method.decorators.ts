@@ -27,10 +27,3 @@ export const JsonYamlContentParser = createParamDecorator(async (_data: unknown,
     return yaml.load(data, { json: true });
   }
 });
-
-export const RequestPayloadSizeInKilobyte = createParamDecorator(async (_data: unknown, ctx: ExecutionContext) => {
-  const req = ctx.switchToHttp().getRequest();
-  const contentLength = req.headers['content-length'];
-  if (contentLength) return parseInt(contentLength, 10) / 1024;
-  return contentLength;
-});
