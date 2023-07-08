@@ -11,13 +11,13 @@ import {
 } from '@/decorators/controller.method.decorators';
 import { QueryFormat, QueryRealms } from '@/decorators/controller.parameter.decorators';
 import { OpenApi_DownloadFile, OpenApi_PostFile } from '@/decorators/open-api.controller.decorators';
-import { RealmsService } from '@/services/realms.service';
+import { RealmService } from '@/services/realm.service';
 import { SchemaService } from '@/services/schema.service';
 
 @ApiTags('Files')
 @Controller('files')
 export class FilesController {
-  constructor(private readonly realmsService: RealmsService, private readonly schemaService: SchemaService) {}
+  constructor(private readonly realmsService: RealmService, private readonly schemaService: SchemaService) {}
 
   @PostFile()
   @OpenApi_PostFile()

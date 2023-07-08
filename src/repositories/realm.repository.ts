@@ -13,7 +13,7 @@ import { RealmConfigsDocument, RealmConfigsSchemaDefinition } from '@/schemas/re
 import { RealmsDocument, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
 
 @Injectable()
-export class RealmsRepository {
+export class RealmRepository {
   constructor(
     @InjectModel(RealmConfigsSchemaDefinition.name)
     private readonly configModel: Model<RealmConfigsDocument>,
