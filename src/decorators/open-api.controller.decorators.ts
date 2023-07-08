@@ -172,6 +172,19 @@ export function OpenApi_GetRealmConfig() {
   );
 }
 
+export function OpenApi_GetRealmMeta() {
+  return applyDecorators(
+    ApiOperation({
+      description: 'Returns the meta data',
+    }),
+    ApiOkResponse(),
+    ApiQueryTake(),
+    ApiQuerySkip(),
+    ApiInternalServerErrorResponse(),
+    ApiUnprocessableEntityResponse(),
+  );
+}
+
 export function OpenApi_GetRealms() {
   return applyDecorators(
     ApiOperation({
