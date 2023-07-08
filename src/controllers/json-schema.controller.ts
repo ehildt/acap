@@ -112,11 +112,12 @@ export class JsonSchemaController {
     const matchedKeys = Object.keys(cache).filter((c) => filteredIds.includes(c));
     if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
     if (matchedKeys?.length === filteredIds?.length) return cache;
-    // ! we have matchedKeys so only fetch those which did not match, not the whole filteredIds
-    const entities = await this.schemaService.getRealmConfigIds(realm, filteredIds);
-    cache = gzipSyncCacheObject({ ...cache, ...entities }, this.configFactory.config.gzipThreshold);
+    const unmatchedKeys = filteredIds.filter((fk) => !matchedKeys.find((mk) => fk === mk));
+    const entities = await this.schemaService.getRealmConfigIds(realm, unmatchedKeys);
+    const cacheObj = { ...cache, ...entities };
+    cache = gzipSyncCacheObject(cacheObj, this.configFactory.config.gzipThreshold);
     await this.cache.set(postfix, cache, this.configFactory.config.ttl);
-    return cache;
+    return cacheObj;
   }
 
   @Get()
@@ -141,6 +142,7 @@ export class JsonSchemaController {
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
     await this.schemaService.deleteRealmConfigIds(realm, filteredIds);
+
     if (keys.length) {
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);

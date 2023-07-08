@@ -55,6 +55,7 @@ export class SchemaRepository {
     const rowsToDelete = prepareBulkWriteDeleteConfigs(realm, req);
     const rowsDeleted = await this.configsModel.bulkWrite(rowsToDelete);
     const isNotEmpty = Boolean(await this.configsModel.count().where({ realm }));
+
     if (!isNotEmpty) {
       const realms = prepareBulkWriteDeleteRealms([realm]);
       await this.schemaModel.bulkWrite(realms);
