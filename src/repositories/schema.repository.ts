@@ -33,6 +33,14 @@ export class SchemaRepository {
     return await this.configsModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
   }
 
+  async getMeta(take: number, skip: number, propertiesToSelect: Array<string>) {
+    return await this.configsModel
+      .find({}, null, { limit: take, skip })
+      .select(propertiesToSelect)
+      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .lean();
+  }
+
   async where(filter: FilterQuery<RealmReq>) {
     return await this.configsModel.find().where(filter).lean();
   }
