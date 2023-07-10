@@ -41,6 +41,15 @@ export class SchemaRepository {
       .lean();
   }
 
+  async getMetaSchemasByRealms(realms: Array<string>, propertiesToSelect: Array<string>) {
+    return await this.configsModel
+      .find()
+      .where({ realm: { $in: realms } })
+      .select(propertiesToSelect)
+      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .lean();
+  }
+
   async where(filter: FilterQuery<RealmReq>) {
     return await this.configsModel.find().where(filter).lean();
   }

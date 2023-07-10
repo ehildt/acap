@@ -175,7 +175,20 @@ export function OpenApi_GetRealmConfig() {
 export function OpenApi_GetRealmMeta() {
   return applyDecorators(
     ApiOperation({
-      description: 'Returns the meta data',
+      description: 'Returns the realm meta data',
+    }),
+    ApiOkResponse(),
+    ApiQueryTake(),
+    ApiQuerySkip(),
+    ApiInternalServerErrorResponse(),
+    ApiUnprocessableEntityResponse(),
+  );
+}
+
+export function OpenApi_GetSchemaMeta() {
+  return applyDecorators(
+    ApiOperation({
+      description: 'Returns the schema meta data',
     }),
     ApiOkResponse(),
     ApiQueryTake(),

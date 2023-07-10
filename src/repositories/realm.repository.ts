@@ -33,6 +33,15 @@ export class RealmRepository {
       .lean();
   }
 
+  async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
+    return await this.configModel
+      .find()
+      .where({ realm: { $in: realms } })
+      .select(propertiesToSelect)
+      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .lean();
+  }
+
   async find(take: number, skip: number) {
     const realms = (await this.realmModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configModel
