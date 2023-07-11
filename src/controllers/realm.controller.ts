@@ -1,6 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -38,14 +39,18 @@ import { gzipSyncCacheObject } from '@/helpers/gzip-sync-cache-object.helper';
 import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
+import { AvjService } from '@/services/avj.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { RealmService } from '@/services/realm.service';
+import { SchemaService } from '@/services/schema.service';
 
 @ApiTags('Configs')
 @Controller('configs')
 export class RealmController {
   constructor(
+    private readonly avjService: AvjService,
     private readonly realmService: RealmService,
+    private readonly schemaService: SchemaService,
     private readonly configFactory: ConfigFactoryService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
@@ -99,6 +104,16 @@ export class RealmController {
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
+    // ! here schema validation start
+    let schemaConfigObject: Record<any, any>;
+    try {
+      const realmConfigKeys = req.map(({ id }) => id);
+      schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
+      req.forEach(({ value, id }) => this.avjService.validate(schemaConfigObject[id], value));
+    } catch (error) {
+      throw new ForbiddenException({ message: 'missing properties', required: error });
+    }
+    // ! here schema validation end
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
     const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
