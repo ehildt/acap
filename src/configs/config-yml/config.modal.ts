@@ -8,6 +8,7 @@ export interface AppConfig {
 }
 
 export interface RealmConfig {
+  gzipThreshold: number;
   namespacePostfix: string;
   resolveEnv: boolean;
   ttl: number;

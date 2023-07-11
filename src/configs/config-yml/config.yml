@@ -8,6 +8,7 @@ realmConfig:
   ttl: 300
   resolveEnv: false
   namespacePostfix: REALM
+  gzipThreshold: 20
 
 mongoConfig:
   uri: mongodb://mongo:27017

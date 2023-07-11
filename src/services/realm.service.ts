@@ -9,14 +9,14 @@ import { challengeConfigValue } from '@/helpers/challenge-config-source.helper';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
-import { RealmsRepository } from '@/repositories/realms.repository';
+import { RealmRepository } from '@/repositories/realm.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
-export class RealmsService {
+export class RealmService {
   constructor(
-    private readonly configRepo: RealmsRepository,
+    private readonly configRepo: RealmRepository,
     private readonly factory: ConfigFactoryService,
     @Inject(Publisher.TOKEN) private client: ClientProxy,
   ) {}

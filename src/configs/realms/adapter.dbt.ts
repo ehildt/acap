@@ -14,4 +14,8 @@ export class RealmAdapter {
   get RESOLVE_ENV(): boolean {
     return process.env.REALM_RESOLVE_ENV === 'true';
   }
+
+  get GZIP_THRESHOLD(): number {
+    return parseInt(process.env.REALM_GZIP_THRESHOLD ?? '20', 10);
+  }
 }

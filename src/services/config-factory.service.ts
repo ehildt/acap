@@ -28,6 +28,7 @@ export class ConfigFactoryService {
       ttl: this.configService.get<number>('Realm.TTL'),
       namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
       resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
+      gzipThreshold: this.configService.get<number>('Realm.GZIP_THRESHOLD'),
     });
   }
 

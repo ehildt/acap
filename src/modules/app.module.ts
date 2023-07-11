@@ -9,14 +9,14 @@ import { ConfigFactoryService } from '@/services/config-factory.service';
 import { ClientsGlobalModule } from './clients.module';
 import { ConfigFactoryGlobalModule } from './config-factory.module';
 import { PubSubGlobalModule } from './pubsub.module';
-import { RealmsModule } from './realms.module';
+import { RealmSchemaModule } from './realm-schema.module';
 
 @Module({
   imports: [
     ClientsGlobalModule,
     ConfigFactoryGlobalModule,
     PubSubGlobalModule,
-    RealmsModule,
+    RealmSchemaModule,
     CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],
