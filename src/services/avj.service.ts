@@ -5,7 +5,8 @@ import Ajv from 'ajv';
 export class AvjService {
   constructor(@Inject('AVJ_TOKEN') private readonly avj: Ajv) {}
 
-  validate(schema: Record<any, any>, config: any) {
+  validate(config: any, schema?: Record<any, any>) {
+    if (!schema) return;
     const validate = this.avj.compile(schema);
     const isValid = validate(config);
     if (!isValid) throw validate.errors;
