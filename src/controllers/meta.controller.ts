@@ -1,24 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { GetMeta } from '@/decorators/controller.method.decorators';
+import { ParamMeta } from '@/decorators/controller.parameter.decorators';
 import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
-import { OpenApi_GetRealmMeta, OpenApi_GetSchemaMeta } from '@/decorators/open-api.controller.decorators';
+import { OpenApi_GetMeta } from '@/decorators/open-api.controller.decorators';
 import { MetaService } from '@/services/meta.service';
 
-@ApiTags('Meta')
-@Controller('meta')
+type META = 'realms' | 'schemas';
+
+@ApiTags('Metae')
+@Controller('metae')
 export class MetaController {
   constructor(private readonly metaService: MetaService) {}
 
-  @Get('realm')
-  @OpenApi_GetRealmMeta()
-  async getRealmMeta(@QueryTake() take: number, @QuerySkip() skip: number) {
-    return await this.metaService.getRealmMeta(take, skip);
-  }
-
-  @Get('schema')
-  @OpenApi_GetSchemaMeta()
-  async getSchemaMeta(@QueryTake() take: number, @QuerySkip() skip: number) {
-    return await this.metaService.getSchemaMeta(take, skip);
+  @GetMeta()
+  @OpenApi_GetMeta()
+  async getRealmMeta(@ParamMeta() meta: META, @QueryTake() take: number, @QuerySkip() skip: number) {
+    if (meta === 'realms') return await this.metaService.getRealmMeta(take, skip);
+    if (meta === 'schemas') return await this.metaService.getSchemaMeta(take, skip);
   }
 }

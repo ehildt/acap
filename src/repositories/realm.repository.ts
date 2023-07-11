@@ -25,14 +25,6 @@ export class RealmRepository {
     return await this.configModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
   }
 
-  async getMeta(take: number, skip: number, propertiesToSelect: Array<string>) {
-    return await this.configModel
-      .find({}, null, { limit: take, skip })
-      .select(propertiesToSelect)
-      .sort({ realm: 'desc', updatedAt: 'desc' })
-      .lean();
-  }
-
   async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
     return await this.configModel
       .find()
@@ -42,9 +34,11 @@ export class RealmRepository {
       .lean();
   }
 
-  async find(take: number, skip: number) {
+  async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
     const realms = (await this.realmModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configModel
+      .find()
+      .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
       .sort({ realm: 'desc', updatedAt: 'desc' })
       .lean();

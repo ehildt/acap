@@ -10,8 +10,7 @@ export class MetaService {
   async getRealmMeta(take: number, skip: number) {
     const realms = {};
     const schemas = {};
-    // ! fetch for realms first, then the configs by realm!
-    const realmConfigEntities = await this.realmRepository.getMeta(take, skip, QUERY_PROPERTIES);
+    const realmConfigEntities = await this.realmRepository.find(take, skip, QUERY_PROPERTIES);
     const realmSchemas = realmConfigEntities.map(({ realm }) => realm);
     const schemaConfigEntities = await this.schemaRepository.getMetaSchemasByRealms(realmSchemas, QUERY_PROPERTIES);
     mapRealmEntitiesMeta(schemaConfigEntities, schemas);
@@ -22,8 +21,7 @@ export class MetaService {
   async getSchemaMeta(take: number, skip: number) {
     const realms = {};
     const schemas = {};
-    // ! fetch for schemas first, then the configs by schema!
-    const schemaConfigEntities = await this.schemaRepository.getMeta(take, skip, QUERY_PROPERTIES);
+    const schemaConfigEntities = await this.schemaRepository.find(take, skip, QUERY_PROPERTIES);
     const realmSchemas = schemaConfigEntities.map(({ realm }) => realm);
     const realmConfigEntities = await this.realmRepository.getMetaRealmsBySchemas(realmSchemas, QUERY_PROPERTIES);
     mapSchemaEntitiesMeta(realmConfigEntities, realms);

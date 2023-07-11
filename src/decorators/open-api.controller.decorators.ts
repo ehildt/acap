@@ -17,6 +17,7 @@ import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
   ApiParamConfigId,
+  ApiParamMeta,
   ApiParamRealm,
   ApiQueryConfigIds,
   ApiQueryFormat,
@@ -172,24 +173,12 @@ export function OpenApi_GetRealmConfig() {
   );
 }
 
-export function OpenApi_GetRealmMeta() {
+export function OpenApi_GetMeta() {
   return applyDecorators(
     ApiOperation({
-      description: 'Returns the realm meta data',
+      description: 'Returns the meta data',
     }),
-    ApiOkResponse(),
-    ApiQueryTake(),
-    ApiQuerySkip(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
-  );
-}
-
-export function OpenApi_GetSchemaMeta() {
-  return applyDecorators(
-    ApiOperation({
-      description: 'Returns the schema meta data',
-    }),
+    ApiParamMeta(),
     ApiOkResponse(),
     ApiQueryTake(),
     ApiQuerySkip(),
