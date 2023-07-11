@@ -21,9 +21,11 @@ export class SchemaRepository {
     private readonly schemaModel: Model<JsonSchemaDocument>,
   ) {}
 
-  async find(take: number, skip: number) {
+  async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
     const realms = (await this.schemaModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configsModel
+      .find()
+      .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
       .sort({ realm: 'desc', updatedAt: 'desc' })
       .lean();
@@ -31,6 +33,15 @@ export class SchemaRepository {
 
   async findAll() {
     return await this.configsModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
+  }
+
+  async getMetaSchemasByRealms(realms: Array<string>, propertiesToSelect: Array<string>) {
+    return await this.configsModel
+      .find()
+      .where({ realm: { $in: realms } })
+      .select(propertiesToSelect)
+      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .lean();
   }
 
   async where(filter: FilterQuery<RealmReq>) {
@@ -55,6 +66,7 @@ export class SchemaRepository {
     const rowsToDelete = prepareBulkWriteDeleteConfigs(realm, req);
     const rowsDeleted = await this.configsModel.bulkWrite(rowsToDelete);
     const isNotEmpty = Boolean(await this.configsModel.count().where({ realm }));
+
     if (!isNotEmpty) {
       const realms = prepareBulkWriteDeleteRealms([realm]);
       await this.schemaModel.bulkWrite(realms);

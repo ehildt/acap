@@ -17,6 +17,7 @@ import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
   ApiParamConfigId,
+  ApiParamMeta,
   ApiParamRealm,
   ApiQueryConfigIds,
   ApiQueryFormat,
@@ -167,6 +168,20 @@ export function OpenApi_GetRealmConfig() {
     ApiOkResponse(),
     ApiParamConfigId(),
     ApiParamRealm(),
+    ApiInternalServerErrorResponse(),
+    ApiUnprocessableEntityResponse(),
+  );
+}
+
+export function OpenApi_GetMeta() {
+  return applyDecorators(
+    ApiOperation({
+      description: 'Returns the meta data',
+    }),
+    ApiParamMeta(),
+    ApiOkResponse(),
+    ApiQueryTake(),
+    ApiQuerySkip(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );

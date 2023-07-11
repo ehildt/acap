@@ -13,7 +13,7 @@ import { RealmConfigsDocument, RealmConfigsSchemaDefinition } from '@/schemas/re
 import { RealmsDocument, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
 
 @Injectable()
-export class RealmsRepository {
+export class RealmRepository {
   constructor(
     @InjectModel(RealmConfigsSchemaDefinition.name)
     private readonly configModel: Model<RealmConfigsDocument>,
@@ -25,9 +25,20 @@ export class RealmsRepository {
     return await this.configModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
   }
 
-  async find(take: number, skip: number) {
+  async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
+    return await this.configModel
+      .find()
+      .where({ realm: { $in: realms } })
+      .select(propertiesToSelect)
+      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .lean();
+  }
+
+  async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
     const realms = (await this.realmModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configModel
+      .find()
+      .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
       .sort({ realm: 'desc', updatedAt: 'desc' })
       .lean();
@@ -55,6 +66,7 @@ export class RealmsRepository {
     const rowsToDelete = prepareBulkWriteDeleteConfigs(realm, req);
     const rowsDeleted = await this.configModel.bulkWrite(rowsToDelete);
     const isNotEmpty = Boolean(await this.configModel.count().where({ realm }));
+
     if (!isNotEmpty) {
       const realms = prepareBulkWriteDeleteRealms([realm]);
       await this.realmModel.bulkWrite(realms);
