@@ -70,7 +70,6 @@ export class RealmController {
     throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
   }
 
-  // TODO: implement gzip
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
@@ -180,13 +179,14 @@ export class RealmController {
 
     if (!ids) {
       await this.cache.del(postfix);
-      return await this.realmsService.deleteRealm(realm);
+      return await this.realmService.deleteRealm(realm);
     }
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
-    await this.realmsService.deleteRealmConfigIds(realm, filteredIds);
+    await this.realmService.deleteRealmConfigIds(realm, filteredIds);
+
     if (keys.length) {
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);

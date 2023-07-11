@@ -143,6 +143,7 @@ export class JsonSchemaController {
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
     await this.schemaService.deleteRealmConfigIds(realm, filteredIds);
+
     if (keys.length) {
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
