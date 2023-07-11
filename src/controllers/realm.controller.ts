@@ -39,13 +39,13 @@ import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
 import { ConfigFactoryService } from '@/services/config-factory.service';
-import { RealmsService } from '@/services/realms.service';
+import { RealmService } from '@/services/realm.service';
 
 @ApiTags('Configs')
 @Controller('configs')
 export class RealmController {
   constructor(
-    private readonly realmsService: RealmsService,
+    private readonly realmService: RealmService,
     private readonly configFactory: ConfigFactoryService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
@@ -57,7 +57,7 @@ export class RealmController {
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const matchedKey = Object.keys(cache).find((key) => key === id);
     if (matchedKey) return cache[matchedKey];
-    const data = await this.realmsService.getRealmConfigIds(realm, [id]);
+    const data = await this.realmService.getRealmConfigIds(realm, [id]);
     if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
     const cacheData = gzipSyncCacheObject({ ...cache, ...data }, this.configFactory.config.gzipThreshold);
     await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
@@ -65,7 +65,6 @@ export class RealmController {
     throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
   }
 
-  // TODO: implement gzip
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
@@ -73,11 +72,11 @@ export class RealmController {
     let cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
 
     if (!ids) {
-      if (Object.keys(cache)?.length) return cache;
-      const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmsService.getRealm(realm));
-      if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
       // ! we might want to keep track of how many configs are loaded
       // and in case not all are in ram, only then fetch for the whole realm
+      if (Object.keys(cache)?.length) return cache;
+      const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmService.getRealm(realm));
+      if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
       const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
       return data;
@@ -87,11 +86,12 @@ export class RealmController {
     const matchedKeys = Object.keys(cache).filter((c) => filteredIds.includes(c));
     if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
     if (matchedKeys?.length === filteredIds?.length) return cache;
-    // ! we have matchedKeys so only fetch those which did not match, not the whole filteredIds
-    const entities = await this.realmsService.getRealmConfigIds(realm, filteredIds);
-    cache = gzipSyncCacheObject({ ...cache, ...entities }, this.configFactory.config.gzipThreshold);
+    const unmatchedKeys = filteredIds.filter((fk) => !matchedKeys.find((mk) => fk === mk));
+    const entities = await this.realmService.getRealmConfigIds(realm, unmatchedKeys);
+    const cacheObj = { ...cache, ...entities };
+    cache = gzipSyncCacheObject(cacheObj, this.configFactory.config.gzipThreshold);
     await this.cache.set(postfix, cache, this.configFactory.config.ttl);
-    return cache;
+    return cacheObj;
   }
 
   @PostRealm()
@@ -103,7 +103,7 @@ export class RealmController {
     req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
     const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
     await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
-    return await this.realmsService.upsertRealm(realm, req);
+    return await this.realmService.upsertRealm(realm, req);
   }
 
   @Post()
@@ -117,7 +117,7 @@ export class RealmController {
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     });
-    return await this.realmsService.upsertRealms(req);
+    return await this.realmService.upsertRealms(req);
   }
 
   @DeleteRealm()
@@ -128,13 +128,14 @@ export class RealmController {
 
     if (!ids) {
       await this.cache.del(postfix);
-      return await this.realmsService.deleteRealm(realm);
+      return await this.realmService.deleteRealm(realm);
     }
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
-    await this.realmsService.deleteRealmConfigIds(realm, filteredIds);
+    await this.realmService.deleteRealmConfigIds(realm, filteredIds);
+
     if (keys.length) {
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
@@ -144,7 +145,7 @@ export class RealmController {
   @Get()
   @OpenApi_GetRealms()
   async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
-    if (!realms) return await this.realmsService.paginate(take ?? 100, skip ?? 0);
-    return await this.realmsService.getRealms(realms);
+    if (!realms) return await this.realmService.paginate(take ?? 100, skip ?? 0);
+    return await this.realmService.getRealms(realms);
   }
 }

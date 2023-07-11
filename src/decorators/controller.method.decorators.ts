@@ -1,11 +1,13 @@
 import { createParamDecorator, Delete, ExecutionContext, Get, Post } from '@nestjs/common';
 import * as yaml from 'js-yaml';
 
+const meta = ':meta';
 const realm = ':realm';
 const realm_id = ':realm/collections/:id';
 const configFile = 'realm-config';
 const schemaConfigFile = 'schema-config';
 
+export const GetMeta = () => Get(meta);
 export const PostFile = () => Post(configFile);
 export const DownloadFile = () => Get(configFile);
 export const PostSchemaFile = () => Post(schemaConfigFile);
