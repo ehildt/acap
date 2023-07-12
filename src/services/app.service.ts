@@ -7,7 +7,10 @@ import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly logger: ConsoleLogger, private readonly configFactory: ConfigFactoryService) {}
+  constructor(
+    private readonly logger: ConsoleLogger,
+    private readonly configFactory: ConfigFactoryService,
+  ) {}
 
   useGlobalPipes(app: NestFastifyApplication) {
     app.useGlobalPipes(
