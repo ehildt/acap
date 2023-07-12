@@ -17,7 +17,10 @@ import { SchemaService } from '@/services/schema.service';
 @ApiTags('Files')
 @Controller('files')
 export class FilesController {
-  constructor(private readonly realmsService: RealmService, private readonly schemaService: SchemaService) {}
+  constructor(
+    private readonly realmsService: RealmService,
+    private readonly schemaService: SchemaService,
+  ) {}
 
   @PostFile()
   @OpenApi_PostFile()
