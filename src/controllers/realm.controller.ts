@@ -126,13 +126,26 @@ export class RealmController {
   @OpenApi_UpsertRealms()
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
-    req.forEach(async ({ realm, configs }) => {
+    const tasks = req.map(async ({ realm, configs }) => {
       const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
       const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
       configs.forEach(({ id, value }) => cache[id] && (cache[id] = value));
+      // ! schema validation start
+      try {
+        const realmConfigKeys = configs.map(({ id }) => id);
+        const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
+        configs.forEach(({ value, id }) => this.avjService.validate(value, schemaConfigObject[id]));
+      } catch (error) {
+        // if error.status is defined, then this config has no schema and we go silent
+        // otherwise the config validation must have failed and we throw an exception
+        if (error.status === undefined)
+          throw new ForbiddenException({ message: 'missing properties', required: error });
+      }
+      // ! schema validation end
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     });
+    await Promise.all(tasks);
     return await this.realmService.upsertRealms(req);
   }
 
