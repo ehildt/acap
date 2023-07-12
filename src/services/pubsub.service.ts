@@ -10,7 +10,10 @@ import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
 export class PubSubService {
-  constructor(private readonly factory: ConfigFactoryService, @Inject(Publisher.TOKEN) private client: ClientProxy) {}
+  constructor(
+    private readonly factory: ConfigFactoryService,
+    @Inject(Publisher.TOKEN) private client: ClientProxy,
+  ) {}
 
   async passThrough(reqs: Array<RealmsUpsertReq>) {
     await Promise.all(
