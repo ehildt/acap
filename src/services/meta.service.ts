@@ -5,7 +5,10 @@ import { SchemaRepository } from '@/repositories/schema.repository';
 
 @Injectable()
 export class MetaService {
-  constructor(private readonly realmRepository: RealmRepository, private readonly schemaRepository: SchemaRepository) {}
+  constructor(
+    private readonly realmRepository: RealmRepository,
+    private readonly schemaRepository: SchemaRepository,
+  ) {}
 
   async getRealmMeta(take: number, skip: number) {
     const realms = {};
