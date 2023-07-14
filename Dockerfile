@@ -1,14 +1,14 @@
 # entrypoint for local development
 FROM node:20 AS local
 WORKDIR /app
-EXPOSE 3000
+EXPOSE 3001
 ENTRYPOINT [ "npm", "run", "start:dev"]
 
 # entrypoint for the app builder
 FROM node:20 AS builder
 WORKDIR /app
 
-ENV PORT 3000
+ENV PORT 3001
 EXPOSE ${PORT}
 
 COPY package*.json ./
@@ -20,26 +20,26 @@ COPY src/configs/config-yml/config.yml ./dist/configs/config-yml/config.yml
 RUN npm ci --ignore-scripts --loglevel=error
 
 # entrypoint for dev-stage
-FROM builder AS dev
+FROM builder AS development
 WORKDIR /app
 RUN npm run build
 USER node
 ENTRYPOINT ["npm", "run", "start"]
 
 # entrypoint for prepare-prod
-FROM builder AS prepare_prod
+FROM builder AS temporary
 WORKDIR /app
 RUN npm run build:prod
 
 # entrypoint for prod-stage
-FROM node:20-alpine AS prod
+FROM node:20 AS production
 WORKDIR /app
 
-ENV PORT 3000
+ENV PORT 3001
 EXPOSE ${PORT}
 
-COPY --from=prepare_prod ./app/dist ./dist
-COPY --from=prepare_prod ./app/package*.json ./
+COPY --from=temporary ./app/dist ./dist
+COPY --from=temporary ./app/package*.json ./
 
 RUN npm ci --ignore-scripts --loglevel=error --omit=dev
 
