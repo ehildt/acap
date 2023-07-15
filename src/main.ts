@@ -7,7 +7,14 @@ import { AppService } from './services/app.service';
 import { ConfigFactoryService } from './services/config-factory.service';
 
 void (async () => {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const adapter = new FastifyAdapter();
+  adapter.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
   const appService = app.get(AppService);
   const factory = app.get(ConfigFactoryService);
 
