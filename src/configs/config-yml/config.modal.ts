@@ -5,6 +5,7 @@ export interface AppConfig {
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
+  nodeEnv: string;
 }
 
 export interface RealmConfig {

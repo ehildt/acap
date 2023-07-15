@@ -35,8 +35,12 @@ RUN npm run build:prod
 FROM node:20 AS production
 WORKDIR /app
 
+ENV NODE_ENV "production"
+ENV PRINT_ENV "false"
+ENV START_SWAGGER "false"
 ENV PORT 3001
 EXPOSE ${PORT}
+
 
 COPY --from=temporary ./app/dist ./dist
 COPY --from=temporary ./app/package*.json ./

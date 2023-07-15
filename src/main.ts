@@ -14,7 +14,9 @@ void (async () => {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
+    logger: process.env.NODE_ENV === 'production' ? ['warn', 'error'] : ['warn', 'error', 'debug', 'log', 'verbose'],
+  });
   const appService = app.get(AppService);
   const factory = app.get(ConfigFactoryService);
 

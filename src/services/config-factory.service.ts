@@ -20,6 +20,7 @@ export class ConfigFactoryService {
       address: this.configService.get<string>('AppConfig.ADDRESS'),
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
+      nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
     });
   }
 
