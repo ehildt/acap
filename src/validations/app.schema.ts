@@ -18,4 +18,8 @@ export const APP_SCHEMA = {
     CONFIG_YML?.appConfig?.startSwagger !== undefined
       ? Joi.boolean().default(CONFIG_YML.appConfig.startSwagger)
       : Joi.boolean().required(),
+
+  NODE_ENV: CONFIG_YML?.appConfig?.nodeEnv
+    ? Joi.string().default(CONFIG_YML.appConfig.nodeEnv)
+    : Joi.string().required(),
 };

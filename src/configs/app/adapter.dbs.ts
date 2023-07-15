@@ -14,4 +14,8 @@ export class AppConfigAdapter {
   get PRINT_ENV(): boolean {
     return process.env.PRINT_ENV == 'true';
   }
+
+  get NODE_ENV(): string {
+    return process.env.NODE_ENV;
+  }
 }
