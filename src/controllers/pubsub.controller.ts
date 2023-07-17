@@ -6,7 +6,7 @@ import { RealmUpsertRealmBody } from '@/decorators/controller.parameter.decorato
 import { OpenApi_PubSub } from '@/decorators/open-api.controller.decorators';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
-import { PubSubService } from '@/services/pubsub.service';
+import { PubSubService } from '@/services/redis-pubsub.service';
 
 @ApiTags('PubSubs')
 @Controller('pubsubs')

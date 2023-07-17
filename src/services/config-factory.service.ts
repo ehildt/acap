@@ -2,13 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 
-import {
-  AppConfig,
-  MongoConfig,
-  RealmConfig,
-  RedisConfig,
-  RedisPublisherConfig,
-} from '@/configs/config-yml/config.modal';
+import { AppConfig, MongoConfig, RealmConfig, RedisConfig, redisPubSubConfig } from '@/configs/config-yml/config.modal';
 
 @Injectable()
 export class ConfigFactoryService {
@@ -56,15 +50,16 @@ export class ConfigFactoryService {
     });
   }
 
-  get publisher() {
-    return Object.freeze<RedisPublisherConfig>({
+  // TODO rename redisPubSub
+  get redisPubSub() {
+    return Object.freeze<redisPubSubConfig>({
       transport: Transport.REDIS,
-      publishEvents: this.configService.get<boolean>('Publisher.EVENTS'),
+      publishEvents: this.configService.get<boolean>('RedisPubSub.EVENTS'),
       options: {
-        port: this.configService.get<number>('Publisher.PORT'),
-        host: this.configService.get<string>('Publisher.HOST'),
-        password: this.configService.get<string>('Publisher.PASS'),
-        username: this.configService.get<string>('Publisher.USER'),
+        port: this.configService.get<number>('RedisPubSub.PORT'),
+        host: this.configService.get<string>('RedisPubSub.HOST'),
+        password: this.configService.get<string>('RedisPubSub.PASS'),
+        username: this.configService.get<string>('RedisPubSub.USER'),
       },
     });
   }

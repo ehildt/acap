@@ -28,7 +28,7 @@ redisConfig:
   password: redis
   username: default
 
-redisPublisherConfig: 
+redisPubSubConfig: 
   publishEvents: true
   options:
     port: 6379

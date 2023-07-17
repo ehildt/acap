@@ -24,7 +24,7 @@ export interface MongoConfig {
   sslValidate: boolean;
 }
 
-export interface RedisPublisherConfig {
+export interface redisPubSubConfig {
   transport: Transport.REDIS;
   publishEvents: boolean;
   options: {
@@ -50,5 +50,5 @@ export interface Config {
   mongoConfig: MongoConfig;
   redisConfig: RedisConfig;
   realmConfig: RealmConfig;
-  redisPublisherConfig: RedisPublisherConfig;
+  redisPubSubConfig: redisPubSubConfig;
 }
