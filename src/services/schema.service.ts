@@ -1,8 +1,7 @@
-import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Inject, Injectable, Optional, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
 
-import { Publisher } from '@/constants/publisher.enum';
+import { REDIS_PUBSUB } from '@/constants/app.constants';
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
@@ -17,35 +16,19 @@ export class SchemaService {
   constructor(
     private readonly schemaRepository: SchemaRepository,
     private readonly factory: ConfigFactoryService,
-    @Inject(Publisher.TOKEN) private client: ClientProxy,
+    @Optional() @Inject(REDIS_PUBSUB) private readonly client: ClientProxy,
   ) {}
 
   async upsertRealm(realm: string, req: RealmUpsertReq[]) {
     const result = await this.schemaRepository.upsert(realm, req);
-    const ids = req.map(({ id }) => id);
-    if (result?.ok) this.factory.publisher.publishEvents && (await firstValueFrom(this.client.emit(realm, ids)));
+    if (result?.ok) this.factory.redisPubSub.isUsed && this.client.emit(realm, req);
     return result;
   }
 
   async upsertRealms(reqs: RealmsUpsertReq[]) {
     const result = await this.schemaRepository.upsertMany(reqs);
-
-    if (result?.ok) {
-      await Promise.all(
-        reqs.map(async (req) => {
-          return (
-            this.factory.publisher.publishEvents &&
-            (await firstValueFrom(
-              this.client.emit(
-                req.realm,
-                req.configs.map(({ id }) => id),
-              ),
-            ))
-          );
-        }),
-      );
-    }
-
+    if (result?.ok)
+      reqs.map(({ realm, configs }) => this.factory.redisPubSub.isUsed && this.client.emit(realm, configs));
     return result;
   }
 
@@ -85,13 +68,13 @@ export class SchemaService {
 
   async deleteRealm(realm: string) {
     const entity = await this.schemaRepository.delete(realm);
-    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(realm, {}));
+    if (entity.deletedCount && this.factory.redisPubSub.isUsed) this.client.emit(realm, { deletedSchema: realm });
     return entity;
   }
 
   async deleteRealmConfigIds(realm: string, ids: string[]) {
     const entity = await this.schemaRepository.delete(realm, ids);
-    if (entity && this.factory.publisher.publishEvents) await firstValueFrom(this.client.emit(realm, ids));
+    if (entity.deletedCount && this.factory.redisPubSub.isUsed) this.client.emit(realm, { deletedConfigIds: ids });
     return entity;
   }
 

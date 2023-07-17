@@ -15,4 +15,4 @@ import { AvjService } from '@/services/avj.service';
   ],
   exports: [AvjService],
 })
-export class AvJModule {}
+export class GlobalAvJModule {}
