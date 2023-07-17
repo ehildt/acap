@@ -81,7 +81,7 @@ export function OpenApi_Upsert() {
   return applyDecorators(
     ApiOperation({
       description:
-        'Upserts a realm in the database. The realm is not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
+        'Upserts a realm in the database. The realm is not cached, but changes are emitted if REDIS_PUBSUB_PUBLISH_EVENTS is set to true',
     }),
     ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
@@ -108,7 +108,7 @@ export function OpenApi_UpsertRealms() {
   return applyDecorators(
     ApiOperation({
       description:
-        'Upserts realms in the database. The realms are not cached, but changes are emitted if REDIS_PUBLISHER_PUBLISH_EVENTS is set to true',
+        'Upserts realms in the database. The realms are not cached, but changes are emitted if REDIS_PUBSUB_PUBLISH_EVENTS is set to true',
     }),
     ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),

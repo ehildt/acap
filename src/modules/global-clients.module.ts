@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 
-import { Publisher } from '@/constants/publisher.enum';
+import { REDIS_PUBSUB } from '@/constants/app.constants';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 
 @Global()
@@ -10,15 +10,15 @@ import { ConfigFactoryService } from '@/services/config-factory.service';
   imports: [
     ClientsModule.registerAsync([
       {
-        name: Publisher.TOKEN,
+        name: REDIS_PUBSUB,
         imports: [ConfigModule],
         extraProviders: [ConfigFactoryService],
         inject: [ConfigFactoryService],
-        useFactory: async (configFactoryService: ConfigFactoryService) => configFactoryService.publisher,
+        useFactory: async ({ redisPubSub }: ConfigFactoryService) => (redisPubSub.publishEvents ? redisPubSub : {}),
       },
     ]),
   ],
   providers: [ConfigFactoryService],
   exports: [ClientsModule],
 })
-export class ClientsGlobalModule {}
+export class GlobalClientsModule {}
