@@ -1,4 +1,5 @@
 import fastifyMultipart from '@fastify/multipart';
+import { LogLevel } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
@@ -14,9 +15,8 @@ void (async () => {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
-    logger: process.env.NODE_ENV === 'production' ? ['warn', 'error'] : ['warn', 'error', 'debug', 'log', 'verbose'],
-  });
+
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, { logger: getLogLevel() });
   const appService = app.get(AppService);
   const factory = app.get(ConfigFactoryService);
 
@@ -29,3 +29,7 @@ void (async () => {
   await app.listen(factory.app.port, factory.app.address);
   appService.logOnServerStart(factory);
 })();
+
+function getLogLevel(): LogLevel[] {
+  return process.env.NODE_ENV === 'production' ? ['warn', 'error'] : ['warn', 'error', 'debug', 'log', 'verbose'];
+}
