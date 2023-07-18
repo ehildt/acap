@@ -15,16 +15,16 @@ export class PubSubService {
   ) {}
 
   passThrough(reqs: Array<RealmsUpsertReq>) {
-    //fire and forget
-    reqs.map((req) => {
-      this.factory.redisPubSub.publishEvents &&
+    reqs.map(
+      (req) =>
+        this.factory.redisPubSub.isUsed &&
         this.client.emit(
           req.realm,
           req.configs.map(({ id, value }) => ({
             id,
             value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
           })),
-        );
-    });
+        ),
+    );
   }
 }

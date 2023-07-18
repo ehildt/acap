@@ -50,16 +50,19 @@ export class ConfigFactoryService {
     });
   }
 
-  // TODO rename redisPubSub
   get redisPubSub() {
+    const port = this.configService.get<number>('RedisPubSub.PORT');
+    const host = this.configService.get<string>('RedisPubSub.HOST');
+    const password = this.configService.get<string>('RedisPubSub.PASS');
+    const username = this.configService.get<string>('RedisPubSub.USER');
     return Object.freeze<redisPubSubConfig>({
       transport: Transport.REDIS,
-      publishEvents: this.configService.get<boolean>('RedisPubSub.EVENTS'),
+      isUsed: Boolean(port && host && password && username),
       options: {
-        port: this.configService.get<number>('RedisPubSub.PORT'),
-        host: this.configService.get<string>('RedisPubSub.HOST'),
-        password: this.configService.get<string>('RedisPubSub.PASS'),
-        username: this.configService.get<string>('RedisPubSub.USER'),
+        port,
+        host,
+        password,
+        username,
       },
     });
   }

@@ -22,24 +22,22 @@ export class SchemaService {
   async upsertRealm(realm: string, req: RealmUpsertReq[]) {
     const result = await this.schemaRepository.upsert(realm, req);
     const ids = req.map(({ id }) => id);
-    // fire and forget
-    if (result?.ok) this.factory.redisPubSub.publishEvents && this.client.emit(realm, ids);
+    if (result?.ok) this.factory.redisPubSub.isUsed && this.client.emit(realm, ids);
     return result;
   }
 
   async upsertRealms(reqs: RealmsUpsertReq[]) {
     const result = await this.schemaRepository.upsertMany(reqs);
 
-    // fire and forget
-    if (result?.ok) {
-      reqs.map((req) => {
-        this.factory.redisPubSub.publishEvents &&
+    if (result?.ok)
+      reqs.map(
+        (req) =>
+          this.factory.redisPubSub.isUsed &&
           this.client.emit(
             req.realm,
             req.configs.map(({ id }) => id),
-          );
-      });
-    }
+          ),
+      );
 
     return result;
   }
@@ -80,15 +78,13 @@ export class SchemaService {
 
   async deleteRealm(realm: string) {
     const entity = await this.schemaRepository.delete(realm);
-    // fire and forget
-    if (entity && this.factory.redisPubSub.publishEvents) this.client.emit(realm, {});
+    if (entity.deletedCount && this.factory.redisPubSub.isUsed) this.client.emit(realm, null);
     return entity;
   }
 
   async deleteRealmConfigIds(realm: string, ids: string[]) {
     const entity = await this.schemaRepository.delete(realm, ids);
-    // fire and forget
-    if (entity && this.factory.redisPubSub.publishEvents) this.client.emit(realm, ids);
+    if (entity.deletedCount && this.factory.redisPubSub.isUsed) this.client.emit(realm, ids);
     return entity;
   }
 

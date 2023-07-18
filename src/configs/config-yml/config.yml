@@ -29,7 +29,6 @@ redisConfig:
   username: default
 
 redisPubSubConfig: 
-  publishEvents: true
   options:
     port: 6379
     host: redis

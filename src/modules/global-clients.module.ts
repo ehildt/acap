@@ -14,7 +14,7 @@ import { ConfigFactoryService } from '@/services/config-factory.service';
         imports: [ConfigModule],
         extraProviders: [ConfigFactoryService],
         inject: [ConfigFactoryService],
-        useFactory: async ({ redisPubSub }: ConfigFactoryService) => (redisPubSub.publishEvents ? redisPubSub : {}),
+        useFactory: async ({ redisPubSub }: ConfigFactoryService) => (redisPubSub.isUsed ? redisPubSub : {}),
       },
     ]),
   ],

@@ -3,8 +3,6 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  HttpCode,
-  HttpStatus,
   Inject,
   Post,
   UnprocessableEntityException,
@@ -13,7 +11,12 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
+import {
+  DeleteRealm,
+  GetRealm,
+  GetRealmConfig,
+  PostRealm,
+} from '@/controllers/decorators/controller.method.decorators';
 import {
   ParamId,
   ParamRealm,
@@ -22,8 +25,8 @@ import {
   QueryRealms,
   RealmUpsertBody,
   RealmUpsertRealmBody,
-} from '@/decorators/controller.parameter.decorators';
-import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
+} from '@/controllers/decorators/controller.parameter.decorators';
+import { QuerySkip, QueryTake } from '@/controllers/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
@@ -31,7 +34,7 @@ import {
   OpenApi_GetRealms,
   OpenApi_Upsert,
   OpenApi_UpsertRealms,
-} from '@/decorators/open-api.controller.decorators';
+} from '@/controllers/decorators/open-api.controller.decorators';
 import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-object.helper';
@@ -151,7 +154,6 @@ export class RealmController {
 
   @DeleteRealm()
   @OpenApi_DeleteRealm()
-  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRealm(@ParamRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
 
@@ -163,12 +165,14 @@ export class RealmController {
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
-    await this.realmService.deleteRealmConfigIds(realm, filteredIds);
+    const result = await this.realmService.deleteRealmConfigIds(realm, filteredIds);
 
     if (keys.length) {
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
-    } else return await this.cache.del(postfix);
+    } else await this.cache.del(postfix);
+
+    return result;
   }
 
   @Get()

@@ -26,7 +26,7 @@ export interface MongoConfig {
 
 export interface redisPubSubConfig {
   transport: Transport.REDIS;
-  publishEvents: boolean;
+  isUsed?: boolean;
   options: {
     port: number;
     host: string;
