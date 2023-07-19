@@ -2,7 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 
-import { AppConfig, MongoConfig, RealmConfig, RedisConfig, redisPubSubConfig } from '@/configs/config-yml/config.modal';
+import {
+  AppConfig,
+  BullMQConfig,
+  MongoConfig,
+  RealmConfig,
+  RedisConfig,
+  RedisPubSubConfig,
+} from '@/configs/config-yml/config.modal';
 
 @Injectable()
 export class ConfigFactoryService {
@@ -55,10 +62,26 @@ export class ConfigFactoryService {
     const host = this.configService.get<string>('RedisPubSub.HOST');
     const password = this.configService.get<string>('RedisPubSub.PASS');
     const username = this.configService.get<string>('RedisPubSub.USER');
-    return Object.freeze<redisPubSubConfig>({
+    return Object.freeze<RedisPubSubConfig>({
       transport: Transport.REDIS,
       isUsed: Boolean(port && host && password && username),
       options: {
+        port,
+        host,
+        password,
+        username,
+      },
+    });
+  }
+
+  get bullMQ() {
+    const port = this.configService.get<number>('BullMQ.PORT');
+    const host = this.configService.get<string>('BullMQ.HOST');
+    const password = this.configService.get<string>('BullMQ.PASS');
+    const username = this.configService.get<string>('BullMQ.USER');
+    return Object.freeze<BullMQConfig>({
+      isUsed: Boolean(port && host && password && username),
+      redis: {
         port,
         host,
         password,

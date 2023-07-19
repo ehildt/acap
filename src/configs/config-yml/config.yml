@@ -8,7 +8,7 @@ appConfig:
 realmConfig:
   ttl: 300
   resolveEnv: false
-  namespacePostfix: REALM
+  namespacePostfix: DCCS
   gzipThreshold: 20
 
 mongoConfig:
@@ -30,6 +30,13 @@ redisConfig:
 
 redisPubSubConfig: 
   options:
+    port: 6379
+    host: redis
+    password: redis
+    username: default
+
+bullMQConfig:
+  redis:
     port: 6379
     host: redis
     password: redis

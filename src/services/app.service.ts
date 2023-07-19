@@ -60,13 +60,14 @@ export class AppService {
     if (process.env.PRINT_ENV === 'true')
       this.logger.log(
         {
-          APP_CONFIG: appFactory.app,
-          REALM_CONFIG: appFactory.config,
-          MONGO_CONFIG: appFactory.mongo,
-          REDIS_CONFIG: appFactory.redis,
-          REDIS_PUBSUB_CONFIG: appFactory.redisPubSub,
+          APP: appFactory.app,
+          REALM: appFactory.config,
+          MONGO: appFactory.mongo,
+          REDIS: appFactory.redis,
+          REDIS_PUBSUB: appFactory.redisPubSub.isUsed ? appFactory.redisPubSub : 'N/A',
+          BULLMQ: appFactory.bullMQ.isUsed ? appFactory.bullMQ : 'N/A',
         },
-        'Config',
+        'ENVIRONMENT',
       );
 
     if (appFactory.app.startSwagger) {

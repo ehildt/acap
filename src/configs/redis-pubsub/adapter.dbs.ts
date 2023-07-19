@@ -7,10 +7,6 @@ export class RedisPubSubAdapter {
     return process.env.REDIS_PUBSUB_HOST;
   }
 
-  get EVENTS(): boolean {
-    return process.env.REDIS_PUBSUB_PUBLISH_EVENTS === 'true';
-  }
-
   get PASS(): string {
     return process.env.REDIS_PUBSUB_PASS;
   }

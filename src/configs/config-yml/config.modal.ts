@@ -24,10 +24,20 @@ export interface MongoConfig {
   sslValidate: boolean;
 }
 
-export interface redisPubSubConfig {
+export interface RedisPubSubConfig {
   transport: Transport.REDIS;
   isUsed?: boolean;
   options: {
+    port: number;
+    host: string;
+    password: string;
+    username: string;
+  };
+}
+
+export interface BullMQConfig {
+  isUsed?: boolean;
+  redis: {
     port: number;
     host: string;
     password: string;
@@ -50,5 +60,6 @@ export interface Config {
   mongoConfig: MongoConfig;
   redisConfig: RedisConfig;
   realmConfig: RealmConfig;
-  redisPubSubConfig: redisPubSubConfig;
+  redisPubSubConfig: RedisPubSubConfig;
+  bullMQConfig: BullMQConfig;
 }
