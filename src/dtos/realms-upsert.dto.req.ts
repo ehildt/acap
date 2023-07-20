@@ -11,5 +11,5 @@ export class RealmsUpsertReq {
 
   @ArrayNotEmpty()
   @ApiProperty({ isArray: true, type: () => RealmUpsertReq })
-  configs: RealmUpsertReq[];
+  configs: Array<RealmUpsertReq>;
 }

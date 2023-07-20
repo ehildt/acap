@@ -6,7 +6,7 @@ import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import RedisStore from 'cache-manager-ioredis';
 
-import { BULLMQ_METAE_QUEUE, BULLMQ_REALMS_QUEUE, BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
+import { BULLMQ_REALMS_QUEUE, BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { FilesController } from '@/controllers/files.controller';
 import { JsonSchemaController } from '@/controllers/json-schema.controller';
 import { MetaController } from '@/controllers/meta.controller';
@@ -27,34 +27,34 @@ import { GlobalAvJModule } from './global-ajv.module';
 import { GlobalConfigFactoryModule } from './global-config-factory.module';
 import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
 
+const useRedisPubSub = process.env.USE_REDIS_PUBSUB === 'true';
+const useBullMQ = process.env.USE_BULLMQ == 'true';
+
 @Module({
   imports: [
     ClientsModule.registerAsync(
       [
-        process.env.USE_REDIS_PUBSUB && {
+        useRedisPubSub && {
           name: REDIS_PUBSUB,
           imports: [ConfigModule],
           inject: [ConfigFactoryService],
           useFactory: async ({ redisPubSub }: ConfigFactoryService) => redisPubSub,
         },
-      ].filter((item) => item),
+      ].filter((exists) => exists),
     ),
-    process.env.USE_BULLMQ &&
+    useBullMQ &&
       BullModule.forRootAsync({
         imports: [ConfigModule],
         inject: [ConfigFactoryService],
         useFactory: async ({ bullMQ }: ConfigFactoryService) => bullMQ,
       }),
-    process.env.USE_BULLMQ &&
+    useBullMQ &&
       BullModule.registerQueue(
         {
           name: BULLMQ_REALMS_QUEUE,
         },
         {
           name: BULLMQ_SCHEMAS_QUEUE,
-        },
-        {
-          name: BULLMQ_METAE_QUEUE,
         },
       ),
     MongooseModule.forRootAsync({
@@ -94,7 +94,7 @@ import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
       extraProviders: [ConfigFactoryService],
       useFactory: ({ redis }: ConfigFactoryService) => ({ ...redis, store: RedisStore }),
     }),
-  ].filter((item) => item),
+  ].filter((exists) => exists),
   providers: [AppService, ConsoleLogger, RealmService, RealmRepository, SchemaService, SchemaRepository, MetaService],
   controllers: [RealmController, FilesController, JsonSchemaController, MetaController],
 })

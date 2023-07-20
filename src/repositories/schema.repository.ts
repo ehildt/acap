@@ -27,12 +27,12 @@ export class SchemaRepository {
       .find()
       .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
-      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .sort({ realm: 'asc', updatedAt: 'asc' })
       .lean();
   }
 
   async findAll() {
-    return await this.configsModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
+    return await this.configsModel.find().sort({ realm: 'asc', updatedAt: 'asc' }).lean();
   }
 
   async getMetaSchemasByRealms(realms: Array<string>, propertiesToSelect: Array<string>) {
@@ -40,7 +40,7 @@ export class SchemaRepository {
       .find()
       .where({ realm: { $in: realms } })
       .select(propertiesToSelect)
-      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .sort({ realm: 'asc', updatedAt: 'asc' })
       .lean();
   }
 
