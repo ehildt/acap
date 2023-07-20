@@ -1,11 +1,17 @@
 import { Transport } from '@nestjs/microservices';
 
+export interface AppServices {
+  useBullMQ: boolean;
+  useRedisPubSub: boolean;
+}
+
 export interface AppConfig {
   port: number;
+  nodeEnv: string;
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
-  nodeEnv: string;
+  services: AppServices;
 }
 
 export interface RealmConfig {
@@ -21,12 +27,11 @@ export interface MongoConfig {
   user: string;
   pass: string;
   ssl: boolean;
-  sslValidate: boolean;
+  tlsAllowInvalidCertificates: boolean;
 }
 
 export interface RedisPubSubConfig {
   transport: Transport.REDIS;
-  isUsed?: boolean;
   options: {
     port: number;
     host: string;
@@ -36,8 +41,7 @@ export interface RedisPubSubConfig {
 }
 
 export interface BullMQConfig {
-  isUsed?: boolean;
-  redis: {
+  connection: {
     port: number;
     host: string;
     password: string;

@@ -1,4 +1,4 @@
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -6,7 +6,7 @@ import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import RedisStore from 'cache-manager-ioredis';
 
-import { METAE_QUEUE, REALMS_QUEUE, REDIS_PUBSUB, SCHEMAS_QUEUE } from '@/constants/app.constants';
+import { BULLMQ_METAE_QUEUE, BULLMQ_REALMS_QUEUE, BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { FilesController } from '@/controllers/files.controller';
 import { JsonSchemaController } from '@/controllers/json-schema.controller';
 import { MetaController } from '@/controllers/meta.controller';
@@ -29,33 +29,37 @@ import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
 
 @Module({
   imports: [
-    GlobalAvJModule,
-    GlobalConfigFactoryModule,
-    GlobalRedisPubSubModule,
-    ClientsModule.registerAsync([
-      {
-        name: REDIS_PUBSUB,
+    ClientsModule.registerAsync(
+      [
+        process.env.USE_REDIS_PUBSUB && {
+          name: REDIS_PUBSUB,
+          imports: [ConfigModule],
+          inject: [ConfigFactoryService],
+          useFactory: async ({ redisPubSub }: ConfigFactoryService) => redisPubSub,
+        },
+      ].filter((f) => {
+        console.log(f);
+        return f;
+      }),
+    ),
+    process.env.USE_BULLMQ &&
+      BullModule.forRootAsync({
         imports: [ConfigModule],
         inject: [ConfigFactoryService],
-        useFactory: async ({ redisPubSub }: ConfigFactoryService) => (redisPubSub.isUsed ? redisPubSub : {}),
-      },
-    ]),
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigFactoryService],
-      useFactory: async ({ bullMQ }: ConfigFactoryService) => bullMQ,
-    }),
-    BullModule.registerQueue(
-      {
-        name: REALMS_QUEUE,
-      },
-      {
-        name: SCHEMAS_QUEUE,
-      },
-      {
-        name: METAE_QUEUE,
-      },
-    ),
+        useFactory: async ({ bullMQ }: ConfigFactoryService) => bullMQ,
+      }),
+    process.env.USE_BULLMQ &&
+      BullModule.registerQueue(
+        {
+          name: BULLMQ_REALMS_QUEUE,
+        },
+        {
+          name: BULLMQ_SCHEMAS_QUEUE,
+        },
+        {
+          name: BULLMQ_METAE_QUEUE,
+        },
+      ),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -83,6 +87,9 @@ import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
         collection: 'SCHEMA_CONFIG',
       },
     ]),
+    GlobalAvJModule,
+    GlobalConfigFactoryModule,
+    GlobalRedisPubSubModule,
     CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],
@@ -90,7 +97,7 @@ import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
       extraProviders: [ConfigFactoryService],
       useFactory: ({ redis }: ConfigFactoryService) => ({ ...redis, store: RedisStore }),
     }),
-  ],
+  ].filter((item) => item),
   providers: [AppService, ConsoleLogger, RealmService, RealmRepository, SchemaService, SchemaRepository, MetaService],
   controllers: [RealmController, FilesController, JsonSchemaController, MetaController],
 })

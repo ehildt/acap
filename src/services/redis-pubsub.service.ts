@@ -16,7 +16,7 @@ export class PubSubService {
 
   async passThrough(reqs: Array<RealmsUpsertReq>) {
     reqs.map((req) => {
-      this.factory.redisPubSub.isUsed &&
+      this.factory.app.services.useRedisPubSub &&
         this.client.emit(
           req.realm,
           req.configs.map(({ id, value }) => ({

@@ -4,6 +4,9 @@ appConfig:
   printEnv: true
   startSwagger: true
   nodeEnv: 'local'
+  services: 
+    useBullMQ: true
+    useRedisPubSub: true
 
 realmConfig:
   ttl: 300
@@ -14,7 +17,7 @@ realmConfig:
 mongoConfig:
   uri: mongodb://mongo:27017
   ssl: false
-  sslValidate: false
+  tlsAllowInvalidCertificates: true
   dbName: configs
   user: mongo
   pass: mongo
@@ -36,7 +39,7 @@ redisPubSubConfig:
     username: default
 
 bullMQConfig:
-  redis:
+  connection:
     port: 6379
     host: redis
     password: redis

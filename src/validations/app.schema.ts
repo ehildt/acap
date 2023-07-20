@@ -22,4 +22,14 @@ export const APP_SCHEMA = {
   NODE_ENV: CONFIG_YML?.appConfig?.nodeEnv
     ? Joi.string().default(CONFIG_YML.appConfig.nodeEnv)
     : Joi.string().required(),
+
+  USE_REDIS_PUBSUB:
+    CONFIG_YML?.appConfig?.services.useRedisPubSub !== undefined
+      ? Joi.boolean().default(CONFIG_YML.appConfig.services.useRedisPubSub)
+      : Joi.boolean().required(),
+
+  USE_BULLMQ:
+    CONFIG_YML?.appConfig?.services.useBullMQ !== undefined
+      ? Joi.boolean().default(CONFIG_YML.appConfig.services.useBullMQ)
+      : Joi.boolean().required(),
 };
