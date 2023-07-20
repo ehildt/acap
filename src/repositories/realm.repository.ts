@@ -22,7 +22,7 @@ export class RealmRepository {
   ) {}
 
   async findAll() {
-    return await this.configModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
+    return await this.configModel.find().sort({ realm: 'asc', updatedAt: 'asc' }).lean();
   }
 
   async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
@@ -30,7 +30,7 @@ export class RealmRepository {
       .find()
       .where({ realm: { $in: realms } })
       .select(propertiesToSelect)
-      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .sort({ realm: 'asc', updatedAt: 'asc' })
       .lean();
   }
 
@@ -38,9 +38,9 @@ export class RealmRepository {
     const realms = (await this.realmModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configModel
       .find()
+      .sort({ realm: 'asc', updatedAt: 'asc' })
       .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
-      .sort({ realm: 'desc', updatedAt: 'desc' })
       .lean();
   }
 

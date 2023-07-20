@@ -19,7 +19,7 @@ export class MongoConfigAdapter {
     return process.env.MONGO_SSL == 'true';
   }
 
-  get SSL_VALIDATE(): boolean {
-    return process.env.MONGO_SSL_VALIDATE == 'true';
+  get TLS_ALLOW_INVALID_CERTIFICATES(): boolean {
+    return process.env.MONGO_TLS_ALLOW_INVALID_CERTIFICATES == 'true';
   }
 }

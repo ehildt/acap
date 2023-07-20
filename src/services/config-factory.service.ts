@@ -2,7 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 
-import { AppConfig, MongoConfig, RealmConfig, RedisConfig, redisPubSubConfig } from '@/configs/config-yml/config.modal';
+import {
+  AppConfig,
+  BullMQConfig,
+  MongoConfig,
+  RealmConfig,
+  RedisConfig,
+  RedisPubSubConfig,
+} from '@/configs/config-yml/config.modal';
 
 @Injectable()
 export class ConfigFactoryService {
@@ -15,6 +22,10 @@ export class ConfigFactoryService {
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
       nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
+      services: {
+        useBullMQ: this.configService.get<boolean>('AppConfig.USE_BULLMQ'),
+        useRedisPubSub: this.configService.get<boolean>('AppConfig.USE_REDIS_PUBSUB'),
+      },
     });
   }
 
@@ -31,7 +42,7 @@ export class ConfigFactoryService {
     return Object.freeze<MongoConfig>({
       uri: this.configService.get<string>('MongoConfig.URI'),
       ssl: this.configService.get<boolean>('MongoConfig.SSL'),
-      sslValidate: this.configService.get<boolean>('MongoConfig.SSL_VALIDATE'),
+      tlsAllowInvalidCertificates: this.configService.get<boolean>('MongoConfig.TLS_ALLOW_INVALID_CERTIFICATES'),
       dbName: this.configService.get<string>('MongoConfig.DB_NAME'),
       user: this.configService.get<string>('MongoConfig.USER'),
       pass: this.configService.get<string>('MongoConfig.PASS'),
@@ -55,10 +66,24 @@ export class ConfigFactoryService {
     const host = this.configService.get<string>('RedisPubSub.HOST');
     const password = this.configService.get<string>('RedisPubSub.PASS');
     const username = this.configService.get<string>('RedisPubSub.USER');
-    return Object.freeze<redisPubSubConfig>({
+    return Object.freeze<RedisPubSubConfig>({
       transport: Transport.REDIS,
-      isUsed: Boolean(port && host && password && username),
       options: {
+        port,
+        host,
+        password,
+        username,
+      },
+    });
+  }
+
+  get bullMQ() {
+    const port = this.configService.get<number>('BullMQ.PORT');
+    const host = this.configService.get<string>('BullMQ.HOST');
+    const password = this.configService.get<string>('BullMQ.PASS');
+    const username = this.configService.get<string>('BullMQ.USER');
+    return Object.freeze<BullMQConfig>({
+      connection: {
         port,
         host,
         password,

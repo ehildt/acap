@@ -10,7 +10,6 @@ export class SchemaUpsertReq {
   @IsDefined()
   @ApiProperty({
     isArray: true,
-    type: () => SchemaUpsertReq,
     oneOf: [
       { type: 'string', description: 'string or text' },
       { type: 'number', description: 'a number' },

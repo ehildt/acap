@@ -10,7 +10,6 @@ export class RealmUpsertReq {
   @IsDefined()
   @ApiProperty({
     isArray: true,
-    type: () => RealmUpsertReq,
     oneOf: [
       { type: 'string', description: 'string or text' },
       { type: 'number', description: 'a number' },

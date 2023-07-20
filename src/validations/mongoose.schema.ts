@@ -8,9 +8,9 @@ export const MONGOOSE_SCHEMA = {
       ? Joi.boolean().default(CONFIG_YML.mongoConfig.ssl)
       : Joi.boolean().required(),
 
-  MONGO_SSL_VALIDATE:
-    CONFIG_YML?.mongoConfig?.sslValidate !== undefined
-      ? Joi.boolean().default(CONFIG_YML.mongoConfig.sslValidate)
+  MONGO_TLS_ALLOW_INVALID_CERTIFICATES:
+    CONFIG_YML?.mongoConfig?.tlsAllowInvalidCertificates !== undefined
+      ? Joi.boolean().default(CONFIG_YML.mongoConfig.tlsAllowInvalidCertificates)
       : Joi.boolean().required(),
 
   MONGO_USER: CONFIG_YML?.mongoConfig?.user
