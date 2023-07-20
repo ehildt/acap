@@ -18,4 +18,12 @@ export class AppConfigAdapter {
   get NODE_ENV(): string {
     return process.env.NODE_ENV;
   }
+
+  get USE_REDIS_PUBSUB(): boolean {
+    return process.env.USE_REDIS_PUBSUB === 'true';
+  }
+
+  get USE_BULLMQ(): boolean {
+    return process.env.USE_BULLMQ === 'true';
+  }
 }

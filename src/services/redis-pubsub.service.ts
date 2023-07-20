@@ -14,17 +14,16 @@ export class PubSubService {
     @Optional() @Inject(REDIS_PUBSUB) private readonly client: ClientProxy,
   ) {}
 
-  passThrough(reqs: Array<RealmsUpsertReq>) {
-    reqs.map(
-      (req) =>
-        this.factory.redisPubSub.isUsed &&
+  async passThrough(reqs: Array<RealmsUpsertReq>) {
+    reqs.map((req) => {
+      this.factory.app.services.useRedisPubSub &&
         this.client.emit(
           req.realm,
           req.configs.map(({ id, value }) => ({
             id,
             value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
           })),
-        ),
-    );
+        );
+    });
   }
 }
