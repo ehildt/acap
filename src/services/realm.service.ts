@@ -33,9 +33,8 @@ export class RealmService {
     if (result?.ok) {
       this.factory.app.services.useRedisPubSub && this.redisPubSubClient?.emit(realm, req);
       this.factory.app.services.useBullMQ &&
-        this.bullmq.add(BULLMQ_UPSERT_REALM, { realm, configs: req }).catch((error) => {
+        this.bullmq.add(BULLMQ_UPSERT_REALM, { realm, configs: req }).catch(() => {
           // TODO: handle error
-          console.error(error);
         });
     }
     return result;
@@ -53,9 +52,8 @@ export class RealmService {
     // BullMQ
     if (this.factory.app.services.useBullMQ) {
       const bullMQs = reqs.map((data) => ({ name: BULLMQ_UPSERT_REALM, data }));
-      await this.bullmq.addBulk(bullMQs).catch((error) => {
+      await this.bullmq.addBulk(bullMQs).catch(() => {
         // TODO: handle error
-        console.error(error);
       });
     }
 
@@ -101,9 +99,8 @@ export class RealmService {
     if (entity.deletedCount) {
       this.factory.app.services.useRedisPubSub && this.redisPubSubClient.emit(realm, { deletedRealm: realm });
       this.factory.app.services.useBullMQ &&
-        this.bullmq.add(BULLMQ_DELETE_REALM, { deletedRealm: realm }).catch((error) => {
+        this.bullmq.add(BULLMQ_DELETE_REALM, { deletedRealm: realm }).catch(() => {
           // TODO: handle error
-          console.error(error);
         });
     }
     return entity;
@@ -114,9 +111,8 @@ export class RealmService {
     if (entity.deletedCount) {
       this.factory.app.services.useRedisPubSub && this.redisPubSubClient.emit(realm, { deletedConfigIds: ids });
       this.factory.app.services.useBullMQ &&
-        this.bullmq.add(BULLMQ_DELETE_REALM_CONFIGS, { realm, deletedConfigIds: ids }).catch((error) => {
+        this.bullmq.add(BULLMQ_DELETE_REALM_CONFIGS, { realm, deletedConfigIds: ids }).catch(() => {
           // TODO: handle error
-          console.error(error);
         });
     }
     return entity;

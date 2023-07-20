@@ -37,10 +37,7 @@ import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
           inject: [ConfigFactoryService],
           useFactory: async ({ redisPubSub }: ConfigFactoryService) => redisPubSub,
         },
-      ].filter((f) => {
-        console.log(f);
-        return f;
-      }),
+      ].filter((item) => item),
     ),
     process.env.USE_BULLMQ &&
       BullModule.forRootAsync({
