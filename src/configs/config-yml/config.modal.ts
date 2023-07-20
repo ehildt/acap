@@ -1,17 +1,15 @@
 import { Transport } from '@nestjs/microservices';
 
-export interface AppServices {
-  useBullMQ: boolean;
-  useRedisPubSub: boolean;
-}
-
 export interface AppConfig {
   port: number;
   nodeEnv: string;
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
-  services: AppServices;
+  services: {
+    useBullMQ: boolean;
+    useRedisPubSub: boolean;
+  };
 }
 
 export interface RealmConfig {
