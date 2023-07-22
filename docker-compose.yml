@@ -37,7 +37,7 @@ services:
     command: redis-server --requirepass "redis" --loglevel "warning" 
 
 volumes:
-  mongo_data:
+  mongo_dscd_data:
 
 networks:
   default:

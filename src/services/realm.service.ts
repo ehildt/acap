@@ -43,11 +43,11 @@ export class RealmService {
   async upsertRealms(reqs: RealmsUpsertReq[]) {
     const result = await this.configRepo.upsertMany(reqs);
     if (result?.ok) return result;
-    if (this.redisPubSubClient)
-      reqs.forEach(({ realm, configs }) =>
-        this.redisPubSubClient.emit(realm, configs).pipe(catchError((error) => error)),
-      );
-
+    if (this.redisPubSubClient || this.mqttClient)
+      reqs.forEach(({ realm, configs }) => {
+        this.redisPubSubClient?.emit(realm, configs).pipe(catchError((error) => error));
+        this.mqttClient?.publish(realm, configs);
+      });
     this.bullmq?.addBulk(reqs.map((data) => ({ name: BULLMQ_UPSERT_REALM, data }))).catch((error) => error);
     return result;
   }
@@ -91,6 +91,7 @@ export class RealmService {
     if (!entity.deletedCount) return entity;
     this.redisPubSubClient?.emit(realm, { deletedRealm: realm }).pipe(catchError((error) => error));
     this.bullmq?.add(BULLMQ_DELETE_REALM, { deletedRealm: realm }).catch((error) => error);
+    this.mqttClient?.publish(realm, { deletedRealm: realm });
     return entity;
   }
 
@@ -98,7 +99,8 @@ export class RealmService {
     const entity = await this.configRepo.delete(realm, ids);
     if (!entity.deletedCount) return entity;
     this.redisPubSubClient?.emit(realm, { deletedConfigIds: ids }).pipe(catchError((error) => error));
-    this.bullmq?.add(BULLMQ_DELETE_REALM_CONFIGS, { realm, deletedConfigIds: ids }).catch((error) => error);
+    this.bullmq?.add(BULLMQ_DELETE_REALM_CONFIGS, { deletedConfigIds: ids }).catch((error) => error);
+    this.mqttClient?.publish(realm, { deletedConfigIds: ids });
     return entity;
   }
 
