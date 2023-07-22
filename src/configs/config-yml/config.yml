@@ -19,7 +19,7 @@ mongoConfig:
   uri: mongodb://mongo:27017
   ssl: false
   tlsAllowInvalidCertificates: true
-  dbName: configs
+  dbName: DSCD
   user: mongo
   pass: mongo
 

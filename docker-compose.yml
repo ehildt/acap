@@ -1,7 +1,7 @@
 version: '3.9'
 services:
-  config-manager:
-    container_name: config-manager
+  dscd:
+    container_name: dscd
     build:
       context: .
       dockerfile: Dockerfile
@@ -23,9 +23,9 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo
       - MONGO_INITDB_ROOT_PASSWORD=mongo
-      - MONGO_INITDB_DATABASE=configs
+      - MONGO_INITDB_DATABASE=DSCD
     volumes:
-      - mongo_data:/data/db
+      - mongo_dscd_data:/data/db
     ports:
       - '27017:27017'
 
@@ -41,4 +41,4 @@ volumes:
 
 networks:
   default:
-    name: CONFIG_MANAGER_NETWORK
+    name: DSCD_NETWORK

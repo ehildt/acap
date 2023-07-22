@@ -64,9 +64,9 @@ export class AppService {
           REALM: appFactory.config,
           MONGO: appFactory.mongo,
           REDIS: appFactory.redis,
-          REDIS_PUBSUB: appFactory.app.services.useRedisPubSub ? appFactory.redisPubSub : null,
-          BULLMQ: appFactory.app.services.useBullMQ ? appFactory.bullMQ : null,
-          MQTT: appFactory.app.services.useMQTT ? appFactory.mqtt : null,
+          REDIS_PUBSUB: appFactory.app.services.useRedisPubSub ? appFactory.redisPubSub : undefined,
+          BULLMQ: appFactory.app.services.useBullMQ ? appFactory.bullMQ : undefined,
+          MQTT: appFactory.app.services.useMQTT ? appFactory.mqtt : undefined,
         },
         'ENVIRONMENT',
       );
