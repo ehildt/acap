@@ -1,7 +1,7 @@
 
-# Config-Manager
+# Dynamic Content Communication Service (DCCS)
 
-A simple and convenient way to config your apps ;)
+A simple and convenient way to dynamically communicate your content to your services ;)
 
 ## Whats in the box?
 

@@ -16,6 +16,7 @@ import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
+import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { RealmRepository } from '@/repositories/realm.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -27,6 +28,7 @@ export class RealmService {
     private readonly factory: ConfigFactoryService,
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSubClient: ClientProxy,
     @Optional() @InjectQueue(BULLMQ_REALMS_QUEUE) private readonly bullmq: Queue,
+    @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
   ) {}
 
   async upsertRealm(realm: string, req: RealmUpsertReq[]) {
@@ -34,6 +36,7 @@ export class RealmService {
     if (!result?.ok) return result;
     this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
     this.bullmq?.add(BULLMQ_UPSERT_REALM, { realm, configs: req }).catch((error) => error);
+    this.mqttClient?.publish(realm, req);
     return result;
   }
 

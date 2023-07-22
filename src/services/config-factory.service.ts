@@ -6,6 +6,7 @@ import {
   AppConfig,
   BullMQConfig,
   MongoConfig,
+  MQTTClientConfig,
   RealmConfig,
   RedisConfig,
   RedisPubSubConfig,
@@ -25,6 +26,7 @@ export class ConfigFactoryService {
       services: {
         useBullMQ: this.configService.get<boolean>('AppConfig.USE_BULLMQ'),
         useRedisPubSub: this.configService.get<boolean>('AppConfig.USE_REDIS_PUBSUB'),
+        useMQTT: this.configService.get<boolean>('AppConfig.USE_MQTT'),
       },
     });
   }
@@ -89,6 +91,17 @@ export class ConfigFactoryService {
         password,
         username,
       },
+    });
+  }
+
+  get mqtt() {
+    return Object.freeze<MQTTClientConfig>({
+      keepalive: 5000,
+      connectTimeout: 5000,
+      reconnectPeriod: 1000,
+      resubscribe: true,
+      port: 1883,
+      hostname: 'test.mosquitto.org',
     });
   }
 }

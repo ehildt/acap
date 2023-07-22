@@ -5,8 +5,9 @@ appConfig:
   startSwagger: true
   nodeEnv: 'local'
   services: 
-    useBullMQ: true
-    useRedisPubSub: true
+    useRedisPubSub: false
+    useBullMQ: false
+    useMQTT: false
 
 realmConfig:
   ttl: 300

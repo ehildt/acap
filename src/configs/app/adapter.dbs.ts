@@ -26,4 +26,8 @@ export class AppConfigAdapter {
   get USE_BULLMQ(): boolean {
     return process.env.USE_BULLMQ === 'true';
   }
+
+  get USE_MQTT(): boolean {
+    return process.env.USE_MQTT === 'true';
+  }
 }

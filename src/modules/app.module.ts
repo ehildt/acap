@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConsoleLogger, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import RedisStore from 'cache-manager-ioredis';
@@ -26,9 +26,11 @@ import { SchemaService } from '@/services/schema.service';
 import { GlobalAvJModule } from './global-ajv.module';
 import { GlobalConfigFactoryModule } from './global-config-factory.module';
 import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
+import { MqttClientModule } from './mqtt-client.module';
 
 const useRedisPubSub = process.env.USE_REDIS_PUBSUB === 'true';
-const useBullMQ = process.env.USE_BULLMQ == 'true';
+const useBullMQ = process.env.USE_BULLMQ === 'true';
+const useMQTTClient = process.env.USE_MQTT_CLIENT === 'true';
 
 @Module({
   imports: [
@@ -59,8 +61,8 @@ const useBullMQ = process.env.USE_BULLMQ == 'true';
       ),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService) => new ConfigFactoryService(configService).mongo,
+      inject: [ConfigFactoryService],
+      useFactory: ({ mongo }: ConfigFactoryService) => mongo,
     }),
     MongooseModule.forFeature([
       {
@@ -87,6 +89,13 @@ const useBullMQ = process.env.USE_BULLMQ == 'true';
     GlobalAvJModule,
     GlobalConfigFactoryModule,
     GlobalRedisPubSubModule,
+    useMQTTClient &&
+      MqttClientModule.registerAsync({
+        imports: [ConfigModule],
+        inject: [ConfigFactoryService],
+        isGlobal: true,
+        useFactory: ({ mqtt }: ConfigFactoryService) => mqtt,
+      }),
     CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],
