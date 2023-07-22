@@ -22,13 +22,14 @@ import {
   OpenApi_SchemaUpsert,
   OpenApi_UpsertRealms,
 } from '@/controllers/decorators/open-api.controller.decorators';
-import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-object.helper';
 import { gzipSyncCacheObject } from '@/helpers/gzip-sync-cache-object.helper';
 import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
 import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
 import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
+import { AvjService } from '@/services/avj.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { SchemaService } from '@/services/schema.service';
 
@@ -38,15 +39,17 @@ export class JsonSchemaController {
   constructor(
     private readonly schemaService: SchemaService,
     private readonly configFactory: ConfigFactoryService,
+    private readonly avjService: AvjService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
   @PostRealm()
   @OpenApi_SchemaUpsert()
   @UseInterceptors(ParseYmlInterceptor)
-  async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
+  async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: Array<ContentUpsertReq>) {
     const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    req.forEach(({ value }) => this.avjService.compile(value));
     req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
     const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
     await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
@@ -56,10 +59,11 @@ export class JsonSchemaController {
   @Post()
   @OpenApi_UpsertRealms()
   @UseInterceptors(ParseYmlInterceptor)
-  async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
+  async upsertRealms(@RealmUpsertRealmBody() req: Array<RealmsUpsertReq>) {
     const tasks = req.map(async ({ realm, configs }) => {
       const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
       const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+      configs.forEach(({ value }) => this.avjService.compile(value));
       configs.forEach(({ id, value }) => cache[id] && (cache[id] = value));
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);

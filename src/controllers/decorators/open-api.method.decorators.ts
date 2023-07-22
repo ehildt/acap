@@ -1,6 +1,6 @@
 import { ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
 
-import { RealmUpsertReq } from '../../dtos/realm-upsert-req.dto';
+import { ContentUpsertReq } from '../../dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '../../dtos/realms-upsert.dto.req';
 
 export const ApiQueryRealm = () => ApiQuery({ name: 'realm', type: String });
@@ -18,7 +18,7 @@ export const ApiBodyRealmUpsert = () =>
   ApiBody({
     isArray: true,
     required: true,
-    type: RealmUpsertReq,
+    type: ContentUpsertReq,
   });
 
 export const ApiBodyRealmUpsertPerRealm = () =>

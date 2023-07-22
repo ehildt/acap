@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsString, IsUppercase } from 'class-validator';
 
-export class RealmUpsertReq {
+export class ContentUpsertReq {
   @IsString()
   @IsUppercase()
   @ApiProperty()

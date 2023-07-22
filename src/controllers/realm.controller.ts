@@ -35,7 +35,7 @@ import {
   OpenApi_Upsert,
   OpenApi_UpsertRealms,
 } from '@/controllers/decorators/open-api.controller.decorators';
-import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-object.helper';
 import { gzipSyncCacheObject } from '@/helpers/gzip-sync-cache-object.helper';
@@ -105,17 +105,17 @@ export class RealmController {
   @PostRealm()
   @OpenApi_Upsert()
   @UseInterceptors(ParseYmlInterceptor)
-  async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: RealmUpsertReq[]) {
+  async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: ContentUpsertReq[]) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
     // ! schema validation start
     try {
       const realmConfigKeys = req.map(({ id }) => id);
       const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
-      req.forEach(({ value, id }) => this.avjService.validate(value, schemaConfigObject[id]));
+      req.forEach(({ value, id }) => this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])));
     } catch (error) {
       // if error.status is defined, then this config has no schema and we go silent
       // otherwise the config validation must have failed and we throw an exception
-      if (error.status === undefined) throw new ForbiddenException({ message: 'missing properties', required: error });
+      if (error.status === undefined) throw new ForbiddenException({ message: 'missing properties', error });
     }
     // ! schema validation end
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
@@ -137,12 +137,13 @@ export class RealmController {
       try {
         const realmConfigKeys = configs.map(({ id }) => id);
         const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
-        configs.forEach(({ value, id }) => this.avjService.validate(value, schemaConfigObject[id]));
+        configs.forEach(({ value, id }) =>
+          this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
+        );
       } catch (error) {
         // if error.status is defined, then this config has no schema and we go silent
         // otherwise the config validation must have failed and we throw an exception
-        if (error.status === undefined)
-          throw new ForbiddenException({ message: 'missing properties', required: error });
+        if (error.status === undefined) throw new ForbiddenException({ message: 'missing properties', error });
       }
       // ! schema validation end
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);

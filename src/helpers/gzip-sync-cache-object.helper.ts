@@ -10,7 +10,7 @@ function sizeOf(content: Record<any, any>) {
 }
 
 export function gzipSyncCacheObject(content: Record<any, any>, threshold: number) {
-  if (sizeOf(content) > threshold)
-    return { zipped: true, content: zlib.gzipSync(Buffer.from(JSON.stringify(content))) };
+  const size = sizeOf(content);
+  if (size > threshold) return { zipped: true, content: zlib.gzipSync(Buffer.from(JSON.stringify(content))) };
   return { content };
 }

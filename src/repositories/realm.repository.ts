@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 
+import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmReq } from '@/dtos/realm-req.dto';
-import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { prepareBulkWriteDeleteConfigs } from '@/helpers/prepare-bulk-write-delete-configs.helper';
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
@@ -55,7 +55,7 @@ export class RealmRepository {
     return await this.configModel.bulkWrite(preparedUpserts);
   }
 
-  async upsert(realm: string, req: RealmUpsertReq[]) {
+  async upsert(realm: string, req: ContentUpsertReq[]) {
     const realms = prepareBulkWriteRealms([realm]);
     await this.realmModel.bulkWrite(realms);
     const rowsToUpsert = prepareBulkWriteConfigs(req, realm);

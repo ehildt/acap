@@ -11,7 +11,7 @@ import {
   BULLMQ_UPSERT_REALM,
   REDIS_PUBSUB,
 } from '@/constants/app.constants';
-import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
@@ -31,7 +31,7 @@ export class RealmService {
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
   ) {}
 
-  async upsertRealm(realm: string, req: RealmUpsertReq[]) {
+  async upsertRealm(realm: string, req: ContentUpsertReq[]) {
     const result = await this.configRepo.upsert(realm, req);
     if (!result?.ok) return result;
     this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
