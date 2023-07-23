@@ -39,9 +39,9 @@ export class AppService {
     const openApiObj = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('Config-Manager')
-        .setDescription('A simple and convenient way to config your apps ;)')
-        .setVersion('0.8.7')
+        .setTitle('DSCA')
+        .setDescription('A simple and convenient way to dynamically distribute and provide content to your services ;)')
+        .setVersion('0.8.10')
         .build(),
     );
     SwaggerModule.setup(API_DOCS, app, openApiObj);

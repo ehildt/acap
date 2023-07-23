@@ -1,9 +1,11 @@
 
-# Dynamic Service Content Distributer (DSCD)
+# Dynamic Service Content Aggregator (DSCA)
 
-A simple and convenient way to dynamically provide content to your services ;)
+A simple and convenient way to dynamically distribute and provide content to your services ;)
 
-The **Dynamic Service Content Distributer** `DSCD` is a system designed to distribute service-related content in a dynamic, adaptable, and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process.
+The **Dynamic Service Content Distributer** `DSCA` is a system designed to distribute service-related content in a dynamic, adaptable, and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process.
+
+A Dynamic Service Content Aggregator (DSCA) refers to a platform or system that actively collects, organizes, and distributes a wide range of service-oriented content to users or clients. The term "dynamic" suggests that the aggregator is responsive and adaptable, capable of adjusting its content collection and distribution based on changing user needs and preferences. It focuses on aggregating and curating services, information, or media from various sources to provide a comprehensive and personalized experience. The DSCA aims to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels.
 
 ## Whats in the box?
 
