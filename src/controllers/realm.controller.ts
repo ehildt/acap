@@ -55,15 +55,14 @@ export class RealmController {
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+
     if (!ids) {
-      // ! we might want to keep track of how many configs are loaded
-      // and in case not all are in ram, only then fetch for the whole realm
       if (Object.keys(cache.content)?.length === cache.count) return cache.content;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
-      const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold, Object.keys(data).length);
-      await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
-      return cacheData.content;
+      const cacheObj = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold, Object.keys(data).length);
+      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+      return data;
     }
 
     const filteredIds = Array.from(new Set(ids?.filter((e) => e)));
@@ -75,8 +74,8 @@ export class RealmController {
     const entities = await this.realmService.getRealmConfigIds(realm, unmatchedKeys);
     const count = await this.realmService.countRealmContents();
     const content = { ...cache.content, ...entities };
-    cache.content = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
-    await this.cache.set(postfix, cache.content, this.configFactory.config.ttl);
+    const cacheObj = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
+    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     return content;
   }
 
@@ -151,8 +150,8 @@ export class RealmController {
     const data = await this.realmService.getRealmConfigIds(realm, [id]);
     const count = await this.realmService.countRealmContents();
     if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
-    const cacheData = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.config.gzipThreshold, count);
-    await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
+    const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.config.gzipThreshold, count);
+    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     if (data[id]) return data[id];
     throw new BadRequestException(`N/A realm: ${realm} | id: ${id}`);
   }

@@ -81,8 +81,8 @@ export class JsonSchemaController {
     const data = await this.schemaService.getRealmConfigIds(realm, [id]);
     const count = await this.schemaService.countRealmContents();
     if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-    const cacheData = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.config.gzipThreshold, count);
-    await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
+    const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.config.gzipThreshold, count);
+    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     if (data[id]) return data[id];
     throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
   }
@@ -97,10 +97,8 @@ export class JsonSchemaController {
       if (Object.keys(cache.content)?.length) return cache.content;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.schemaService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-      // ! we might want to keep track of how many configs are loaded
-      // and in case not all are in ram, only then fetch for the whole realm
-      const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold);
-      await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
+      const cacheObj = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold, Object.keys(data).length);
+      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
       return data;
     }
 
@@ -113,8 +111,8 @@ export class JsonSchemaController {
     const entities = await this.schemaService.getRealmConfigIds(realm, unmatchedKeys);
     const count = await this.schemaService.countRealmContents();
     const content = { ...cache.content, ...entities };
-    cache.content = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
-    await this.cache.set(postfix, cache.content, this.configFactory.config.ttl);
+    const cacheObj = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
+    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     return content;
   }
 
