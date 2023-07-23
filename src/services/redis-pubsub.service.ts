@@ -19,7 +19,7 @@ export class PubSubService {
     reqs.map((req) => {
       this.client?.emit(
         req.realm,
-        req.configs.map(({ id, value }) => ({
+        req.contents.map(({ id, value }) => ({
           id,
           value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
         })),

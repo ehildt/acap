@@ -58,7 +58,7 @@ export class SchemaRepository {
   async upsertMany(reqs: RealmsUpsertReq[]) {
     const realms = prepareBulkWriteRealms(reqs.map(({ realm }) => realm));
     await this.schemaModel.bulkWrite(realms);
-    const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.configs, req.realm)).flat();
+    const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.contents, req.realm)).flat();
     return await this.configsModel.bulkWrite(preparedUpserts);
   }
 

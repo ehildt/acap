@@ -44,9 +44,9 @@ export class RealmService {
     const result = await this.configRepo.upsertMany(reqs);
     if (result?.ok) return result;
     if (this.redisPubSubClient || this.mqttClient)
-      reqs.forEach(({ realm, configs }) => {
-        this.redisPubSubClient?.emit(realm, configs).pipe(catchError((error) => error));
-        this.mqttClient?.publish(realm, configs);
+      reqs.forEach(({ realm, contents }) => {
+        this.redisPubSubClient?.emit(realm, contents).pipe(catchError((error) => error));
+        this.mqttClient?.publish(realm, contents);
       });
     this.bullmq?.addBulk(reqs.map((data) => ({ name: BULLMQ_UPSERT_REALM, data }))).catch((error) => error);
     return result;

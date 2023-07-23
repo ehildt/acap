@@ -47,8 +47,8 @@ import { ConfigFactoryService } from '@/services/config-factory.service';
 import { RealmService } from '@/services/realm.service';
 import { SchemaService } from '@/services/schema.service';
 
-@ApiTags('Configs')
-@Controller('configs')
+@ApiTags('Contents')
+@Controller('contents')
 export class RealmController {
   constructor(
     private readonly avjService: AvjService,
@@ -129,15 +129,15 @@ export class RealmController {
   @OpenApi_UpsertRealms()
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
-    const tasks = req.map(async ({ realm, configs }) => {
+    const tasks = req.map(async ({ realm, contents }) => {
       const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
       const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      configs.forEach(({ id, value }) => cache[id] && (cache[id] = value));
+      contents.forEach(({ id, value }) => cache[id] && (cache[id] = value));
       // ! schema validation start
       try {
-        const realmConfigKeys = configs.map(({ id }) => id);
+        const realmConfigKeys = contents.map(({ id }) => id);
         const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
-        configs.forEach(({ value, id }) =>
+        contents.forEach(({ value, id }) =>
           this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
         );
       } catch (error) {

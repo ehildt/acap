@@ -60,11 +60,11 @@ export class JsonSchemaController {
   @OpenApi_UpsertRealms()
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: Array<RealmsUpsertReq>) {
-    const tasks = req.map(async ({ realm, configs }) => {
+    const tasks = req.map(async ({ realm, contents }) => {
       const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
       const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      configs.forEach(({ value }) => this.avjService.compile(value));
-      configs.forEach(({ id, value }) => cache[id] && (cache[id] = value));
+      contents.forEach(({ value }) => this.avjService.compile(value));
+      contents.forEach(({ id, value }) => cache[id] && (cache[id] = value));
       const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     });
