@@ -31,6 +31,10 @@ export class SchemaService {
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
   ) {}
 
+  async countRealmContents() {
+    return await this.schemaRepository.count();
+  }
+
   async upsertRealm(realm: string, req: Array<ContentUpsertReq>) {
     const result = await this.schemaRepository.upsert(realm, req);
     if (!result?.ok) return result;

@@ -7,12 +7,12 @@ appConfig:
   services: 
     useRedisPubSub: false
     useBullMQ: false
-    useMQTT: false
+    useMQTT: true
 
 realmConfig:
   ttl: 300
   resolveEnv: false
-  namespacePostfix: DCCS
+  namespacePostfix: DSCA
   gzipThreshold: 20
 
 mongoConfig:

@@ -76,12 +76,12 @@ export class JsonSchemaController {
   @OpenApi_GetSchema()
   async getSchemaConfig(@ParamRealm() realm: string, @ParamId() id: string) {
     const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    const matchedKey = Object.keys(cache).find((key) => key === id);
-    if (matchedKey) return cache[matchedKey];
+    const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    if (content[id]) return content[id];
     const data = await this.schemaService.getRealmConfigIds(realm, [id]);
+    const count = await this.schemaService.countRealmContents();
     if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-    const cacheData = gzipSyncCacheObject({ ...cache, ...data }, this.configFactory.config.gzipThreshold);
+    const cacheData = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.config.gzipThreshold, count);
     await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
     if (data[id]) return data[id];
     throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
@@ -91,10 +91,10 @@ export class JsonSchemaController {
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
-    let cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
 
     if (!ids) {
-      if (Object.keys(cache)?.length) return cache;
+      if (Object.keys(cache.content)?.length) return cache.content;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.schemaService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
       // ! we might want to keep track of how many configs are loaded
@@ -105,15 +105,17 @@ export class JsonSchemaController {
     }
 
     const filteredIds = Array.from(new Set(ids?.filter((e) => e)));
-    const matchedKeys = Object.keys(cache).filter((c) => filteredIds.includes(c));
-    if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
-    if (matchedKeys?.length === filteredIds?.length) return cache;
+    const matchedKeys = Object.keys(cache.content).filter((c) => filteredIds.includes(c));
+    if (matchedKeys?.length)
+      cache.content = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache.content[key] }), {});
+    if (matchedKeys?.length === filteredIds?.length) return cache.content;
     const unmatchedKeys = filteredIds.filter((fk) => !matchedKeys.find((mk) => fk === mk));
     const entities = await this.schemaService.getRealmConfigIds(realm, unmatchedKeys);
-    const cacheObj = { ...cache, ...entities };
-    cache = gzipSyncCacheObject(cacheObj, this.configFactory.config.gzipThreshold);
-    await this.cache.set(postfix, cache, this.configFactory.config.ttl);
-    return cacheObj;
+    const count = await this.schemaService.countRealmContents();
+    const content = { ...cache.content, ...entities };
+    cache.content = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
+    await this.cache.set(postfix, cache.content, this.configFactory.config.ttl);
+    return content;
   }
 
   @Get()
@@ -134,12 +136,13 @@ export class JsonSchemaController {
     }
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
+    const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const result = await this.schemaService.deleteRealmConfigIds(realm, filteredIds);
+    const count = await this.schemaService.countRealmContents();
 
-    if (keys.length) {
-      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+    if (count) {
+      Object.keys(content).filter((key) => delete content[filteredIds.find((id) => id === key)]);
+      const cacheObj = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     } else await this.cache.del(postfix);
 

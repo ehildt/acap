@@ -1,13 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  Controller,
-  ForbiddenException,
-  Get,
-  Inject,
-  Post,
-  UnprocessableEntityException,
-  UseInterceptors,
-} from '@nestjs/common';
+import { BadRequestException, Controller, Get, Inject, Post, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -58,48 +50,41 @@ export class RealmController {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
-  @GetRealmConfig()
-  @OpenApi_GetRealmConfig()
-  async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    const matchedKey = Object.keys(cache).find((key) => key === id);
-    if (matchedKey) return cache[matchedKey];
-    const data = await this.realmService.getRealmConfigIds(realm, [id]);
-    if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-    const cacheData = gzipSyncCacheObject({ ...cache, ...data }, this.configFactory.config.gzipThreshold);
-    await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
-    if (data[id]) return data[id];
-    throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
-  }
-
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
-    let cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-
+    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     if (!ids) {
       // ! we might want to keep track of how many configs are loaded
       // and in case not all are in ram, only then fetch for the whole realm
-      if (Object.keys(cache)?.length) return cache;
+      if (Object.keys(cache.content)?.length === cache.count) return cache.content;
       const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.realmService.getRealm(realm));
-      if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-      const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold);
+      if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
+      const cacheData = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold, Object.keys(data).length);
       await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
-      return data;
+      return cacheData.content;
     }
 
     const filteredIds = Array.from(new Set(ids?.filter((e) => e)));
-    const matchedKeys = Object.keys(cache).filter((c) => filteredIds.includes(c));
-    if (matchedKeys?.length) cache = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache[key] }), {});
-    if (matchedKeys?.length === filteredIds?.length) return cache;
+    const matchedKeys = Object.keys(cache.content).filter((c) => filteredIds.includes(c));
+    if (matchedKeys?.length)
+      cache.content = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache.content[key] }), {});
+    if (matchedKeys?.length === filteredIds?.length) return cache.content;
     const unmatchedKeys = filteredIds.filter((fk) => !matchedKeys.find((mk) => fk === mk));
     const entities = await this.realmService.getRealmConfigIds(realm, unmatchedKeys);
-    const cacheObj = { ...cache, ...entities };
-    cache = gzipSyncCacheObject(cacheObj, this.configFactory.config.gzipThreshold);
-    await this.cache.set(postfix, cache, this.configFactory.config.ttl);
-    return cacheObj;
+    const count = await this.realmService.countRealmContents();
+    const content = { ...cache.content, ...entities };
+    cache.content = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
+    await this.cache.set(postfix, cache.content, this.configFactory.config.ttl);
+    return content;
+  }
+
+  @Get()
+  @OpenApi_GetRealms()
+  async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
+    if (!realms) return await this.realmService.paginate(take ?? 100, skip ?? 0);
+    return await this.realmService.getRealms(realms);
   }
 
   @PostRealm()
@@ -109,20 +94,22 @@ export class RealmController {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
     // ! schema validation start
     try {
-      const realmConfigKeys = req.map(({ id }) => id);
+      const realmConfigKeys = Array.from(new Set(req.map(({ id }) => id)));
       const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
       req.forEach(({ value, id }) => this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])));
     } catch (error) {
       // if error.status is defined, then this config has no schema and we go silent
       // otherwise the config validation must have failed and we throw an exception
-      if (error.status === undefined) throw new ForbiddenException({ message: 'missing properties', error });
+      if (error.status === undefined) throw new BadRequestException(error);
     }
     // ! schema validation end
+    const entity = await this.realmService.upsertRealm(realm, req);
+    const count = await this.realmService.countRealmContents();
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
-    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
-    return await this.realmService.upsertRealm(realm, req);
+    return entity;
   }
 
   @Post()
@@ -130,12 +117,9 @@ export class RealmController {
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
     const tasks = req.map(async ({ realm, contents }) => {
-      const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
-      const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      contents.forEach(({ id, value }) => cache[id] && (cache[id] = value));
       // ! schema validation start
       try {
-        const realmConfigKeys = contents.map(({ id }) => id);
+        const realmConfigKeys = Array.from(new Set(contents.map(({ id }) => id)));
         const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
         contents.forEach(({ value, id }) =>
           this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
@@ -143,14 +127,34 @@ export class RealmController {
       } catch (error) {
         // if error.status is defined, then this config has no schema and we go silent
         // otherwise the config validation must have failed and we throw an exception
-        if (error.status === undefined) throw new ForbiddenException({ message: 'missing properties', error });
+        if (error.status === undefined) throw new BadRequestException(error);
       }
       // ! schema validation end
-      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+      const entity = await this.realmService.upsertRealm(realm, contents);
+      const count = await this.realmService.countRealmContents();
+      const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
+      const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+      contents.forEach(({ id, value }) => content[id] && (content[id] = value));
+      const cacheObj = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+      return entity;
     });
-    await Promise.all(tasks);
-    return await this.realmService.upsertRealms(req);
+    return await Promise.all(tasks);
+  }
+
+  @GetRealmConfig()
+  @OpenApi_GetRealmConfig()
+  async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
+    const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
+    const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    if (content[id]) return content[id];
+    const data = await this.realmService.getRealmConfigIds(realm, [id]);
+    const count = await this.realmService.countRealmContents();
+    if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
+    const cacheData = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.config.gzipThreshold, count);
+    await this.cache.set(postfix, cacheData, this.configFactory.config.ttl);
+    if (data[id]) return data[id];
+    throw new BadRequestException(`N/A realm: ${realm} | id: ${id}`);
   }
 
   @DeleteRealm()
@@ -164,22 +168,16 @@ export class RealmController {
     }
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
+    const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     const result = await this.realmService.deleteRealmConfigIds(realm, filteredIds);
+    const count = await this.realmService.countRealmContents();
 
-    if (keys.length) {
-      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
+    if (count) {
+      Object.keys(content).filter((key) => delete content[filteredIds.find((id) => id === key)]);
+      const cacheObj = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
       await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
     } else await this.cache.del(postfix);
 
     return result;
-  }
-
-  @Get()
-  @OpenApi_GetRealms()
-  async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
-    if (!realms) return await this.realmService.paginate(take ?? 100, skip ?? 0);
-    return await this.realmService.getRealms(realms);
   }
 }

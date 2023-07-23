@@ -31,6 +31,10 @@ export class RealmService {
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
   ) {}
 
+  async countRealmContents() {
+    return await this.configRepo.count();
+  }
+
   async upsertRealm(realm: string, req: ContentUpsertReq[]) {
     const result = await this.configRepo.upsert(realm, req);
     if (!result?.ok) return result;

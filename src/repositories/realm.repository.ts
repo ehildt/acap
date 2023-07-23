@@ -25,6 +25,10 @@ export class RealmRepository {
     return await this.configModel.find().sort({ realm: 'asc', updatedAt: 'asc' }).lean();
   }
 
+  async count() {
+    return await this.configModel.count();
+  }
+
   async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
     return await this.configModel
       .find()

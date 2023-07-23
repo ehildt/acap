@@ -21,6 +21,10 @@ export class SchemaRepository {
     private readonly schemaModel: Model<JsonSchemaDocument>,
   ) {}
 
+  async count() {
+    return await this.configsModel.count();
+  }
+
   async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
     const realms = (await this.schemaModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configsModel
