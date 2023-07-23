@@ -1,6 +1,32 @@
 import { ConsoleLogger, DynamicModule, Inject, Injectable, Module } from '@nestjs/common';
 import mqtt from 'mqtt';
 
+@Module({})
+export class MqttClientModule {
+  static registerAsync(options: MqttClientModuleOptions): DynamicModule {
+    return {
+      module: MqttClientModule,
+      imports: options.imports ?? [],
+      global: options.isGlobal,
+      exports: [MQTT_CLIENT],
+      providers: [
+        ConsoleLogger,
+        MqttClient,
+        ...(options.providers ?? []),
+        {
+          provide: MQTT_CLIENT_OPTIONS,
+          inject: options.inject ?? [],
+          useFactory: options.useFactory,
+        },
+        {
+          provide: MQTT_CLIENT,
+          useExisting: MqttClient,
+        },
+      ],
+    };
+  }
+}
+
 export const MQTT_CLIENT = 'MQTT_CLIENT';
 export type { MqttClient };
 
@@ -27,10 +53,9 @@ class MqttClient {
   ) {
     this.client = mqtt
       .connect(options)
-      .on('connect', () => this.logger.log(`${this.options.hostname} (connected)`, MQTT_CLIENT))
-      .on('reconnect', () => this.logger.log(`reconnecting to ${this.options.hostname} ..`, MQTT_CLIENT))
-      .on('disconnect', () => this.logger.log(`${this.options.hostname} (disconnected)`, MQTT_CLIENT))
-      .on('error', (error) => this.logger.log(error, MQTT_CLIENT))
+      .on('reconnect', () => this.logger.log(`reconnecting..`, MQTT_CLIENT))
+      .on('disconnect', () => this.logger.log(`disconnected..`, MQTT_CLIENT))
+      .on('error', (error) => this.logger.error(JSON.stringify(error, null, 4), MQTT_CLIENT))
       .on('message', (topic: string, payload: Buffer) => {
         this.topics.get(topic)?.forEach((handler) => handler?.(payload.toString(), topic));
       });
@@ -45,10 +70,9 @@ class MqttClient {
     const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
     if (!this.topics.has(topic)) {
       this.topics.set(topic, new Map().set(handlerName, handler));
-      this.client.subscribe(topic, (error) => {
-        if (error) this.logger.error(error);
-        else this.logger.log(`${topic} ${handlerName} subscribed`, MQTT_CLIENT);
-      });
+      this.client.subscribe(topic, (error) =>
+        error ? this.logger.error(error) : this.logger.log(`${topic} ${handlerName} subscribed`, MQTT_CLIENT),
+      );
     } else {
       const handlerMap = this.topics.get(topic);
       if (!handlerMap.has(handlerName)) {
@@ -56,47 +80,45 @@ class MqttClient {
         this.logger.log(`${topic} ${handlerName} subscribed`, MQTT_CLIENT);
       } else this.logger.warn(`${topic} ${handlerName} skipping, already subscribed`, MQTT_CLIENT);
     }
+
+    return this;
   }
 
-  public resubscribe(topic: string, handler: Handler, descriptor?: string) {
+  /**
+   * - upserts a handler
+   * @param topic
+   * @param handler
+   * @param descriptor
+   */
+  public upsertHandler(topic: string, handler: Handler, descriptor?: string) {
     const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
     this.topics.get(topic)?.set(handlerName, handler);
+    return this;
   }
 
+  /**
+   * - removes a handler from the subscribed topic
+   * - does not remove the topic even if all handlers are removed
+   * @param topic
+   * @param handler
+   * @param descriptor
+   */
   public ejectHandler(topic: string, handler?: Handler, descriptor?: string) {
     const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
     this.topics.get(topic)?.delete(handlerName);
+    return this;
   }
 
+  /**
+   * - unsubscribes from a topic
+   * - removes all handlers on that topic
+   * @param topic
+   * @param options
+   */
   public unsubscribe(topic: string, options?: Record<string, any>) {
     this.client.unsubscribe(topic, options, () => {
       this.topics.delete(topic) && this.logger.log(`${topic} unsubscribed`);
     });
-  }
-}
-
-@Module({})
-export class MqttClientModule {
-  static registerAsync(options: MqttClientModuleOptions): DynamicModule {
-    return {
-      module: MqttClientModule,
-      imports: options.imports ?? [],
-      global: options.isGlobal,
-      exports: [MQTT_CLIENT],
-      providers: [
-        ConsoleLogger,
-        MqttClient,
-        ...(options.providers ?? []),
-        {
-          provide: MQTT_CLIENT_OPTIONS,
-          inject: options.inject ?? [],
-          useFactory: options.useFactory,
-        },
-        {
-          provide: MQTT_CLIENT,
-          useExisting: MqttClient,
-        },
-      ],
-    };
+    return this;
   }
 }
