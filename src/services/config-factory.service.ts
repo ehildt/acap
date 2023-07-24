@@ -23,10 +23,10 @@ export class ConfigFactoryService {
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
       nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
       realm: {
-        ttl: this.configService.get<number>('Realm.TTL'),
-        namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
-        resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
-        gzipThreshold: this.configService.get<number>('Realm.GZIP_THRESHOLD'),
+        ttl: this.configService.get<number>('AppConfig.TTL'),
+        namespacePostfix: this.configService.get<string>('AppConfig.NAMESPACE_POSTFIX'),
+        resolveEnv: this.configService.get<boolean>('AppConfig.RESOLVE_ENV'),
+        gzipThreshold: this.configService.get<number>('AppConfig.GZIP_THRESHOLD'),
       },
       services: {
         useBullMQ: this.configService.get<boolean>('AppConfig.USE_BULLMQ'),

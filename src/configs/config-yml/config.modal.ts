@@ -7,19 +7,17 @@ export type AppConfig = {
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
-  realm: RealmConfig;
+  realm: {
+    gzipThreshold: number;
+    namespacePostfix: string;
+    resolveEnv: boolean;
+    ttl: number;
+  };
   services: {
     useBullMQ: boolean;
     useRedisPubSub: boolean;
     useMQTT: boolean;
   };
-};
-
-export type RealmConfig = {
-  gzipThreshold: number;
-  namespacePostfix: string;
-  resolveEnv: boolean;
-  ttl: number;
 };
 
 export type MongoConfig = {
@@ -64,7 +62,6 @@ export type Config = {
   appConfig: AppConfig;
   mongoConfig: MongoConfig;
   redisConfig: RedisConfig;
-  realmConfig: RealmConfig;
   redisPubSubConfig: RedisPubSubConfig;
   bullMQConfig: BullMQConfig;
   mqttClientConfig: IClientOptions;

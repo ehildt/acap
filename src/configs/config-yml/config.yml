@@ -12,7 +12,7 @@ appConfig:
 realmConfig:
   ttl: 300
   resolveEnv: false
-  namespacePostfix: DSCA
+  namespacePostfix: ACAP
   gzipThreshold: 20
 
 mongoConfig:

@@ -1,7 +1,7 @@
 version: '3.9'
 services:
-  dscd:
-    container_name: dscd
+  acap:
+    container_name: acap
     build:
       context: .
       dockerfile: Dockerfile
@@ -23,9 +23,9 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo
       - MONGO_INITDB_ROOT_PASSWORD=mongo
-      - MONGO_INITDB_DATABASE=DSCD
+      - MONGO_INITDB_DATABASE=ACAP
     volumes:
-      - mongo_dscd_data:/data/db
+      - mongo_acap_data:/data/db
     ports:
       - '27017:27017'
 
@@ -37,8 +37,8 @@ services:
     command: redis-server --requirepass "redis" --loglevel "warning" 
 
 volumes:
-  mongo_dscd_data:
+  mongo_acap_data:
 
 networks:
   default:
-    name: DSCD_NETWORK
+    name: ACAP_NETWORK
