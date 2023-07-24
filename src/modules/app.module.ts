@@ -30,7 +30,7 @@ import { MqttClientModule } from './mqtt-client.module';
 
 const useRedisPubSub = process.env.USE_REDIS_PUBSUB === 'true';
 const useBullMQ = process.env.USE_BULLMQ === 'true';
-const useMQTTClient = process.env.USE_MQTT_CLIENT === 'true';
+const useMQTTClient = process.env.USE_MQTT === 'true';
 
 @Module({
   imports: [
@@ -94,7 +94,7 @@ const useMQTTClient = process.env.USE_MQTT_CLIENT === 'true';
         imports: [ConfigModule],
         inject: [ConfigFactoryService],
         isGlobal: true,
-        useFactory: ({ mqtt }: ConfigFactoryService) => mqtt,
+        useFactory: ({ mqtt }: ConfigFactoryService) => ({ ...mqtt }),
       }),
     CacheModule.registerAsync({
       isGlobal: true,

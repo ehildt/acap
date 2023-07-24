@@ -21,7 +21,7 @@ export class PubSubService {
         req.realm,
         req.contents.map(({ id, value }) => ({
           id,
-          value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
+          value: challengeConfigValue(value as any, this.factory.app.realm.resolveEnv),
         })),
       );
     });

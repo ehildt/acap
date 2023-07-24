@@ -1,4 +1,5 @@
 import { Transport } from '@nestjs/microservices';
+import { IClientOptions } from 'mqtt';
 
 export type AppConfig = {
   port: number;
@@ -6,6 +7,7 @@ export type AppConfig = {
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
+  realm: RealmConfig;
   services: {
     useBullMQ: boolean;
     useRedisPubSub: boolean;
@@ -48,15 +50,6 @@ export type BullMQConfig = {
   };
 };
 
-export type MQTTClientConfig = {
-  keepalive: number;
-  connectTimeout: number;
-  reconnectPeriod: number;
-  resubscribe: boolean;
-  port: number;
-  hostname: string;
-};
-
 export type RedisConfig = {
   db: number;
   host: string;
@@ -74,5 +67,5 @@ export type Config = {
   realmConfig: RealmConfig;
   redisPubSubConfig: RedisPubSubConfig;
   bullMQConfig: BullMQConfig;
-  mqttClientConfig: MQTTClientConfig;
+  mqttClientConfig: IClientOptions;
 };

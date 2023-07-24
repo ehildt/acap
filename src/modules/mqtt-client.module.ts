@@ -47,12 +47,13 @@ type MqttClientModuleOptions = {
 class MqttClient {
   private client: mqtt.MqttClient;
   private topics = new Map<string, Map<string, Handler>>();
+  private topic: string;
   constructor(
     private readonly logger: ConsoleLogger,
     @Inject(MQTT_CLIENT_OPTIONS) private readonly options: mqtt.IClientOptions,
   ) {
     this.client = mqtt
-      .connect(options)
+      .connect(this.options)
       .on('reconnect', () => this.logger.log(`reconnecting..`, MQTT_CLIENT))
       .on('disconnect', () => this.logger.log(`disconnected..`, MQTT_CLIENT))
       .on('error', (error) => this.logger.error(JSON.stringify(error, null, 4), MQTT_CLIENT))
@@ -66,54 +67,49 @@ class MqttClient {
     else this.client.publish(topic, JSON.stringify(payload), callback);
   }
 
-  public subscribe(topic: string, handler: Handler, descriptor?: string) {
-    const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
+  // TODO remove the handler for sake of chained configuration
+  public subscribe(topic: string) {
     if (!this.topics.has(topic)) {
-      this.topics.set(topic, new Map().set(handlerName, handler));
+      this.topic = topic;
+      this.topics.set(topic, new Map());
       this.client.subscribe(topic, (error) =>
-        error ? this.logger.error(error) : this.logger.log(`${topic} ${handlerName} subscribed`, MQTT_CLIENT),
+        error ? this.logger.error(error) : this.logger.log(`${topic} subscribed`, MQTT_CLIENT),
       );
-    } else {
-      const handlerMap = this.topics.get(topic);
-      if (!handlerMap.has(handlerName)) {
-        handlerMap.set(handlerName, handler);
-        this.logger.log(`${topic} ${handlerName} subscribed`, MQTT_CLIENT);
-      } else this.logger.warn(`${topic} ${handlerName} skipping, already subscribed`, MQTT_CLIENT);
-    }
-
+    } else this.logger.warn(`${topic} skipping, already subscribed`, MQTT_CLIENT);
     return this;
   }
 
   /**
-   * - upserts a handler
-   * @param topic
-   * @param handler
-   * @param descriptor
+   * - inserts if not exists, otherwise updates a handler
+   * - if chained, reuses the `topic` which is used on subscribe
+   * @param handler - the handler to be upserted
+   * @param descriptor - an alternative identifier for the handler
+   * @param topic - as in the subscribed channel
    */
-  public upsertHandler(topic: string, handler: Handler, descriptor?: string) {
+  public use(handler: Handler, descriptor?: string, topic?: string) {
     const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
-    this.topics.get(topic)?.set(handlerName, handler);
+    this.topics.get(topic ?? this.topic)?.set(handlerName, handler);
     return this;
   }
 
   /**
-   * - removes a handler from the subscribed topic
-   * - does not remove the topic even if all handlers are removed
-   * @param topic
-   * @param handler
-   * @param descriptor
+   * - removes a `handler` from a subscribed `topic`
+   * - if chained, reuses the `topic` which is used on subscribe
+   * @param handler - the handler to be removed
+   * @param descriptor - an alternative identifier for the handler
+   * @param topic - as in the subscribed channel
    */
-  public ejectHandler(topic: string, handler?: Handler, descriptor?: string) {
+  public eject(handler?: Handler, descriptor?: string, topic?: string) {
     const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
-    this.topics.get(topic)?.delete(handlerName);
+    this.topics.get(topic ?? this.topic)?.delete(handlerName);
     return this;
   }
 
   /**
-   * - unsubscribes from a topic
-   * - removes all handlers on that topic
-   * @param topic
-   * @param options
+   * - unsubscribes from a `topic`
+   * - removes all handlers associated with that `topic`
+   * @param topic - as in the subscribed channel
+   * @param options - options of unsubscribe
    */
   public unsubscribe(topic: string, options?: Record<string, any>) {
     this.client.unsubscribe(topic, options, () => {

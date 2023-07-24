@@ -47,12 +47,12 @@ export class JsonSchemaController {
   @OpenApi_SchemaUpsert()
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: Array<ContentUpsertReq>) {
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     req.forEach(({ value }) => this.avjService.compile(value));
     req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
-    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
-    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.app.realm.gzipThreshold);
+    await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return await this.schemaService.upsertRealm(realm, req);
   }
 
@@ -61,12 +61,12 @@ export class JsonSchemaController {
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: Array<RealmsUpsertReq>) {
     const tasks = req.map(async ({ realm, contents }) => {
-      const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
+      const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
       const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
       contents.forEach(({ value }) => this.avjService.compile(value));
       contents.forEach(({ id, value }) => cache[id] && (cache[id] = value));
-      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
-      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.app.realm.gzipThreshold);
+      await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     });
     await Promise.all(tasks);
     return await this.schemaService.upsertRealms(req);
@@ -75,14 +75,14 @@ export class JsonSchemaController {
   @GetSchema()
   @OpenApi_GetSchema()
   async getSchemaConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     if (content[id]) return content[id];
     const data = await this.schemaService.getRealmConfigIds(realm, [id]);
     const count = await this.schemaService.countRealmContents();
     if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-    const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.config.gzipThreshold, count);
-    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
+    await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     if (data[id]) return data[id];
     throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
   }
@@ -90,15 +90,15 @@ export class JsonSchemaController {
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
     const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
 
     if (!ids) {
       if (Object.keys(cache.content)?.length) return cache.content;
-      const data = reduceToConfigs(this.configFactory.config.resolveEnv, await this.schemaService.getRealm(realm));
+      const data = reduceToConfigs(this.configFactory.app.realm.resolveEnv, await this.schemaService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
-      const cacheObj = gzipSyncCacheObject(data, this.configFactory.config.gzipThreshold, Object.keys(data).length);
-      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+      const cacheObj = gzipSyncCacheObject(data, this.configFactory.app.realm.gzipThreshold, Object.keys(data).length);
+      await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
       return data;
     }
 
@@ -111,8 +111,8 @@ export class JsonSchemaController {
     const entities = await this.schemaService.getRealmConfigIds(realm, unmatchedKeys);
     const count = await this.schemaService.countRealmContents();
     const content = { ...cache.content, ...entities };
-    const cacheObj = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
-    await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+    const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
+    await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return content;
   }
 
@@ -126,7 +126,7 @@ export class JsonSchemaController {
   @DeleteRealm()
   @OpenApi_DeleteRealm()
   async deleteRealm(@ParamRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.config.namespacePostfix);
+    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
 
     if (!ids) {
       await this.cache.del(postfix);
@@ -140,8 +140,8 @@ export class JsonSchemaController {
 
     if (count) {
       Object.keys(content).filter((key) => delete content[filteredIds.find((id) => id === key)]);
-      const cacheObj = gzipSyncCacheObject(content, this.configFactory.config.gzipThreshold, count);
-      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
+      const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
+      await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     } else await this.cache.del(postfix);
 
     return result;

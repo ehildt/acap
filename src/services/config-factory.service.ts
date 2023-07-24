@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
+import { IClientOptions } from 'mqtt';
 
 import {
   AppConfig,
   BullMQConfig,
   MongoConfig,
-  MQTTClientConfig,
-  RealmConfig,
   RedisConfig,
   RedisPubSubConfig,
 } from '@/configs/config-yml/config.modal';
@@ -23,20 +22,17 @@ export class ConfigFactoryService {
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
       nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
+      realm: {
+        ttl: this.configService.get<number>('Realm.TTL'),
+        namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
+        resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
+        gzipThreshold: this.configService.get<number>('Realm.GZIP_THRESHOLD'),
+      },
       services: {
         useBullMQ: this.configService.get<boolean>('AppConfig.USE_BULLMQ'),
         useRedisPubSub: this.configService.get<boolean>('AppConfig.USE_REDIS_PUBSUB'),
         useMQTT: this.configService.get<boolean>('AppConfig.USE_MQTT'),
       },
-    });
-  }
-
-  get config() {
-    return Object.freeze<RealmConfig>({
-      ttl: this.configService.get<number>('Realm.TTL'),
-      namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
-      resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
-      gzipThreshold: this.configService.get<number>('Realm.GZIP_THRESHOLD'),
     });
   }
 
@@ -95,13 +91,16 @@ export class ConfigFactoryService {
   }
 
   get mqtt() {
-    return Object.freeze<MQTTClientConfig>({
-      keepalive: 5000,
-      connectTimeout: 5000,
-      reconnectPeriod: 1000,
-      resubscribe: true,
-      port: 1883,
-      hostname: 'test.mosquitto.org',
+    return Object.freeze<IClientOptions>({
+      keepalive: this.configService.get<number>('MQTTClientConfig.KEEPALIVE'),
+      connectTimeout: this.configService.get<number>('MQTTClientConfig.CONNECTION_TIMEOUT'),
+      reconnectPeriod: this.configService.get<number>('MQTTClientConfig.RECONNECT_PERIOD'),
+      resubscribe: this.configService.get<boolean>('MQTTClientConfig.RESUBSCRIBE'),
+      protocol: this.configService.get<any>('MQTTClientConfig.PROTOCOL'),
+      hostname: this.configService.get<string>('MQTTClientConfig.HOSTNAME'),
+      port: this.configService.get<number>('MQTTClientConfig.PORT'),
+      username: this.configService.get<string>('MQTTClientConfig.USERNAME'),
+      password: this.configService.get<string>('MQTTClientConfig.PASSWORD'),
     });
   }
 }

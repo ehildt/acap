@@ -61,7 +61,6 @@ export class AppService {
       this.logger.log(
         {
           APP: appFactory.app,
-          REALM: appFactory.config,
           MONGO: appFactory.mongo,
           REDIS: appFactory.redis,
           REDIS_PUBSUB: appFactory.app.services.useRedisPubSub ? appFactory.redisPubSub : undefined,

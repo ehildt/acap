@@ -69,7 +69,7 @@ export class RealmService {
   async getRealms(realms: string[]) {
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.configRepo.where({ realm: { $in: realmSet } });
-    return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.config.resolveEnv), {});
+    return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.app.realm.resolveEnv), {});
   }
 
   async getRealm(realm: string) {
@@ -87,7 +87,7 @@ export class RealmService {
         `N/A [ realm: ${realm} | id: ${ids.filter((id) => !entities.find(({ _id }) => _id === id))} ]`,
       );
 
-    return reduceEntities(this.factory.config.resolveEnv, entities);
+    return reduceEntities(this.factory.app.realm.resolveEnv, entities);
   }
 
   async deleteRealm(realm: string) {
