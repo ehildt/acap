@@ -10,7 +10,7 @@ import { AvjService } from '@/services/avj.service';
     AvjService,
     {
       provide: 'AVJ_TOKEN',
-      useValue: ajvAddFormats(new Ajv({ allErrors: true })),
+      useValue: ajvAddFormats(new Ajv()),
     },
   ],
   exports: [AvjService],

@@ -11,11 +11,12 @@ import {
   BULLMQ_UPSERT_SCHEMA,
   REDIS_PUBSUB,
 } from '@/constants/app.constants';
-import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
+import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
+import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { SchemaRepository } from '@/repositories/schema.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -27,21 +28,30 @@ export class SchemaService {
     private readonly factory: ConfigFactoryService,
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSubClient: ClientProxy,
     @Optional() @InjectQueue(BULLMQ_SCHEMAS_QUEUE) private readonly bullmq: Queue,
+    @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
   ) {}
 
-  async upsertRealm(realm: string, req: RealmUpsertReq[]) {
+  async countRealmContents() {
+    return await this.schemaRepository.count();
+  }
+
+  async upsertRealm(realm: string, req: Array<ContentUpsertReq>) {
     const result = await this.schemaRepository.upsert(realm, req);
     if (!result?.ok) return result;
     this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
     this.bullmq?.add(BULLMQ_UPSERT_SCHEMA, { realm, configs: req }).catch((error) => error);
+    this.mqttClient?.publish(realm, req);
     return result;
   }
 
   async upsertRealms(reqs: RealmsUpsertReq[]) {
     const result = await this.schemaRepository.upsertMany(reqs);
     if (!result?.ok) return result;
-    if (this.redisPubSubClient)
-      reqs.map(({ realm, configs }) => this.redisPubSubClient.emit(realm, configs).pipe((error) => error));
+    if (this.redisPubSubClient || this.mqttClient)
+      reqs.forEach(({ realm, contents }) => {
+        this.redisPubSubClient?.emit(realm, contents).pipe(catchError((error) => error));
+        this.mqttClient?.publish(realm, contents);
+      });
     this.bullmq?.addBulk(reqs.map((data) => ({ name: BULLMQ_UPSERT_SCHEMA, data }))).catch((error) => error);
     return result;
   }
@@ -49,7 +59,7 @@ export class SchemaService {
   async getRealms(realms: string[]) {
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.schemaRepository.where({ realm: { $in: realmSet } });
-    return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.config.resolveEnv), {});
+    return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.app.realm.resolveEnv), {});
   }
 
   async getRealm(realm: string) {
@@ -67,7 +77,7 @@ export class SchemaService {
         `N/A [ realm: ${realm} | id: ${ids.filter((id) => !entities.find(({ _id }) => _id === id))} ]`,
       );
 
-    return reduceEntities(this.factory.config.resolveEnv, entities);
+    return reduceEntities(this.factory.app.realm.resolveEnv, entities);
   }
 
   async paginate(take: number, skip: number) {
@@ -85,6 +95,7 @@ export class SchemaService {
     if (!entity.deletedCount) return entity;
     this.redisPubSubClient?.emit(realm, { deletedRealm: realm }).pipe(catchError((error) => error));
     this.bullmq?.add(BULLMQ_DELETE_SCHEMA, { deletedRealm: realm }).catch((error) => error);
+    this.mqttClient?.publish(realm, { deletedRealm: realm });
     return entity;
   }
 
@@ -93,6 +104,7 @@ export class SchemaService {
     if (!entity.deletedCount) return entity;
     this.redisPubSubClient?.emit(realm, { deletedConfigIds: ids }).pipe(catchError((error) => error));
     this.bullmq?.add(BULLMQ_DELETE_SCHEMA_CONFIGS, { realm, deletedConfigIds: ids }).catch((error) => error);
+    this.mqttClient?.publish(realm, { deletedConfigIds: ids });
     return entity;
   }
 

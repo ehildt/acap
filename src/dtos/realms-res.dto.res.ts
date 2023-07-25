@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { RealmUpsertReq } from './realm-upsert-req.dto';
+import { ContentUpsertReq } from './content-upsert-req.dto';
 
 class RealmKeyValuePair {
   @ApiProperty({
     isArray: true,
-    type: () => RealmUpsertReq,
+    type: () => ContentUpsertReq,
     oneOf: [
       { type: 'string', description: 'string or text' },
       { type: 'number', description: 'a number' },

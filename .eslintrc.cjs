@@ -20,7 +20,7 @@ module.exports = {
   rules: {
     'no-console': 'error',
     'no-loops/no-loops': 'error',
-    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    'prettier/prettier': ['error', { usePrettierrc: true }],
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     '@typescript-eslint/no-floating-promises': 'warn',
@@ -28,6 +28,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
   ignorePatterns: ['node_modules', 'dist', 'coverage', '.eslintrc.js', '**/*.config.js', '**/*.config.ts'],
   env: {

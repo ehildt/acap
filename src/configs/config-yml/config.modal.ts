@@ -1,34 +1,35 @@
 import { Transport } from '@nestjs/microservices';
+import { IClientOptions } from 'mqtt';
 
-export interface AppConfig {
+export type AppConfig = {
   port: number;
   nodeEnv: string;
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
+  realm: {
+    gzipThreshold: number;
+    namespacePostfix: string;
+    resolveEnv: boolean;
+    ttl: number;
+  };
   services: {
     useBullMQ: boolean;
     useRedisPubSub: boolean;
+    useMQTT: boolean;
   };
-}
+};
 
-export interface RealmConfig {
-  gzipThreshold: number;
-  namespacePostfix: string;
-  resolveEnv: boolean;
-  ttl: number;
-}
-
-export interface MongoConfig {
+export type MongoConfig = {
   uri: string;
   dbName: string;
   user: string;
   pass: string;
   ssl: boolean;
   tlsAllowInvalidCertificates: boolean;
-}
+};
 
-export interface RedisPubSubConfig {
+export type RedisPubSubConfig = {
   transport: Transport.REDIS;
   options: {
     port: number;
@@ -36,18 +37,18 @@ export interface RedisPubSubConfig {
     password: string;
     username: string;
   };
-}
+};
 
-export interface BullMQConfig {
+export type BullMQConfig = {
   connection: {
     port: number;
     host: string;
     password: string;
     username: string;
   };
-}
+};
 
-export interface RedisConfig {
+export type RedisConfig = {
   db: number;
   host: string;
   port: number;
@@ -55,13 +56,13 @@ export interface RedisConfig {
   username: string;
   ttl: number;
   max: number;
-}
+};
 
-export interface Config {
+export type Config = {
   appConfig: AppConfig;
   mongoConfig: MongoConfig;
   redisConfig: RedisConfig;
-  realmConfig: RealmConfig;
   redisPubSubConfig: RedisPubSubConfig;
   bullMQConfig: BullMQConfig;
-}
+  mqttClientConfig: IClientOptions;
+};
