@@ -57,7 +57,7 @@ export function OpenApi_PostFile() {
 export function OpenApi_DownloadFile() {
   return applyDecorators(
     ApiOperation({
-      description: 'Downloads the realms as a json file',
+      description: 'Downloads the realms/schemas as a json/yml file',
     }),
     ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiBadRequestResponse(),

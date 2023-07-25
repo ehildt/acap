@@ -7,7 +7,7 @@ export function mapEntitiesToConfigFile(
 ) {
   return realms?.map((realm) => ({
     realm,
-    configs: entities
+    contents: entities
       .filter((entity) => entity.realm === realm)
       .map((config) => {
         try {
