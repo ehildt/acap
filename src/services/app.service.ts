@@ -39,9 +39,9 @@ export class AppService {
     const openApiObj = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('DSCA')
+        .setTitle('ACAP')
         .setDescription('A simple and convenient way to dynamically distribute and provide content to your services ;)')
-        .setVersion('0.8.10')
+        .setVersion('0.9.1')
         .build(),
     );
     SwaggerModule.setup(API_DOCS, app, openApiObj);
@@ -51,9 +51,7 @@ export class AppService {
     app
       .getHttpAdapter()
       .getInstance()
-      .addContentTypeParser('application/x-yaml', { parseAs: 'string' }, (_, body, done) => {
-        done(null, body);
-      });
+      .addContentTypeParser('application/x-yaml', { parseAs: 'string' }, (_, body, done) => done(null, body));
   }
 
   logOnServerStart(appFactory: ConfigFactoryService) {

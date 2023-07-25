@@ -173,7 +173,7 @@ export class JsonSchemaController {
     const count = await this.schemaService.countRealmContents();
 
     if (count) {
-      Object.keys(content).filter((key) => delete content[filteredIds.find((id) => id === key)]);
+      Object.keys(content).forEach((key) => (content[filteredIds.find((id) => id === key)] = undefined));
       const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     } else await this.cache.del(postfix);

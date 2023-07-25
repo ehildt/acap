@@ -1,5 +1,5 @@
 import { ConsoleLogger, DynamicModule, Inject, Injectable, Module } from '@nestjs/common';
-import mqtt from 'mqtt';
+import mqtt, { IClientSubscribeOptions } from 'mqtt';
 
 @Module({})
 export class MqttClientModule {
@@ -123,7 +123,7 @@ class MqttClient {
    * @param topic - as in the subscribed channel
    * @param options - options of unsubscribe
    */
-  public unsubscribe(topic: string, options?: Record<string, any>) {
+  public unsubscribe(topic: string, options?: IClientSubscribeOptions) {
     this.client.unsubscribe(topic, options, () => {
       this.topics.delete(topic) && this.logger.log(`${topic} unsubscribed`);
     });

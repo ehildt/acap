@@ -172,7 +172,8 @@ export class RealmController {
     const count = await this.realmService.countRealmContents();
 
     if (count) {
-      Object.keys(content).filter((key) => delete content[filteredIds.find((id) => id === key)]);
+      // we iterate through the ids and set the key to undefined if it exists
+      Object.keys(content).forEach((key) => (content[filteredIds.find((id) => id === key)] = undefined));
       const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     } else await this.cache.del(postfix);
