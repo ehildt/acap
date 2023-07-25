@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsString, IsUppercase } from 'class-validator';
 
-export class SchemaUpsertReq {
+export class ContentUpsertReq {
   @IsString()
   @IsUppercase()
   @ApiProperty()
@@ -10,7 +10,6 @@ export class SchemaUpsertReq {
   @IsDefined()
   @ApiProperty({
     isArray: true,
-    type: () => SchemaUpsertReq,
     oneOf: [
       { type: 'string', description: 'string or text' },
       { type: 'number', description: 'a number' },

@@ -32,4 +32,22 @@ export const APP_SCHEMA = {
     CONFIG_YML?.appConfig?.services.useBullMQ !== undefined
       ? Joi.boolean().default(CONFIG_YML.appConfig.services.useBullMQ)
       : Joi.boolean().required(),
+
+  REALM_NAMESPACE_POSTFIX: CONFIG_YML?.appConfig.realm?.namespacePostfix
+    ? Joi.string().default(CONFIG_YML.appConfig.realm?.namespacePostfix)
+    : Joi.string().required(),
+
+  REALM_RESOLVE_ENV:
+    CONFIG_YML?.appConfig.realm?.resolveEnv !== undefined
+      ? Joi.boolean().default(CONFIG_YML.appConfig.realm?.resolveEnv)
+      : Joi.boolean().required(),
+
+  REALM_TTL:
+    CONFIG_YML?.appConfig.realm?.ttl !== undefined
+      ? Joi.number().default(CONFIG_YML.appConfig.realm.ttl)
+      : Joi.number().required(),
+
+  REALM_GZIP_THRESHOLD: CONFIG_YML?.appConfig.realm?.gzipThreshold
+    ? Joi.number().default(CONFIG_YML.appConfig.realm.gzipThreshold)
+    : Joi.number().required(),
 };
