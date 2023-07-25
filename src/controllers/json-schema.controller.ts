@@ -1,5 +1,13 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Controller, Get, Inject, Post, UnprocessableEntityException, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  UnprocessableEntityException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -48,12 +56,24 @@ export class JsonSchemaController {
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: Array<ContentUpsertReq>) {
     const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    req.forEach(({ value }) => this.avjService.compile(value));
-    req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
-    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.app.realm.gzipThreshold);
+    // ! schema validation start
+    try {
+      const realmConfigKeys = Array.from(new Set(req.map(({ id }) => id)));
+      const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
+      req.forEach(({ value, id }) => this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])));
+    } catch (error) {
+      // if error.status is defined, then this config has no schema and we go silent
+      // otherwise the config validation must have failed and we throw an exception
+      if (error.status === undefined) throw new BadRequestException(error);
+    }
+    // ! schema validation end
+    const entity = await this.schemaService.upsertRealm(realm, req);
+    const count = await this.schemaService.countRealmContents();
+    const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    req.forEach(({ id, value }) => content[id] && (content[id] = value));
+    const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
-    return await this.schemaService.upsertRealm(realm, req);
+    return entity;
   }
 
   @Post()
@@ -61,15 +81,29 @@ export class JsonSchemaController {
   @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: Array<RealmsUpsertReq>) {
     const tasks = req.map(async ({ realm, contents }) => {
+      // ! schema validation start
+      try {
+        const realmConfigKeys = Array.from(new Set(contents.map(({ id }) => id)));
+        const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
+        contents.forEach(({ value, id }) =>
+          this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
+        );
+      } catch (error) {
+        // if error.status is defined, then this config has no schema and we go silent
+        // otherwise the config validation must have failed and we throw an exception
+        if (error.status === undefined) throw new BadRequestException(error);
+      }
+      // ! schema validation end
+      const entity = await this.schemaService.upsertRealm(realm, contents);
+      const count = await this.schemaService.countRealmContents();
       const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
-      const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      contents.forEach(({ value }) => this.avjService.compile(value));
-      contents.forEach(({ id, value }) => cache[id] && (cache[id] = value));
-      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.app.realm.gzipThreshold);
+      const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+      contents.forEach(({ id, value }) => content[id] && (content[id] = value));
+      const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
+      return entity;
     });
-    await Promise.all(tasks);
-    return await this.schemaService.upsertRealms(req);
+    return await Promise.all(tasks);
   }
 
   @GetSchema()

@@ -104,9 +104,9 @@ export class RealmController {
     // ! schema validation end
     const entity = await this.realmService.upsertRealm(realm, req);
     const count = await this.realmService.countRealmContents();
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    req.forEach(({ id, value }) => cache[id] && (cache[id] = value));
-    const cacheObj = gzipSyncCacheObject(cache, this.configFactory.app.realm.gzipThreshold, count);
+    const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    req.forEach(({ id, value }) => content[id] && (content[id] = value));
+    const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return entity;
   }

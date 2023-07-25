@@ -31,7 +31,7 @@ export const MQTT_CLIENT = 'MQTT_CLIENT';
 export type { MqttClient };
 
 const MQTT_CLIENT_OPTIONS = 'MQTT_CLIENT_OPTIONS';
-const DEFAULT = 'DEFAULT';
+const ANONYMOUS_HANDLER = 'ANONYMOUS_HANDLER';
 
 type Handler = (payload: string, topic?: string) => void;
 
@@ -62,20 +62,32 @@ class MqttClient {
       });
   }
 
+  /**
+   * publishes the payload to the `topic`
+   * @param topic - as in the subscribed channel
+   * @param payload - as in the data to be published
+   * @param callback `(error) => void` is always called when provided
+   */
   public publish(topic: string, payload: string | Buffer | Record<any, any>, callback?: mqtt.PacketCallback) {
     if (payload instanceof Buffer || typeof payload === 'string') this.client.publish(topic, payload, callback);
     else this.client.publish(topic, JSON.stringify(payload), callback);
   }
 
-  // TODO remove the handler for sake of chained configuration
+  /**
+   * - subscribes to a topic
+   * - skips duplicate subscriptions
+   * - to register a handler call `subscribe('topic').use((payload) => {})`
+   * @param topic - as in the channel to subscribe to
+   * @returns
+   */
   public subscribe(topic: string) {
     if (!this.topics.has(topic)) {
       this.topic = topic;
       this.topics.set(topic, new Map());
       this.client.subscribe(topic, (error) =>
-        error ? this.logger.error(error) : this.logger.log(`${topic} subscribed`, MQTT_CLIENT),
+        error ? this.logger.error(error) : this.logger.log(`SUBSCRIBED: ${topic}`, MQTT_CLIENT),
       );
-    } else this.logger.warn(`${topic} skipping, already subscribed`, MQTT_CLIENT);
+    } else this.logger.warn(`SUBSCRIPTION_SKIPPED: ${topic} - already subscribed`, MQTT_CLIENT);
     return this;
   }
 
@@ -83,24 +95,24 @@ class MqttClient {
    * - inserts if not exists, otherwise updates a handler
    * - if chained, reuses the `topic` which is used on subscribe
    * @param handler - the handler to be upserted
-   * @param descriptor - an alternative identifier for the handler
+   * @param descriptor - an optional identifier for handlers: `() => {}`
    * @param topic - as in the subscribed channel
    */
   public use(handler: Handler, descriptor?: string, topic?: string) {
-    const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
+    const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : ANONYMOUS_HANDLER;
     this.topics.get(topic ?? this.topic)?.set(handlerName, handler);
     return this;
   }
 
   /**
    * - removes a `handler` from a subscribed `topic`
-   * - if chained, reuses the `topic` which is used on subscribe
+   * - if chained, reuses the previous subscribed `topic`
    * @param handler - the handler to be removed
    * @param descriptor - an alternative identifier for the handler
    * @param topic - as in the subscribed channel
    */
   public eject(handler?: Handler, descriptor?: string, topic?: string) {
-    const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : DEFAULT;
+    const handlerName = descriptor?.length ? descriptor : handler.name.length ? handler.name : ANONYMOUS_HANDLER;
     this.topics.get(topic ?? this.topic)?.delete(handlerName);
     return this;
   }
