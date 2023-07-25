@@ -7,6 +7,9 @@ import { AppModule } from './modules/app.module';
 import { AppService } from './services/app.service';
 import { ConfigFactoryService } from './services/config-factory.service';
 
+const LOG_LEVEL: Array<LogLevel> =
+  process.env.NODE_ENV === 'production' ? ['warn', 'error'] : ['warn', 'error', 'debug', 'log', 'verbose'];
+
 void (async () => {
   const adapter = new FastifyAdapter();
   adapter.enableCors({
@@ -16,7 +19,7 @@ void (async () => {
     optionsSuccessStatus: 204,
   });
 
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, { logger: getLogLevel() });
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, { logger: LOG_LEVEL });
   const appService = app.get(AppService);
   const factory = app.get(ConfigFactoryService);
 
@@ -29,7 +32,3 @@ void (async () => {
   await app.listen(factory.app.port, factory.app.address);
   appService.logOnServerStart(factory);
 })();
-
-function getLogLevel(): LogLevel[] {
-  return process.env.NODE_ENV === 'production' ? ['warn', 'error'] : ['warn', 'error', 'debug', 'log', 'verbose'];
-}

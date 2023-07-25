@@ -39,9 +39,9 @@ export class AppService {
     const openApiObj = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('Config-Manager')
-        .setDescription('A simple and convenient way to config your apps ;)')
-        .setVersion('0.8.7')
+        .setTitle('ACAP')
+        .setDescription('A simple and convenient way to dynamically distribute and provide content to your services ;)')
+        .setVersion('0.9.1')
         .build(),
     );
     SwaggerModule.setup(API_DOCS, app, openApiObj);
@@ -51,9 +51,7 @@ export class AppService {
     app
       .getHttpAdapter()
       .getInstance()
-      .addContentTypeParser('application/x-yaml', { parseAs: 'string' }, (_, body, done) => {
-        done(null, body);
-      });
+      .addContentTypeParser('application/x-yaml', { parseAs: 'string' }, (_, body, done) => done(null, body));
   }
 
   logOnServerStart(appFactory: ConfigFactoryService) {
@@ -61,11 +59,11 @@ export class AppService {
       this.logger.log(
         {
           APP: appFactory.app,
-          REALM: appFactory.config,
           MONGO: appFactory.mongo,
           REDIS: appFactory.redis,
-          REDIS_PUBSUB: appFactory.app.services.useRedisPubSub ? appFactory.redisPubSub : 'N/A',
-          BULLMQ: appFactory.app.services.useBullMQ ? appFactory.bullMQ : 'N/A',
+          REDIS_PUBSUB: appFactory.app.services.useRedisPubSub ? appFactory.redisPubSub : undefined,
+          BULLMQ: appFactory.app.services.useBullMQ ? appFactory.bullMQ : undefined,
+          MQTT: appFactory.app.services.useMQTT ? appFactory.mqtt : undefined,
         },
         'ENVIRONMENT',
       );

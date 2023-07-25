@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 
+import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmReq } from '@/dtos/realm-req.dto';
-import { RealmUpsertReq } from '@/dtos/realm-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { prepareBulkWriteDeleteConfigs } from '@/helpers/prepare-bulk-write-delete-configs.helper';
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
@@ -22,7 +22,11 @@ export class RealmRepository {
   ) {}
 
   async findAll() {
-    return await this.configModel.find().sort({ realm: 'desc', updatedAt: 'desc' }).lean();
+    return await this.configModel.find().sort({ realm: 'asc', updatedAt: 'asc' }).lean();
+  }
+
+  async count() {
+    return await this.configModel.count();
   }
 
   async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
@@ -30,7 +34,7 @@ export class RealmRepository {
       .find()
       .where({ realm: { $in: realms } })
       .select(propertiesToSelect)
-      .sort({ realm: 'desc', updatedAt: 'desc' })
+      .sort({ realm: 'asc', updatedAt: 'asc' })
       .lean();
   }
 
@@ -38,9 +42,9 @@ export class RealmRepository {
     const realms = (await this.realmModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
     return await this.configModel
       .find()
+      .sort({ realm: 'asc', updatedAt: 'asc' })
       .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
-      .sort({ realm: 'desc', updatedAt: 'desc' })
       .lean();
   }
 
@@ -51,11 +55,11 @@ export class RealmRepository {
   async upsertMany(reqs: RealmsUpsertReq[]) {
     const realms = prepareBulkWriteRealms(reqs.map(({ realm }) => realm));
     await this.realmModel.bulkWrite(realms);
-    const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.configs, req.realm)).flat();
+    const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.contents, req.realm)).flat();
     return await this.configModel.bulkWrite(preparedUpserts);
   }
 
-  async upsert(realm: string, req: RealmUpsertReq[]) {
+  async upsert(realm: string, req: ContentUpsertReq[]) {
     const realms = prepareBulkWriteRealms([realm]);
     await this.realmModel.bulkWrite(realms);
     const rowsToUpsert = prepareBulkWriteConfigs(req, realm);

@@ -15,15 +15,15 @@ export class PubSubService {
   ) {}
 
   async passThrough(reqs: Array<RealmsUpsertReq>) {
+    if (!this.client) return;
     reqs.map((req) => {
-      this.factory.app.services.useRedisPubSub &&
-        this.client.emit(
-          req.realm,
-          req.configs.map(({ id, value }) => ({
-            id,
-            value: challengeConfigValue(value as any, this.factory.config.resolveEnv),
-          })),
-        );
+      this.client?.emit(
+        req.realm,
+        req.contents.map(({ id, value }) => ({
+          id,
+          value: challengeConfigValue(value as any, this.factory.app.realm.resolveEnv),
+        })),
+      );
     });
   }
 }
