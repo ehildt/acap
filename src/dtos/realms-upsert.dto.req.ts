@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ArrayNotEmpty, IsString, IsUppercase } from 'class-validator';
 
-import { RealmUpsertReq } from './realm-upsert-req.dto';
+import { ContentUpsertReq } from './content-upsert-req.dto';
 
 export class RealmsUpsertReq {
   @IsString()
@@ -10,6 +10,6 @@ export class RealmsUpsertReq {
   realm: string;
 
   @ArrayNotEmpty()
-  @ApiProperty({ isArray: true, type: () => RealmUpsertReq })
-  configs: Array<RealmUpsertReq>;
+  @ApiProperty({ isArray: true, type: () => ContentUpsertReq })
+  contents: Array<ContentUpsertReq>;
 }

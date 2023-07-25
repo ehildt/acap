@@ -6,10 +6,10 @@ import {
   AppConfig,
   BullMQConfig,
   MongoConfig,
-  RealmConfig,
   RedisConfig,
   RedisPubSubConfig,
 } from '@/configs/config-yml/config.modal';
+import { MqttClientProps } from '@/modules/mqtt-client.module';
 
 @Injectable()
 export class ConfigFactoryService {
@@ -22,19 +22,17 @@ export class ConfigFactoryService {
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
       nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
+      realm: {
+        ttl: this.configService.get<number>('AppConfig.TTL'),
+        namespacePostfix: this.configService.get<string>('AppConfig.NAMESPACE_POSTFIX'),
+        resolveEnv: this.configService.get<boolean>('AppConfig.RESOLVE_ENV'),
+        gzipThreshold: this.configService.get<number>('AppConfig.GZIP_THRESHOLD'),
+      },
       services: {
         useBullMQ: this.configService.get<boolean>('AppConfig.USE_BULLMQ'),
         useRedisPubSub: this.configService.get<boolean>('AppConfig.USE_REDIS_PUBSUB'),
+        useMQTT: this.configService.get<boolean>('AppConfig.USE_MQTT'),
       },
-    });
-  }
-
-  get config() {
-    return Object.freeze<RealmConfig>({
-      ttl: this.configService.get<number>('Realm.TTL'),
-      namespacePostfix: this.configService.get<string>('Realm.NAMESPACE_POSTFIX'),
-      resolveEnv: this.configService.get<boolean>('Realm.RESOLVE_ENV'),
-      gzipThreshold: this.configService.get<number>('Realm.GZIP_THRESHOLD'),
     });
   }
 
@@ -88,6 +86,23 @@ export class ConfigFactoryService {
         host,
         password,
         username,
+      },
+    });
+  }
+
+  get mqtt() {
+    return Object.freeze<MqttClientProps>({
+      brokerUrl: this.configService.get<string>('MQTTClientConfig.BROKER_URL'),
+      options: {
+        keepalive: this.configService.get<number>('MQTTClientConfig.KEEPALIVE'),
+        connectTimeout: this.configService.get<number>('MQTTClientConfig.CONNECTION_TIMEOUT'),
+        reconnectPeriod: this.configService.get<number>('MQTTClientConfig.RECONNECT_PERIOD'),
+        resubscribe: this.configService.get<boolean>('MQTTClientConfig.RESUBSCRIBE'),
+        protocol: this.configService.get<any>('MQTTClientConfig.PROTOCOL'),
+        hostname: this.configService.get<string>('MQTTClientConfig.HOSTNAME'),
+        port: this.configService.get<number>('MQTTClientConfig.PORT'),
+        username: this.configService.get<string>('MQTTClientConfig.USERNAME'),
+        password: this.configService.get<string>('MQTTClientConfig.PASSWORD'),
       },
     });
   }

@@ -8,9 +8,9 @@
     "adpyke.codesnap",
     "oderwat.indent-rainbow",
     "dotenv.dotenv-vscode",
-    "mikestead.dotenv",
     "hangxingliu.vscode-nginx-conf-hint",
     "tamasfe.even-better-toml",
-    "aaron-bond.better-comments"
+    "aaron-bond.better-comments",
+    "mikestead.dotenv"
   ]
 }

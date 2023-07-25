@@ -1,5 +1,6 @@
-import { Controller, StreamableFile } from '@nestjs/common';
+import { Controller, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { FastifyReply } from 'fastify';
 import * as yaml from 'js-yaml';
 
 import {
@@ -30,10 +31,12 @@ export class FilesController {
 
   @DownloadFile()
   @OpenApi_DownloadFile()
-  async downloadRealmFile(@QueryFormat() format: string, @QueryRealms() realms?: string[]) {
+  async downloadRealmFile(@Res() reply: FastifyReply, @QueryFormat() format: string, @QueryRealms() realms?: string[]) {
     const file = await this.realmsService.downloadConfigFile(realms);
-    if (format === 'json') return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
-    return new StreamableFile(Buffer.from(yaml.dump(file)));
+    void reply.header('Content-Type', 'application/octet-stream');
+    void reply.header('Content-Disposition', `attachment; filename="realms.${format}"`);
+    if (format === 'json') void reply.send(Buffer.from(JSON.stringify(file, null, 4)));
+    else void reply.send(Buffer.from(yaml.dump(file)));
   }
 
   @PostSchemaFile()
@@ -44,8 +47,10 @@ export class FilesController {
 
   @DownloadSchemaFile()
   @OpenApi_DownloadFile()
-  async downloadSchemaFile(@QueryRealms() realms?: string[]) {
+  async downloadSchemaFile(@Res() reply: FastifyReply, @QueryRealms() realms?: string[]) {
     const file = await this.schemaService.downloadConfigFile(realms);
-    return new StreamableFile(Buffer.from(JSON.stringify(file, null, 4)));
+    void reply.header('Content-Type', 'application/octet-stream');
+    void reply.header('Content-Disposition', 'attachment; filename="schemas.json"');
+    void reply.send(Buffer.from(JSON.stringify(file, null, 4)));
   }
 }

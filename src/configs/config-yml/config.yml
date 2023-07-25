@@ -5,20 +5,21 @@ appConfig:
   startSwagger: true
   nodeEnv: 'local'
   services: 
-    useBullMQ: true
-    useRedisPubSub: true
+    useRedisPubSub: false
+    useBullMQ: false
+    useMQTT: true
 
 realmConfig:
   ttl: 300
   resolveEnv: false
-  namespacePostfix: DCCS
+  namespacePostfix: ACAP
   gzipThreshold: 20
 
 mongoConfig:
   uri: mongodb://mongo:27017
   ssl: false
   tlsAllowInvalidCertificates: true
-  dbName: configs
+  dbName: DSCD
   user: mongo
   pass: mongo
 
@@ -44,3 +45,16 @@ bullMQConfig:
     host: redis
     password: redis
     username: default
+
+mqttClientConfig:
+  brokerUrl: null
+  options:
+    keepalive: 5000
+    connectTimeout: 5000
+    reconnectPeriod: 1000
+    resubscribe: true
+    protocol: 'mqtt'
+    hostname: 'test.mosquitto.org'
+    port: 1883
+    username: null
+    password: null
