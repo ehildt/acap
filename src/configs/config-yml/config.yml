@@ -47,12 +47,14 @@ bullMQConfig:
     username: default
 
 mqttClientConfig:
-  keepalive: 5000
-  connectTimeout: 5000
-  reconnectPeriod: 1000
-  resubscribe: true
-  protocol: 'mqtt'
-  hostname: 'test.mosquitto.org'
-  port: 1883
-  username: null
-  password: null
+  brokerUrl: null
+  options:
+    keepalive: 5000
+    connectTimeout: 5000
+    reconnectPeriod: 1000
+    resubscribe: true
+    protocol: 'mqtt'
+    hostname: 'test.mosquitto.org'
+    port: 1883
+    username: null
+    password: null

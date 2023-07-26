@@ -1,11 +1,11 @@
 # entrypoint for local development
-FROM node:20-slim AS local
+FROM node:20 AS local
 WORKDIR /app
 EXPOSE 3001
 ENTRYPOINT [ "npm", "run", "start:dev"]
 
 # entrypoint for the app builder
-FROM node:20-slim AS builder
+FROM node:20 AS builder
 WORKDIR /app
 
 ENV PORT 3001
@@ -32,7 +32,7 @@ WORKDIR /app
 RUN npm run build:prod
 
 # entrypoint for prod-stage
-FROM node:20-slim AS production
+FROM node:20 AS production
 WORKDIR /app
 
 ENV NODE_ENV "production"

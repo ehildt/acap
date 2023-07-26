@@ -1,5 +1,5 @@
 import { ConsoleLogger, DynamicModule, Inject, Injectable, Module } from '@nestjs/common';
-import mqtt, { IClientSubscribeOptions } from 'mqtt';
+import mqtt, { connect, IClientSubscribeOptions } from 'mqtt';
 
 @Module({})
 export class MqttClientModule {
@@ -40,7 +40,12 @@ type MqttClientModuleOptions = {
   inject?: Array<any>;
   providers?: Array<any>;
   isGlobal?: boolean;
-  useFactory: (...deps: any) => mqtt.IClientOptions;
+  useFactory: (...deps: any) => MqttClientProps;
+};
+
+export type MqttClientProps = {
+  brokerUrl?: string;
+  options?: mqtt.IClientOptions;
 };
 
 @Injectable()
@@ -50,10 +55,9 @@ class MqttClient {
   private topic: string;
   constructor(
     private readonly logger: ConsoleLogger,
-    @Inject(MQTT_CLIENT_OPTIONS) private readonly options: mqtt.IClientOptions,
+    @Inject(MQTT_CLIENT_OPTIONS) private readonly props: MqttClientProps,
   ) {
-    this.client = mqtt
-      .connect(this.options)
+    this.client = (props.brokerUrl ? connect(this.props.brokerUrl, this.props.options) : connect(this.props.options))
       .on('reconnect', () => this.logger.log(`reconnecting..`, MQTT_CLIENT))
       .on('disconnect', () => this.logger.log(`disconnected..`, MQTT_CLIENT))
       .on('error', (error) => this.logger.error(JSON.stringify(error, null, 4), MQTT_CLIENT))
