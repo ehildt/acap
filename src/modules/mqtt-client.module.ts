@@ -3,7 +3,7 @@ import mqtt, { connect, IClientSubscribeOptions } from 'mqtt';
 
 @Module({})
 export class MqttClientModule {
-  static registerAsync(options: MqttClientModuleOptions): DynamicModule {
+  static registerAsync(options: MqttClientModuleProps): DynamicModule {
     return {
       module: MqttClientModule,
       imports: options.imports ?? [],
@@ -35,15 +35,15 @@ const ANONYMOUS_HANDLER = 'ANONYMOUS_HANDLER';
 
 type Handler = (payload: string, topic?: string) => void;
 
-type MqttClientModuleOptions = {
+type MqttClientModuleProps = {
   imports?: Array<any>;
   inject?: Array<any>;
   providers?: Array<any>;
   isGlobal?: boolean;
-  useFactory: (...deps: any) => MqttClientProps;
+  useFactory: (...deps: any) => MqttClientOptions;
 };
 
-export type MqttClientProps = {
+export type MqttClientOptions = {
   brokerUrl?: string;
   options?: mqtt.IClientOptions;
 };
@@ -55,9 +55,11 @@ class MqttClient {
   private topic: string;
   constructor(
     private readonly logger: ConsoleLogger,
-    @Inject(MQTT_CLIENT_OPTIONS) private readonly props: MqttClientProps,
+    @Inject(MQTT_CLIENT_OPTIONS) private readonly props: MqttClientOptions,
   ) {
-    this.client = (props.brokerUrl ? connect(this.props.brokerUrl, this.props.options) : connect(this.props.options))
+    this.client = (
+      this.props.brokerUrl ? connect(this.props.brokerUrl, this.props.options) : connect(this.props.options)
+    )
       .on('reconnect', () => this.logger.log(`reconnecting..`, MQTT_CLIENT))
       .on('disconnect', () => this.logger.log(`disconnected..`, MQTT_CLIENT))
       .on('error', (error) => this.logger.error(JSON.stringify(error, null, 4), MQTT_CLIENT))
