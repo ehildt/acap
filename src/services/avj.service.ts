@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Ajv, { ValidateFunction } from 'ajv';
 
 @Injectable()
@@ -12,10 +12,6 @@ export class AvjService {
   }
 
   compile(schema: any) {
-    try {
-      return this.avj.compile(schema);
-    } catch (error) {
-      throw new BadRequestException('schema must be a boolean or object');
-    }
+    return this.avj.compile(schema);
   }
 }

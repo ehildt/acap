@@ -4,22 +4,21 @@ appConfig:
   printEnv: true
   startSwagger: true
   nodeEnv: 'local'
+  realm: 
+    ttl: 300
+    resolveEnv: false
+    namespacePostfix: ACAP
+    gzipThreshold: 20
   services: 
     useRedisPubSub: false
     useBullMQ: false
-    useMQTT: true
-
-realmConfig:
-  ttl: 300
-  resolveEnv: false
-  namespacePostfix: ACAP
-  gzipThreshold: 20
+    useMQTT: false
 
 mongoConfig:
   uri: mongodb://mongo:27017
   ssl: false
   tlsAllowInvalidCertificates: true
-  dbName: DSCD
+  dbName: ACAP
   user: mongo
   pass: mongo
 

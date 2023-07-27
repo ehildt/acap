@@ -9,7 +9,7 @@ import {
   RedisConfig,
   RedisPubSubConfig,
 } from '@/configs/config-yml/config.modal';
-import { MqttClientProps } from '@/modules/mqtt-client.module';
+import { MqttClientOptions } from '@/modules/mqtt-client.module';
 
 @Injectable()
 export class ConfigFactoryService {
@@ -91,7 +91,7 @@ export class ConfigFactoryService {
   }
 
   get mqtt() {
-    return Object.freeze<MqttClientProps>({
+    return Object.freeze<MqttClientOptions>({
       brokerUrl: this.configService.get<string>('MQTTClientConfig.BROKER_URL'),
       options: {
         keepalive: this.configService.get<number>('MQTTClientConfig.KEEPALIVE'),

@@ -72,7 +72,7 @@ class MqttClient {
    * publishes the payload to the `topic`
    * @param topic - as in the subscribed channel
    * @param payload - as in the data to be published
-   * @param callback `(error) => void` is always called when provided
+   * @param callback `(error) => void` is always called if provided
    */
   public publish(topic: string, payload: string | Buffer | Record<any, any>, callback?: mqtt.PacketCallback) {
     if (payload instanceof Buffer || typeof payload === 'string') this.client.publish(topic, payload, callback);
@@ -99,7 +99,7 @@ class MqttClient {
 
   /**
    * - inserts if not exists, otherwise updates a handler
-   * - if chained, reuses the `topic` which is used on subscribe
+   * - if chained, reuses the previous subscribed `topic`
    * @param handler - the handler to be upserted
    * @param descriptor - an optional identifier for handlers: `() => {}`
    * @param topic - as in the subscribed channel

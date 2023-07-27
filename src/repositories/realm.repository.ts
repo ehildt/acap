@@ -34,15 +34,20 @@ export class RealmRepository {
       .find()
       .where({ realm: { $in: realms } })
       .select(propertiesToSelect)
-      .sort({ realm: 'asc', updatedAt: 'asc' })
+      .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }
 
   async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
-    const realms = (await this.realmModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
+    const realms = (
+      await this.realmModel
+        .find({}, null, { limit: take, skip })
+        .sort({ realm: 'descending', updatedAt: 'descending' })
+        .lean()
+    ).map(({ realm }) => realm);
     return await this.configModel
       .find()
-      .sort({ realm: 'asc', updatedAt: 'asc' })
+      .sort({ realm: 'descending', updatedAt: 'descending' })
       .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
       .lean();

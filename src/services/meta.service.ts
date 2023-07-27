@@ -35,7 +35,7 @@ export class MetaService {
 
 const QUERY_PROPERTIES = ['realm', 'id', 'createdAt', 'updatedAt', '-_id'];
 
-function mapRealmEntitiesMeta(entities: any[], collection: Record<any, any>, schemaCollection?: Record<any, any>) {
+function mapRealmEntitiesMeta(entities: Array<any>, collection: Record<any, any>, schemaCollection?: Record<any, any>) {
   entities.forEach(({ realm, ...rest }) => {
     const realmConfigs = collection[realm];
     const schemaConfigs = schemaCollection?.[realm];
@@ -46,7 +46,11 @@ function mapRealmEntitiesMeta(entities: any[], collection: Record<any, any>, sch
   });
 }
 
-function mapSchemaEntitiesMeta(entities: any[], collection: Record<any, any>, schemaCollection?: Record<any, any>) {
+function mapSchemaEntitiesMeta(
+  entities: Array<any>,
+  collection: Record<any, any>,
+  schemaCollection?: Record<any, any>,
+) {
   entities.forEach(({ realm, ...rest }) => {
     const realmConfigs = collection[realm];
     const schemaConfigs = schemaCollection?.[realm];
