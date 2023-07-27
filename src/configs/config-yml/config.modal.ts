@@ -1,6 +1,6 @@
 import { Transport } from '@nestjs/microservices';
 
-import { MqttClientProps } from '@/modules/mqtt-client.module';
+import { MqttClientOptions } from '@/modules/mqtt-client.module';
 
 export type AppConfig = {
   port: number;
@@ -65,5 +65,5 @@ export type Config = {
   redisConfig: RedisConfig;
   redisPubSubConfig: RedisPubSubConfig;
   bullMQConfig: BullMQConfig;
-  mqttClientConfig: MqttClientProps;
+  mqttClientConfig: MqttClientOptions;
 };

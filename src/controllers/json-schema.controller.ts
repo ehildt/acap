@@ -71,7 +71,11 @@ export class JsonSchemaController {
     const count = await this.schemaService.countRealmContents();
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     req.forEach(({ id, value }) => content[id] && (content[id] = value));
-    const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
+    const cacheObj = gzipSyncCacheObject(
+      { ...content, ...reduceToConfigs(this.configFactory.app.realm.resolveEnv, req) },
+      this.configFactory.app.realm.gzipThreshold,
+      count,
+    );
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return entity;
   }
@@ -91,7 +95,7 @@ export class JsonSchemaController {
       } catch (error) {
         // if error.status is defined, then this config has no schema and we go silent
         // otherwise the config validation must have failed and we throw an exception
-        if (error.status === undefined) throw new BadRequestException(error);
+        if (error.status === undefined || error.status !== 200) throw new BadRequestException(error);
       }
       // ! schema validation end
       const entity = await this.schemaService.upsertRealm(realm, contents);
@@ -99,7 +103,11 @@ export class JsonSchemaController {
       const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
       const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
       contents.forEach(({ id, value }) => content[id] && (content[id] = value));
-      const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
+      const cacheObj = gzipSyncCacheObject(
+        { ...content, ...reduceToConfigs(this.configFactory.app.realm.resolveEnv, contents) },
+        this.configFactory.app.realm.gzipThreshold,
+        count,
+      );
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
       return entity;
     });

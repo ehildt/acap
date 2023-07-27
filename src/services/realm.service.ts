@@ -4,13 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bullmq';
 import { catchError } from 'rxjs';
 
-import {
-  BULLMQ_DELETE_REALM,
-  BULLMQ_DELETE_REALM_CONFIGS,
-  BULLMQ_REALMS_QUEUE,
-  BULLMQ_UPSERT_REALM,
-  REDIS_PUBSUB,
-} from '@/constants/app.constants';
+import { BULLMQ_REALMS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
@@ -29,7 +23,9 @@ export class RealmService {
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSubClient: ClientProxy,
     @Optional() @InjectQueue(BULLMQ_REALMS_QUEUE) private readonly bullmq: Queue,
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
-  ) {}
+  ) {
+    this.mqttClient.subscribe('REALM').use((payload) => console.log('MQTT_CLIENT', payload));
+  }
 
   async countRealmContents() {
     return await this.configRepo.count();
@@ -37,9 +33,9 @@ export class RealmService {
 
   async upsertRealm(realm: string, req: ContentUpsertReq[]) {
     const result = await this.configRepo.upsert(realm, req);
-    if (!result?.ok) return result;
+    if (!result?.ok) return result; // TODO maybe throw an error?
     this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
-    this.bullmq?.add(BULLMQ_UPSERT_REALM, { realm, configs: req }).catch((error) => error);
+    this.bullmq?.add(realm, req).catch((error) => error);
     this.mqttClient?.publish(realm, req);
     return result;
   }
@@ -52,7 +48,7 @@ export class RealmService {
         this.redisPubSubClient?.emit(realm, contents).pipe(catchError((error) => error));
         this.mqttClient?.publish(realm, contents);
       });
-    this.bullmq?.addBulk(reqs.map((data) => ({ name: BULLMQ_UPSERT_REALM, data }))).catch((error) => error);
+    this.bullmq?.addBulk(reqs.map(({ realm, contents }) => ({ name: realm, data: contents }))).catch((error) => error);
     return result;
   }
 
@@ -93,18 +89,18 @@ export class RealmService {
   async deleteRealm(realm: string) {
     const entity = await this.configRepo.delete(realm);
     if (!entity.deletedCount) return entity;
-    this.redisPubSubClient?.emit(realm, { deletedRealm: realm }).pipe(catchError((error) => error));
-    this.bullmq?.add(BULLMQ_DELETE_REALM, { deletedRealm: realm }).catch((error) => error);
-    this.mqttClient?.publish(realm, { deletedRealm: realm });
+    this.redisPubSubClient?.emit(realm, null).pipe(catchError((error) => error));
+    this.bullmq?.add(realm, null).catch((error) => error);
+    this.mqttClient?.publish(realm, null);
     return entity;
   }
 
   async deleteRealmConfigIds(realm: string, ids: string[]) {
     const entity = await this.configRepo.delete(realm, ids);
     if (!entity.deletedCount) return entity;
-    this.redisPubSubClient?.emit(realm, { deletedConfigIds: ids }).pipe(catchError((error) => error));
-    this.bullmq?.add(BULLMQ_DELETE_REALM_CONFIGS, { deletedConfigIds: ids }).catch((error) => error);
-    this.mqttClient?.publish(realm, { deletedConfigIds: ids });
+    this.redisPubSubClient?.emit(realm, ids).pipe(catchError((error) => error));
+    this.bullmq?.add(realm, ids).catch((error) => error);
+    this.mqttClient?.publish(realm, ids);
     return entity;
   }
 

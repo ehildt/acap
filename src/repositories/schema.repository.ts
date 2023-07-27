@@ -26,12 +26,17 @@ export class SchemaRepository {
   }
 
   async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
-    const realms = (await this.schemaModel.find({}, null, { limit: take, skip }).lean()).map(({ realm }) => realm);
+    const realms = (
+      await this.schemaModel
+        .find({}, null, { limit: take, skip })
+        .sort({ realm: 'descending', updatedAt: 'descending' })
+        .lean()
+    ).map(({ realm }) => realm);
     return await this.configsModel
       .find()
       .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
-      .sort({ realm: 'asc', updatedAt: 'asc' })
+      .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }
 

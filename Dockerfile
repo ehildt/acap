@@ -8,7 +8,7 @@ ENTRYPOINT [ "npm", "run", "start:dev"]
 FROM node:20 AS builder
 WORKDIR /app
 
-ENV PORT 3001
+ENV PORT=3001
 EXPOSE ${PORT}
 
 COPY package*.json ./
@@ -34,13 +34,12 @@ RUN npm run build:prod
 # entrypoint for prod-stage
 FROM node:20 AS production
 WORKDIR /app
-
-ENV NODE_ENV "production"
-ENV PRINT_ENV "false"
-ENV START_SWAGGER "false"
-ENV PORT 3001
+ENV NODE_OPTIONS="--max-old-space-size=128"
+ENV NODE_ENV="production"
+ENV PRINT_ENV="false"
+ENV START_SWAGGER="false"
+ENV PORT=3001
 EXPOSE ${PORT}
-
 
 COPY --from=temporary ./app/dist ./dist
 COPY --from=temporary ./app/package*.json ./
