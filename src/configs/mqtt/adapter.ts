@@ -19,6 +19,10 @@ export class MQTTClientAdapter {
     return process.env.MQTT_RESUBSCRIBE === 'true';
   }
 
+  get BROKER_URL(): string {
+    return process.env.MQTT_BROKER_URL;
+  }
+
   get PROTOCOL(): string {
     return process.env.MQTT_PROTOCOL;
   }

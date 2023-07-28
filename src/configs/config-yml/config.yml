@@ -4,22 +4,21 @@ appConfig:
   printEnv: true
   startSwagger: true
   nodeEnv: 'local'
+  realm: 
+    ttl: 300
+    resolveEnv: false
+    namespacePostfix: ACAP
+    gzipThreshold: 20
   services: 
     useRedisPubSub: false
     useBullMQ: false
-    useMQTT: true
-
-realmConfig:
-  ttl: 300
-  resolveEnv: false
-  namespacePostfix: ACAP
-  gzipThreshold: 20
+    useMQTT: false
 
 mongoConfig:
   uri: mongodb://mongo:27017
   ssl: false
   tlsAllowInvalidCertificates: true
-  dbName: DSCD
+  dbName: ACAP
   user: mongo
   pass: mongo
 
@@ -47,12 +46,14 @@ bullMQConfig:
     username: default
 
 mqttClientConfig:
-  keepalive: 5000
-  connectTimeout: 5000
-  reconnectPeriod: 1000
-  resubscribe: true
-  protocol: 'mqtt'
-  hostname: 'test.mosquitto.org'
-  port: 1883
-  username: null
-  password: null
+  brokerUrl: null
+  options:
+    keepalive: 5000
+    connectTimeout: 5000
+    reconnectPeriod: 1000
+    resubscribe: true
+    protocol: 'mqtt'
+    hostname: 'test.mosquitto.org'
+    port: 1883
+    username: null
+    password: null

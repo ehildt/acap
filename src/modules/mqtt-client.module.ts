@@ -1,9 +1,9 @@
 import { ConsoleLogger, DynamicModule, Inject, Injectable, Module } from '@nestjs/common';
-import mqtt, { IClientSubscribeOptions } from 'mqtt';
+import mqtt, { connect, IClientSubscribeOptions } from 'mqtt';
 
 @Module({})
 export class MqttClientModule {
-  static registerAsync(options: MqttClientModuleOptions): DynamicModule {
+  static registerAsync(options: MqttClientModuleProps): DynamicModule {
     return {
       module: MqttClientModule,
       imports: options.imports ?? [],
@@ -35,12 +35,17 @@ const ANONYMOUS_HANDLER = 'ANONYMOUS_HANDLER';
 
 type Handler = (payload: string, topic?: string) => void;
 
-type MqttClientModuleOptions = {
+type MqttClientModuleProps = {
   imports?: Array<any>;
   inject?: Array<any>;
   providers?: Array<any>;
   isGlobal?: boolean;
-  useFactory: (...deps: any) => mqtt.IClientOptions;
+  useFactory: (...deps: any) => MqttClientOptions;
+};
+
+export type MqttClientOptions = {
+  brokerUrl?: string;
+  options?: mqtt.IClientOptions;
 };
 
 @Injectable()
@@ -50,10 +55,11 @@ class MqttClient {
   private topic: string;
   constructor(
     private readonly logger: ConsoleLogger,
-    @Inject(MQTT_CLIENT_OPTIONS) private readonly options: mqtt.IClientOptions,
+    @Inject(MQTT_CLIENT_OPTIONS) private readonly props: MqttClientOptions,
   ) {
-    this.client = mqtt
-      .connect(this.options)
+    this.client = (
+      this.props.brokerUrl ? connect(this.props.brokerUrl, this.props.options) : connect(this.props.options)
+    )
       .on('reconnect', () => this.logger.log(`reconnecting..`, MQTT_CLIENT))
       .on('disconnect', () => this.logger.log(`disconnected..`, MQTT_CLIENT))
       .on('error', (error) => this.logger.error(JSON.stringify(error, null, 4), MQTT_CLIENT))
@@ -66,7 +72,7 @@ class MqttClient {
    * publishes the payload to the `topic`
    * @param topic - as in the subscribed channel
    * @param payload - as in the data to be published
-   * @param callback `(error) => void` is always called when provided
+   * @param callback `(error) => void` is always called if provided
    */
   public publish(topic: string, payload: string | Buffer | Record<any, any>, callback?: mqtt.PacketCallback) {
     if (payload instanceof Buffer || typeof payload === 'string') this.client.publish(topic, payload, callback);
@@ -93,7 +99,7 @@ class MqttClient {
 
   /**
    * - inserts if not exists, otherwise updates a handler
-   * - if chained, reuses the `topic` which is used on subscribe
+   * - if chained, reuses the previous subscribed `topic`
    * @param handler - the handler to be upserted
    * @param descriptor - an optional identifier for handlers: `() => {}`
    * @param topic - as in the subscribed channel

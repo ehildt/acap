@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
-import { IClientOptions } from 'mqtt';
 
 import {
   AppConfig,
@@ -10,6 +9,7 @@ import {
   RedisConfig,
   RedisPubSubConfig,
 } from '@/configs/config-yml/config.modal';
+import { MqttClientOptions } from '@/modules/mqtt-client.module';
 
 @Injectable()
 export class ConfigFactoryService {
@@ -91,16 +91,19 @@ export class ConfigFactoryService {
   }
 
   get mqtt() {
-    return Object.freeze<IClientOptions>({
-      keepalive: this.configService.get<number>('MQTTClientConfig.KEEPALIVE'),
-      connectTimeout: this.configService.get<number>('MQTTClientConfig.CONNECTION_TIMEOUT'),
-      reconnectPeriod: this.configService.get<number>('MQTTClientConfig.RECONNECT_PERIOD'),
-      resubscribe: this.configService.get<boolean>('MQTTClientConfig.RESUBSCRIBE'),
-      protocol: this.configService.get<any>('MQTTClientConfig.PROTOCOL'),
-      hostname: this.configService.get<string>('MQTTClientConfig.HOSTNAME'),
-      port: this.configService.get<number>('MQTTClientConfig.PORT'),
-      username: this.configService.get<string>('MQTTClientConfig.USERNAME'),
-      password: this.configService.get<string>('MQTTClientConfig.PASSWORD'),
+    return Object.freeze<MqttClientOptions>({
+      brokerUrl: this.configService.get<string>('MQTTClientConfig.BROKER_URL'),
+      options: {
+        keepalive: this.configService.get<number>('MQTTClientConfig.KEEPALIVE'),
+        connectTimeout: this.configService.get<number>('MQTTClientConfig.CONNECTION_TIMEOUT'),
+        reconnectPeriod: this.configService.get<number>('MQTTClientConfig.RECONNECT_PERIOD'),
+        resubscribe: this.configService.get<boolean>('MQTTClientConfig.RESUBSCRIBE'),
+        protocol: this.configService.get<any>('MQTTClientConfig.PROTOCOL'),
+        hostname: this.configService.get<string>('MQTTClientConfig.HOSTNAME'),
+        port: this.configService.get<number>('MQTTClientConfig.PORT'),
+        username: this.configService.get<string>('MQTTClientConfig.USERNAME'),
+        password: this.configService.get<string>('MQTTClientConfig.PASSWORD'),
+      },
     });
   }
 }
