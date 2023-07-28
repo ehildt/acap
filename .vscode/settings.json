@@ -50,9 +50,9 @@
   },
   "explorerExclude.backup": {},
   "better-comments.tags": [
-    {
-      "tag": "FIX",
-      "color": "#CC2D00",
+        {
+      "tag": "!",
+      "color": "#BB84D0",
       "strikethrough": false,
       "underline": false,
       "backgroundColor": "transparent",
@@ -60,7 +60,16 @@
       "italic": false
     },
     {
-      "tag": "!",
+      "tag": "FIX",
+      "color": "#CC2DA0",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "@",
       "color": "#FC2DAA",
       "strikethrough": false,
       "underline": false,
@@ -104,5 +113,8 @@
       "bold": false,
       "italic": false
     }
-  ]
+  ],
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }
