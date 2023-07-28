@@ -12,7 +12,7 @@ appConfig:
   services: 
     useRedisPubSub: false
     useBullMQ: false
-    useMQTT: true
+    useMQTT: false
 
 mongoConfig:
   uri: mongodb://mongo:27017

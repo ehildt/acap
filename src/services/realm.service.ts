@@ -23,9 +23,7 @@ export class RealmService {
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSubClient: ClientProxy,
     @Optional() @InjectQueue(BULLMQ_REALMS_QUEUE) private readonly bullmq: Queue,
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
-  ) {
-    this.mqttClient.subscribe('REALM').use((payload) => console.log('MQTT_CLIENT', payload));
-  }
+  ) {}
 
   async countRealmContents() {
     return await this.configRepo.count();
@@ -33,7 +31,7 @@ export class RealmService {
 
   async upsertRealm(realm: string, req: ContentUpsertReq[]) {
     const result = await this.configRepo.upsert(realm, req);
-    if (!result?.ok) return result; // TODO maybe throw an error?
+    if (!result?.ok) return result;
     this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
     this.bullmq?.add(realm, req).catch((error) => error);
     this.mqttClient?.publish(realm, req);
@@ -62,7 +60,7 @@ export class RealmService {
     });
   }
 
-  async getRealms(realms: string[]) {
+  async getRealms(realms: Array<string>) {
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.configRepo.where({ realm: { $in: realmSet } });
     return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.app.realm.resolveEnv), {});
@@ -72,7 +70,7 @@ export class RealmService {
     return await this.configRepo.where({ realm });
   }
 
-  async getRealmConfigIds(realm: string, ids: string[]) {
+  async getRealmConfigIds(realm: string, ids: Array<string>) {
     const entities = await this.configRepo.where({
       realm,
       id: { $in: ids },
@@ -95,7 +93,7 @@ export class RealmService {
     return entity;
   }
 
-  async deleteRealmConfigIds(realm: string, ids: string[]) {
+  async deleteRealmConfigIds(realm: string, ids: Array<string>) {
     const entity = await this.configRepo.delete(realm, ids);
     if (!entity.deletedCount) return entity;
     this.redisPubSubClient?.emit(realm, ids).pipe(catchError((error) => error));
@@ -104,7 +102,7 @@ export class RealmService {
     return entity;
   }
 
-  async downloadConfigFile(realms?: string[]) {
+  async downloadConfigFile(realms?: Array<string>) {
     if (!realms) {
       const entities = await this.configRepo.findAll();
       const realms = Array.from(new Set(entities.map(({ realm }) => realm)));

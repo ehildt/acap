@@ -50,7 +50,7 @@ export class SchemaService {
     return result;
   }
 
-  async getRealms(realms: string[]) {
+  async getRealms(realms: Array<string>) {
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.schemaRepository.where({ realm: { $in: realmSet } });
     return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.app.realm.resolveEnv), {});
@@ -60,7 +60,7 @@ export class SchemaService {
     return await this.schemaRepository.where({ realm });
   }
 
-  async getRealmConfigIds(realm: string, ids: string[]) {
+  async getRealmConfigIds(realm: string, ids: Array<string>) {
     const entities = await this.schemaRepository.where({
       realm,
       id: { $in: ids },
@@ -93,7 +93,7 @@ export class SchemaService {
     return entity;
   }
 
-  async deleteRealmConfigIds(realm: string, ids: string[]) {
+  async deleteRealmConfigIds(realm: string, ids: Array<string>) {
     const entity = await this.schemaRepository.delete(realm, ids);
     if (!entity.deletedCount) return entity;
     this.redisPubSubClient?.emit(realm, ids).pipe(catchError((error) => error));
@@ -102,7 +102,7 @@ export class SchemaService {
     return entity;
   }
 
-  async downloadConfigFile(realms?: string[]) {
+  async downloadConfigFile(realms?: Array<string>) {
     if (!realms) {
       const entities = await this.schemaRepository.findAll();
       const realms = Array.from(new Set(entities.map(({ realm }) => realm)));

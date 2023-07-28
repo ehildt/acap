@@ -84,7 +84,7 @@
     "depcheck": "^1.4.3",
     "dependency-cruiser": "13.1.1",
     "dotenv-cli": "7.2.1",
-    "eslint": "8.45.0",
+    "eslint": "8.46.0",
     "eslint-config-prettier": "8.9.0",
     "eslint-plugin-no-loops": "0.3.0",
     "eslint-plugin-prettier": "5.0.0",
