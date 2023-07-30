@@ -11,7 +11,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
-import { DeleteRealm, GetRealm, GetSchema, PostRealm } from '@/controllers/decorators/controller.method.decorators';
+import { DeleteRealm, GetRealm, GetSchema, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamId,
   ParamRealm,
@@ -20,8 +20,8 @@ import {
   QueryRealms,
   RealmUpsertBody,
   RealmUpsertRealmBody,
-} from '@/controllers/decorators/controller.parameter.decorators';
-import { QuerySkip, QueryTake } from '@/controllers/decorators/controller.query.decorators';
+} from '@/decorators/controller.parameter.decorators';
+import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
@@ -29,7 +29,7 @@ import {
   OpenApi_GetSchema,
   OpenApi_SchemaUpsert,
   OpenApi_UpsertRealms,
-} from '@/controllers/decorators/open-api.controller.decorators';
+} from '@/decorators/open-api.controller.decorators';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-object.helper';

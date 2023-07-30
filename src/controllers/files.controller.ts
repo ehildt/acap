@@ -9,9 +9,9 @@ import {
   JsonYamlContentParser,
   PostFile,
   PostSchemaFile,
-} from '@/controllers/decorators/controller.method.decorators';
-import { QueryFormat, QueryRealms } from '@/controllers/decorators/controller.parameter.decorators';
-import { OpenApi_DownloadFile, OpenApi_PostFile } from '@/controllers/decorators/open-api.controller.decorators';
+} from '@/decorators/controller.method.decorators';
+import { QueryFormat, QueryRealms } from '@/decorators/controller.parameter.decorators';
+import { OpenApi_DownloadFile, OpenApi_PostFile } from '@/decorators/open-api.controller.decorators';
 import { RealmService } from '@/services/realm.service';
 import { SchemaService } from '@/services/schema.service';
 
