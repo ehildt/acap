@@ -1,5 +1,7 @@
 {
-  "reject": [],
+  "reject": [
+    "fastify"
+  ],
   "target": "latest",
   "upgrade": true
 }
