@@ -3,22 +3,17 @@
 
 A simple and convenient way to dynamically provide and distribute content to your clients and services ;)
 
-The **Adaptive Content Aggregation Proxy** `ACAP` is a system designed to provide and distribute client- and service-related content in a dynamic, adaptable, responsive and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process. `ACAP` is an excellent choice for applications seeking to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels, providing a CMS-like experience. 
+`ACAP` is a system designed to provide and distribute client- and service-related content in a dynamic, adaptable, responsive and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process. Furthermore, it is also an excellent choice for applications seeking to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels, providing a CMS-like experience. 
 
+`ACAP` is intentionally not designed to handle large stringified Buffers base64 data, and similar content. While it is technically possible, it is recommended to limit its usage to essential data only. This approach is based on the principle that it is generally not advisable to load massive files into memory unless specifically required by the use case.
 
-`possible other definitions:`
-```sh
-  1. Streamlined Content Integration Platform
-  2. Real-time Service Content Synthesizer
-  3. Dynamic Multi-Source Content Compiler
-  4. Unified Service Content Hub
-  5. Adaptive Content Aggregation Proxy
-  6. Agile Service Content Combiner
-  7. Dynamic Content Fusion Engine
-  8. Integrated Service Content Proxy
-  9. Dynamic Service Content Integration Hub
-  10. Consolidated Service Content Proxy
-  ```
+## Use Cases
+
+One example use case for `ACAP` could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images.
+
+Another use case could involve inter-service communication, enabling a centralized configuration as a single source of truth. This can be achieved by leveraging technologies such as Redis PubSub, MQTT, and bullMQ, which facilitate real-time provision and distribution of these configurations.
+
+In certain scenarios, there may be a need to describe and validate content. `ACAP` accomplishes this by utilizing JSON schema with the help of `avj`. In IDEs like `Visual Studio Code` and similar environments, you have the ability to link the  **$schema** , which enables highlighting and validation. Alternatively, you can fetch the schema on the client side and perform data validation in real time during runtime.
 
 ## Whats in the box?
 
