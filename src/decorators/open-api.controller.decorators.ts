@@ -10,8 +10,9 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-import { RealmsRes } from '../../dtos/realms-res.dto.res';
-import { RealmsUpsertReq } from '../../dtos/realms-upsert.dto.req';
+import { RealmsRes } from '@/dtos/realms-res.dto.res';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+
 import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
