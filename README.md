@@ -7,10 +7,9 @@ A simple and convenient way to dynamically provide and distribute content to you
 
 To ensure optimal performance, it is recommended to restrict the use of `ACAP` to essential data and avoid handling large datasets such as stringified Buffers (files, documents etc.). Streaming such datasets can consume substantial resources and potentially lead to blocking incoming requests, primarily due to limitations in both RAM and network bandwidth. Instead, we encourage you to utilize `ACAP` as a proxy to minimize the need for streaming large datasets.
 
-
-<span style="color: skyblue">
+```
 ACAP is a lightweight solution, making it an ideal choice for embedding and seamlessly integrating into your ecosystem.
-</span>
+``` 
 
 ## Example Use Cases
 
