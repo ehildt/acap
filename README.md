@@ -21,13 +21,15 @@ In certain scenarios, there may be a need to describe and validate content. **AC
 
 ## Whats in the box?
 
-Postman, Insomnia and Swagger OpenApi were yesterday! **ACAP** delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your desired content. With crisp content management and immediate processing, your experience is seamless and efficient.
+Postman, Insomnia and Swagger OpenApi were yesterday! **ACAP** delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your content. With crisp content management and immediate processing, your experience is seamless and efficient.
 
 ### Own Your Content
-  - manage your content
-  - content validation
 
-### Redis Cache
+When creating and managing content, you can choose between a strict or lenient approach to describe its structure. Validation of your content using involves checking if a JSON schema matches the content. `ACAP` knows which content belongs to which schema by simply mapping the realm identifier. In simpler terms, if you create content with a realm value of **MY_REALM** and a schema that also has a realm value of **MY_REALM**, your content will be validated against that schema. The content itself is not bound to any particular structure or value. It even has the capability to fetch system variables when enabled, as long as the identified system variable matches the specified key. By default, this feature is disabled to ensure security. For a more comprehensive understanding of content and schema declarations, please refer to the [wiki]().
+
+### Redis
+
+Under the hood, `ACAP` utilizes [Redis](https://redis.io/docs/) for optimization. It efficiently updates the cache whenever the content is modified, except during the initial creation. If existing content is updated, the cache is also updated as long as the content is currently cached. When fetching the content, and if it already exists in the cache, the time-to-live (TTL) is reset. This approach minimizes unnecessary database I/O operations. Otherwise the content is fetched from the database and populated in the cache.
 
 ### Redis Publish Subscribe
 
