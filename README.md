@@ -7,6 +7,11 @@ A simple and convenient way to dynamically provide and distribute content to you
 
 To ensure optimal performance, it is recommended to restrict the use of `ACAP` to essential data and avoid handling large datasets such as stringified Buffers (files, documents etc.). Streaming such datasets can consume substantial resources and potentially lead to blocking incoming requests, primarily due to limitations in both RAM and network bandwidth. Instead, we encourage you to utilize `ACAP` as a proxy to minimize the need for streaming large datasets.
 
+
+<h4 style="color: skyblue">
+ACAP is a lightweight solution, making it an ideal choice for embedding and seamlessly integrating into your ecosystem.
+</h4>
+
 ## Example Use Cases
 
 One example use case for `ACAP` could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images. 
@@ -19,7 +24,19 @@ In certain scenarios, there may be a need to describe and validate content. `ACA
 
 ## Whats in the box?
 
-..to be continue
+Postman, Insomnia and Swagger OpenApi were yesterday! `ACAP` delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your desired content. With crisp content management and immediate processing, your experience is seamless and efficient.
+
+### Own Your Content
+  - manage your content
+  - content validation
+
+### Redis Cache
+
+### Redis Publish Subscribe
+
+### MQTT
+
+### BullMQ
 
 ## Getting Started
 
