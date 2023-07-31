@@ -1,13 +1,7 @@
 
 # Adaptive Content Aggregation Proxy (ACAP)
 
-A simple and convenient way to dynamically provide and distribute content to your clients and services ;)
-
-ACAP is a system designed to provide and distribute client- and service-related content in a dynamic, adaptable, responsive and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process. Furthermore, it is also an excellent choice for applications seeking to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels, providing a CMS-like experience. 
-
-To ensure optimal performance, it is recommended to restrict the use of ACAP to essential data and avoid handling large datasets such as stringified Buffers (files, documents etc.). Streaming such datasets can consume substantial resources and potentially lead to blocking incoming requests, primarily due to limitations in both RAM and network bandwidth. Instead, we encourage you to utilize ACAP as a proxy to minimize the need for streaming large datasets.
-
-`ACAP is a lightweight solution, making it an ideal choice for embedding and seamlessly integrating into your ecosystem.`
+ACAP is a cutting-edge system designed to revolutionize content distribution and engagement. With its dynamic and adaptable features, it ensures that your clients and services receive the right content at the right time. ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience. Its automated processes make content distribution effortless, allowing you to focus on what matters most. Moreover, ACAP empowers you to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels. This means increased customer satisfaction and loyalty, leading to business growth. Say goodbye to static content and hello to ACAP's game-changing capabilities.
 
 ## Example Use Cases
 
