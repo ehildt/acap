@@ -3,27 +3,25 @@
 
 A simple and convenient way to dynamically provide and distribute content to your clients and services ;)
 
-`ACAP` is a system designed to provide and distribute client- and service-related content in a dynamic, adaptable, responsive and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process. Furthermore, it is also an excellent choice for applications seeking to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels, providing a CMS-like experience. 
+****ACAP**** is a system designed to provide and distribute client- and service-related content in a dynamic, adaptable, responsive and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process. Furthermore, it is also an excellent choice for applications seeking to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels, providing a CMS-like experience. 
 
-To ensure optimal performance, it is recommended to restrict the use of `ACAP` to essential data and avoid handling large datasets such as stringified Buffers (files, documents etc.). Streaming such datasets can consume substantial resources and potentially lead to blocking incoming requests, primarily due to limitations in both RAM and network bandwidth. Instead, we encourage you to utilize `ACAP` as a proxy to minimize the need for streaming large datasets.
+To ensure optimal performance, it is recommended to restrict the use of ****ACAP**** to essential data and avoid handling large datasets such as stringified Buffers (files, documents etc.). Streaming such datasets can consume substantial resources and potentially lead to blocking incoming requests, primarily due to limitations in both RAM and network bandwidth. Instead, we encourage you to utilize ****ACAP**** as a proxy to minimize the need for streaming large datasets.
 
-```
-ACAP is a lightweight solution, making it an ideal choice for embedding and seamlessly integrating into your ecosystem.
-``` 
+`ACAP is a lightweight solution, making it an ideal choice for embedding and seamlessly integrating into your ecosystem.`
 
 ## Example Use Cases
 
-One example use case for `ACAP` could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images. 
+One example use case for **ACAP** could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images. 
 
-Another use case could involve inter-service communication, enabling a centralized configuration as a single source of truth. This can be achieved by leveraging technologies such as `bullMQ`, `MQTT` and `RedisPubSub` which facilitate real-time provision and distribution of these configurations.
+Another use case could involve inter-service communication, enabling a centralized configuration as a single source of truth. This can be achieved by leveraging technologies such as **bullMQ**, **MQTT** and **RedisPubSub** which facilitate real-time provision and distribution of these configurations.
 
-There are instances where utilizing `ACAP` as a proxy can be advantageous. By creating content that references external sources holding the required datasets, you can leverage the capabilities of `ACAP` without the need for directly handling large datasets. This approach greatly enhances the efficiency of data retrieval and management.
+There are instances where utilizing **ACAP** as a proxy can be advantageous. By creating content that references external sources holding the required datasets, you can leverage the capabilities of **ACAP** without the need for directly handling large datasets. This approach greatly enhances the efficiency of data retrieval and management.
 
-In certain scenarios, there may be a need to describe and validate content. `ACAP` accomplishes this by utilizing JSON schema with the help of `avj`. In IDEs like `Visual Studio Code` and similar environments, you have the ability to link the  **$schema** , which enables highlighting and validation. Alternatively, you can fetch the schema on the client side and perform data validation in real time during runtime.
+In certain scenarios, there may be a need to describe and validate content. **ACAP** accomplishes this by utilizing JSON schema with the help of **avj**. In IDEs like **Visual Studio Code** and similar environments, you have the ability to link the  **$schema** , which enables highlighting and validation. Alternatively, you can fetch the schema on the client side and perform data validation in real time during runtime.
 
 ## Whats in the box?
 
-Postman, Insomnia and Swagger OpenApi were yesterday! `ACAP` delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your desired content. With crisp content management and immediate processing, your experience is seamless and efficient.
+Postman, Insomnia and Swagger OpenApi were yesterday! **ACAP** delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your desired content. With crisp content management and immediate processing, your experience is seamless and efficient.
 
 ### Own Your Content
   - manage your content
