@@ -3,35 +3,41 @@
 
 A simple and convenient way to dynamically provide and distribute content to your clients and services ;)
 
-****ACAP**** is a system designed to provide and distribute client- and service-related content in a dynamic, adaptable, responsive and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process. Furthermore, it is also an excellent choice for applications seeking to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels, providing a CMS-like experience. 
+ACAP is a system designed to provide and distribute client- and service-related content in a dynamic, adaptable, responsive and automated manner. It responds to changing needs and preferences in real-time, ensuring a flexible and responsive distribution process. Furthermore, it is also an excellent choice for applications seeking to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels, providing a CMS-like experience. 
 
-To ensure optimal performance, it is recommended to restrict the use of ****ACAP**** to essential data and avoid handling large datasets such as stringified Buffers (files, documents etc.). Streaming such datasets can consume substantial resources and potentially lead to blocking incoming requests, primarily due to limitations in both RAM and network bandwidth. Instead, we encourage you to utilize ****ACAP**** as a proxy to minimize the need for streaming large datasets.
+To ensure optimal performance, it is recommended to restrict the use of ACAP to essential data and avoid handling large datasets such as stringified Buffers (files, documents etc.). Streaming such datasets can consume substantial resources and potentially lead to blocking incoming requests, primarily due to limitations in both RAM and network bandwidth. Instead, we encourage you to utilize ACAP as a proxy to minimize the need for streaming large datasets.
 
 `ACAP is a lightweight solution, making it an ideal choice for embedding and seamlessly integrating into your ecosystem.`
 
 ## Example Use Cases
 
-One example use case for **ACAP** could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images. 
+One example use case for ACAP could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images. 
 
 Another use case could involve inter-service communication, enabling a centralized configuration as a single source of truth. This can be achieved by leveraging technologies such as **bullMQ**, **MQTT** and **RedisPubSub** which facilitate real-time provision and distribution of these configurations.
 
-There are instances where utilizing **ACAP** as a proxy can be advantageous. By creating content that references external sources holding the required datasets, you can leverage the capabilities of **ACAP** without the need for directly handling large datasets. This approach greatly enhances the efficiency of data retrieval and management.
+There are instances where utilizing ACAP as a proxy can be advantageous. By creating content that references external sources holding the required datasets, you can leverage the capabilities of ACAP without the need for directly handling large datasets. This approach greatly enhances the efficiency of data retrieval and management.
 
-In certain scenarios, there may be a need to describe and validate content. **ACAP** accomplishes this by utilizing JSON schema with the help of **avj**. In IDEs like **Visual Studio Code** and similar environments, you have the ability to link the  **$schema** , which enables highlighting and validation. Alternatively, you can fetch the schema on the client side and perform data validation in real time during runtime.
+In certain scenarios, there may be a need to describe and validate content. ACAP accomplishes this by utilizing JSON schema with the help of **avj**. In IDEs like **Visual Studio Code** and similar environments, you have the ability to link the  **$schema** , which enables highlighting and validation. Alternatively, you can fetch the schema on the client side and perform data validation in real time during runtime.
 
 ## Whats in the box?
 
-Postman, Insomnia and Swagger OpenApi were yesterday! **ACAP** delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your content. With crisp content management and immediate processing, your experience is seamless and efficient.
+Postman, Insomnia and Swagger OpenApi were yesterday! ACAP delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your content. With crisp content management and immediate processing, your experience is seamless and efficient.
 
 ### Own Your Content
 
-When creating and managing content, you can choose between a strict or lenient approach to describe its structure. Validation of your content using involves checking if a JSON schema matches the content. `ACAP` knows which content belongs to which schema by simply mapping the realm identifier. In simpler terms, if you create content with a realm value of **MY_REALM** and a schema that also has a realm value of **MY_REALM**, your content will be validated against that schema. The content itself is not bound to any particular structure or value. It even has the capability to fetch system variables when enabled, as long as the identified system variable matches the specified key. By default, this feature is disabled to ensure security. For a more comprehensive understanding of content and schema declarations, please refer to the [wiki]().
+When creating and managing content, you can choose between a strict or lenient approach to describe its structure. Validation of your content involves checking if a JSON schema matches the content. ACAP knows which content belongs to which schema by simply referencing the realm identifier. In simpler terms, if you create content with a realm value of **MY_REALM** and a schema that also has a realm value of **MY_REALM**, your content will be validated against that schema. The content itself is not bound to any particular structure or value. It even has the capability to fetch system variables when enabled, as long as the identified matches the specified system variable key. By default, this feature is disabled to ensure security. For a more comprehensive understanding of content and schema declarations, please refer to the [wiki]().
+
+`This powerful feature provides industry-leading flexibility in managing content structure, empowering companies to customize and validate their content with ease and efficiency. Experience unparalleled control and adaptability in content management, unlocking new possibilities for your business's success.`
 
 ### Redis
 
-Under the hood, `ACAP` utilizes [Redis](https://redis.io/docs/) for optimization. It efficiently updates the cache whenever the content is modified, except during the initial creation. If existing content is updated, the cache is also updated as long as the content is currently cached. When fetching the content, and if it already exists in the cache, the time-to-live (TTL) is reset. This approach minimizes unnecessary database I/O operations. Otherwise the content is fetched from the database and populated in the cache.
+Under the hood, ACAP utilizes [Redis](https://redis.io/docs/) for optimization. It efficiently updates the cache whenever the content is modified, except during the initial creation. If existing content is updated, the cache is also updated as long as the content is currently cached. When fetching the content, and if it already exists in the cache, the time-to-live (TTL) is reset. This approach minimizes unnecessary database I/O operations. Otherwise the content is fetched from the database and populated in the cache. 
+
+`The Redis cache is a highly efficient in-memory key-value storage system. ACAP further enhances its capabilities by introducing a dynamic content management system, adding flexibility and versatility to its functionality.`
 
 ### Redis Publish Subscribe
+
+ACAP supports [Redis Publish Subscribe](https://redis.io/docs/interact/pubsub/). When this feature is enabled, ACAP automatically publishes content using the realm as the channel, which can be subscribed to by other clients and services. The chosen strategy for **Redis Publish Subscribe** is **fire-and-forget**, making it non-blocking
 
 ### MQTT
 
@@ -157,10 +163,6 @@ redisPUBSUBConfig:
     host: redis
 ```
 
-
-## API-Interfaces
-
-All of the api interfaces are well documented in the swagger open-api. There, you will find a description to any of the endpoints. The open-api can be toggled by setting the `START_SWAGGER` environment.
 
 ## Caching Insights
 
