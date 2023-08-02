@@ -37,6 +37,7 @@
     "microservices",
     "mongod",
     "mongodb",
+    "mosquitto",
     "MQTT",
     "ndjson",
     "nestjs",

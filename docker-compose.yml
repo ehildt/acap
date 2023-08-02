@@ -11,10 +11,11 @@ services:
     depends_on:
       - mongo
       - redis
+      - mosquitto
     env_file:
       - env/defaults.env
     ports:
-      - '3001:3001'
+      - 3001:3001
 
   mongo:
     command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
@@ -27,18 +28,32 @@ services:
     volumes:
       - mongo_acap_data:/data/db
     ports:
-      - '27017:27017'
+      - 27017:27017
 
   redis:
     image: redis
     container_name: redis
     ports:
-      - '6379:6379'
+      - 6379:6379
     command: redis-server --requirepass "redis" --loglevel "warning" 
+  
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_log:/mosquitto/log
 
 volumes:
   mongo_acap_data:
-
+  mosquitto_data:
+  mosquitto_config:
+  mosquitto_log:
+    
 networks:
   default:
     name: ACAP_NETWORK

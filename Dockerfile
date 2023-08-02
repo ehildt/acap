@@ -23,6 +23,7 @@ RUN npm ci --ignore-scripts --loglevel=error
 FROM builder AS development
 WORKDIR /app
 RUN npm run build
+RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 USER node
 ENTRYPOINT ["npm", "run", "start"]
 
@@ -44,7 +45,8 @@ EXPOSE ${PORT}
 COPY --from=temporary ./app/dist ./dist
 COPY --from=temporary ./app/package*.json ./
 
+RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 RUN npm ci --ignore-scripts --loglevel=error --omit=dev
 
 USER node
-ENTRYPOINT ["npm", "run", "start:prod"]
+ENTRYPOINT ["npm", "run", "start"]
