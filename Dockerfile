@@ -25,7 +25,7 @@ WORKDIR /app
 RUN npm run build
 RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 USER node
-ENTRYPOINT ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "start:node"]
 
 # entrypoint for prepare-prod
 FROM builder AS temporary
@@ -49,4 +49,4 @@ RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 RUN npm ci --ignore-scripts --loglevel=error --omit=dev
 
 USER node
-ENTRYPOINT ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "start:node"]

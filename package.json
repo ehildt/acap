@@ -23,6 +23,7 @@
     "prepare": "husky install",
     "start:debug": "nest start --debug --watch  --preserveWatchOutput",
     "start:dev": "dotenv -e ./env/defaults.env -- nest start --watch  --preserveWatchOutput",
+    "start:node": "node dist/main",
     "start": "nest start",
     "test:clearCache": "jest --clearCache",
     "test:cov": "jest --coverage",
