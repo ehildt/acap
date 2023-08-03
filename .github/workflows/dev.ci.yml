@@ -16,6 +16,31 @@ jobs:
         node-version: 
           - 20
     steps:
+    - name: Git Semantic Version
+      id: version
+      uses: PaulHatch/semantic-version@v5.0.3
+      with:
+        # The prefix to use to identify tags
+        tag_prefix: "v"
+        # A string which, if present in a git commit, indicates that a change represents a
+        # major (breaking) change, supports regular expressions wrapped with '/'
+        major_pattern: "(MAJOR)"
+        # A string which indicates the flags used by the `major_pattern` regular expression. Supported flags: idgs
+        major_regexp_flags: ""
+        # Same as above except indicating a minor change, supports regular expressions wrapped with '/'
+        minor_pattern: "(MINOR)"
+        # A string which indicates the flags used by the `minor_pattern` regular expression. Supported flags: idgs
+        minor_regexp_flags: ""
+        # A string to determine the format of the version output
+        version_format: "${major}.${minor}.${patch}-beta.${increment}"
+        # Named version, will be used as suffix for name version tag
+        namespace: acap
+        # If this is set to true, *every* commit will be treated as a new version.
+        bump_each_commit: false
+        # If true, the body of commits will also be searched for major/minor patterns to determine the version type.
+        search_commit_body: false
+        # The output method used to generate list of users, 'csv' or 'json'.
+        user_format_type: "json"
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3

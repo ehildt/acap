@@ -49,10 +49,15 @@ export class RealmController {
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
+    const cachedRealm = await this.cache.get<CacheObject>(postfix);
+    const cache = gunzipSyncCacheObject(cachedRealm);
 
     if (!ids) {
-      if (Object.keys(cache.content)?.length === cache.count) return cache.content;
+      if (Object.keys(cache.content)?.length === cache.count) {
+        // @ we reset the ttl
+        await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
+        return cache.content;
+      }
       const data = reduceToConfigs(this.configFactory.app.realm.resolveEnv, await this.realmService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
       const cacheObj = gzipSyncCacheObject(data, this.configFactory.app.realm.gzipThreshold, Object.keys(data).length);
@@ -60,15 +65,19 @@ export class RealmController {
       return data;
     }
 
+    let content: any;
     const filteredIds = Array.from(new Set(ids?.filter((e) => e)));
     const matchedKeys = Object.keys(cache.content).filter((c) => filteredIds.includes(c));
-    if (matchedKeys?.length)
-      cache.content = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache.content[key] }), {});
-    if (matchedKeys?.length === filteredIds?.length) return cache.content;
+    if (matchedKeys?.length) content = matchedKeys.reduce((acc, key) => ({ ...acc, [key]: cache.content[key] }), {});
+    if (matchedKeys?.length === filteredIds?.length) {
+      // @ we reset the ttl
+      await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
+      return content;
+    }
     const unmatchedKeys = filteredIds.filter((fk) => !matchedKeys.find((mk) => fk === mk));
     const entities = await this.realmService.getRealmConfigIds(realm, unmatchedKeys);
     const count = await this.realmService.countRealmContents();
-    const content = { ...cache.content, ...entities };
+    content = { ...content, ...entities };
     const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return content;
@@ -148,15 +157,19 @@ export class RealmController {
   @OpenApi_GetRealmConfig()
   async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
-    const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    if (content[id]) return content[id];
+    const cachedRealm = await this.cache.get<CacheObject>(postfix);
+    const { content } = gunzipSyncCacheObject(cachedRealm);
+    if (content[id]) {
+      // @ we reset the ttl
+      await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
+      return content[id];
+    }
     const data = await this.realmService.getRealmConfigIds(realm, [id]);
     const count = await this.realmService.countRealmContents();
-    if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
+    if (!data[id]) throw new BadRequestException(`N/A realm: ${realm} | id: ${id}`);
     const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
-    if (data[id]) return data[id];
-    throw new BadRequestException(`N/A realm: ${realm} | id: ${id}`);
+    return data[id];
   }
 
   @DeleteRealm()
@@ -175,7 +188,7 @@ export class RealmController {
     const count = await this.realmService.countRealmContents();
 
     if (count) {
-      // we iterate through the ids and set the key to undefined if it exists
+      // @ we iterate through the ids and remove the id from the cache
       Object.keys(content).forEach((key) => (content[filteredIds.find((id) => id === key)] = undefined));
       const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
