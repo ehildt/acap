@@ -73,4 +73,186 @@ By leveraging BullMQ, ACAP gains robust job management, scalability, fault toler
 
 ## Getting Started
 
-**ACAP** offers a ready-to-use setup for easy initialization. It utilizes a config.yml file instead of relying solely on system variables, while still allowing you to set them if necessary. When using ACAP in Docker or K8S, you can easily map the config.yml file through the volumes. In the container, the config.yml file is located at `/app/dist/config/config-yml/config.yml` and for simplicity has been aliased as `/app/config.yml`.
+**ACAP** offers a ready-to-use setup for easy initialization. It utilizes a config.yml file instead of relying solely on system environment variables, while still allowing you to set them if necessary. When using ACAP in Docker or K8S, you can easily map the config.yml file through the volumes. In the container, the config.yml file is located at `/app/dist/config/config-yml/config.yml` and for simplicity has been aliased as `/app/config.yml`.
+
+The config.yml file contains default presets that make it easier to create a container for local development. 
+
+```yml
+appConfig:
+  port: 3001
+  address: 0.0.0.0
+  printEnv: true
+  startSwagger: true
+  nodeEnv: 'local'
+  realm: 
+    ttl: 300
+    resolveEnv: false
+    namespacePostfix: ACAP
+    gzipThreshold: 20
+  services: 
+    useRedisPubSub: false
+    useBullMQ: false
+    useMQTT: false
+
+mongoConfig:
+  uri: mongodb://mongo:27017
+  ssl: false
+  tlsAllowInvalidCertificates: true
+  dbName: ACAP
+  user: mongo
+  pass: mongo
+
+redisConfig:
+  host: redis
+  port: 6379
+  ttl: 600
+  max: 100
+  db: 0
+  password: redis
+  username: default
+
+redisPubSubConfig: 
+  options:
+    port: 6379
+    host: redis
+    password: redis
+    username: default
+
+bullMQConfig:
+  connection:
+    port: 6379
+    host: redis
+    password: redis
+    username: default
+
+mqttClientConfig:
+  brokerUrl: null
+  options:
+    port: 1883
+    keepalive: 5000
+    connectTimeout: 5000
+    reconnectPeriod: 1000
+    resubscribe: true
+    protocol: 'mqtt'
+    hostname: mosquitto
+    username: null
+    password: null
+```
+
+Docker Compose further simplifies the process, allowing for a quick start and easy exploration of the application. 
+
+```yml
+version: '3.9'
+services:
+  acap:
+    container_name: acap
+    build:
+      context: https://github.com/ehildt/ACAP.git
+      target: production
+    depends_on:
+      - mongo
+      - redis
+      - mosquitto
+    env_file:
+      - env/defaults.env
+    ports:
+      - 3001:3001
+
+  mongo:
+    command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
+    image: mongo
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+      - MONGO_INITDB_DATABASE=ACAP
+    volumes:
+      - mongo_acap_data:/data/db
+    ports:
+      - 27017:27017
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass "redis" --loglevel "warning" 
+  
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_log:/mosquitto/log
+
+volumes:
+  mongo_acap_data:
+  mosquitto_data:
+  mosquitto_config:
+  mosquitto_log:
+    
+networks:
+  default:
+    name: ACAP_NETWORK
+```
+
+As mentioned earlier, you can still utilize system environment variables either in conjunction with the config.yml file or explicitly set them. Here are the system environment variables that are available for utilization.
+
+```sh
+PORT=3001
+ADDRESS='0.0.0.0'
+NODE_ENV='local'
+REALM_TTL=300
+REALM_NAMESPACE_POSTFIX='ACAP'
+REALM_GZIP_THRESHOLD=20
+PRINT_ENV=true
+START_SWAGGER=true
+REALM_RESOLVE_ENV=false
+USE_REDIS_PUBSUB=true
+USE_BULLMQ=true
+USE_MQTT=true
+
+REDIS_PUBSUB_PORT=6379
+REDIS_PUBSUB_USER='default'
+REDIS_PUBSUB_PASS='redis'
+REDIS_PUBSUB_HOST='redis'
+
+BULLMQ_REDIS_PORT=6379
+BULLMQ_REDIS_USER='default'
+BULLMQ_REDIS_PASS='redis'
+BULLMQ_REDIS_HOST='redis'
+
+MQTT_KEEPALIVE=5000
+MQTT_CONNECTION_TIMEOUT=5000
+MQTT_RECONNECT_PERIOD=1000
+MQTT_RESUBSCRIBE=true
+MQTT_BROKER_URL='mqtt://test.mosquitto.org'
+MQTT_PROTOCOL='mqtt'
+MQTT_HOSTNAME='test.mosquitto.org'
+MQTT_PORT=1883
+MQTT_USERNAME=''
+MQTT_PASSWORD=''
+
+MONGO_USER='mongo'
+MONGO_PASS='mongo'
+MONGO_DB_NAME='ACAP'
+MONGO_URI='mongodb://mongo:27017'
+MONGO_SSL=false
+MONGO_TLS_ALLOW_INVALID_CERTIFICATES=true
+
+REDIS_USER='default'
+REDIS_PASS='redis'
+REDIS_HOST='redis'
+REDIS_PORT=6379
+REDIS_TTL=600
+REDIS_MAX_RESPONSES=100
+REDIS_DB_INDEX=0
+```
+
+With this, you have everything you need to make the ACAP your own and harness its full potential to power your applications and drive business growth.
+
+`Get in touch with us if you're eager to contribute to ACAP and show your support, or simply want to treat us to a coffee or beer. We appreciate any form of collaboration and generosity!`
