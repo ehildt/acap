@@ -5,32 +5,36 @@ import { FilterQuery, Model } from 'mongoose';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmReq } from '@/dtos/realm-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
-import { prepareBulkWriteDeleteConfigs } from '@/helpers/prepare-bulk-write-delete-configs.helper';
+import { prepareBulkWriteDeleteContents } from '@/helpers/prepare-bulk-write-delete-contents.helper';
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
-import { prepareBulkWriteConfigs } from '@/helpers/prepare-bulk-write-upsert-configs.helper';
+import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-upsert-contents.helper';
 import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
-import { RealmConfigsDocument, RealmConfigsSchemaDefinition } from '@/schemas/realm-configs-definition.schema';
+import { RealmContentsDocument, RealmContentsSchemaDefinition } from '@/schemas/realm-content-definition.schema';
 import { RealmsDocument, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
 
 @Injectable()
 export class RealmRepository {
   constructor(
-    @InjectModel(RealmConfigsSchemaDefinition.name)
-    private readonly configModel: Model<RealmConfigsDocument>,
+    @InjectModel(RealmContentsSchemaDefinition.name)
+    private readonly contentModel: Model<RealmContentsDocument>,
     @InjectModel(RealmsSchemaDefinition.name)
     private readonly realmModel: Model<RealmsDocument>,
   ) {}
 
   async findAll() {
-    return await this.configModel.find().sort({ realm: 'asc', updatedAt: 'asc' }).lean();
+    return await this.contentModel.find().sort({ realm: 'asc', updatedAt: 'asc' }).lean();
   }
 
-  async count() {
-    return await this.configModel.count();
+  async countContents() {
+    return await this.contentModel.count();
+  }
+
+  async countRealms() {
+    return await this.realmModel.count();
   }
 
   async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
-    return await this.configModel
+    return await this.contentModel
       .find()
       .where({ realm: { $in: realms } })
       .select(propertiesToSelect)
@@ -45,7 +49,7 @@ export class RealmRepository {
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean()
     ).map(({ realm }) => realm);
-    return await this.configModel
+    return await this.contentModel
       .find()
       .sort({ realm: 'descending', updatedAt: 'descending' })
       .select(propertiesToSelect)
@@ -54,27 +58,27 @@ export class RealmRepository {
   }
 
   async where(filter: FilterQuery<RealmReq>) {
-    return await this.configModel.where(filter).lean();
+    return await this.contentModel.where(filter).lean();
   }
 
   async upsertMany(reqs: RealmsUpsertReq[]) {
     const realms = prepareBulkWriteRealms(reqs.map(({ realm }) => realm));
     await this.realmModel.bulkWrite(realms);
-    const preparedUpserts = reqs.map((req) => prepareBulkWriteConfigs(req.contents, req.realm)).flat();
-    return await this.configModel.bulkWrite(preparedUpserts);
+    const preparedUpserts = reqs.map((req) => prepareBulkWriteContents(req.contents, req.realm)).flat();
+    return await this.contentModel.bulkWrite(preparedUpserts);
   }
 
   async upsert(realm: string, req: ContentUpsertReq[]) {
     const realms = prepareBulkWriteRealms([realm]);
     await this.realmModel.bulkWrite(realms);
-    const rowsToUpsert = prepareBulkWriteConfigs(req, realm);
-    return await this.configModel.bulkWrite(rowsToUpsert);
+    const rowsToUpsert = prepareBulkWriteContents(req, realm);
+    return await this.contentModel.bulkWrite(rowsToUpsert);
   }
 
   async delete(realm: string, req?: string[]) {
-    const rowsToDelete = prepareBulkWriteDeleteConfigs(realm, req);
-    const rowsDeleted = await this.configModel.bulkWrite(rowsToDelete);
-    const isNotEmpty = Boolean(await this.configModel.count().where({ realm }));
+    const rowsToDelete = prepareBulkWriteDeleteContents(realm, req);
+    const rowsDeleted = await this.contentModel.bulkWrite(rowsToDelete);
+    const isNotEmpty = Boolean(await this.contentModel.count().where({ realm }));
 
     if (!isNotEmpty) {
       const realms = prepareBulkWriteDeleteRealms([realm]);

@@ -1,4 +1,4 @@
-export function challengeParseConfigValue(value: string) {
+export function challengeParseContentValue(value: string) {
   try {
     return JSON.parse(value);
   } catch {
