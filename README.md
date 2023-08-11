@@ -154,7 +154,7 @@ services:
       - redis
       - mosquitto
     volumes:
-      - config.yml:/app/config.yml
+      - ./config.yml:/app/config.yml
     ports:
       - 3001:3001
 
@@ -178,6 +178,8 @@ services:
       - 6379:6379
     command: redis-server --requirepass "redis" --loglevel "warning" 
   
+  # We use Mosquitto for demonstration purposes.
+  # You are free to choose any MQTT service you prefer.
   mosquitto:
     image: eclipse-mosquitto
     container_name: mosquitto
