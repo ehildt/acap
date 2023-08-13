@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type RealmConfigsDocument = RealmConfigsSchemaDefinition & Document;
+export type JsonSchemaContentsDocument = JsonSchemaContentsDefinition & Document;
 
 @Schema({ timestamps: true, autoIndex: true })
-export class RealmConfigsSchemaDefinition {
+export class JsonSchemaContentsDefinition {
   @Prop({ required: true, uppercase: true })
   realm: string;
 
@@ -15,6 +15,6 @@ export class RealmConfigsSchemaDefinition {
   value: string;
 }
 
-export const RealmConfigsSchema = SchemaFactory.createForClass(RealmConfigsSchemaDefinition);
+export const JsonSchemaContentSchema = SchemaFactory.createForClass(JsonSchemaContentsDefinition);
 
-RealmConfigsSchema.index({ realm: 1, id: 1 }, { unique: true });
+JsonSchemaContentSchema.index({ realm: 1, id: 1 }, { unique: true });

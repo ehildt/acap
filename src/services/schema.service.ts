@@ -7,7 +7,7 @@ import { catchError } from 'rxjs';
 import { BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
-import { mapEntitiesToConfigFile } from '@/helpers/map-entities-to-config-file.helper';
+import { mapEntitiesToContentFile } from '@/helpers/map-entities-to-content-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
@@ -26,7 +26,7 @@ export class SchemaService {
   ) {}
 
   async countRealmContents() {
-    return await this.schemaRepository.count();
+    return await this.schemaRepository.countContents();
   }
 
   async upsertRealm(realm: string, req: Array<ContentUpsertReq>) {
@@ -106,11 +106,11 @@ export class SchemaService {
     if (!realms) {
       const entities = await this.schemaRepository.findAll();
       const realms = Array.from(new Set(entities.map(({ realm }) => realm)));
-      return mapEntitiesToConfigFile(entities, realms);
+      return mapEntitiesToContentFile(entities, realms);
     }
 
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.schemaRepository.where({ realm: { $in: realmSet } });
-    return mapEntitiesToConfigFile(entities, realms);
+    return mapEntitiesToContentFile(entities, realms);
   }
 }

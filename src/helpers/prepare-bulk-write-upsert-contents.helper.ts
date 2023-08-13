@@ -1,6 +1,6 @@
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 
-export function prepareBulkWriteConfigs(req: Array<ContentUpsertReq>, realm: string) {
+export function prepareBulkWriteContents(req: Array<ContentUpsertReq>, realm: string) {
   return req.map((config) => ({
     updateOne: {
       upsert: true,

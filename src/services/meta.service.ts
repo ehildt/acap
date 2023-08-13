@@ -18,7 +18,7 @@ export class MetaService {
     const schemaConfigEntities = await this.schemaRepository.getMetaSchemasByRealms(realmSchemas, QUERY_PROPERTIES);
     mapRealmEntitiesMeta(schemaConfigEntities, schemas);
     mapRealmEntitiesMeta(realmConfigEntities, realms, schemas);
-    const count = await this.realmRepository.count();
+    const count = await this.realmRepository.countRealms();
     return {
       count,
       data: realms,
@@ -33,7 +33,7 @@ export class MetaService {
     const realmConfigEntities = await this.realmRepository.getMetaRealmsBySchemas(realmSchemas, QUERY_PROPERTIES);
     mapSchemaEntitiesMeta(realmConfigEntities, realms);
     mapSchemaEntitiesMeta(schemaConfigEntities, schemas, realms);
-    const count = await this.schemaRepository.count();
+    const count = await this.schemaRepository.countSchemas();
     return {
       count,
       data: schemas,
