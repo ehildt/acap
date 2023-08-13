@@ -60,3 +60,15 @@ jobs:
     - run: npm run ts-unused-exports
     - run: npm run licensee
     - run: npm run build --if-present
+    - name: Git Semantic Version
+      id: version
+      uses: PaulHatch/semantic-version@v5.0.3
+      with:
+        tag_prefix: "v"
+        major_pattern: "(MAJOR)"
+        minor_pattern: "(MINOR)"
+        version_format: "${major}.${minor}.${patch}-beta.${increment}"
+        namespace: acap
+        bump_each_commit: false
+        search_commit_body: true
+        user_format_type: "json"

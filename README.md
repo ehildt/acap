@@ -27,11 +27,11 @@ In certain scenarios, there may be a need to describe and validate content. ACAP
 
 ## Whats in the box?
 
-Postman, Insomnia and Swagger OpenApi were yesterday! ACAP delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your content. With crisp content management and immediate processing, your experience is seamless and efficient. ACAP simplifies the process for developers to enable or disable optional features like Redis Publish Subscribe, MQTT, and BullMQ as per their requirements.
+Postman, Insomnia and Swagger OpenApi were yesterday! ACAP delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your content (**WIP**). With crisp content management and immediate processing, your experience is seamless and efficient. ACAP simplifies the process for developers to enable or disable optional features like Redis Publish Subscribe, MQTT, and BullMQ as per their requirements.
 
 ### K-Own Your Content
 
-When creating and managing content, you can freely choose between a strict or lenient approach to describe its structure. Validation of your content involves checking if a JSON schema matches the content. ACAP knows which content belongs to which schema by simply referencing the realm identifier. In simpler terms, if you create content with a realm value of **MY_REALM** and a schema that also has a realm value of **MY_REALM**, your content will be validated against that schema. The content itself is not bound to any particular structure or value. It even has the capability to fetch system variables when enabled, as long as the content identifier matches the specified system variable key. By default, this feature is disabled to ensure security. For a more comprehensive understanding of content and schema declarations, please refer to the [wiki]().
+When creating and managing content, you can freely choose between a strict or lenient approach to describe its structure. Validation of your content involves checking if a JSON schema matches the content. ACAP knows which content belongs to which schema by simply referencing the realm identifier. In simpler terms, if you create content with a realm value of **MY_REALM** and a schema that also has a realm value of **MY_REALM**, your content will be validated against that schema. The content itself is not bound to any particular structure or value. It even has the capability to fetch system variables when enabled, as long as the content identifier matches the specified system variable key. By default, this feature is disabled to ensure security. For a more comprehensive understanding of content and schema declarations, please refer to the [Wiki](https://github.com/ehildt/ACAP/wiki/ACAP).
 
 `This powerful feature provides industry-leading flexibility in managing content structure, empowering companies to customize and validate their content with ease and efficiency. Experience unparalleled control and adaptability in content management, unlocking new possibilities for your business's success.`
 
@@ -153,8 +153,8 @@ services:
       - mongo
       - redis
       - mosquitto
-    env_file:
-      - env/defaults.env
+    volumes:
+      - ./config.yml:/app/config.yml
     ports:
       - 3001:3001
 
@@ -178,6 +178,8 @@ services:
       - 6379:6379
     command: redis-server --requirepass "redis" --loglevel "warning" 
   
+  # We use Mosquitto for demonstration purposes.
+  # You are free to choose any MQTT service you prefer.
   mosquitto:
     image: eclipse-mosquitto
     container_name: mosquitto
@@ -200,21 +202,21 @@ networks:
     name: ACAP_NETWORK
 ```
 
-As mentioned earlier, you can still utilize system environment variables either in conjunction with the config.yml file or explicitly set them. Here are the system environment variables that are available for utilization.
+As mentioned earlier, you can still utilize system environment variables either in conjunction with the config.yml file. System environment variables, if set, take precedence over the values specified in the config.yml file. Here are the system environment variables that are available for utilization.
 
 ```sh
 PORT=3001
 ADDRESS='0.0.0.0'
 NODE_ENV='local'
 REALM_TTL=300
-REALM_NAMESPACE_POSTFIX='ACAP'
-REALM_GZIP_THRESHOLD=20
-PRINT_ENV=true
-START_SWAGGER=true
-REALM_RESOLVE_ENV=false
-USE_REDIS_PUBSUB=true
-USE_BULLMQ=true
-USE_MQTT=true
+REALM_NAMESPACE_POSTFIX='ACAP'  # Optional
+REALM_GZIP_THRESHOLD=20         # Kilobyte
+PRINT_ENV=false                 # Default
+START_SWAGGER=false             # Default
+REALM_RESOLVE_ENV=false         # Default
+USE_REDIS_PUBSUB=false          # Default
+USE_BULLMQ=false                # Default
+USE_MQTT=false                  # Default
 
 REDIS_PUBSUB_PORT=6379
 REDIS_PUBSUB_USER='default'
@@ -226,16 +228,16 @@ BULLMQ_REDIS_USER='default'
 BULLMQ_REDIS_PASS='redis'
 BULLMQ_REDIS_HOST='redis'
 
-MQTT_KEEPALIVE=5000
-MQTT_CONNECTION_TIMEOUT=5000
-MQTT_RECONNECT_PERIOD=1000
-MQTT_RESUBSCRIBE=true
-MQTT_BROKER_URL='mqtt://test.mosquitto.org'
-MQTT_PROTOCOL='mqtt'
-MQTT_HOSTNAME='test.mosquitto.org'
-MQTT_PORT=1883
-MQTT_USERNAME=''
-MQTT_PASSWORD=''
+MQTT_KEEPALIVE=5000             # Milliseconds
+MQTT_CONNECTION_TIMEOUT=5000    # Milliseconds
+MQTT_RECONNECT_PERIOD=1000      # Milliseconds
+MQTT_PORT=1883                  # Default
+MQTT_PROTOCOL='mqtt'            # Default
+MQTT_RESUBSCRIBE=true           # Default
+MQTT_BROKER_URL=''              # Optional
+MQTT_HOSTNAME=''                # Optional
+MQTT_USERNAME=''                # Optional
+MQTT_PASSWORD=''                # Optional
 
 MONGO_USER='mongo'
 MONGO_PASS='mongo'
@@ -255,4 +257,4 @@ REDIS_DB_INDEX=0
 
 With this, you have everything you need to make the ACAP your own and harness its full potential to power your applications and drive business growth.
 
-`Get in touch with us if you're eager to contribute to ACAP and show your support, or simply want to treat us to a coffee or beer. We appreciate any form of collaboration and generosity!`
+`Get in touch with us if you're eager to contribute to ACAP and show your support, or show some love by treating us to a beer or coffee. We appreciate any form of collaboration and generosity!`
