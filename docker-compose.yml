@@ -18,7 +18,7 @@ services:
       - 3001:3001
 
   mongo:
-    command: mongod --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
+    command: mongod --quiet --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
     image: mongo
     container_name: mongo
     environment:
@@ -35,7 +35,7 @@ services:
     container_name: redis
     ports:
       - 6379:6379
-    command: redis-server --requirepass "redis" --loglevel "warning" 
+    command: redis-server --requirepass "redis" --logfile /dev/null
   
   mosquitto:
     image: eclipse-mosquitto
