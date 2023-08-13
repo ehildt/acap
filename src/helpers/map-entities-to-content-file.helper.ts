@@ -1,8 +1,8 @@
-import { JsonSchemaConfigsDocument } from '@/schemas/json-schema-config-definition.schema';
-import { RealmConfigsDocument } from '@/schemas/realm-configs-definition.schema';
+import { JsonSchemaContentsDocument } from '@/schemas/json-schema-content-definition.schema';
+import { RealmContentsDocument } from '@/schemas/realm-content-definition.schema';
 
-export function mapEntitiesToConfigFile(
-  entities: (RealmConfigsDocument | JsonSchemaConfigsDocument)[],
+export function mapEntitiesToContentFile(
+  entities: (RealmContentsDocument | JsonSchemaContentsDocument)[],
   realms?: string[],
 ) {
   return realms?.map((realm) => ({
