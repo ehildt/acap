@@ -35,7 +35,7 @@ import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-object.helper';
 import { gzipSyncCacheObject } from '@/helpers/gzip-sync-cache-object.helper';
 import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
-import { reduceToConfigs } from '@/helpers/reduce-to-configs.helper';
+import { reduceToContents } from '@/helpers/reduce-to-contents.helper';
 import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
 import { AvjService } from '@/services/avj.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
@@ -141,7 +141,7 @@ export class JsonSchemaController {
         await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
         return cache.content;
       }
-      const data = reduceToConfigs(this.configFactory.app.realm.resolveEnv, await this.schemaService.getRealm(realm));
+      const data = reduceToContents(this.configFactory.app.realm.resolveEnv, await this.schemaService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
       const cacheObj = gzipSyncCacheObject(data, this.configFactory.app.realm.gzipThreshold, Object.keys(data).length);
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);

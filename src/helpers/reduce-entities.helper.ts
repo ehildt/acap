@@ -1,20 +1,20 @@
-import { JsonSchemaConfigsDocument } from '@/schemas/json-schema-config-definition.schema';
-import { RealmConfigsDocument } from '@/schemas/realm-configs-definition.schema';
+import { JsonSchemaContentsDocument } from '@/schemas/json-schema-content-definition.schema';
+import { RealmContentsDocument } from '@/schemas/realm-content-definition.schema';
 
-import { challengeConfigValue } from './challenge-config-source.helper';
+import { challengeContentValue } from './challenge-content-source.helper';
 
 const entityReducer = (
   previous: Record<string, unknown>,
-  document: RealmConfigsDocument | JsonSchemaConfigsDocument,
+  document: RealmContentsDocument | JsonSchemaContentsDocument,
   resolveEnv: boolean,
 ) => ({
   ...previous,
-  [document.id]: challengeConfigValue(document.value, resolveEnv),
+  [document.id]: challengeContentValue(document.value, resolveEnv),
 });
 
 export function reduceEntities(
   resolveEnv: boolean,
-  documents?: Array<RealmConfigsDocument | JsonSchemaConfigsDocument>,
+  documents?: Array<RealmContentsDocument | JsonSchemaContentsDocument>,
 ) {
   return documents?.reduce((acc, val) => entityReducer(acc, val, resolveEnv), {});
 }

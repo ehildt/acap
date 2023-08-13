@@ -3,7 +3,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 import { REDIS_PUBSUB } from '@/constants/app.constants';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
-import { challengeConfigValue } from '@/helpers/challenge-config-source.helper';
+import { challengeContentValue } from '@/helpers/challenge-content-source.helper';
 
 import { ConfigFactoryService } from './config-factory.service';
 
@@ -21,7 +21,7 @@ export class PubSubService {
         req.realm,
         req.contents.map(({ id, value }) => ({
           id,
-          value: challengeConfigValue(value as any, this.factory.app.realm.resolveEnv),
+          value: challengeContentValue(value as any, this.factory.app.realm.resolveEnv),
         })),
       );
     });

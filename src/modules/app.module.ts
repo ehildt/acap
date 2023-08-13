@@ -13,9 +13,9 @@ import { MetaController } from '@/controllers/meta.controller';
 import { RealmController } from '@/controllers/realm.controller';
 import { RealmRepository } from '@/repositories/realm.repository';
 import { SchemaRepository } from '@/repositories/schema.repository';
-import { JsonSchemaConfigsDefinition, JsonSchemaConfigsSchema } from '@/schemas/json-schema-config-definition.schema';
+import { JsonSchemaContentSchema, JsonSchemaContentsDefinition } from '@/schemas/json-schema-content-definition.schema';
 import { JsonSchema, JsonSchemaDefinition } from '@/schemas/json-schema-definition.schema';
-import { RealmConfigsSchema, RealmConfigsSchemaDefinition } from '@/schemas/realm-configs-definition.schema';
+import { RealmContentsSchema, RealmContentsSchemaDefinition } from '@/schemas/realm-content-definition.schema';
 import { RealmsSchema, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
 import { AppService } from '@/services/app.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
@@ -71,8 +71,8 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
         collection: 'REALM',
       },
       {
-        name: RealmConfigsSchemaDefinition.name,
-        schema: RealmConfigsSchema,
+        name: RealmContentsSchemaDefinition.name,
+        schema: RealmContentsSchema,
         collection: 'REALM_CONFIG',
       },
       {
@@ -81,8 +81,8 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
         collection: 'SCHEMA',
       },
       {
-        name: JsonSchemaConfigsDefinition.name,
-        schema: JsonSchemaConfigsSchema,
+        name: JsonSchemaContentsDefinition.name,
+        schema: JsonSchemaContentSchema,
         collection: 'SCHEMA_CONFIG',
       },
     ]),
