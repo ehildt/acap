@@ -15,7 +15,7 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY shims.d.ts ./
 COPY src/ ./src/
-# COPY src/configs/config-yml/config.yml ./dist/configs/config-yml/config.yml
+COPY src/configs/config-yml/config.yml ./dist/configs/config-yml/config.yml
 
 RUN npm ci --ignore-scripts --loglevel=error
 
