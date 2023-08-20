@@ -86,8 +86,11 @@ export class RealmController {
   @Get()
   @OpenApi_GetRealms()
   async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
-    if (!realms) return await this.realmService.paginate(take ?? 100, skip ?? 0);
-    return await this.realmService.getRealms(realms);
+    if (realms) return await this.realmService.getRealms(realms);
+    return {
+      data: await this.realmService.paginate(take ?? 100, skip ?? 0),
+      count: await this.realmService.countRealmContents(),
+    };
   }
 
   @PostRealm()
