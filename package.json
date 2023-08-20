@@ -1,6 +1,6 @@
 {
   "name": "@litlbyte/acap",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "A simple and convenient way to distribute and provide content to your apps ;)",
   "repository": "git@github.com:ehildt/acap.git",
   "author": {
