@@ -8,7 +8,7 @@
     "assets": [
       {
         "include": "configs/config-yml/config.yml",
-        "outDir": "dist/configs/config-yml/config.yml"
+        "outDir": "dist"
       }
     ]
   }
