@@ -31,7 +31,7 @@ check_docker_service() {
 }
 
 check_docker_service() {
-    if ! docker info > /dev/null 2>&1; then
+    if ! docker info >/dev/null 2>&1; then
         info "$(redfy error): This husky script uses docker.."
         debug "Is docker installed and running?"
         debug "WSL - sudo service docker start"
