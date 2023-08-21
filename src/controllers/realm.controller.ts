@@ -89,7 +89,7 @@ export class RealmController {
     if (realms) return await this.realmService.getRealms(realms);
     return {
       data: await this.realmService.paginate(take ?? 100, skip ?? 0),
-      count: await this.realmService.countRealmContents(),
+      count: await this.realmService.countRealms(),
     };
   }
 

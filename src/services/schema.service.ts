@@ -29,6 +29,10 @@ export class SchemaService {
     return await this.schemaRepository.countContents();
   }
 
+  async countSchemas() {
+    return await this.schemaRepository.countSchemas();
+  }
+
   async upsertRealm(realm: string, req: Array<ContentUpsertReq>) {
     const result = await this.schemaRepository.upsert(realm, req);
     if (!result?.ok) return result;
