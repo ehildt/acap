@@ -29,6 +29,10 @@ export class RealmService {
     return await this.configRepo.countContents();
   }
 
+  async countRealms() {
+    return await this.configRepo.countRealms();
+  }
+
   async upsertRealm(realm: string, req: ContentUpsertReq[]) {
     const result = await this.configRepo.upsert(realm, req);
     if (!result?.ok) return result;
