@@ -172,7 +172,7 @@ export class JsonSchemaController {
     if (realms) return await this.schemaService.getRealms(realms);
     return {
       data: await this.schemaService.paginate(take ?? 100, skip ?? 0),
-      count: await this.schemaService.countRealmContents(),
+      count: await this.schemaService.countSchemas(),
     };
   }
 
