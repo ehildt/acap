@@ -54,16 +54,6 @@ export class RealmService {
     return result;
   }
 
-  async paginate(take: number, skip: number) {
-    return (await this.configRepo.find(take, skip)).map(({ value, ...rest }) => {
-      try {
-        return { ...rest, value: JSON.parse(value) };
-      } catch {
-        return { ...rest, value };
-      }
-    });
-  }
-
   async getRealms(realms: Array<string>) {
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.configRepo.where({ realm: { $in: realmSet } });

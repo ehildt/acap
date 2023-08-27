@@ -10,7 +10,6 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-import { RealmsRes } from '@/dtos/realms-res.dto.res';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 
 import {
@@ -23,8 +22,10 @@ import {
   ApiQueryFormat,
   ApiQueryRealm,
   ApiQueryRealms,
+  ApiQuerySearch,
   ApiQuerySkip,
   ApiQueryTake,
+  ApiQueryVerbose,
 } from './open-api.method.decorators';
 
 const APPLICATION_YAML = 'application/x-yaml';
@@ -182,21 +183,8 @@ export function OpenApi_GetMeta() {
     ApiOkResponse(),
     ApiQueryTake(),
     ApiQuerySkip(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
-  );
-}
-
-export function OpenApi_GetRealms() {
-  return applyDecorators(
-    ApiOperation({
-      description:
-        'If a value for realms is provided, then take and skip are ignored. Otherwise all realms are paginated.',
-    }),
-    ApiOkResponse({ type: RealmsRes }),
-    ApiQueryRealms(false),
-    ApiQueryTake(),
-    ApiQuerySkip(),
+    ApiQueryVerbose(),
+    ApiQuerySearch(),
     ApiInternalServerErrorResponse(),
     ApiUnprocessableEntityResponse(),
   );

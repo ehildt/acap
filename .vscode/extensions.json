@@ -11,6 +11,7 @@
     "hangxingliu.vscode-nginx-conf-hint",
     "tamasfe.even-better-toml",
     "aaron-bond.better-comments",
-    "mikestead.dotenv"
+    "mikestead.dotenv",
+    "mongodb.mongodb-vscode"
   ]
 }

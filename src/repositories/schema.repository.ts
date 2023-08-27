@@ -9,6 +9,7 @@ import { prepareBulkWriteDeleteContents } from '@/helpers/prepare-bulk-write-del
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
 import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-upsert-contents.helper';
 import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
+import { FILTER } from '@/models/filter.model';
 import {
   JsonSchemaContentsDefinition,
   JsonSchemaContentsDocument,
@@ -32,18 +33,21 @@ export class SchemaRepository {
     return await this.schemaModel.count();
   }
 
-  async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
+  async find(filter: FILTER, propertiesToSelect?: Array<string>) {
+    const { skip, take, search, verbose } = filter;
+    if (!verbose) propertiesToSelect.push('value');
     const realms = (
       await this.schemaModel
         .find({}, null, { limit: take, skip })
         .sort({ realm: 'descending', updatedAt: 'descending' })
+        .where({ realm: { $text: search } })
         .lean()
     ).map(({ realm }) => realm);
     return await this.contentsModel
       .find()
-      .select(propertiesToSelect)
-      .where({ realm: { $in: realms } })
       .sort({ realm: 'descending', updatedAt: 'descending' })
+      .select(propertiesToSelect)
+      .where({ realm: { $in: realms, $text: search } })
       .lean();
   }
 

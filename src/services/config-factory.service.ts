@@ -8,7 +8,7 @@ import {
   MongoConfig,
   RedisConfig,
   RedisPubSubConfig,
-} from '@/configs/config-yml/config.modal';
+} from '@/configs/config-yml/config.model';
 import { MqttClientOptions } from '@/modules/mqtt-client.module';
 
 @Injectable()

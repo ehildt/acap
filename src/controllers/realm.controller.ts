@@ -1,5 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { BadRequestException, Controller, Get, Inject, Post, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Controller, Inject, Post, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -9,16 +9,13 @@ import {
   ParamRealm,
   QueryIds,
   QueryRealm,
-  QueryRealms,
   RealmUpsertBody,
   RealmUpsertRealmBody,
 } from '@/decorators/controller.parameter.decorators';
-import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
   OpenApi_GetRealmConfig,
-  OpenApi_GetRealms,
   OpenApi_Upsert,
   OpenApi_UpsertRealms,
 } from '@/decorators/open-api.controller.decorators';
@@ -53,11 +50,15 @@ export class RealmController {
     const cache = gunzipSyncCacheObject(cachedRealm);
 
     if (!ids) {
+      // @ we update the ttl if the cache holds the same amount of content ids
+      // ! when upserting the realm, the cache is also upserted.
       if (Object.keys(cache.content)?.length === cache.count) {
-        // @ we reset the ttl
         await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
         return cache.content;
       }
+
+      // @ if not all realm content ids are in cache when fetching the realm,
+      // @ we fetch the whole realm, cache and return it.
       const data = reduceToContents(this.configFactory.app.realm.resolveEnv, await this.realmService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
       const cacheObj = gzipSyncCacheObject(data, this.configFactory.app.realm.gzipThreshold, Object.keys(data).length);
@@ -125,9 +126,7 @@ export class RealmController {
       const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
       req.forEach(({ value, id }) => this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])));
     } catch (error) {
-      // * 400 - error is coming from avj
-      // * 422 - error is coming from schemaService
-      if (error.status === 400) throw new BadRequestException(error);
+      if (error.status !== 422) throw new BadRequestException(error);
     }
     // @ schema validation end
     // ! we don't cache schemas on upsert.
@@ -157,9 +156,7 @@ export class RealmController {
           this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
         );
       } catch (error) {
-        // * 400 - error is coming from avj
-        // * 422 - error is coming from schemaService
-        if (error.status === 400) throw new BadRequestException(error);
+        if (error.status !== 422) throw new BadRequestException(error);
       }
       // @ schema validation end
       // ! we don't cache schemas on upsert.
