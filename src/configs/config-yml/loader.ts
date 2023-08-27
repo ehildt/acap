@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import { join } from 'path';
 
-import { Config } from './config.modal';
+import { Config } from './config.model';
 
 const file = readFileSync(join(__dirname, 'config.yml'), 'utf8');
 

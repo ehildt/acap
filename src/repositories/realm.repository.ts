@@ -9,6 +9,7 @@ import { prepareBulkWriteDeleteContents } from '@/helpers/prepare-bulk-write-del
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
 import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-upsert-contents.helper';
 import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
+import { FILTER } from '@/models/filter.model';
 import { RealmContentsDocument, RealmContentsSchemaDefinition } from '@/schemas/realm-content-definition.schema';
 import { RealmsDocument, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
 
@@ -42,18 +43,34 @@ export class RealmRepository {
       .lean();
   }
 
-  async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
+  async find(filter: FILTER, propertiesToSelect?: Array<string>) {
+    const { skip, take, search, verbose } = filter;
+    if (search) {
+      return await this.contentModel
+        .find(null, null, { limit: take, skip })
+        .where({
+          $or: [
+            { realm: { $regex: `.*${search}.*`, $options: 'i' } },
+            { value: { $regex: `.*${search}.*`, $options: 'i' } },
+            { id: { $regex: `.*${search}.*`, $options: 'i' } },
+          ],
+        })
+        .select(verbose ? propertiesToSelect?.concat(['value']) : propertiesToSelect)
+        .sort({ realm: 'descending', updatedAt: 'descending' })
+        .lean();
+    }
+
     const realms = (
       await this.realmModel
-        .find({}, null, { limit: take, skip })
+        .find(null, null, { limit: take, skip })
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean()
     ).map(({ realm }) => realm);
+
     return await this.contentModel
-      .find()
-      .sort({ realm: 'descending', updatedAt: 'descending' })
-      .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
+      .select(verbose ? propertiesToSelect?.concat(['value']) : propertiesToSelect)
+      .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }
 

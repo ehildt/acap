@@ -29,7 +29,6 @@ void (async () => {
   appService.addYamlContentType(app);
 
   process.on('SIGINT', process.exit);
-  process.on('SIGTERM', process.exit);
   process.on('SIGQUIT', process.exit);
 
   await app.register(fastifyMultipart);

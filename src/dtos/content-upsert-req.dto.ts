@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsString, IsUppercase } from 'class-validator';
+import { IsDefined, IsString } from 'class-validator';
 
 export class ContentUpsertReq {
   @IsString()
-  @IsUppercase()
   @ApiProperty()
   id: string;
 
