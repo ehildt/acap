@@ -1,4 +1,4 @@
-import fastifyMultipart from '@fastify/multipart';
+import { fastifyMultipart } from '@fastify/multipart';
 import { LogLevel } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -29,6 +29,7 @@ void (async () => {
   appService.addYamlContentType(app);
 
   process.on('SIGINT', process.exit);
+  process.on('SIGTERM', process.exit);
   process.on('SIGQUIT', process.exit);
 
   await app.register(fastifyMultipart);
