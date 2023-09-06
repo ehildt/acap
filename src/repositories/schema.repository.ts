@@ -36,18 +36,31 @@ export class SchemaRepository {
   async find(filter: FILTER, propertiesToSelect?: Array<string>) {
     const { skip, take, search, verbose } = filter;
     if (!verbose) propertiesToSelect.push('value');
+    if (search) {
+      return await this.contentsModel
+        .find(null, null, { limit: take, skip })
+        .where({
+          $or: [
+            { realm: { $regex: `.*${search}.*`, $options: 'i' } },
+            { value: { $regex: `.*${search}.*`, $options: 'i' } },
+            { id: { $regex: `.*${search}.*`, $options: 'i' } },
+          ],
+        })
+        .select(propertiesToSelect)
+        .sort({ realm: 'descending', updatedAt: 'descending' })
+        .lean();
+    }
+
     const realms = (
       await this.schemaModel
         .find({}, null, { limit: take, skip })
         .sort({ realm: 'descending', updatedAt: 'descending' })
-        .where({ realm: { $text: search } })
         .lean()
     ).map(({ realm }) => realm);
     return await this.contentsModel
-      .find()
-      .sort({ realm: 'descending', updatedAt: 'descending' })
+      .where({ realm: { $in: realms } })
       .select(propertiesToSelect)
-      .where({ realm: { $in: realms, $text: search } })
+      .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }
 
