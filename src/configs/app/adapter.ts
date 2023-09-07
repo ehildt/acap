@@ -1,6 +1,6 @@
 import ShortUniqueId from 'short-unique-id';
 
-const shortUniqueId = new ShortUniqueId()(32);
+const uuid = new ShortUniqueId();
 
 export class AppConfigAdapter {
   get PORT(): number {
@@ -36,7 +36,7 @@ export class AppConfigAdapter {
   }
 
   get NAMESPACE_POSTFIX(): string {
-    return process.env.REALM_NAMESPACE_POSTFIX ?? shortUniqueId;
+    return process.env.REALM_NAMESPACE_POSTFIX ?? uuid.randomUUID(32);
   }
 
   get TTL(): number {
