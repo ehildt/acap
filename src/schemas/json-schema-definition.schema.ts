@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type JsonSchemaDocument = JsonSchemaDefinition & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, strict: true })
 export class JsonSchemaDefinition {
   @Prop({ required: true })
   realm: string;
