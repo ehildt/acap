@@ -3,15 +3,13 @@
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
     "redhat.vscode-yaml",
-    "peterschmalfeldt.explorer-exclude",
     "richie5um2.vscode-sort-json",
     "adpyke.codesnap",
     "oderwat.indent-rainbow",
-    "dotenv.dotenv-vscode",
     "hangxingliu.vscode-nginx-conf-hint",
     "tamasfe.even-better-toml",
     "aaron-bond.better-comments",
     "mikestead.dotenv",
-    "mongodb.mongodb-vscode"
+    "mongodb.mongodb-vscode",
   ]
 }
