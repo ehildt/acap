@@ -9,6 +9,7 @@ import { prepareBulkWriteDeleteContents } from '@/helpers/prepare-bulk-write-del
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
 import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-upsert-contents.helper';
 import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
+import { FILTER } from '@/models/filter.model';
 import {
   JsonSchemaContentsDefinition,
   JsonSchemaContentsDocument,
@@ -32,7 +33,24 @@ export class SchemaRepository {
     return await this.schemaModel.count();
   }
 
-  async find(take: number, skip: number, propertiesToSelect?: Array<string>) {
+  async find(filter: FILTER, propertiesToSelect?: Array<string>) {
+    const { skip, take, search, verbose } = filter;
+    if (!verbose) propertiesToSelect.push('value');
+    if (search) {
+      return await this.contentsModel
+        .find(null, null, { limit: take, skip })
+        .where({
+          $or: [
+            { realm: { $regex: `.*${search}.*`, $options: 'i' } },
+            { value: { $regex: `.*${search}.*`, $options: 'i' } },
+            { id: { $regex: `.*${search}.*`, $options: 'i' } },
+          ],
+        })
+        .select(propertiesToSelect)
+        .sort({ realm: 'descending', updatedAt: 'descending' })
+        .lean();
+    }
+
     const realms = (
       await this.schemaModel
         .find({}, null, { limit: take, skip })
@@ -40,9 +58,8 @@ export class SchemaRepository {
         .lean()
     ).map(({ realm }) => realm);
     return await this.contentsModel
-      .find()
-      .select(propertiesToSelect)
       .where({ realm: { $in: realms } })
+      .select(propertiesToSelect)
       .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }

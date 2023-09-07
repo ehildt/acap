@@ -78,16 +78,6 @@ export class SchemaService {
     return reduceEntities(this.factory.app.realm.resolveEnv, entities);
   }
 
-  async paginate(take: number, skip: number) {
-    return (await this.schemaRepository.find(take, skip)).map(({ value, ...rest }) => {
-      try {
-        return { ...rest, value: JSON.parse(value) };
-      } catch {
-        return { ...rest, value };
-      }
-    });
-  }
-
   async deleteRealm(realm: string) {
     const entity = await this.schemaRepository.delete(realm);
     if (!entity.deletedCount) return entity;

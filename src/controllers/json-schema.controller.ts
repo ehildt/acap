@@ -2,7 +2,6 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   Controller,
-  Get,
   Inject,
   Post,
   UnprocessableEntityException,
@@ -17,15 +16,12 @@ import {
   ParamRealm,
   QueryIds,
   QueryRealm,
-  QueryRealms,
   RealmUpsertBody,
   RealmUpsertRealmBody,
 } from '@/decorators/controller.parameter.decorators';
-import { QuerySkip, QueryTake } from '@/decorators/controller.query.decorators';
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
-  OpenApi_GetRealms,
   OpenApi_GetSchema,
   OpenApi_SchemaUpsert,
   OpenApi_UpsertRealms,
@@ -62,7 +58,7 @@ export class JsonSchemaController {
       // * avj strict mode - must abide by the schema definition rules
       if ((error.message as string).startsWith('strict')) throw new BadRequestException(error.message);
       // * 400 - some avj schema validation error on compiling
-      if (error.status === 400) throw error.message;
+      if (error.status === 400) throw new BadRequestException(error.message);
     }
     // @ schema validation end
     // ! we don't cache schemas on upsert.
@@ -88,8 +84,9 @@ export class JsonSchemaController {
       try {
         contents.forEach(({ value }) => this.avjService.compile(value));
       } catch (error) {
-        // * 400 - error is coming from avj
-        // * 422 - error is coming from schemaService
+        // * avj strict mode - must abide by the schema definition rules
+        if ((error.message as string).startsWith('strict')) throw new BadRequestException(error.message);
+        // * 400 - some avj schema validation error on compiling
         if (error.status === 400) throw new BadRequestException(error);
       }
       // @ schema validation end
@@ -164,16 +161,6 @@ export class JsonSchemaController {
     const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return content;
-  }
-
-  @Get()
-  @OpenApi_GetRealms()
-  async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
-    if (realms) return await this.schemaService.getRealms(realms);
-    return {
-      data: await this.schemaService.paginate(take ?? 100, skip ?? 0),
-      count: await this.schemaService.countSchemas(),
-    };
   }
 
   @DeleteRealm()

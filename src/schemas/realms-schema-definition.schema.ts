@@ -3,12 +3,10 @@ import { Document } from 'mongoose';
 
 export type RealmsDocument = RealmsSchemaDefinition & Document;
 
-@Schema({ timestamps: true, autoIndex: true })
+@Schema({ timestamps: true, strict: true })
 export class RealmsSchemaDefinition {
-  @Prop({ required: true, uppercase: true })
+  @Prop({ required: true })
   realm: string;
 }
 
-export const RealmsSchema = SchemaFactory.createForClass(RealmsSchemaDefinition);
-
-RealmsSchema.index({ realm: 1 }, { unique: true });
+export const RealmsSchema = SchemaFactory.createForClass(RealmsSchemaDefinition).index({ realm: 1 }, { unique: true });

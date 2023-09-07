@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { FILTER } from '@/models/filter.model';
 import { RealmRepository } from '@/repositories/realm.repository';
 import { SchemaRepository } from '@/repositories/schema.repository';
 
@@ -10,10 +11,10 @@ export class MetaService {
     private readonly schemaRepository: SchemaRepository,
   ) {}
 
-  async getRealmMeta(take: number, skip: number) {
+  async getRealmMeta(filter: FILTER) {
     const realms = {};
     const schemas = {};
-    const realmConfigEntities = await this.realmRepository.find(take, skip, QUERY_PROPERTIES);
+    const realmConfigEntities = await this.realmRepository.find(filter, QUERY_PROPERTIES);
     const realmSchemas = realmConfigEntities.map(({ realm }) => realm);
     const schemaConfigEntities = await this.schemaRepository.getMetaSchemasByRealms(realmSchemas, QUERY_PROPERTIES);
     mapRealmEntitiesMeta(schemaConfigEntities, schemas);
@@ -25,10 +26,10 @@ export class MetaService {
     };
   }
 
-  async getSchemaMeta(take: number, skip: number) {
+  async getSchemaMeta(filter: FILTER) {
     const realms = {};
     const schemas = {};
-    const schemaConfigEntities = await this.schemaRepository.find(take, skip, QUERY_PROPERTIES);
+    const schemaConfigEntities = await this.schemaRepository.find(filter, QUERY_PROPERTIES);
     const realmSchemas = schemaConfigEntities.map(({ realm }) => realm);
     const realmConfigEntities = await this.realmRepository.getMetaRealmsBySchemas(realmSchemas, QUERY_PROPERTIES);
     mapSchemaEntitiesMeta(realmConfigEntities, realms);

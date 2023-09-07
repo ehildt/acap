@@ -3,12 +3,10 @@ import { Document } from 'mongoose';
 
 export type JsonSchemaDocument = JsonSchemaDefinition & Document;
 
-@Schema({ timestamps: true, autoIndex: true })
+@Schema({ timestamps: true, strict: true })
 export class JsonSchemaDefinition {
-  @Prop({ required: true, uppercase: true })
+  @Prop({ required: true })
   realm: string;
 }
 
-export const JsonSchema = SchemaFactory.createForClass(JsonSchemaDefinition);
-
-JsonSchema.index({ realm: 1 }, { unique: true });
+export const JsonSchema = SchemaFactory.createForClass(JsonSchemaDefinition).index({ realm: 1 }, { unique: true });
