@@ -35,7 +35,8 @@ export class SchemaRepository {
 
   async find(filter: FILTER, propertiesToSelect?: Array<string>) {
     const { skip, take, search, verbose } = filter;
-    if (!verbose) propertiesToSelect.push('value');
+    const selectProperties = verbose ? propertiesToSelect.concat(['value']) : propertiesToSelect;
+
     if (search) {
       return await this.contentsModel
         .find(null, null, { limit: take, skip })
@@ -46,7 +47,7 @@ export class SchemaRepository {
             { id: { $regex: `.*${search}.*`, $options: 'i' } },
           ],
         })
-        .select(propertiesToSelect)
+        .select(selectProperties)
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean();
     }
@@ -57,9 +58,10 @@ export class SchemaRepository {
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean()
     ).map(({ realm }) => realm);
+
     return await this.contentsModel
       .where({ realm: { $in: realms } })
-      .select(propertiesToSelect)
+      .select(selectProperties)
       .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }

@@ -45,7 +45,8 @@ export class RealmRepository {
 
   async find(filter: FILTER, propertiesToSelect?: Array<string>) {
     const { skip, take, search, verbose } = filter;
-    if (!verbose) propertiesToSelect.push('value');
+    const selectProperties = verbose ? propertiesToSelect.concat(['value']) : propertiesToSelect;
+
     if (search) {
       return await this.contentModel
         .find(null, null, { limit: take, skip })
@@ -56,7 +57,7 @@ export class RealmRepository {
             { id: { $regex: `.*${search}.*`, $options: 'i' } },
           ],
         })
-        .select(propertiesToSelect)
+        .select(selectProperties)
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean();
     }
@@ -70,7 +71,7 @@ export class RealmRepository {
 
     return await this.contentModel
       .where({ realm: { $in: realms } })
-      .select(propertiesToSelect)
+      .select(selectProperties)
       .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }

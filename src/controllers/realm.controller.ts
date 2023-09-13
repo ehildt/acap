@@ -100,7 +100,9 @@ export class RealmController {
     // ! we don't cache schemas on upsert.
     // ! we don't want to spam the ram whenever we upsert
     // * we want to keep the cache up to date
-    const entity = await this.realmService.upsertRealm(realm, req);
+    let payload: Array<ContentUpsertReq>;
+    // if (encrypt) payload = req.map(({ id, value }) => ({ id, value: this.cryptoService.encrypt(value) }));
+    const entity = await this.realmService.upsertRealm(realm, payload ?? req);
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     if (!Object.keys(content)?.length) return entity;
@@ -132,7 +134,9 @@ export class RealmController {
       // * we want to keep the cache up to date
       const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
       const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      const entity = await this.realmService.upsertRealm(realm, contents);
+      let payload: Array<ContentUpsertReq>;
+      // if (encrypt) payload = contents.map(({ id, value }) => ({ id, value: this.cryptoService.encrypt(value) }));
+      const entity = await this.realmService.upsertRealm(realm, payload ?? contents);
       if (!Object.keys(content)?.length) return entity;
       const count = await this.realmService.countRealmContents();
       contents.forEach(({ id, value }) => content[id] && (content[id] = value));

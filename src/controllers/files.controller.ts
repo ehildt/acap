@@ -12,6 +12,9 @@ import {
 } from '@/decorators/controller.method.decorators';
 import { QueryFormat, QueryRealms } from '@/decorators/controller.parameter.decorators';
 import { OpenApi_DownloadFile, OpenApi_PostFile } from '@/decorators/open-api.controller.decorators';
+import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { ConfigFactoryService } from '@/services/config-factory.service';
+import { CryptoService } from '@/services/crypto.service';
 import { RealmService } from '@/services/realm.service';
 import { SchemaService } from '@/services/schema.service';
 
@@ -21,12 +24,17 @@ export class FilesController {
   constructor(
     private readonly realmsService: RealmService,
     private readonly schemaService: SchemaService,
+    private readonly cryptoService: CryptoService,
+    private readonly configFactory: ConfigFactoryService,
   ) {}
 
   @PostFile()
   @OpenApi_PostFile()
-  async uploadRealmFile(@JsonYamlContentParser() content: any) {
-    return await this.realmsService.upsertRealms(content);
+  async uploadRealmFile(@JsonYamlContentParser() content: Array<RealmsUpsertReq>) {
+    if (!this.configFactory.app.crypto.symmetricKey || !this.configFactory.app.crypto.symmetricAlgorithm)
+      return await this.realmsService.upsertRealms(content);
+    const realmsEncrypted = this.cryptoService.encryptRealmsUpsertReq(content);
+    return await this.realmsService.upsertRealms(realmsEncrypted);
   }
 
   @DownloadFile()

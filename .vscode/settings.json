@@ -118,5 +118,11 @@
   "hide-files.files": [
     "dist",
     "node_modules"
-  ]
+  ],
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }

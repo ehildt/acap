@@ -19,6 +19,7 @@ import { RealmContentsSchema, RealmContentsSchemaDefinition } from '@/schemas/re
 import { RealmsSchema, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
 import { AppService } from '@/services/app.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
+import { CryptoService } from '@/services/crypto.service';
 import { MetaService } from '@/services/meta.service';
 import { RealmService } from '@/services/realm.service';
 import { SchemaService } from '@/services/schema.service';
@@ -104,7 +105,16 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       useFactory: ({ redis }: ConfigFactoryService) => ({ ...redis, store: RedisStore }),
     }),
   ].filter((exists) => exists),
-  providers: [AppService, ConsoleLogger, RealmService, RealmRepository, SchemaService, SchemaRepository, MetaService],
+  providers: [
+    AppService,
+    ConsoleLogger,
+    RealmService,
+    RealmRepository,
+    SchemaService,
+    SchemaRepository,
+    MetaService,
+    CryptoService,
+  ],
   controllers: [RealmController, FilesController, JsonSchemaController, MetaController],
 })
 export class AppModule {}

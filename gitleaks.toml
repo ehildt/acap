@@ -10,8 +10,7 @@ paths = [
     '''(go.mod|go.sum)$''',
     '''node_modules''',
     '''vendor''',
-    "127.0.0.1.key",
-    "127.0.0.1.crt",
+    '''src/configs/config-yml''',
     ".gitleaks.json",
     "README.md"
 ]

@@ -7,6 +7,8 @@ import { catchError } from 'rxjs';
 import { BULLMQ_REALMS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { convertEntitiesToRealmsUpsertReq } from '@/helpers/convert-entities-to-realms-upsert-req.helper';
+import { mapDecryptedRealmsUpsert } from '@/helpers/map-decrypted-realms-upsert.helper';
 import { mapEntitiesToContentFile } from '@/helpers/map-entities-to-content-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
@@ -14,12 +16,14 @@ import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { RealmRepository } from '@/repositories/realm.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
+import { CryptoService } from './crypto.service';
 
 @Injectable()
 export class RealmService {
   constructor(
     private readonly configRepo: RealmRepository,
     private readonly factory: ConfigFactoryService,
+    private readonly cryptoService: CryptoService,
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSubClient: ClientProxy,
     @Optional() @InjectQueue(BULLMQ_REALMS_QUEUE) private readonly bullmq: Queue,
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
@@ -34,6 +38,7 @@ export class RealmService {
   }
 
   async upsertRealm(realm: string, req: ContentUpsertReq[]) {
+    // TODO: handle encryption here
     const result = await this.configRepo.upsert(realm, req);
     if (!result?.ok) return result;
     this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
@@ -43,6 +48,7 @@ export class RealmService {
   }
 
   async upsertRealms(reqs: RealmsUpsertReq[]) {
+    // TODO: handle encryption here
     const result = await this.configRepo.upsertMany(reqs);
     if (result?.ok) return result;
     if (this.redisPubSubClient || this.mqttClient)
@@ -100,11 +106,17 @@ export class RealmService {
     if (!realms) {
       const entities = await this.configRepo.findAll();
       const realms = Array.from(new Set(entities.map(({ realm }) => realm)));
-      return mapEntitiesToContentFile(entities, realms);
+      if (!this.factory.app.crypto.cryptable) return mapEntitiesToContentFile(entities, realms);
+      const converted = convertEntitiesToRealmsUpsertReq(entities, realms);
+      const decrypted = this.cryptoService.decryptRealmsUpsertReq(converted);
+      return mapDecryptedRealmsUpsert(decrypted);
     }
 
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.configRepo.where({ realm: { $in: realmSet } });
-    return mapEntitiesToContentFile(entities, realms);
+    if (!this.factory.app.crypto.cryptable) return mapEntitiesToContentFile(entities, realmSet);
+    const converted = convertEntitiesToRealmsUpsertReq(entities, realms);
+    const decrypted = this.cryptoService.decryptRealmsUpsertReq(converted);
+    return mapDecryptedRealmsUpsert(decrypted);
   }
 }
