@@ -17,7 +17,7 @@ yellowfy() { echo "\e[1m\e[33m$*\e[0m"; }
 bluefy() { echo "\e[1m\e[34m$*\e[0m"; }
 bolderfy() { echo "\e[1m$*\e[0m"; }
 info() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(magentafy $(echo $0 | cut -c 8-))$(bolderfy \])$(bolderfy ' --') $(cyanfy $*)"; }
-debug() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(yellowfy debug)$(bolderfy \])$(bolderfy ' --') $(bluefy $*)"; }
+debug() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(yellowfy debug-hint)$(bolderfy \])$(bolderfy ' --') $(bluefy $*)"; }
 
 check_docker_service() {
     if ! docker info >/dev/null 2>&1; then
