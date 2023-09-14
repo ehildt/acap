@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bullmq';
-import { Inject, Injectable, Optional, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Optional, UnprocessableEntityException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bullmq';
 import { catchError } from 'rxjs';
@@ -37,20 +37,20 @@ export class RealmService {
     return await this.configRepo.countRealms();
   }
 
-  async upsertRealm(realm: string, req: ContentUpsertReq[]) {
-    // TODO: handle encryption here
-    const result = await this.configRepo.upsert(realm, req);
-    if (!result?.ok) return result;
-    this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
-    this.bullmq?.add(realm, req).catch((error) => error);
-    this.mqttClient?.publish(realm, req);
+  async upsertRealm(realm: string, reqs: Array<ContentUpsertReq>) {
+    const payload = this.factory.app.crypto.cryptable ? this.cryptoService.encryptContentUpsertReqs(reqs) : reqs;
+    const result = await this.configRepo.upsert(realm, payload);
+    if (!result?.ok) throw new BadRequestException(result);
+    this.redisPubSubClient?.emit(realm, reqs).pipe(catchError((error) => error));
+    this.bullmq?.add(realm, reqs).catch((error) => error);
+    this.mqttClient?.publish(realm, reqs);
     return result;
   }
 
-  async upsertRealms(reqs: RealmsUpsertReq[]) {
-    // TODO: handle encryption here
-    const result = await this.configRepo.upsertMany(reqs);
-    if (result?.ok) return result;
+  async upsertRealms(reqs: Array<RealmsUpsertReq>) {
+    const payload = this.factory.app.crypto.cryptable ? this.cryptoService.encryptRealmsUpsertReq(reqs) : reqs;
+    const result = await this.configRepo.upsertMany(payload);
+    if (!result?.ok) throw new BadRequestException(result);
     if (this.redisPubSubClient || this.mqttClient)
       reqs.forEach(({ realm, contents }) => {
         this.redisPubSubClient?.emit(realm, contents).pipe(catchError((error) => error));
@@ -60,16 +60,19 @@ export class RealmService {
     return result;
   }
 
+  // TODO: decrypt
   async getRealms(realms: Array<string>) {
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.configRepo.where({ realm: { $in: realmSet } });
     return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.app.realm.resolveEnv), {});
   }
 
+  // TODO: decrypt
   async getRealm(realm: string) {
     return await this.configRepo.where({ realm });
   }
 
+  // TODO: decrypt, rename
   async getRealmConfigIds(realm: string, ids: Array<string>) {
     const entities = await this.configRepo.where({
       realm,
@@ -93,6 +96,7 @@ export class RealmService {
     return entity;
   }
 
+  // TODO: rename
   async deleteRealmConfigIds(realm: string, ids: Array<string>) {
     const entity = await this.configRepo.delete(realm, ids);
     if (!entity.deletedCount) return entity;
@@ -102,6 +106,7 @@ export class RealmService {
     return entity;
   }
 
+  // TODO: rename, decrypt?
   async downloadConfigFile(realms?: Array<string>) {
     if (!realms) {
       const entities = await this.configRepo.findAll();

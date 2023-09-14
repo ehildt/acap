@@ -74,7 +74,7 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       {
         name: RealmContentsSchemaDefinition.name,
         schema: RealmContentsSchema,
-        collection: 'REALM_CONFIG',
+        collection: 'REALM_CONTENT',
       },
       {
         name: JsonSchemaDefinition.name,
@@ -84,7 +84,7 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       {
         name: JsonSchemaContentsDefinition.name,
         schema: JsonSchemaContentSchema,
-        collection: 'SCHEMA_CONFIG',
+        collection: 'SCHEMA_CONTENT',
       },
     ]),
     GlobalAvJModule,

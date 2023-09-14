@@ -1,6 +1,7 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import crypto from 'crypto';
 
+import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -57,5 +58,13 @@ export class CryptoService {
       realm,
       contents: contents.map(({ id, value }) => ({ id, value: this.decrypt(String(value)) })),
     }));
+  }
+
+  encryptContentUpsertReqs(reqs: Array<ContentUpsertReq>): Array<ContentUpsertReq> {
+    return reqs.map(({ id, value }) => ({ id, value: this.encrypt(value) }));
+  }
+
+  decryptContentUpsertReqs(reqs: Array<ContentUpsertReq>): Array<ContentUpsertReq> {
+    return reqs.map(({ id, value }) => ({ id, value: this.decrypt(String(value)) }));
   }
 }

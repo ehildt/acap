@@ -84,6 +84,9 @@ appConfig:
   printEnv: true
   startSwagger: true
   nodeEnv: 'local'
+  crypto: 
+    symmetricKey: 694f676c7dc75a8d644c8cf7f66ac6d0efbcc10e8eaa7b65814577060dfedc35
+    symmetricAlgorithm: aes-256-cbc
   realm: 
     ttl: 300
     resolveEnv: false
@@ -217,6 +220,8 @@ REALM_RESOLVE_ENV=false         # Default
 USE_REDIS_PUBSUB=false          # Default
 USE_BULLMQ=false                # Default
 USE_MQTT=false                  # Default
+SYMMETRIC_KEY=''                # Optional
+SYMMETRIC_ALGORITHM=''          # Optional
 
 REDIS_PUBSUB_PORT=6379
 REDIS_PUBSUB_USER='default'
