@@ -9,7 +9,7 @@ const entityReducer = (
   resolveEnv: boolean,
 ) => ({
   ...previous,
-  [document.id]: challengeContentValue(document.value, resolveEnv),
+  [document.id]: document.id && challengeContentValue(document.value, resolveEnv),
 });
 
 export function reduceEntities(

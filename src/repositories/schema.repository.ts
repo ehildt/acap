@@ -5,10 +5,10 @@ import { FilterQuery, Model } from 'mongoose';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmReq } from '@/dtos/realm-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-contents.helper';
 import { prepareBulkWriteDeleteContents } from '@/helpers/prepare-bulk-write-delete-contents.helper';
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
-import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-upsert-contents.helper';
-import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
+import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-realms.helper';
 import { FILTER } from '@/models/filter.model';
 import {
   JsonSchemaContentsDefinition,
