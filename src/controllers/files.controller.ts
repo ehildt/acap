@@ -33,7 +33,7 @@ export class FilesController {
   @DownloadFile()
   @OpenApi_DownloadFile()
   async downloadRealmFile(@Res() reply: FastifyReply, @QueryFormat() format: string, @QueryRealms() realms?: string[]) {
-    const file = await this.realmsService.downloadConfigFile(realms);
+    const file = await this.realmsService.downloadContents(realms);
     void reply.header('Content-Type', 'application/octet-stream');
     void reply.header('Content-Disposition', `attachment; filename="realms.${format}"`);
     if (format === 'json') void reply.send(Buffer.from(JSON.stringify(file, null, 4)));
@@ -49,7 +49,7 @@ export class FilesController {
   @DownloadSchemaFile()
   @OpenApi_DownloadFile()
   async downloadSchemaFile(@Res() reply: FastifyReply, @QueryRealms() realms?: string[]) {
-    const file = await this.schemaService.downloadConfigFile(realms);
+    const file = await this.schemaService.downloadContents(realms);
     void reply.header('Content-Type', 'application/octet-stream');
     void reply.header('Content-Disposition', 'attachment; filename="schemas.json"');
     void reply.send(Buffer.from(JSON.stringify(file, null, 4)));

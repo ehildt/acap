@@ -3,6 +3,7 @@ import crypto from 'crypto';
 
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { RealmContentsDocument } from '@/schemas/realm-content-definition.schema';
 
 import { ConfigFactoryService } from './config-factory.service';
 
@@ -44,6 +45,10 @@ export class CryptoService {
       this.configFactory.app.crypto.symmetricAlgorithm,
       this.configFactory.app.crypto.symmetricKey,
     );
+  }
+
+  decryptEntityValues(entities: Array<RealmContentsDocument>): Array<any> {
+    return entities.map(({ value, ...rest }) => ({ ...rest, value: this.decrypt(value) }));
   }
 
   encryptRealmsUpsertReq(realms: Array<RealmsUpsertReq>): Array<RealmsUpsertReq> {
