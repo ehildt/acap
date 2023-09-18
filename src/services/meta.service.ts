@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { challengeContentValue } from '@/helpers/challenge-content-source.helper';
+import { challengeParseContentValue } from '@/helpers/challenge-parse-content-value.helper';
 import { FILTER } from '@/models/filter.model';
 import { RealmRepository } from '@/repositories/realm.repository';
 import { SchemaRepository } from '@/repositories/schema.repository';
@@ -25,8 +26,8 @@ export class MetaService {
     const realmConfigEntities = await this.realmRepository.find(filter, QUERY_PROPERTIES);
     const realmSchemas = realmConfigEntities.map(({ realm }) => realm);
     const schemaConfigEntities = await this.schemaRepository.getMetaSchemasByRealms(realmSchemas, QUERY_PROPERTIES);
-    this.mapRealmEntitiesMeta(schemaConfigEntities, schemas);
-    this.mapRealmEntitiesMeta(realmConfigEntities, realms, schemas);
+    this.#mapRealmEntitiesMeta(schemaConfigEntities, schemas);
+    this.#mapRealmEntitiesMeta(realmConfigEntities, realms, schemas);
     const count = await this.realmRepository.countRealms();
     return {
       count,
@@ -40,8 +41,8 @@ export class MetaService {
     const schemaConfigEntities = await this.schemaRepository.find(filter, QUERY_PROPERTIES);
     const realmSchemas = schemaConfigEntities.map(({ realm }) => realm);
     const realmConfigEntities = await this.realmRepository.getMetaRealmsBySchemas(realmSchemas, QUERY_PROPERTIES);
-    this.mapSchemaEntitiesMeta(realmConfigEntities, realms);
-    this.mapSchemaEntitiesMeta(schemaConfigEntities, schemas, realms);
+    this.#mapSchemaEntitiesMeta(realmConfigEntities, realms);
+    this.#mapSchemaEntitiesMeta(schemaConfigEntities, schemas, realms);
     const count = await this.schemaRepository.countSchemas();
     return {
       count,
@@ -49,7 +50,7 @@ export class MetaService {
     };
   }
 
-  mapRealmEntitiesMeta(entities: Array<any>, collection: Record<any, any>, schemaCollection?: Record<any, any>) {
+  #mapRealmEntitiesMeta(entities: Array<any>, collection: Record<any, any>, schemaCollection?: Record<any, any>) {
     entities.forEach(({ realm, value, ...rest }) => {
       const realmConfigs = collection[realm];
       const schemaConfigs = schemaCollection?.[realm];
@@ -68,14 +69,21 @@ export class MetaService {
     });
   }
 
-  mapSchemaEntitiesMeta(entities: Array<any>, collection: Record<any, any>, schemaCollection?: Record<any, any>) {
-    entities.forEach(({ realm, ...rest }) => {
+  #mapSchemaEntitiesMeta(entities: Array<any>, collection: Record<any, any>, schemaCollection?: Record<any, any>) {
+    entities.forEach(({ realm, value, ...rest }) => {
+      const challengedValue = challengeParseContentValue(value);
       const realmConfigs = collection[realm];
       const schemaConfigs = schemaCollection?.[realm];
       let hasRealm = false;
       if (schemaConfigs) hasRealm = Boolean(schemaConfigs.find(({ id }) => rest.id === id));
-      if (!Array.isArray(realmConfigs)) collection[realm] = schemaCollection ? [{ ...rest, hasRealm }] : [rest];
-      else realmConfigs.push(schemaCollection ? { ...rest, hasRealm } : rest);
+      if (!Array.isArray(realmConfigs))
+        collection[realm] = schemaCollection
+          ? [{ ...rest, hasRealm, value: challengedValue }]
+          : [{ ...rest, value: challengedValue }];
+      else
+        realmConfigs.push(
+          schemaCollection ? { ...rest, hasRealm, value: challengedValue } : { ...rest, value: challengedValue },
+        );
     });
   }
 }

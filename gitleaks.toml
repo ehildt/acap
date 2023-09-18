@@ -11,6 +11,7 @@ paths = [
     '''node_modules''',
     '''vendor''',
     '''dist''',
+    '''env''',
     '''src/configs/config-yml''',
     ".gitleaks.json",
     "README.md"
