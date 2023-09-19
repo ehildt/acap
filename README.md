@@ -1,3 +1,16 @@
+[![Node.js CI](https://github.com/ehildt/acap/actions/workflows/main.ci.yml/badge.svg?branch=main)](https://github.com/ehildt/acap/actions/workflows/main.ci.yml)
+
+# Table of Contents
+
+1. [Introduction](#Adaptive_Content_Aggregation_Proxy_ACAP)
+    1. [Example Use Cases](#Example-Use-Cases)
+    2. [Whats in the box?](#Whats-in-the-box)
+        1. [K-Own Your Content](#K-Own-Your-Content)
+        2. [Redis](#Redis)
+        3. [Redis Publish Subscribe](#Redis-Publish-Subscribe)
+        4. [MQTT](#MQTT)
+        5. [BullMQ](#BullMQ)
+2. [Getting Started](#Getting-Started)
 
 # Adaptive Content Aggregation Proxy (ACAP)
 
