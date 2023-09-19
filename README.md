@@ -1,4 +1,8 @@
+![GitHub branch](https://img.shields.io/badge/branch-main-blue)
 [![Node.js CI](https://github.com/ehildt/acap/actions/workflows/main.ci.yml/badge.svg?branch=main)](https://github.com/ehildt/acap/actions/workflows/main.ci.yml)
+![Version](https://img.shields.io/github/package-json/v/ehildt/acap)
+![GitHub branch](https://img.shields.io/badge/branch-dev-purple)
+[![Node.js CI](https://github.com/ehildt/acap/actions/workflows/dev.ci.yml/badge.svg?branch=dev)](https://github.com/ehildt/acap/actions/workflows/dev.ci.yml)
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap)
 
 
