@@ -1,22 +1,31 @@
-![Project Name](https://img.shields.io/badge/project-ACAP-gold)
-![GitHub](https://img.shields.io/github/license/ehildt/acap)   
-![GitHub branch](https://img.shields.io/badge/branch-main-blue?style=flat&logo=git)
-![Version](https://img.shields.io/github/package-json/v/ehildt/acap)
-![Node Version](https://img.shields.io/badge/node-v20.x-purple?style=flat&logo=node.js)
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=flat&logo=github)
 
-![Jokes Card](https://readme-jokes.vercel.app/api?hideBorder)
+![Name](https://img.shields.io/badge/open_source-ACAP-gold)
+![GitHub](https://img.shields.io/github/license/ehildt/acap?style=flat&color=brown) 
+![Branch](https://img.shields.io/badge/branch-main-blue?style=flat&logo=git)
+![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
+![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js)
+![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github)
+
+![NestJs](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![Fastify](https://img.shields.io/badge/fastify-202020?style=for-the-badge&logo=fastify&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![MQTT](https://img.shields.io/badge/MQTT-red?style=for-the-badge&logo=mqtt&logoColor=white)
+![Mosquitto](https://img.shields.io/badge/mosquitto-%233C5280.svg?style=for-the-badge&logo=eclipsemosquitto&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black)
 
 # Table of Contents
 
-1. [Introduction](#Adaptive_Content_Aggregation_Proxy_ACAP)
+1. [Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)
     1. [Example Use Cases](#Example-Use-Cases)
     2. [Whats in the box?](#Whats-in-the-box)
-        1. [K-Own Your Content](#K-Own-Your-Content)
-        2. [Redis](#Redis)
-        3. [Redis Publish Subscribe](#Redis-Publish-Subscribe)
-        4. [MQTT](#MQTT)
-        5. [BullMQ](#BullMQ)
+        1. [Content Validation](#Content-Validation)
+        2. [Data Encryption](#Data-Encryption)
+        3. [Redis](#Redis)
+        4. [Redis Publish Subscribe](#Redis-Publish-Subscribe)
+        5. [MQTT](#MQTT)
+        6. [BullMQ](#BullMQ)
 2. [Getting Started](#Getting-Started)
 
 # Adaptive Content Aggregation Proxy (ACAP)
@@ -49,7 +58,7 @@ In certain scenarios, there may be a need to describe and validate content. ACAP
 
 Postman, Insomnia and Swagger OpenApi were yesterday! ACAP delivers a sleek, modern, and intuitive user interface, designed to effortlessly manage and organize your content (**WIP**). With crisp content management and immediate processing, your experience is seamless and efficient. ACAP simplifies the process for developers to enable or disable optional features like Redis Publish Subscribe, MQTT, and BullMQ as per their requirements.
 
-### K-Own Your Content
+### Content Validation
 
 When creating and managing content, you can freely choose between a strict or lenient approach to describe its structure. Validation of your content involves checking if a JSON schema matches the content. ACAP knows which content belongs to which schema by simply referencing the realm identifier. In simpler terms, if you create content with a realm value of **MY_REALM** and a schema that also has a realm value of **MY_REALM**, your content will be validated against that schema. The content itself is not bound to any particular structure or value. It even has the capability to fetch system variables when enabled, as long as the content identifier matches the specified system variable key. By default, this feature is disabled to ensure security. For a more comprehensive understanding of content and schema declarations, please refer to the [Wiki](https://github.com/ehildt/ACAP/wiki/ACAP).
 
