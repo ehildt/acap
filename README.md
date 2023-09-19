@@ -1,3 +1,5 @@
+![Project Name](https://img.shields.io/badge/Project-ACAP-gold)
+![GitHub](https://img.shields.io/github/license/ehildt/acap)   
 ![GitHub branch](https://img.shields.io/badge/branch-main-blue)
 [![Node.js CI](https://github.com/ehildt/acap/actions/workflows/main.ci.yml/badge.svg?branch=main)](https://github.com/ehildt/acap/actions/workflows/main.ci.yml)
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap)
