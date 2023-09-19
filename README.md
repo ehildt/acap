@@ -1,4 +1,6 @@
 [![Node.js CI](https://github.com/ehildt/acap/actions/workflows/main.ci.yml/badge.svg?branch=main)](https://github.com/ehildt/acap/actions/workflows/main.ci.yml)
+![Version](https://img.shields.io/github/package-json/v/ehildt/acap)
+
 
 # Table of Contents
 
