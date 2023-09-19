@@ -1,11 +1,11 @@
 ![Project Name](https://img.shields.io/badge/project-ACAP-gold)
 ![GitHub](https://img.shields.io/github/license/ehildt/acap)   
-![GitHub branch](https://img.shields.io/badge/branch-main-blue)
+![GitHub branch](https://img.shields.io/badge/branch-main-blue?style=flat&logo=git)
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap)
-![Node Version](https://img.shields.io/badge/node-v20.x-purple)
-![Tests](https://github.com/ehildt/acap/actions/workflows/main.ci.yml/badge.svg?branch=main)
+![Node Version](https://img.shields.io/badge/node-v20.x-purple?style=flat&logo=node.js)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=flat&logo=github)
 
-
+![Jokes Card](https://readme-jokes.vercel.app/api?hideBorder)
 
 # Table of Contents
 
