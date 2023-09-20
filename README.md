@@ -27,7 +27,6 @@
 
   </p>
 </div>
-</br>
 
 
 <div align="center">
@@ -35,13 +34,7 @@
 Table of Contents
 </h1>
 
-<details>
-  <summary>
-    EXPAND
-  </summary>
-
-  <p>
-
+[Getting Started](#Getting-Started)   
 [Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)    
 [Example Use Cases](#Example-Use-Cases)    
 [Whats in the box?](#Whats-in-the-box)    
@@ -51,11 +44,7 @@ Table of Contents
 [Redis Publish Subscribe](#Redis-Publish-Subscribe)   
 [MQTT](#MQTT)   
 [BullMQ](#BullMQ)   
-[Getting Started](#Getting-Started)   
 
-</p>
-
-</details>
 </div>
 </br>
 
