@@ -25,6 +25,9 @@
 
 # Table of Contents
 
+<details>
+<summary>"Click to expand"</summary>
+
 1. [Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)
     1. [Example Use Cases](#Example-Use-Cases)
     2. [Whats in the box?](#Whats-in-the-box)
@@ -35,6 +38,8 @@
         5. [MQTT](#MQTT)
         6. [BullMQ](#BullMQ)
 2. [Getting Started](#Getting-Started)
+
+</details>
 
 # Adaptive Content Aggregation Proxy (ACAP)
 
