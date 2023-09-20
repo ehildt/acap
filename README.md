@@ -1,4 +1,10 @@
 
+
+
+
+<div align="center">
+    <p>
+
 ![Name](https://img.shields.io/badge/open_source-ACAP-gold)
 ![License](https://img.shields.io/github/license/ehildt/acap?style=flat&color=brown)
 ![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)    
@@ -6,11 +12,8 @@
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
 ![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github&logoColor=white)
-
-
-<h1 align="center">POWERED BY</h1>  
-
-<p align="center">
+    </p>
+    <p>
 
 ![NestJs](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![Fastify](https://img.shields.io/badge/fastify-202020?style=for-the-badge&logo=fastify&logoColor=white)
@@ -21,12 +24,17 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black)
-</p>
+
+  </p>
+</div>
+</br>
 
 # Table of Contents
 
 <details>
-<summary>"Click to expand"</summary>
+  <summary>
+    EXPAND
+  </summary>
 
 1. [Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)
     1. [Example Use Cases](#Example-Use-Cases)
@@ -40,6 +48,8 @@
 2. [Getting Started](#Getting-Started)
 
 </details>
+
+</br>
 
 # Adaptive Content Aggregation Proxy (ACAP)
 
