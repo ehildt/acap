@@ -35,4 +35,10 @@ jobs:
     - run: npm run ts-unused-exports
     - run: npm run licensee
     - run: npm run build --if-present
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
     - run: npm run semantic-release
