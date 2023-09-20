@@ -83,6 +83,7 @@
   "name": "@litlbyte/acap",
   "repository": "git@github.com:ehildt/acap.git",
   "scripts": {
+    "semantic-release": "npx semantic-release",
     "build": "nest build",
     "build:prod": "nest build --path ./tsconfig.build.prod.json",
     "depcheck": "npx depcheck .",
