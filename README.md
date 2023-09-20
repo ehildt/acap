@@ -15,7 +15,7 @@ ACAP is a cutting-edge system designed to revolutionize content distribution and
 
 <div align="center">
 <details>
-<summary>Expand where it delivers..</summary>
+<summary>Expand to see where it delivers!</summary>
 
 - **Dynamic and Adaptable Content Distribution:** ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
 
@@ -271,9 +271,6 @@ REDIS_DB_INDEX=0
 
 With this, you have everything you need to make the ACAP your own and harness its full potential to power your applications and drive business growth.
 
-`Get in touch with us if you're eager to contribute to ACAP and show your support, or show some love by treating us to a beer or coffee. We appreciate any form of collaboration and generosity!`
-
-
 ## Example Use Cases
 
 One example use case for ACAP could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images. 
@@ -330,3 +327,6 @@ ACAP supports [Redis Publish Subscribe](https://redis.io/docs/interact/pubsub/).
 
 By leveraging BullMQ, ACAP gains robust job management, scalability, fault tolerance, and monitoring capabilities, enabling it to handle large workloads, provide efficient task execution, and deliver a reliable and high-performance service to its users.
 
+---
+
+`Get in touch with us if you're eager to contribute to ACAP and show your support, or show some love by treating us to a beer or coffee. We appreciate any form of collaboration and generosity!`
