@@ -57,6 +57,7 @@ Table of Contents
 
 </details>
 </div>
+</br>
 
 <h1 align="center">
 Adaptive Content Aggregation Proxy (ACAP)
@@ -136,6 +137,7 @@ By leveraging BullMQ, ACAP gains robust job management, scalability, fault toler
 <h1 align="center">
 Getting Started
 </h1>
+</br>
 
 **ACAP** offers a ready-to-use setup for easy initialization. It utilizes a config.yml file instead of relying solely on system environment variables, while still allowing you to set them if necessary. When using ACAP in Docker or K8S, you can easily map the config.yml file through the volumes. In the container, the config.yml file is located at `/app/dist/config/config-yml/config.yml` and for simplicity has been aliased as `/app/config.yml`.
 
