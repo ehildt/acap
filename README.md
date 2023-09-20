@@ -2,11 +2,35 @@
 
 
 
-<div align="center">
-<h1>
+<h1 align="center">
 Adaptive Content Aggregation Proxy (ACAP)
 </h1>
-    <p>
+
+<div align="center">
+
+`The ideal time to grow a business was yesterday, but the next best time to invest in one is now.`
+
+ACAP is a cutting-edge system designed to revolutionize content distribution and engagement. With its dynamic and adaptable features, it ensures that your clients and services receive the right content at the right time. ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience. Its automated processes make content distribution effortless, allowing you to focus on what matters most. Moreover, ACAP empowers you to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels. This means increased customer satisfaction and loyalty, leading to business growth. Say goodbye to static and cumbersome content management and hello to ACAP's game-changing capabilities
+</div>
+
+<div align="center">
+<details>
+<summary>Expand where it delivers..</summary>
+
+- **Dynamic and Adaptable Content Distribution:** ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
+
+- **Real-time Responsiveness:** ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience for other services. This real-time responsiveness enhances user engagement and satisfaction.
+
+- **Effortless Content Distribution:** ACAP automates content distribution processes, making it effortless for other services. This automation allows other services to focus on their core functionality while ACAP handles the efficient distribution of content.
+
+- **Enhanced User Engagement:** ACAP empowers other services to deliver timely, relevant, and diverse content. By leveraging ACAP's platform or channels, other services can increase user engagement and satisfaction.
+
+- **Increased Customer Satisfaction and Loyalty:** By delivering personalized and relevant content, ACAP helps other services improve customer satisfaction and loyalty. This, in turn, can lead to business growth for those services.
+
+</details>
+</div>
+</br>
+<div align="center">
 
 ![Name](https://img.shields.io/badge/open_source-ACAP-gold)
 ![License](https://img.shields.io/github/license/ehildt/acap?style=flat&color=brown)
@@ -15,9 +39,11 @@ Adaptive Content Aggregation Proxy (ACAP)
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
 ![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github&logoColor=white)
-    </p>
-    powered by
-    <p>
+    </div>
+
+  <div align="center">
+
+powered by
 
 ![NestJs](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![Fastify](https://img.shields.io/badge/fastify-202020?style=for-the-badge&logo=fastify&logoColor=white)
@@ -29,7 +55,7 @@ Adaptive Content Aggregation Proxy (ACAP)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black)
 
-  </p>
+  </div>
 </div>
 </br>
 
@@ -38,8 +64,7 @@ Adaptive Content Aggregation Proxy (ACAP)
 Table of Contents
 </h1>
 
-[Getting Started](#Getting-Started)   
-[Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)    
+[Getting Started](#Getting-Started)     
 [Example Use Cases](#Example-Use-Cases)    
 [Whats in the box?](#Whats-in-the-box)    
 [Content Validation](#Content-Validation)   
@@ -55,21 +80,6 @@ Table of Contents
 <h1 align="center">
 Adaptive Content Aggregation Proxy (ACAP)
 </h1>
-
-
-ACAP is a cutting-edge system designed to revolutionize content distribution and engagement. With its dynamic and adaptable features, it ensures that your clients and services receive the right content at the right time. ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience. Its automated processes make content distribution effortless, allowing you to focus on what matters most. Moreover, ACAP empowers you to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels. This means increased customer satisfaction and loyalty, leading to business growth. Say goodbye to static and cumbersome content management and hello to ACAP's game-changing capabilities. 
-
-- **Dynamic and Adaptable Content Distribution:** ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
-
-- **Real-time Responsiveness:** ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience for other services. This real-time responsiveness enhances user engagement and satisfaction.
-
-- **Effortless Content Distribution:** ACAP automates content distribution processes, making it effortless for other services. This automation allows other services to focus on their core functionality while ACAP handles the efficient distribution of content.
-
-- **Enhanced User Engagement:** ACAP empowers other services to deliver timely, relevant, and diverse content. By leveraging ACAP's platform or channels, other services can increase user engagement and satisfaction.
-
-- **Increased Customer Satisfaction and Loyalty:** By delivering personalized and relevant content, ACAP helps other services improve customer satisfaction and loyalty. This, in turn, can lead to business growth for those services.
-
-`The ideal time to grow a business was yesterday, but the next best time to invest in one is now.`
 
 ## Example Use Cases
 
