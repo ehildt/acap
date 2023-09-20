@@ -15,17 +15,24 @@ ACAP is a cutting-edge system designed to revolutionize content distribution and
 
 <div align="center">
 <details>
-<summary><span color="lightgreen">Expand to read where it delivers!</span></summary>
+<summary>Expand to read where it delivers!</summary>
+</br>
 
-- **Dynamic and Adaptable Content Distribution:** ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
 
-- **Real-time Responsiveness:** ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience for other services. This real-time responsiveness enhances user engagement and satisfaction.
+> **Dynamic and Adaptable Content Distribution**  
+ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
 
-- **Effortless Content Distribution:** ACAP automates content distribution processes, making it effortless for other services. This automation allows other services to focus on their core functionality while ACAP handles the efficient distribution of content.
+> **Real-time Responsiveness**  
+ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience for other services. This real-time responsiveness enhances user engagement and satisfaction.
 
-- **Enhanced User Engagement:** ACAP empowers other services to deliver timely, relevant, and diverse content. By leveraging ACAP's platform or channels, other services can increase user engagement and satisfaction.
+> **Effortless Content Distribution**  
+ACAP automates content distribution processes, making it effortless for other services. This automation allows other services to focus on their core functionality while ACAP handles the efficient distribution of content.
 
-- **Increased Customer Satisfaction and Loyalty:** By delivering personalized and relevant content, ACAP helps other services improve customer satisfaction and loyalty. This, in turn, can lead to business growth for those services.
+> **Enhanced User Engagement**  
+ACAP empowers other services to deliver timely, relevant, and diverse content. By leveraging ACAP's platform or channels, other services can increase user engagement and satisfaction.
+
+> **Increased Customer Satisfaction and Loyalty**  
+By delivering personalized and relevant content, ACAP helps other services improve customer satisfaction and loyalty. This, in turn, can lead to business growth for those services.
 
 </details>
 </div>
