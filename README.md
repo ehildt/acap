@@ -1,19 +1,29 @@
 
+<div style="text-align: center">
+
 ![Name](https://img.shields.io/badge/open_source-ACAP-gold)
-![GitHub](https://img.shields.io/github/license/ehildt/acap?style=flat&color=brown) 
-![Branch](https://img.shields.io/badge/branch-main-blue?style=flat&logo=git)
+![License](https://img.shields.io/github/license/ehildt/acap?style=flat&color=brown)
+![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)    
+![Branch](https://img.shields.io/badge/branch-main-blue?style=flat&logo=git&logoColor=white)
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
-![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js)
-![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github)
+![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
+![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github&logoColor=white)
+
+</div>
+
+<div style="text-align: center">
 
 ![NestJs](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![Fastify](https://img.shields.io/badge/fastify-202020?style=for-the-badge&logo=fastify&logoColor=white)
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![BullMQ](https://img.shields.io/badge/bullmq-%233C5280?style=for-the-badge&logo=redis&logoColor=white)
+![PubSub](https://img.shields.io/badge/pubsub-aC5cce?style=for-the-badge&logo=redis&logoColor=white)    
+![MQTT](https://img.shields.io/badge/MQTT-660066?style=for-the-badge&logo=mqtt&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
-![MQTT](https://img.shields.io/badge/MQTT-red?style=for-the-badge&logo=mqtt&logoColor=white)
-![Mosquitto](https://img.shields.io/badge/mosquitto-%233C5280.svg?style=for-the-badge&logo=eclipsemosquitto&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black)
+
+</div>
 
 # Table of Contents
 
