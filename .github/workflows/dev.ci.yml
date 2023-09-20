@@ -35,3 +35,4 @@ jobs:
     - run: npm run ts-unused-exports
     - run: npm run licensee
     - run: npm run build --if-present
+    - run: npm run semantic-release

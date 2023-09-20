@@ -50,4 +50,12 @@ export class AppConfigAdapter {
   get GZIP_THRESHOLD(): number {
     return parseInt(process.env.REALM_GZIP_THRESHOLD ?? '20', 10);
   }
+
+  get SYMMETRIC_KEY(): string {
+    return process.env.SYMMETRIC_KEY;
+  }
+
+  get SYMMETRIC_ALGORITHM(): string {
+    return process.env.SYMMETRIC_ALGORITHM;
+  }
 }
