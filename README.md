@@ -3,6 +3,9 @@
 
 
 <div align="center">
+<h1>
+Adaptive Content Aggregation Proxy (ACAP)
+</h1>
     <p>
 
 ![Name](https://img.shields.io/badge/open_source-ACAP-gold)
@@ -13,6 +16,7 @@
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
 ![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github&logoColor=white)
     </p>
+    powered by
     <p>
 
 ![NestJs](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
@@ -27,7 +31,7 @@
 
   </p>
 </div>
-
+</br>
 
 <div align="center">
 <h1>
