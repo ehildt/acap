@@ -15,7 +15,7 @@ ACAP is a cutting-edge system designed to revolutionize content distribution and
 
 <div align="center">
 <details>
-<summary><font color="lightgreen">Expand to see where it delivers!</font></summary>
+<summary><font color="lightgreen">Expand to read where it delivers!</font></summary>
 
 - **Dynamic and Adaptable Content Distribution:** ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
 
