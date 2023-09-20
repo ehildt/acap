@@ -42,23 +42,26 @@ Table of Contents
 
   <p>
 
-1. [Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)
-    1. [Example Use Cases](#Example-Use-Cases)
-    2. [Whats in the box?](#Whats-in-the-box)
-        1. [Content Validation](#Content-Validation)
-        2. [Data Encryption](#Data-Encryption)
-        3. [Redis](#Redis)
-        4. [Redis Publish Subscribe](#Redis-Publish-Subscribe)
-        5. [MQTT](#MQTT)
-        6. [BullMQ](#BullMQ)
-2. [Getting Started](#Getting-Started)
+[Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)    
+[Example Use Cases](#Example-Use-Cases)    
+[Whats in the box?](#Whats-in-the-box)    
+[Content Validation](#Content-Validation)   
+[Data Encryption](#Data-Encryption)   
+[Redis](#Redis)   
+[Redis Publish Subscribe](#Redis-Publish-Subscribe)   
+[MQTT](#MQTT)   
+[BullMQ](#BullMQ)   
+[Getting Started](#Getting-Started)   
 
 </p>
 
 </details>
 </div>
 
-# Adaptive Content Aggregation Proxy (ACAP)
+<h1 align="center">
+Adaptive Content Aggregation Proxy (ACAP)
+</h1>
+
 
 ACAP is a cutting-edge system designed to revolutionize content distribution and engagement. With its dynamic and adaptable features, it ensures that your clients and services receive the right content at the right time. ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience. Its automated processes make content distribution effortless, allowing you to focus on what matters most. Moreover, ACAP empowers you to enhance user engagement by delivering timely, relevant, and diverse content through its platform or channels. This means increased customer satisfaction and loyalty, leading to business growth. Say goodbye to static and cumbersome content management and hello to ACAP's game-changing capabilities. 
 
@@ -130,7 +133,9 @@ ACAP supports [Redis Publish Subscribe](https://redis.io/docs/interact/pubsub/).
 
 By leveraging BullMQ, ACAP gains robust job management, scalability, fault tolerance, and monitoring capabilities, enabling it to handle large workloads, provide efficient task execution, and deliver a reliable and high-performance service to its users.
 
-## Getting Started
+<h1 align="center">
+Getting Started
+</h1>
 
 **ACAP** offers a ready-to-use setup for easy initialization. It utilizes a config.yml file instead of relying solely on system environment variables, while still allowing you to set them if necessary. When using ACAP in Docker or K8S, you can easily map the config.yml file through the volumes. In the container, the config.yml file is located at `/app/dist/config/config-yml/config.yml` and for simplicity has been aliased as `/app/config.yml`.
 
