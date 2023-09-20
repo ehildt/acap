@@ -77,10 +77,6 @@ Table of Contents
 </div>
 </br>
 
-<h1 align="center">
-Adaptive Content Aggregation Proxy (ACAP)
-</h1>
-
 ## Example Use Cases
 
 One example use case for ACAP could be serving base64-encoded images to web clients. This setup allows for dynamic switching of content on the fly, similar to how it is commonly done in a content management system (CMS). Of course, this capability is not limited solely to images. 
