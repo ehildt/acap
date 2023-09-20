@@ -28,7 +28,7 @@ jobs:
         path: ~/.npm                                                                                                
         key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
     - run: npm i -g @nestjs/cli
-    - run: npm ci
+    - run: npm ci --ignore-scripts
     - run: npm test
     - run: npm run lint
     - run: npm run depcruiser
