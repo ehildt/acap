@@ -29,12 +29,18 @@
 </div>
 </br>
 
-# Table of Contents
+
+<div align="center">
+<h1>
+Table of Contents
+</h1>
 
 <details>
   <summary>
     EXPAND
   </summary>
+
+  <p>
 
 1. [Adaptive Content Aggregation Proxy (ACAP)](#Adaptive_Content_Aggregation_Proxy_ACAP)
     1. [Example Use Cases](#Example-Use-Cases)
@@ -47,9 +53,10 @@
         6. [BullMQ](#BullMQ)
 2. [Getting Started](#Getting-Started)
 
-</details>
+</p>
 
-</br>
+</details>
+</div>
 
 # Adaptive Content Aggregation Proxy (ACAP)
 
