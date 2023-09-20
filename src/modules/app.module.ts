@@ -7,7 +7,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import RedisStore from 'cache-manager-ioredis';
 
 import { BULLMQ_REALMS_QUEUE, BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
-import { FilesController } from '@/controllers/files.controller';
 import { JsonSchemaController } from '@/controllers/json-schema.controller';
 import { MetaController } from '@/controllers/meta.controller';
 import { RealmController } from '@/controllers/realm.controller';
@@ -115,6 +114,6 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
     MetaService,
     CryptoService,
   ],
-  controllers: [RealmController, FilesController, JsonSchemaController, MetaController],
+  controllers: [RealmController, JsonSchemaController, MetaController],
 })
 export class AppModule {}

@@ -7,7 +7,6 @@
     "email": "eugen.hildt@litlbyte.com"
   },
   "dependencies": {
-    "@fastify/multipart": "^7.7.3",
     "@fastify/static": "^6.11.2",
     "@nestjs/bullmq": "^10.0.1",
     "@nestjs/cache-manager": "^2.1.0",
@@ -27,7 +26,6 @@
     "class-validator": "^0.14.0",
     "fastify": "^4.23",
     "joi": "^17.10.2",
-    "js-yaml": "^4.1.0",
     "mongoose": "^7.5.2",
     "mqtt": "^5.0.5",
     "reflect-metadata": "^0.1.13",
