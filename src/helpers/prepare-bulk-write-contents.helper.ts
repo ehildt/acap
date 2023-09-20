@@ -1,12 +1,12 @@
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 
 export function prepareBulkWriteContents(req: Array<ContentUpsertReq>, realm: string) {
-  return req.map((config) => ({
+  return req.map(({ id, value }) => ({
     updateOne: {
       upsert: true,
-      filter: { id: config.id, realm },
+      filter: { id, realm },
       update: {
-        value: typeof config.value === 'string' ? config.value : JSON.stringify(config.value),
+        value: typeof value === 'object' ? JSON.stringify(value) : value,
       },
     },
   }));

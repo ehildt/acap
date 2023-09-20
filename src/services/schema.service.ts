@@ -9,7 +9,6 @@ import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { mapEntitiesToContentFile } from '@/helpers/map-entities-to-content-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
-import { reduceToRealms } from '@/helpers/reduce-to-realms.helper';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { SchemaRepository } from '@/repositories/schema.repository';
 
@@ -54,17 +53,11 @@ export class SchemaService {
     return result;
   }
 
-  async getRealms(realms: Array<string>) {
-    const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
-    const entities = await this.schemaRepository.where({ realm: { $in: realmSet } });
-    return entities?.reduce((acc, val) => reduceToRealms(acc, val, this.factory.app.realm.resolveEnv), {});
-  }
-
   async getRealm(realm: string) {
     return await this.schemaRepository.where({ realm });
   }
 
-  async getRealmConfigIds(realm: string, ids: Array<string>) {
+  async getRealmContentByIds(realm: string, ids: Array<string>) {
     const entities = await this.schemaRepository.where({
       realm,
       id: { $in: ids },
@@ -87,7 +80,7 @@ export class SchemaService {
     return entity;
   }
 
-  async deleteRealmConfigIds(realm: string, ids: Array<string>) {
+  async deleteRealmContentByIds(realm: string, ids: Array<string>) {
     const entity = await this.schemaRepository.delete(realm, ids);
     if (!entity.deletedCount) return entity;
     this.redisPubSubClient?.emit(realm, ids).pipe(catchError((error) => error));
@@ -96,7 +89,7 @@ export class SchemaService {
     return entity;
   }
 
-  async downloadConfigFile(realms?: Array<string>) {
+  async downloadContents(realms?: Array<string>) {
     if (!realms) {
       const entities = await this.schemaRepository.findAll();
       const realms = Array.from(new Set(entities.map(({ realm }) => realm)));

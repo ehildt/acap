@@ -5,10 +5,10 @@ import { FilterQuery, Model } from 'mongoose';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmReq } from '@/dtos/realm-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-contents.helper';
 import { prepareBulkWriteDeleteContents } from '@/helpers/prepare-bulk-write-delete-contents.helper';
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
-import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-upsert-contents.helper';
-import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
+import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-realms.helper';
 import { FILTER } from '@/models/filter.model';
 import {
   JsonSchemaContentsDefinition,
@@ -35,7 +35,8 @@ export class SchemaRepository {
 
   async find(filter: FILTER, propertiesToSelect?: Array<string>) {
     const { skip, take, search, verbose } = filter;
-    if (!verbose) propertiesToSelect.push('value');
+    const selectProperties = verbose ? propertiesToSelect.concat(['value']) : propertiesToSelect;
+
     if (search) {
       return await this.contentsModel
         .find(null, null, { limit: take, skip })
@@ -46,7 +47,7 @@ export class SchemaRepository {
             { id: { $regex: `.*${search}.*`, $options: 'i' } },
           ],
         })
-        .select(propertiesToSelect)
+        .select(selectProperties)
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean();
     }
@@ -57,9 +58,10 @@ export class SchemaRepository {
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean()
     ).map(({ realm }) => realm);
+
     return await this.contentsModel
       .where({ realm: { $in: realms } })
-      .select(propertiesToSelect)
+      .select(selectProperties)
       .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }
