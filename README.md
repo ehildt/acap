@@ -18,20 +18,20 @@ ACAP is a cutting-edge system designed to revolutionize content distribution and
 <summary>Expand to read where it delivers!</summary>
 </br>
 
-
-<font color="gold">Dynamic and Adaptable Content Distribution</font>  
+  
+${\color{gold}Dynamic \space and \space Adaptable \space Content \space Distribution}$  
 ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
 
-<font color="gold">Real-time Responsiveness</font>  
+${\color{gold}Real-time \space Responsiveness}$   
 ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience for other services. This real-time responsiveness enhances user engagement and satisfaction.
 
-<font color="gold">Effortless Content Distribution</font>  
+${\color{gold}Effortless \space Content \space Distribution}$  
 ACAP automates content distribution processes, making it effortless for other services. This automation allows other services to focus on their core functionality while ACAP handles the efficient distribution of content.
 
-<font color="gold">Enhanced User Engagement</font>  
+${\color{gold}Enhanced \space User \space Engagement}$  
 ACAP empowers other services to deliver timely, relevant, and diverse content. By leveraging ACAP's platform or channels, other services can increase user engagement and satisfaction.
 
-<font color="gold">Increased Customer Satisfaction and Loyalty</font>  
+${\color{gold}Increased \space Customer \space Satisfaction \space and \space Loyalty}$  
 By delivering personalized and relevant content, ACAP helps other services improve customer satisfaction and loyalty. This, in turn, can lead to business growth for those services.
 
 </details>
