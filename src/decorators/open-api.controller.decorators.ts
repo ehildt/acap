@@ -1,7 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -10,8 +9,6 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
-
 import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
@@ -19,9 +16,7 @@ import {
   ApiParamMeta,
   ApiParamRealm,
   ApiQueryConfigIds,
-  ApiQueryFormat,
   ApiQueryRealm,
-  ApiQueryRealms,
   ApiQuerySearch,
   ApiQuerySkip,
   ApiQueryTake,
@@ -30,53 +25,6 @@ import {
 
 const APPLICATION_YAML = 'application/x-yaml';
 const APPLICATION_JSON = 'application/json';
-
-export function OpenApi_PostFile() {
-  return applyDecorators(
-    ApiOperation({
-      description: 'Uploads a json file containing the realms',
-    }),
-    ApiCreatedResponse(),
-    ApiBadRequestResponse(),
-    ApiInternalServerErrorResponse(),
-    ApiConsumes('multipart/form-data'),
-    ApiBody({
-      schema: {
-        type: 'object',
-        required: ['file'],
-        properties: {
-          file: {
-            description: 'a json/yaml file, which contains the configuration(s) for the realm(s)',
-            type: 'string',
-            format: 'binary',
-          },
-        },
-      },
-    }),
-  );
-}
-
-export function OpenApi_DownloadFile() {
-  return applyDecorators(
-    ApiOperation({
-      description: 'Downloads the realms/schemas as a json/yml file',
-    }),
-    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
-    ApiBadRequestResponse(),
-    ApiInternalServerErrorResponse(),
-    ApiQueryRealms(),
-    ApiQueryFormat(),
-    ApiUnprocessableEntityResponse(),
-    ApiOkResponse({
-      type: RealmsUpsertReq,
-      isArray: true,
-      schema: {
-        type: 'string',
-        format: 'binary',
-      },
-    }),
-  );
-}
 
 export function OpenApi_Upsert() {
   return applyDecorators(

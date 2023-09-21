@@ -117,7 +117,7 @@ export class JsonSchemaController {
       await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
       return content[id];
     }
-    const data = await this.schemaService.getRealmConfigIds(realm, [id]);
+    const data = await this.schemaService.getRealmContentByIds(realm, [id]);
     const count = await this.schemaService.countRealmContents();
     if (!data[id]) throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
     const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
@@ -155,7 +155,7 @@ export class JsonSchemaController {
       return content;
     }
     const unmatchedKeys = filteredIds.filter((fk) => !matchedKeys.find((mk) => fk === mk));
-    const entities = await this.schemaService.getRealmConfigIds(realm, unmatchedKeys);
+    const entities = await this.schemaService.getRealmContentByIds(realm, unmatchedKeys);
     const count = await this.schemaService.countRealmContents();
     content = { ...content, ...entities };
     const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
@@ -175,7 +175,7 @@ export class JsonSchemaController {
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    const result = await this.schemaService.deleteRealmConfigIds(realm, filteredIds);
+    const result = await this.schemaService.deleteRealmContentByIds(realm, filteredIds);
     const count = await this.schemaService.countRealmContents();
 
     if (count) {

@@ -16,12 +16,19 @@ export class ConfigFactoryService {
   constructor(private readonly configService: ConfigService) {}
 
   get app() {
+    const symmetricKey = this.configService.get<string>('AppConfig.SYMMETRIC_KEY');
+    const symmetricAlgorithm = this.configService.get<string>('AppConfig.SYMMETRIC_ALGORITHM');
     return Object.freeze<AppConfig>({
       port: this.configService.get<number>('AppConfig.PORT'),
       address: this.configService.get<string>('AppConfig.ADDRESS'),
       startSwagger: this.configService.get<boolean>('AppConfig.START_SWAGGER'),
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
       nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
+      crypto: {
+        symmetricKey,
+        symmetricAlgorithm,
+        cryptable: Boolean(symmetricKey && symmetricAlgorithm),
+      },
       realm: {
         ttl: this.configService.get<number>('AppConfig.TTL'),
         namespacePostfix: this.configService.get<string>('AppConfig.NAMESPACE_POSTFIX'),

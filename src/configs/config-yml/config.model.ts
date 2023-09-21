@@ -8,6 +8,11 @@ export type AppConfig = {
   address: string;
   printEnv: boolean;
   startSwagger: boolean;
+  crypto: {
+    symmetricKey: string;
+    symmetricAlgorithm: string;
+    cryptable: boolean;
+  };
   realm: {
     gzipThreshold: number;
     namespacePostfix: string;

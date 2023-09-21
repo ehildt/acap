@@ -50,4 +50,15 @@ export const APP_SCHEMA = {
   REALM_GZIP_THRESHOLD: CONFIG_YML?.appConfig.realm?.gzipThreshold
     ? Joi.number().default(CONFIG_YML.appConfig.realm.gzipThreshold)
     : Joi.number().required(),
+
+  SYMMETRIC_KEY: CONFIG_YML?.appConfig.crypto?.symmetricKey
+    ? Joi.string()
+        .hex()
+        .length(32)
+        .default(CONFIG_YML?.appConfig.crypto?.symmetricKey)
+    : Joi.optional(),
+
+  SYMMETRIC_ALGORITHM: CONFIG_YML?.appConfig.crypto?.symmetricAlgorithm
+    ? Joi.string().default(CONFIG_YML?.appConfig.crypto?.symmetricAlgorithm)
+    : Joi.optional(),
 };

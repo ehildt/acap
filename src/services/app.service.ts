@@ -41,7 +41,7 @@ export class AppService {
       new DocumentBuilder()
         .setTitle('ACAP')
         .setDescription('A simple and convenient way to dynamically distribute and provide content to your services ;)')
-        .setVersion('0.9.9')
+        .setVersion('0.9.11')
         .build(),
     );
     SwaggerModule.setup(API_DOCS, app, openApiObj);

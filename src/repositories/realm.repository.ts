@@ -5,10 +5,10 @@ import { FilterQuery, Model } from 'mongoose';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmReq } from '@/dtos/realm-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-contents.helper';
 import { prepareBulkWriteDeleteContents } from '@/helpers/prepare-bulk-write-delete-contents.helper';
 import { prepareBulkWriteDeleteRealms } from '@/helpers/prepare-bulk-write-delete-realms.helper';
-import { prepareBulkWriteContents } from '@/helpers/prepare-bulk-write-upsert-contents.helper';
-import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-upsert-realm.helper';
+import { prepareBulkWriteRealms } from '@/helpers/prepare-bulk-write-realms.helper';
 import { FILTER } from '@/models/filter.model';
 import { RealmContentsDocument, RealmContentsSchemaDefinition } from '@/schemas/realm-content-definition.schema';
 import { RealmsDocument, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
@@ -45,7 +45,8 @@ export class RealmRepository {
 
   async find(filter: FILTER, propertiesToSelect?: Array<string>) {
     const { skip, take, search, verbose } = filter;
-    if (!verbose) propertiesToSelect.push('value');
+    const selectProperties = verbose ? propertiesToSelect.concat(['value']) : propertiesToSelect;
+
     if (search) {
       return await this.contentModel
         .find(null, null, { limit: take, skip })
@@ -56,7 +57,7 @@ export class RealmRepository {
             { id: { $regex: `.*${search}.*`, $options: 'i' } },
           ],
         })
-        .select(propertiesToSelect)
+        .select(selectProperties)
         .sort({ realm: 'descending', updatedAt: 'descending' })
         .lean();
     }
@@ -70,7 +71,7 @@ export class RealmRepository {
 
     return await this.contentModel
       .where({ realm: { $in: realms } })
-      .select(propertiesToSelect)
+      .select(selectProperties)
       .sort({ realm: 'descending', updatedAt: 'descending' })
       .lean();
   }

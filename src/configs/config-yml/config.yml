@@ -4,6 +4,9 @@ appConfig:
   printEnv: true
   startSwagger: true
   nodeEnv: 'local'
+  crypto: 
+    symmetricKey: null
+    symmetricAlgorithm: null
   realm: 
     ttl: 300
     resolveEnv: false

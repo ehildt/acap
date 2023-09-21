@@ -7,7 +7,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import RedisStore from 'cache-manager-ioredis';
 
 import { BULLMQ_REALMS_QUEUE, BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
-import { FilesController } from '@/controllers/files.controller';
 import { JsonSchemaController } from '@/controllers/json-schema.controller';
 import { MetaController } from '@/controllers/meta.controller';
 import { RealmController } from '@/controllers/realm.controller';
@@ -19,6 +18,7 @@ import { RealmContentsSchema, RealmContentsSchemaDefinition } from '@/schemas/re
 import { RealmsSchema, RealmsSchemaDefinition } from '@/schemas/realms-schema-definition.schema';
 import { AppService } from '@/services/app.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
+import { CryptoService } from '@/services/crypto.service';
 import { MetaService } from '@/services/meta.service';
 import { RealmService } from '@/services/realm.service';
 import { SchemaService } from '@/services/schema.service';
@@ -73,7 +73,7 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       {
         name: RealmContentsSchemaDefinition.name,
         schema: RealmContentsSchema,
-        collection: 'REALM_CONFIG',
+        collection: 'REALM_CONTENT',
       },
       {
         name: JsonSchemaDefinition.name,
@@ -83,7 +83,7 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       {
         name: JsonSchemaContentsDefinition.name,
         schema: JsonSchemaContentSchema,
-        collection: 'SCHEMA_CONFIG',
+        collection: 'SCHEMA_CONTENT',
       },
     ]),
     GlobalAvJModule,
@@ -104,7 +104,16 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       useFactory: ({ redis }: ConfigFactoryService) => ({ ...redis, store: RedisStore }),
     }),
   ].filter((exists) => exists),
-  providers: [AppService, ConsoleLogger, RealmService, RealmRepository, SchemaService, SchemaRepository, MetaService],
-  controllers: [RealmController, FilesController, JsonSchemaController, MetaController],
+  providers: [
+    AppService,
+    ConsoleLogger,
+    RealmService,
+    RealmRepository,
+    SchemaService,
+    SchemaRepository,
+    MetaService,
+    CryptoService,
+  ],
+  controllers: [RealmController, JsonSchemaController, MetaController],
 })
 export class AppModule {}

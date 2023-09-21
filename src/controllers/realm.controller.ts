@@ -76,7 +76,7 @@ export class RealmController {
       return content;
     }
     const unmatchedKeys = filteredIds.filter((fk) => !matchedKeys.find((mk) => fk === mk));
-    const entities = await this.realmService.getRealmConfigIds(realm, unmatchedKeys);
+    const entities = await this.realmService.getRealmContentByIds(realm, unmatchedKeys);
     const count = await this.realmService.countRealmContents();
     content = { ...content, ...entities };
     const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
@@ -91,7 +91,7 @@ export class RealmController {
     // @ schema validation start
     try {
       const realmConfigKeys = Array.from(new Set(req.map(({ id }) => id)));
-      const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
+      const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys);
       req.forEach(({ value, id }) => this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])));
     } catch (error) {
       if (error.status !== 422) throw new BadRequestException(error);
@@ -100,7 +100,9 @@ export class RealmController {
     // ! we don't cache schemas on upsert.
     // ! we don't want to spam the ram whenever we upsert
     // * we want to keep the cache up to date
-    const entity = await this.realmService.upsertRealm(realm, req);
+    let payload: Array<ContentUpsertReq>;
+    // if (encrypt) payload = req.map(({ id, value }) => ({ id, value: this.cryptoService.encrypt(value) }));
+    const entity = await this.realmService.upsertRealm(realm, payload ?? req);
     const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     if (!Object.keys(content)?.length) return entity;
@@ -119,7 +121,7 @@ export class RealmController {
       // @ schema validation start
       try {
         const realmConfigKeys = Array.from(new Set(contents.map(({ id }) => id)));
-        const schemaConfigObject = await this.schemaService.getRealmConfigIds(realm, realmConfigKeys);
+        const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys);
         contents.forEach(({ value, id }) =>
           this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
         );
@@ -132,7 +134,9 @@ export class RealmController {
       // * we want to keep the cache up to date
       const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
       const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      const entity = await this.realmService.upsertRealm(realm, contents);
+      let payload: Array<ContentUpsertReq>;
+      // if (encrypt) payload = contents.map(({ id, value }) => ({ id, value: this.cryptoService.encrypt(value) }));
+      const entity = await this.realmService.upsertRealm(realm, payload ?? contents);
       if (!Object.keys(content)?.length) return entity;
       const count = await this.realmService.countRealmContents();
       contents.forEach(({ id, value }) => content[id] && (content[id] = value));
@@ -154,7 +158,7 @@ export class RealmController {
       await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
       return content[id];
     }
-    const data = await this.realmService.getRealmConfigIds(realm, [id]);
+    const data = await this.realmService.getRealmContentByIds(realm, [id]);
     const count = await this.realmService.countRealmContents();
     if (!data[id]) throw new BadRequestException(`N/A realm: ${realm} | id: ${id}`);
     const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
@@ -174,7 +178,7 @@ export class RealmController {
 
     const filteredIds = Array.from(new Set(ids.filter((e) => e)));
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    const result = await this.realmService.deleteRealmConfigIds(realm, filteredIds);
+    const result = await this.realmService.deleteRealmContentByIds(realm, filteredIds);
     const count = await this.realmService.countRealmContents();
 
     if (count) {

@@ -11,5 +11,6 @@
     "aaron-bond.better-comments",
     "mikestead.dotenv",
     "mongodb.mongodb-vscode",
+    "pkief.material-icon-theme"
   ]
 }
