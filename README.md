@@ -74,8 +74,8 @@ Table of Contents
 [Getting Started](#Getting-Started)     
 [Example Use Cases](#Example-Use-Cases)    
 [Whats in the box?](#Whats-in-the-box)    
-[Content Validation](#Content-Validation)   
-[Data Encryption](#Data-Encryption)   
+[Content Validation](#Content-Validation)    
+[Content Encryption](#Content-Encryption)   
 [Redis](#Redis)   
 [Redis Publish Subscribe](#Redis-Publish-Subscribe)   
 [MQTT](#MQTT)   
@@ -101,8 +101,8 @@ appConfig:
   startSwagger: true
   nodeEnv: 'local'
   crypto: 
-    symmetricKey: 694f676c7dc75a8d644c8cf7f66ac6d0efbcc10e8eaa7b65814577060dfedc35
-    symmetricAlgorithm: aes-256-cbc
+    symmetricKey: null
+    symmetricAlgorithm: null
   realm: 
     ttl: 300
     resolveEnv: false
@@ -236,8 +236,8 @@ REALM_RESOLVE_ENV=false         # Default
 USE_REDIS_PUBSUB=false          # Default
 USE_BULLMQ=false                # Default
 USE_MQTT=false                  # Default
-SYMMETRIC_KEY=''                # Optional
-SYMMETRIC_ALGORITHM=''          # Optional
+SYMMETRIC_KEY=''                # Optional - 16, 24, 32 byte of key length
+SYMMETRIC_ALGORITHM=''          # Optional - AES-128-CBC, AES-192-CBC, AES-256-CBC
 
 REDIS_PUBSUB_PORT=6379
 REDIS_PUBSUB_USER='default'
@@ -297,6 +297,38 @@ Postman, Insomnia and Swagger OpenApi were yesterday! ACAP delivers a sleek, mod
 When creating and managing content, you can freely choose between a strict or lenient approach to describe its structure. Validation of your content involves checking if a JSON schema matches the content. ACAP knows which content belongs to which schema by simply referencing the realm identifier. In simpler terms, if you create content with a realm value of **MY_REALM** and a schema that also has a realm value of **MY_REALM**, your content will be validated against that schema. The content itself is not bound to any particular structure or value. It even has the capability to fetch system variables when enabled, as long as the content identifier matches the specified system variable key. By default, this feature is disabled to ensure security. For a more comprehensive understanding of content and schema declarations, please refer to the [Wiki](https://github.com/ehildt/ACAP/wiki/ACAP).
 
 `This powerful feature provides industry-leading flexibility in managing content structure, empowering companies to customize and validate their content with ease and efficiency. Experience unparalleled control and adaptability in content management, unlocking new possibilities for your business's success.`
+
+### Content Encryption
+
+In ACAP, we prioritize your freedom of choice, including your security preferences. By default, ACAP conducts content upserts without encryption, suitable for most scenarios. However, recognizing the paramount importance of data security, we empower you to strengthen defenses by encrypting content before it's stored.
+
+Within ACAP, we leverage the globally recognized Advanced Encryption Standard (AES). You have access to multiple block cipher modes: AES-256-CBC, AES-192-CBC, and AES-128-CBC, with respective key lengths of 32, 24, and 16 bytes.
+
+In essence, these AES-CBC modes form a robust security foundation. Your choice depends on specific security and performance needs. Opt for AES-256-CBC for peak security, accepting a slight performance trade-off. Or choose AES-128-CBC, delivering strong security without performance compromise. For a balanced blend, consider AES-192-CBC.
+
+With ACAP, it's your data, your choice, fortified by our robust security options. Elevate your data protection standards while retaining the flexibility to apply encryption as you see fit. Your security, your way, with ACAP's formidable security toolkit. 
+
+<details>
+<summary>Get more insights about AES </summary>
+</br>
+
+${\color{pink}AES-256-CBC \space (32byte \space key)}$ 
+
+
+Security: AES-256-CBC uses a 256-bit key, which provides a very high level of security. As of 2021, it is considered highly secure and resistant to brute force attacks. The key length is so long that it would require an astronomical amount of computational power and time to break the encryption by trying all possible keys.
+Drawbacks: The main drawback of AES-256-CBC is its computational overhead. Encrypting and decrypting data with a longer key can be slower compared to AES-128-CBC or AES-192-CBC. This difference may not be noticeable for small amounts of data but could become significant for large datasets or high-throughput applications.
+
+${\color{pink}AES-192-CBC \space (24byte \space key)}$ 
+
+Security: AES-192-CBC uses a 192-bit key, which is also considered very secure. It strikes a balance between the strong security of AES-256-CBC and the computational efficiency of AES-128-CBC.
+Drawbacks: Like AES-256-CBC, the main drawback is the computational overhead, although it's generally slightly faster than AES-256-CBC. It may be a good choice when you need strong security but want slightly better performance than AES-256-CBC.
+
+${\color{pink}AES-128-CBC \space (16byte \space key)}$ 
+
+Security: AES-128-CBC uses a 128-bit key, which is still considered secure but is theoretically more susceptible to brute force attacks compared to AES-192-CBC and AES-256-CBC. However, in practice, it offers a high level of security for most applications.
+Drawbacks: The primary advantage of AES-128-CBC is its speed and lower computational overhead. It's generally faster than AES-192-CBC and AES-256-CBC. The drawback is that, in rare cases of highly motivated attackers with immense computational resources, it might be less secure compared to the longer key lengths.
+
+</details>
 
 ### Redis
 
