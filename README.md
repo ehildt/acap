@@ -164,7 +164,6 @@ mqttClientConfig:
 ```
 </div>
 </details>
-</br>
 
 Docker Compose further simplifies the process, allowing for a quick start and easy exploration of the application. 
 
@@ -235,7 +234,6 @@ networks:
 ```
 </div>
 </details>
-</br>
 
 As mentioned earlier, you can still utilize system environment variables either in conjunction with the config.yml file. System environment variables, if set, take precedence over the values specified in the config.yml file. Here are the system environment variables that are available for utilization.
 
@@ -299,7 +297,6 @@ REDIS_DB_INDEX=0
 
 </div>
 </details>
-</br>
 
 With this, you have everything you need to make the ACAP your own and harness its full potential to power your applications and drive business growth.
 
