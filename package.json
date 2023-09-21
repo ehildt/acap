@@ -2,7 +2,7 @@
   "name": "@litlbyte/acap",
   "description": "A simple and convenient way to distribute and provide content to your apps ;)",
   "repository": "git@github.com:ehildt/acap.git",
-  "version": "0.9.13",
+  "version": "1.0.0-beta.1",
   "license": "MIT",
   "author": {
     "email": "eugen.hildt@litlbyte.com",
@@ -50,7 +50,7 @@
     "@nestjs/microservices": "^10.2.5",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-fastify": "^10.2.5",
-    "@nestjs/swagger": "^7.1.11",
+    "@nestjs/swagger": "^7.1.12",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "bullmq": "^4.11.2",
