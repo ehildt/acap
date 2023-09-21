@@ -1,4 +1,14 @@
-## 1.0.0 (2023-09-20)
+## 1.0.0-beta.1 (2023-09-21)
+
+
+### Documentation
+
+* README.md ([766afaf](https://github.com/ehildt/acap/commit/766afaf3b54819f1859771c663ed48bd7c25bf27))
+* **README:** updated ([10c7e11](https://github.com/ehildt/acap/commit/10c7e114da8801e7425562573b155dc01a6eccfc))
+* **README:** updated ([9ca8b46](https://github.com/ehildt/acap/commit/9ca8b4608f5a817d0274fde3fae26715b5d4adfb))
+* updated README ([66ec4e7](https://github.com/ehildt/acap/commit/66ec4e7fb84bb049153494feddca8745af825a73))
+* wiki ([489151b](https://github.com/ehildt/acap/commit/489151bc5351150f8f6e96a697ef8621a56d2af7))
+* wip ([d6fcfde](https://github.com/ehildt/acap/commit/d6fcfde5e14d05a4b8719c0bb8d96078fdc2d710))
 
 
 ### Features
@@ -53,6 +63,7 @@
 * dev ci/cd ([5129c4c](https://github.com/ehildt/acap/commit/5129c4c61e388c62df503590fb0cbaa0316774df))
 * dev ci/cd ([6d56ee4](https://github.com/ehildt/acap/commit/6d56ee4cf6f670cbe99e57674a32a4f3febcaef0))
 * **dirty:** workaround for the cache-manager ([d480ac1](https://github.com/ehildt/acap/commit/d480ac1d632c0c3e6c7a74255bf5716d5cc265e6))
+* dockerfile ([5f441e8](https://github.com/ehildt/acap/commit/5f441e84670f99439a0b447c0cde7adf7fb1c5e7))
 * dockerfile ([a7e6ce4](https://github.com/ehildt/acap/commit/a7e6ce4c0652cc78049c2b6ab4b9a8a7c6b3fc7e))
 * dockerfile ([c7b5869](https://github.com/ehildt/acap/commit/c7b5869115da49f0c6ab6dd7d728a1629beb3593))
 * dockerfile ([#121](https://github.com/ehildt/acap/issues/121)) ([55871eb](https://github.com/ehildt/acap/commit/55871ebd8c8a140e131dcc8a443eb1307cfdedf0)), closes [#115](https://github.com/ehildt/acap/issues/115) [#112](https://github.com/ehildt/acap/issues/112)
@@ -74,3 +85,12 @@
 * schema upsert ([0663eaf](https://github.com/ehildt/acap/commit/0663eaf229800175e69df249c523df8b70261c11))
 * typo in pass-through-pubsup ([8be76c0](https://github.com/ehildt/acap/commit/8be76c0fd85f4ae16b8b77102c833a5e3af29fe0))
 * unused export ([50f8d11](https://github.com/ehildt/acap/commit/50f8d11bcab5ded4de8bdc57b3eac1ce90629e0a))
+
+
+### Code Refactoring
+
+* cache-manager.service introduced ([cffcac1](https://github.com/ehildt/acap/commit/cffcac15ad1d4f70c8944951d1eeae16f22f194f))
+* leveraged cache & config services ([e2f3d13](https://github.com/ehildt/acap/commit/e2f3d13a63e4a78db42fe9f1dd73a3b0db686a9d))
+* slight changes here and there ([11d269c](https://github.com/ehildt/acap/commit/11d269c8d2523501acdcf056edf985f9f2eeaabe))
+* updated getByServiceId ([df3c36e](https://github.com/ehildt/acap/commit/df3c36e3a20c58cb3d16939e09c2abedaf8cc90f))
+* wip ([4c2e9b4](https://github.com/ehildt/acap/commit/4c2e9b499dfc214f121c30372a5826aee56e6a7f))

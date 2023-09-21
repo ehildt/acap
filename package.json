@@ -1,10 +1,44 @@
 {
+  "name": "@litlbyte/acap",
+  "description": "A simple and convenient way to distribute and provide content to your apps ;)",
+  "repository": "git@github.com:ehildt/acap.git",
+  "version": "1.0.0-beta.1",
+  "license": "MIT",
   "author": {
     "email": "eugen.hildt@litlbyte.com",
     "name": "Eugen Hildt"
   },
   "bugs": {
     "email": "eugen.hildt@litlbyte.com"
+  },
+  "scripts": {
+    "release": "standard-version",
+    "semantic-release": "npx semantic-release",
+    "build": "nest build",
+    "build:prod": "nest build --path ./tsconfig.build.prod.json",
+    "depcheck": "npx depcheck .",
+    "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src",
+    "depcruiser:graph": "npx depcruise -c .depcruiser.cjs -x \".+.spec.ts\" -T dot ./src | dot -T png > .depcruiser-graph.png",
+    "format": "prettier --write .",
+    "gitleaks": "docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git",
+    "licensee": "licensee --errors-only",
+    "lint": "eslint .",
+    "lint-staged": "npx lint-staged --allow-empty",
+    "ncu:update": "npx npm-check-updates --doctor -u",
+    "ncu:validate": "npx npm-check-updates -e 2 --packageFile=./package.json",
+    "prebuild": "rimraf dist",
+    "prepare": "husky install",
+    "start": "nest start",
+    "start:debug": "nest start --debug --watch  --preserveWatchOutput",
+    "start:dev": "dotenv -e ./env/defaults.env -- nest start --watch  --preserveWatchOutput",
+    "start:node": "node dist/main",
+    "test": "jest --passWithNoTests",
+    "test:clearCache": "jest --clearCache",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "dotenv -e ./env/defaults.env -- jest --detectOpenHandles --config ./test/jest-e2e.json",
+    "test:watch": "jest --watch",
+    "ts-unused-exports": "npx ts-unused-exports ./tsconfig.json"
   },
   "dependencies": {
     "@fastify/static": "^6.11.2",
@@ -16,7 +50,7 @@
     "@nestjs/microservices": "^10.2.5",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-fastify": "^10.2.5",
-    "@nestjs/swagger": "^7.1.11",
+    "@nestjs/swagger": "^7.1.12",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "bullmq": "^4.11.2",
@@ -33,7 +67,6 @@
     "rxjs": "^7.8.1",
     "short-unique-id": "^5.0.2"
   },
-  "description": "A simple and convenient way to distribute and provide content to your apps ;)",
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@nestjs/cli": "^10.1.18",
@@ -72,6 +105,7 @@
     "prettier": "^3.0.3",
     "semantic-release": "^22.0.1",
     "source-map-support": "^0.5.21",
+    "standard-version": "^9.5.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.4.4",
@@ -79,37 +113,5 @@
     "ts-unused-exports": "^10.0.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
-  },
-  "license": "MIT",
-  "name": "@litlbyte/acap",
-  "repository": "git@github.com:ehildt/acap.git",
-  "scripts": {
-    "semantic-release": "npx semantic-release",
-    "build": "nest build",
-    "build:prod": "nest build --path ./tsconfig.build.prod.json",
-    "depcheck": "npx depcheck .",
-    "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src",
-    "depcruiser:graph": "npx depcruise -c .depcruiser.cjs -x \".+.spec.ts\" -T dot ./src | dot -T png > .depcruiser-graph.png",
-    "format": "prettier --write .",
-    "gitleaks": "docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git",
-    "licensee": "licensee --errors-only",
-    "lint": "eslint .",
-    "lint-staged": "npx lint-staged --allow-empty",
-    "ncu:update": "npx npm-check-updates --doctor -u",
-    "ncu:validate": "npx npm-check-updates -e 2 --packageFile=./package.json",
-    "prebuild": "rimraf dist",
-    "prepare": "husky install",
-    "start": "nest start",
-    "start:debug": "nest start --debug --watch  --preserveWatchOutput",
-    "start:dev": "dotenv -e ./env/defaults.env -- nest start --watch  --preserveWatchOutput",
-    "start:node": "node dist/main",
-    "test": "jest --passWithNoTests",
-    "test:clearCache": "jest --clearCache",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "dotenv -e ./env/defaults.env -- jest --detectOpenHandles --config ./test/jest-e2e.json",
-    "test:watch": "jest --watch",
-    "ts-unused-exports": "npx ts-unused-exports ./tsconfig.json"
-  },
-  "version": "0.9.13"
+  }
 }
