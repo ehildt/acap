@@ -310,7 +310,7 @@ With ACAP, it's your data, your choice, fortified by our robust security options
 
 <div align="center">
 <details>
-<summary>Get more insights about AES </summary>
+<summary>Get more insights about AES</summary>
 </br>
 
 ${\color{pink}AES-256-CBC \space (32byte \space key)}$ 
