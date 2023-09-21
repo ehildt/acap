@@ -308,6 +308,7 @@ In essence, these AES-CBC modes form a robust security foundation. Your choice d
 
 With ACAP, it's your data, your choice, fortified by our robust security options. Elevate your data protection standards while retaining the flexibility to apply encryption as you see fit. Your security, your way, with ACAP's formidable security toolkit. 
 
+<div align="center">
 <details>
 <summary>Get more insights about AES </summary>
 </br>
@@ -329,6 +330,7 @@ Security: AES-128-CBC uses a 128-bit key, which is still considered secure but i
 Drawbacks: The primary advantage of AES-128-CBC is its speed and lower computational overhead. It's generally faster than AES-192-CBC and AES-256-CBC. The drawback is that, in rare cases of highly motivated attackers with immense computational resources, it might be less secure compared to the longer key lengths.
 
 </details>
+</div>
 
 ### Redis
 
