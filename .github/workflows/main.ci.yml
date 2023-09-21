@@ -30,3 +30,12 @@ jobs:
     - run: npm install -g @nestjs/cli
     - run: npm ci --omit=dev --ignore-scripts
     - run: npm run build:prod --if-present
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - run: npm run semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
