@@ -29,6 +29,11 @@ jobs:
         key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
     - run: npm install -g @nestjs/cli
     - run: npm ci --ignore-scripts
+    - run: npm test
+    - run: npm run lint
+    - run: npm run depcruiser
+    - run: npm run ts-unused-exports
+    - run: npm run licensee
     - run: npm run build:prod --if-present
     - name: Set up SSH key
       run: |
