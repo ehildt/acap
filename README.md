@@ -93,6 +93,11 @@ Getting Started
 
 The config.yml file contains default presets that make it easier to create a container for local development. 
 
+<details align="center">
+<summary>Expand to see the sample config.yml file</summary>
+</br>
+<div align="left">
+
 ```yml
 appConfig:
   port: 3001
@@ -157,8 +162,16 @@ mqttClientConfig:
     username: null
     password: null
 ```
+</div>
+</details>
+</br>
 
 Docker Compose further simplifies the process, allowing for a quick start and easy exploration of the application. 
+
+<details align="center">
+<summary>Expand to see the sample docker compose file</summary>
+</br>
+<div align="left">
 
 ```yml
 version: '3.9'
@@ -220,8 +233,16 @@ networks:
   default:
     name: ACAP_NETWORK
 ```
+</div>
+</details>
+</br>
 
 As mentioned earlier, you can still utilize system environment variables either in conjunction with the config.yml file. System environment variables, if set, take precedence over the values specified in the config.yml file. Here are the system environment variables that are available for utilization.
+
+<details align="center">
+<summary>Expand to see the sample .env file</summary>
+</br>
+<div align="left">
 
 ```sh
 PORT=3001
@@ -275,6 +296,10 @@ REDIS_TTL=600
 REDIS_MAX_RESPONSES=100
 REDIS_DB_INDEX=0
 ```
+
+</div>
+</details>
+</br>
 
 With this, you have everything you need to make the ACAP your own and harness its full potential to power your applications and drive business growth.
 
