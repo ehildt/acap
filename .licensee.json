@@ -98,6 +98,7 @@
     "scss-parser": "^1.0.6",
     "semver-utils": "^1.1.4",
     "jackspeak": "^2.2.1",
-    "callsite": "^1.0.0"
+    "callsite": "^1.0.0",
+    "gitconfiglocal": "^1.0.0"
   }
 }
