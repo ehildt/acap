@@ -1,3 +1,16 @@
+## [1.0.1-beta.1](https://github.com/ehildt/acap/compare/v1.0.0...v1.0.1-beta.1) (2023-09-21)
+
+
+### CI/CD
+
+* added tests ([44c3f48](https://github.com/ehildt/acap/commit/44c3f482043c8c907842876ff34a8a3bafc72b76))
+
+
+### Documentation
+
+* **README:** updated ([10c7e11](https://github.com/ehildt/acap/commit/10c7e114da8801e7425562573b155dc01a6eccfc))
+* **README:** updated ([9ca8b46](https://github.com/ehildt/acap/commit/9ca8b4608f5a817d0274fde3fae26715b5d4adfb))
+
 ## 1.0.0 (2023-09-21)
 
 
