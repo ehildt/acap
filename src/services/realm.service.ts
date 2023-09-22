@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bullmq';
-import { BadRequestException, Inject, Injectable, Optional, UnprocessableEntityException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException, Optional } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bullmq';
 import { catchError } from 'rxjs';
@@ -31,7 +31,7 @@ export class RealmService {
   async upsertRealm(realm: string, reqs: Array<ContentUpsertReq>) {
     const payload = this.factory.app.crypto.cryptable ? this.cryptoService.encryptContentUpsertReqs(reqs) : reqs;
     const result = await this.configRepo.upsert(realm, payload);
-    if (!result?.ok) throw new BadRequestException(result);
+    if (!result?.ok) throw new InternalServerErrorException(result);
     this.redisPubSubClient?.emit(realm, reqs).pipe(catchError((error) => error));
     this.bullmq?.add(realm, reqs).catch((error) => error);
     this.mqttClient?.publish(realm, reqs);
@@ -41,7 +41,7 @@ export class RealmService {
   async upsertRealms(reqs: Array<RealmsUpsertReq>) {
     const payload = this.factory.app.crypto.cryptable ? this.cryptoService.encryptRealmsUpsertReq(reqs) : reqs;
     const result = await this.configRepo.upsertMany(payload);
-    if (!result?.ok) throw new BadRequestException(result);
+    if (!result?.ok) throw new InternalServerErrorException(result);
     if (this.redisPubSubClient || this.mqttClient)
       reqs.forEach(({ realm, contents }) => {
         this.redisPubSubClient?.emit(realm, contents).pipe(catchError((error) => error));
@@ -58,8 +58,8 @@ export class RealmService {
     });
 
     if (entities?.length < ids?.length)
-      throw new UnprocessableEntityException(
-        `N/A [ realm: ${realm} | id: ${ids.filter((id) => !entities.find(({ _id }) => _id === id))} ]`,
+      throw new NotFoundException(
+        `No such ID::${ids.filter((id) => !entities.find(({ _id }) => _id === id))} in REALM::${realm}`,
       );
 
     return !this.factory.app.crypto.cryptable

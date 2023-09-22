@@ -1,8 +1,8 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
-  BadRequestException,
   Controller,
   Inject,
+  NotFoundException,
   Post,
   UnprocessableEntityException,
   UseInterceptors,
@@ -10,6 +10,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
+import { SCHEMA_PREFIX } from '@/constants/app.constants';
 import { DeleteRealm, GetRealm, GetSchema, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamId,
@@ -55,17 +56,16 @@ export class JsonSchemaController {
     try {
       req.forEach(({ value }) => this.avjService.compile(value));
     } catch (error) {
-      // * avj strict mode - must abide by the schema definition rules
-      if ((error.message as string).startsWith('strict')) throw new BadRequestException(error.message);
-      // * 400 - some avj schema validation error on compiling
-      if (error.status === 400) throw new BadRequestException(error.message);
+      if (error.status === 400) throw new UnprocessableEntityException(error.message);
+      if (error.message.startsWith('strict')) throw new UnprocessableEntityException(error.message);
+      if (error.message === 'schema must be object or boolean') throw new UnprocessableEntityException(error.message);
     }
     // @ schema validation end
     // ! we don't cache schemas on upsert.
     // ! we don't want to spam the ram whenever we upsert
     // * we want to keep the cache up to date
     const entity = await this.schemaService.upsertRealm(realm, req);
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     if (!Object.keys(content)?.length) return entity;
     const count = await this.schemaService.countRealmContents();
@@ -84,17 +84,16 @@ export class JsonSchemaController {
       try {
         contents.forEach(({ value }) => this.avjService.compile(value));
       } catch (error) {
-        // * avj strict mode - must abide by the schema definition rules
-        if ((error.message as string).startsWith('strict')) throw new BadRequestException(error.message);
-        // * 400 - some avj schema validation error on compiling
-        if (error.status === 400) throw new BadRequestException(error);
+        if (error.status === 400) throw new UnprocessableEntityException(error.message);
+        if (error.message.startsWith('strict')) throw new UnprocessableEntityException(error.message);
+        if (error.message === 'schema must be object or boolean') throw new UnprocessableEntityException(error.message);
       }
       // @ schema validation end
       // ! we don't cache schemas on upsert.
       // ! we don't want to spam the ram whenever we upsert
       // * we want to keep the cache up to date
       const entity = await this.schemaService.upsertRealm(realm, contents);
-      const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
+      const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
       const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
       if (!Object.keys(content)?.length) return entity;
       const count = await this.schemaService.countRealmContents();
@@ -109,7 +108,7 @@ export class JsonSchemaController {
   @GetSchema()
   @OpenApi_GetSchema()
   async getSchemaConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const cachedRealm = await this.cache.get<CacheObject>(postfix);
     const { content } = gunzipSyncCacheObject(cachedRealm);
     if (content[id]) {
@@ -119,7 +118,7 @@ export class JsonSchemaController {
     }
     const data = await this.schemaService.getRealmContentByIds(realm, [id]);
     const count = await this.schemaService.countRealmContents();
-    if (!data[id]) throw new UnprocessableEntityException(`N/A realm: ${realm} | id: ${id}`);
+    if (!data[id]) throw new NotFoundException(`No such ID::${id} on REALM::${realm}`);
     const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return data[id];
@@ -128,7 +127,7 @@ export class JsonSchemaController {
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const cachedRealm = await this.cache.get<CacheObject>(postfix);
     const cache = gunzipSyncCacheObject(cachedRealm);
 
@@ -139,7 +138,7 @@ export class JsonSchemaController {
         return cache.content;
       }
       const data = reduceToContents(this.configFactory.app.realm.resolveEnv, await this.schemaService.getRealm(realm));
-      if (!Object.keys(data)?.length) throw new UnprocessableEntityException(`N/A realm: ${realm}`);
+      if (!Object.keys(data)?.length) throw new NotFoundException(`No such REALM::${realm}`);
       const cacheObj = gzipSyncCacheObject(data, this.configFactory.app.realm.gzipThreshold, Object.keys(data).length);
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
       return data;
@@ -166,7 +165,7 @@ export class JsonSchemaController {
   @DeleteRealm()
   @OpenApi_DeleteRealm()
   async deleteRealm(@ParamRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = prepareCacheKey('SCHEMA', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
 
     if (!ids) {
       await this.cache.del(postfix);

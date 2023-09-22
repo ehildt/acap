@@ -1,9 +1,13 @@
 import { ConsoleLogger, Injectable, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 import { API_DOCS, API_DOCS_JSON } from '../constants/app.constants';
 import { ConfigFactoryService } from './config-factory.service';
+
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../../package.json'), 'utf8'));
 
 @Injectable()
 export class AppService {
@@ -39,37 +43,30 @@ export class AppService {
     const openApiObj = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('ACAP')
-        .setDescription('A simple and convenient way to dynamically distribute and provide content to your services ;)')
-        .setVersion('0.9.11')
+        .setTitle(packageJson.name.split('/').at(1).toUpperCase())
+        .setDescription(packageJson.description)
+        .setVersion(packageJson.version)
         .build(),
     );
     SwaggerModule.setup(API_DOCS, app, openApiObj);
   }
 
-  addYamlContentType(app: NestFastifyApplication) {
-    app
-      .getHttpAdapter()
-      .getInstance()
-      .addContentTypeParser('application/x-yaml', { parseAs: 'string' }, (_, body, done) => done(null, body));
-  }
-
-  logOnServerStart(appFactory: ConfigFactoryService) {
-    if (process.env.PRINT_ENV === 'true')
+  logOnServerStart() {
+    if (this.configFactory.app.printEnv)
       this.logger.log(
         {
-          APP: appFactory.app,
-          MONGO: appFactory.mongo,
-          REDIS: appFactory.redis,
-          REDIS_PUBSUB: appFactory.app.services.useRedisPubSub ? appFactory.redisPubSub : undefined,
-          BULLMQ: appFactory.app.services.useBullMQ ? appFactory.bullMQ : undefined,
-          MQTT: appFactory.app.services.useMQTT ? appFactory.mqtt : undefined,
+          APP: this.configFactory.app,
+          MONGO: this.configFactory.mongo,
+          REDIS: this.configFactory.redis,
+          REDIS_PUBSUB: this.configFactory.app.services.useRedisPubSub ? this.configFactory.redisPubSub : undefined,
+          BULLMQ: this.configFactory.app.services.useBullMQ ? this.configFactory.bullMQ : undefined,
+          MQTT: this.configFactory.app.services.useMQTT ? this.configFactory.mqtt : undefined,
         },
         'ENVIRONMENT',
       );
 
-    if (appFactory.app.startSwagger) {
-      const swaggerPath = `http://localhost:${appFactory.app.port}`;
+    if (this.configFactory.app.startSwagger) {
+      const swaggerPath = `http://localhost:${this.configFactory.app.port}`;
       this.logger.log(`${swaggerPath}/${API_DOCS_JSON}`);
       this.logger.log(`${swaggerPath}/${API_DOCS}`);
     }

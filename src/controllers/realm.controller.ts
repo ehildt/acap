@@ -1,8 +1,16 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { BadRequestException, Controller, Inject, Post, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Inject,
+  NotFoundException,
+  Post,
+  UnprocessableEntityException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
+import { REALM_PREFIX } from '@/constants/app.constants';
 import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamId,
@@ -45,7 +53,7 @@ export class RealmController {
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(REALM_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const cachedRealm = await this.cache.get<CacheObject>(postfix);
     const cache = gunzipSyncCacheObject(cachedRealm);
 
@@ -60,7 +68,7 @@ export class RealmController {
       // @ if not all realm content ids are in cache when fetching the realm,
       // @ we fetch the whole realm, cache and return it.
       const data = reduceToContents(this.configFactory.app.realm.resolveEnv, await this.realmService.getRealm(realm));
-      if (!Object.keys(data)?.length) throw new BadRequestException(`N/A realm: ${realm}`);
+      if (!Object.keys(data)?.length) throw new NotFoundException(`No such REALM::${realm}`);
       const cacheObj = gzipSyncCacheObject(data, this.configFactory.app.realm.gzipThreshold, Object.keys(data).length);
       await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
       return data;
@@ -94,16 +102,15 @@ export class RealmController {
       const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys);
       req.forEach(({ value, id }) => this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])));
     } catch (error) {
-      if (error.status !== 422) throw new BadRequestException(error);
+      if (error.status !== 422) throw new UnprocessableEntityException(error);
     }
     // @ schema validation end
     // ! we don't cache schemas on upsert.
     // ! we don't want to spam the ram whenever we upsert
     // * we want to keep the cache up to date
     let payload: Array<ContentUpsertReq>;
-    // if (encrypt) payload = req.map(({ id, value }) => ({ id, value: this.cryptoService.encrypt(value) }));
     const entity = await this.realmService.upsertRealm(realm, payload ?? req);
-    const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(REALM_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
     if (!Object.keys(content)?.length) return entity;
     const count = await this.realmService.countRealmContents();
@@ -126,16 +133,15 @@ export class RealmController {
           this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
         );
       } catch (error) {
-        if (error.status !== 422) throw new BadRequestException(error);
+        if (error.status !== 422) throw new UnprocessableEntityException(error);
       }
       // @ schema validation end
       // ! we don't cache schemas on upsert.
       // ! we don't want to spam the ram whenever we upsert
       // * we want to keep the cache up to date
-      const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
+      const postfix = prepareCacheKey(REALM_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
       const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
       let payload: Array<ContentUpsertReq>;
-      // if (encrypt) payload = contents.map(({ id, value }) => ({ id, value: this.cryptoService.encrypt(value) }));
       const entity = await this.realmService.upsertRealm(realm, payload ?? contents);
       if (!Object.keys(content)?.length) return entity;
       const count = await this.realmService.countRealmContents();
@@ -150,7 +156,7 @@ export class RealmController {
   @GetRealmConfig()
   @OpenApi_GetRealmConfig()
   async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(REALM_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const cachedRealm = await this.cache.get<CacheObject>(postfix);
     const { content } = gunzipSyncCacheObject(cachedRealm);
     if (content[id]) {
@@ -160,7 +166,7 @@ export class RealmController {
     }
     const data = await this.realmService.getRealmContentByIds(realm, [id]);
     const count = await this.realmService.countRealmContents();
-    if (!data[id]) throw new BadRequestException(`N/A realm: ${realm} | id: ${id}`);
+    if (!data[id]) throw new NotFoundException(`No such ID::${id} on REALM::${realm}`);
     const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return data[id];
@@ -169,7 +175,7 @@ export class RealmController {
   @DeleteRealm()
   @OpenApi_DeleteRealm()
   async deleteRealm(@ParamRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = prepareCacheKey('REALM', realm, this.configFactory.app.realm.namespacePostfix);
+    const postfix = prepareCacheKey(REALM_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
 
     if (!ids) {
       await this.cache.del(postfix);

@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bullmq';
-import { Inject, Injectable, Optional, UnprocessableEntityException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException, Optional } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bullmq';
 import { catchError } from 'rxjs';
@@ -24,17 +24,9 @@ export class SchemaService {
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
   ) {}
 
-  async countRealmContents() {
-    return await this.schemaRepository.countContents();
-  }
-
-  async countSchemas() {
-    return await this.schemaRepository.countSchemas();
-  }
-
   async upsertRealm(realm: string, req: Array<ContentUpsertReq>) {
     const result = await this.schemaRepository.upsert(realm, req);
-    if (!result?.ok) return result;
+    if (!result?.ok) throw new InternalServerErrorException(result);
     this.redisPubSubClient?.emit(realm, req).pipe(catchError((error) => error));
     this.bullmq?.add(realm, req).catch((error) => error);
     this.mqttClient?.publish(realm, req);
@@ -43,7 +35,7 @@ export class SchemaService {
 
   async upsertRealms(reqs: RealmsUpsertReq[]) {
     const result = await this.schemaRepository.upsertMany(reqs);
-    if (!result?.ok) return result;
+    if (!result?.ok) throw new InternalServerErrorException(result);
     if (this.redisPubSubClient || this.mqttClient)
       reqs.forEach(({ realm, contents }) => {
         this.redisPubSubClient?.emit(realm, contents).pipe(catchError((error) => error));
@@ -53,10 +45,6 @@ export class SchemaService {
     return result;
   }
 
-  async getRealm(realm: string) {
-    return await this.schemaRepository.where({ realm });
-  }
-
   async getRealmContentByIds(realm: string, ids: Array<string>) {
     const entities = await this.schemaRepository.where({
       realm,
@@ -64,8 +52,8 @@ export class SchemaService {
     });
 
     if (entities?.length < ids?.length)
-      throw new UnprocessableEntityException(
-        `N/A [ realm: ${realm} | id: ${ids.filter((id) => !entities.find(({ _id }) => _id === id))} ]`,
+      throw new NotFoundException(
+        `No such ID::${ids.filter((id) => !entities.find(({ _id }) => _id === id))} in REALM::${realm}`,
       );
 
     return reduceEntities(this.factory.app.realm.resolveEnv, entities);
@@ -99,5 +87,17 @@ export class SchemaService {
     const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
     const entities = await this.schemaRepository.where({ realm: { $in: realmSet } });
     return mapEntitiesToContentFile(entities, realms);
+  }
+
+  async getRealm(realm: string) {
+    return await this.schemaRepository.where({ realm });
+  }
+
+  async countRealmContents() {
+    return await this.schemaRepository.countContents();
+  }
+
+  async countSchemas() {
+    return await this.schemaRepository.countSchemas();
   }
 }
