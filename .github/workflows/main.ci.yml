@@ -67,3 +67,11 @@ jobs:
         run: npm run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Back-Merge into DEV
+        run: |
+          git checkout dev
+          git merge --no-ff main
+          if [[ $? -eq 0 ]]; then
+            git push origin dev
+          fi

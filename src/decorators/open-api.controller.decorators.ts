@@ -9,6 +9,8 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
+import { MetaRes } from '@/dtos/metae-res.dto';
+
 import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
@@ -128,13 +130,11 @@ export function OpenApi_GetMeta() {
       description: 'Returns the meta data',
     }),
     ApiParamMeta(),
-    ApiOkResponse(),
+    ApiOkResponse({ type: MetaRes }),
     ApiQueryTake(),
     ApiQuerySkip(),
     ApiQueryVerbose(),
     ApiQuerySearch(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
   );
 }
 
