@@ -6,4 +6,9 @@
     "sourceMap": false,
     "removeComments": true,
   },
+  "exclude": [
+    "test/**/*",
+    ".eslintrc.cjs",
+    ".prettierrc.cjs",
+  ]
 }

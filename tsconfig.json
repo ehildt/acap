@@ -25,10 +25,4 @@
     "src/**/*",
     "test/**/*"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*spec.ts",
-    "**/test/**"
-  ]
 }
