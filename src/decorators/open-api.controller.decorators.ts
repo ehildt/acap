@@ -28,6 +28,8 @@ import {
 
 const REQUEST_SUCCESSFUL = 'request successful';
 const REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG = 'something has seriously gone wrong..';
+const REQUEST_SCHEMA_COMPILATION_FAILED = 'schema compilation failed';
+const REQUEST_SCHEMA_VALIDATION_FAILED = 'schema validation failed';
 
 export function OpenApi_Upsert() {
   return applyDecorators(
@@ -46,7 +48,7 @@ export function OpenApi_Upsert() {
     }),
     ApiBodyRealmUpsert(),
     ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
-    ApiUnprocessableEntityResponse({ description: 'schema validation failed' }),
+    ApiUnprocessableEntityResponse({ description: REQUEST_SCHEMA_VALIDATION_FAILED }),
     ApiInternalServerErrorResponse({ description: REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG }),
   );
 }
@@ -68,7 +70,26 @@ export function OpenApi_SchemaUpsert() {
     }),
     ApiBodyRealmUpsert(),
     ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
-    ApiUnprocessableEntityResponse({ description: 'schema compilation failed' }),
+    ApiUnprocessableEntityResponse({ description: REQUEST_SCHEMA_COMPILATION_FAILED }),
+    ApiInternalServerErrorResponse({ description: REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG }),
+  );
+}
+
+export function OpenApi_UpsertSchemas() {
+  return applyDecorators(
+    ApiOperation({
+      description: `
+        This efficient API is designed to handle the process of updating or inserting data into multiple realms, which 
+        represent separate collections of data. By providing a list of realms and the data to be upserted, you can ensure 
+        that the data undergoes validation to conform to a valid JSON schema. This validation is crucial for maintaining 
+        data consistency and adhering to the expected JSON schema format. During the upsert operation, the API selectively 
+        updates the cache, targeting only the existing data. This means that any content that is absent from the cache 
+        remains untouched, avoiding unnecessary modifications. This approach allows for efficient processing while 
+        preserving the integrity of the cache.`,
+    }),
+    ApiBodyRealmUpsertPerRealm(),
+    ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
+    ApiUnprocessableEntityResponse({ description: REQUEST_SCHEMA_COMPILATION_FAILED }),
     ApiInternalServerErrorResponse({ description: REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG }),
   );
 }
@@ -88,7 +109,7 @@ export function OpenApi_UpsertRealms() {
     }),
     ApiBodyRealmUpsertPerRealm(),
     ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
-    ApiUnprocessableEntityResponse({ description: 'schema validation failed' }),
+    ApiUnprocessableEntityResponse({ description: REQUEST_SCHEMA_VALIDATION_FAILED }),
     ApiInternalServerErrorResponse({ description: REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG }),
   );
 }
