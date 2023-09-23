@@ -11,7 +11,7 @@ import { ConfigFactoryService } from './config-factory.service';
 export class CryptoService {
   constructor(private readonly configFactory: ConfigFactoryService) {}
 
-  #handleEncrypt(data: string, algorithm: string, key: string): string {
+  protected handleEncrypt(data: string, algorithm: string, key: string): string {
     try {
       const iv = crypto.randomBytes(16);
       const cipher = crypto.createCipheriv(algorithm, Buffer.from(key, 'hex'), iv);
@@ -21,7 +21,7 @@ export class CryptoService {
     }
   }
 
-  #handleDecrypt(value: string, algorithm: string, key: string): string {
+  protected handleDecrypt(value: string, algorithm: string, key: string): string {
     try {
       const [iv, payload] = value.split(':');
       const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
@@ -32,15 +32,15 @@ export class CryptoService {
   }
 
   encrypt(payload: any) {
-    return this.#handleEncrypt(
-      JSON.stringify(payload),
+    return this.handleEncrypt(
+      typeof payload === 'object' ? JSON.stringify(payload) : payload,
       this.configFactory.app.crypto.symmetricAlgorithm,
       this.configFactory.app.crypto.symmetricKey,
     );
   }
 
   decrypt(payload: string) {
-    return this.#handleDecrypt(
+    return this.handleDecrypt(
       payload,
       this.configFactory.app.crypto.symmetricAlgorithm,
       this.configFactory.app.crypto.symmetricKey,
