@@ -7,7 +7,7 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
-  verbose: false,
+  verbose: true,
   reporters: ['default', 'jest-junit'],
   coverageReporters: ['clover', 'json', 'cobertura'],
   coverageThreshold: {
