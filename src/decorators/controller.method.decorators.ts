@@ -9,5 +9,5 @@ export const PostPubSubPubSub = () => Post();
 export const PostRealm = () => Post(realm);
 export const GetRealm = () => Get(realm);
 export const GetSchema = () => Get(realm_id);
-export const GetRealmConfig = () => Get(realm_id);
+export const GetRealmContent = () => Get(realm_id);
 export const DeleteRealm = () => Delete(realm);

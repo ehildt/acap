@@ -1,7 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiConsumes,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -27,8 +26,7 @@ import {
   ApiQueryVerbose,
 } from './open-api.method.decorators';
 
-const APPLICATION_YAML = 'application/x-yaml';
-const APPLICATION_JSON = 'application/json';
+const REQUEST_SUCCESSFUL = 'request successful';
 
 export function OpenApi_Upsert() {
   return applyDecorators(
@@ -45,8 +43,8 @@ export function OpenApi_Upsert() {
         this endpoint helps maintain data consistency within a realm, selectively updates the cache with the new content,
         and provides real-time notifications to enabled services when changes occur.`,
     }),
-    ApiCreatedResponse({ description: 'request was successful' }),
     ApiBodyRealmUpsert(),
+    ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
     ApiUnprocessableEntityResponse({ description: 'schema validation failed' }),
     ApiInternalServerErrorResponse({ description: 'something has seriously gone wrong..' }),
   );
@@ -57,7 +55,6 @@ export function OpenApi_SchemaUpsert() {
     ApiOperation({
       description: 'Upserts a schema in the database. The schema is not cached',
     }),
-    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiCreatedResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsert(),
@@ -68,14 +65,20 @@ export function OpenApi_SchemaUpsert() {
 export function OpenApi_UpsertRealms() {
   return applyDecorators(
     ApiOperation({
-      description:
-        'Upserts realms in the database. The realms are not cached, but changes are emitted if REDIS_PUBSUB_PUBLISH_EVENTS is set to true',
+      description: `
+        This API efficiently upserts (updates or inserts) data into multiple realms, each representing a distinct collection
+        of data. You provide a list of realms and the data to upsert within them. Before the upsert, the endpoint validates 
+        data against predefined schemas (if available) to ensure data consistency. The operation updates the cache selectively,
+        affecting only the data already present in the cache. If some content is absent from the cache, it remains unaffected.
+        If services like MQTT, BullMQ, and Redis PubSub are enabled, the endpoint emits new content to these services, 
+        facilitating real-time notifications and enabling other parts of your application to react to changes. In summary, 
+        this API streamlines upserts across multiple data realms, ensuring data integrity, optimizing memory use, and 
+        providing real-time notifications for enabled services to respond to data changes.`,
     }),
-    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
-    ApiCreatedResponse(),
-    ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),
-    ApiInternalServerErrorResponse(),
+    ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
+    ApiUnprocessableEntityResponse({ description: 'schema validation failed' }),
+    ApiInternalServerErrorResponse({ description: 'something has seriously gone wrong..' }),
   );
 }
 
@@ -84,7 +87,6 @@ export function OpenApi_PubSub() {
     ApiOperation({
       description: 'Immediately publishes the payload. The cache and database are bypassed',
     }),
-    ApiConsumes(APPLICATION_JSON, APPLICATION_YAML),
     ApiOkResponse(),
     ApiBadRequestResponse(),
     ApiBodyRealmUpsertPerRealm(),
@@ -106,7 +108,7 @@ export function OpenApi_GetRealm() {
         updates the cache, and returns the combined result. In summary, this endpoint provides efficient access to realm data, 
         minimizing unnecessary data retrieval and optimizing performance through caching.`,
     }),
-    ApiOkResponse({ type: OpenApiGetRealmProperty, description: 'request was successful' }),
+    ApiOkResponse({ type: OpenApiGetRealmProperty, description: REQUEST_SUCCESSFUL }),
     ApiNotFoundResponse({ description: 'requested realm or id not found' }),
     ApiQueryConfigIds(),
     ApiQueryRealm(),
@@ -127,17 +129,30 @@ export function OpenApi_GetSchema() {
   );
 }
 
-export function OpenApi_GetRealmConfig() {
+export function OpenApi_GetRealmContent() {
   return applyDecorators(
     ApiOperation({
-      description:
-        'Returns the realm config a from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
+      description: `
+      This API endpoint allows you to retrieve content from a specific realm by providing the realm name and a unique 
+      content ID. The endpoint follows a caching mechanism to optimize performance. It first checks if the requested 
+      content is available in the cache; if not, it fetches the content from the realm service and stores it in the 
+      cache for future requests. This approach ensures faster response times for frequently accessed content.`,
     }),
-    ApiOkResponse(),
+    ApiOkResponse({
+      description: REQUEST_SUCCESSFUL,
+      schema: {
+        oneOf: [
+          { type: 'string' },
+          { type: 'number' },
+          { type: 'boolean' },
+          { type: 'array', items: { type: 'object', additionalProperties: true } },
+          { type: 'object', additionalProperties: true },
+        ],
+      },
+    }),
+    ApiNotFoundResponse({ description: 'requested realm or id not found' }),
     ApiParamConfigId(),
     ApiParamRealm(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
   );
 }
 
@@ -158,13 +173,17 @@ export function OpenApi_GetMeta() {
 export function OpenApi_DeleteRealm() {
   return applyDecorators(
     ApiOperation({
-      description: `If a value for realm is provided, then the whole realm is deleted from cache AND database. 
-        Otherwise if also ids are provided, then only the ids are deleted from cache AND the database. 
-        If a realm has no more ids, then the realm is also deleted.`,
+      description: `
+        This API endpoint allows you to delete content from a specified realm. You can specify the realm name and, 
+        optionally, an array of unique content IDs to delete specific content items. The endpoint employs a caching 
+        mechanism to efficiently manage content removal and updates the cache accordingly. It also supports the 
+        deletion of entire realms when no specific content IDs are provided. If services like MQTT, BullMQ, and Redis
+        PubSub are enabled, the endpoint emits new content to these services, facilitating real-time notifications 
+        and enabling other parts of your application to react to changes. This real-time notification feature 
+        enhances the responsiveness and interactivity of your application.`,
     }),
     ApiQueryConfigIds(),
     ApiParamRealm(),
-    ApiOkResponse(),
-    ApiInternalServerErrorResponse(),
+    ApiOkResponse({ description: REQUEST_SUCCESSFUL }),
   );
 }

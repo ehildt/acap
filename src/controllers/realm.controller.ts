@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
 import { REALM_PREFIX } from '@/constants/app.constants';
-import { DeleteRealm, GetRealm, GetRealmConfig, PostRealm } from '@/decorators/controller.method.decorators';
+import { DeleteRealm, GetRealm, GetRealmContent, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamId,
   ParamRealm,
@@ -16,7 +16,7 @@ import {
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
-  OpenApi_GetRealmConfig,
+  OpenApi_GetRealmContent,
   OpenApi_Upsert,
   OpenApi_UpsertRealms,
 } from '@/decorators/open-api.controller.decorators';
@@ -143,9 +143,9 @@ export class RealmController {
     return await Promise.all(tasks);
   }
 
-  @GetRealmConfig()
-  @OpenApi_GetRealmConfig()
-  async getRealmConfig(@ParamRealm() realm: string, @ParamId() id: string) {
+  @GetRealmContent()
+  @OpenApi_GetRealmContent()
+  async getRealmContent(@ParamRealm() realm: string, @ParamId() id: string) {
     const postfix = prepareCacheKey(REALM_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const cachedRealm = await this.cache.get<CacheObject>(postfix);
     const { content } = gunzipSyncCacheObject(cachedRealm);
