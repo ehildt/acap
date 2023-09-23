@@ -15,7 +15,13 @@ class MetaItem {
 
   @ApiProperty({
     required: false,
-    oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }, { type: 'object' }, { type: 'array' }],
+    oneOf: [
+      { type: 'string' },
+      { type: 'number' },
+      { type: 'boolean' },
+      { type: 'array', items: { type: 'object', additionalProperties: true } },
+      { type: 'object', additionalProperties: true },
+    ],
   })
   value?: string | number | boolean | Record<string, unknown> | Array<unknown>;
 }
@@ -25,7 +31,7 @@ class MetaObject {
   EXAMPLE_REALM?: Array<MetaItem>;
 }
 
-export class MetaRes {
+export class OpenApiMetaProperty {
   @ApiProperty({
     description: 'as in the amount of total realms/schemas in the database',
   })

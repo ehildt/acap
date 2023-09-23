@@ -12,6 +12,7 @@ export class AvjService {
   }
 
   compile(schema: any) {
+    if (!schema) return;
     return this.avj.compile(schema);
   }
 }

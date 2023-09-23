@@ -1,12 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  Controller,
-  Inject,
-  NotFoundException,
-  Post,
-  UnprocessableEntityException,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Inject, NotFoundException, Post, UnprocessableEntityException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -33,7 +26,6 @@ import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-
 import { gzipSyncCacheObject } from '@/helpers/gzip-sync-cache-object.helper';
 import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
 import { reduceToContents } from '@/helpers/reduce-to-contents.helper';
-import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
 import { AvjService } from '@/services/avj.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { RealmService } from '@/services/realm.service';
@@ -94,12 +86,11 @@ export class RealmController {
 
   @PostRealm()
   @OpenApi_Upsert()
-  @UseInterceptors(ParseYmlInterceptor)
   async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: ContentUpsertReq[]) {
     // @ schema validation start
     try {
       const realmConfigKeys = Array.from(new Set(req.map(({ id }) => id)));
-      const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys);
+      const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys, false);
       req.forEach(({ value, id }) => this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])));
     } catch (error) {
       if (error.status !== 422) throw new UnprocessableEntityException(error);
@@ -122,13 +113,12 @@ export class RealmController {
 
   @Post()
   @OpenApi_UpsertRealms()
-  @UseInterceptors(ParseYmlInterceptor)
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
     const tasks = req.map(async ({ realm, contents }) => {
       // @ schema validation start
       try {
         const realmConfigKeys = Array.from(new Set(contents.map(({ id }) => id)));
-        const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys);
+        const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys, false);
         contents.forEach(({ value, id }) =>
           this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
         );

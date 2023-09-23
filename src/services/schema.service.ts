@@ -45,13 +45,13 @@ export class SchemaService {
     return result;
   }
 
-  async getRealmContentByIds(realm: string, ids: Array<string>) {
+  async getRealmContentByIds(realm: string, ids: Array<string>, allowThrow = true) {
     const entities = await this.schemaRepository.where({
       realm,
       id: { $in: ids },
     });
 
-    if (entities?.length < ids?.length)
+    if (entities?.length < ids?.length && allowThrow)
       throw new NotFoundException(
         `No such ID::${ids.filter((id) => !entities.find(({ _id }) => _id === id))} in REALM::${realm}`,
       );
