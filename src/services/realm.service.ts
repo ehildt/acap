@@ -7,9 +7,6 @@ import { catchError } from 'rxjs';
 import { BULLMQ_REALMS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
-import { convertEntitiesToRealmsUpsertReq } from '@/helpers/convert-entities-to-realms-upsert-req.helper';
-import { mapDecryptedRealmsUpsert } from '@/helpers/map-decrypted-realms-upsert.helper';
-import { mapEntitiesToContentFile } from '@/helpers/map-entities-to-content-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { RealmRepository } from '@/repositories/realm.repository';
@@ -83,24 +80,6 @@ export class RealmService {
     this.bullmq?.add(realm, ids).catch((error) => error);
     this.mqttClient?.publish(realm, ids);
     return entity;
-  }
-
-  async downloadContents(realms?: Array<string>) {
-    if (!realms) {
-      const entities = await this.configRepo.findAll();
-      const realms = Array.from(new Set(entities.map(({ realm }) => realm)));
-      if (!this.factory.app.crypto.cryptable) return mapEntitiesToContentFile(entities, realms);
-      const converted = convertEntitiesToRealmsUpsertReq(entities, realms);
-      const decrypted = this.cryptoService.decryptRealmsUpsertReq(converted);
-      return mapDecryptedRealmsUpsert(decrypted);
-    }
-
-    const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
-    const entities = await this.configRepo.where({ realm: { $in: realmSet } });
-    if (!this.factory.app.crypto.cryptable) return mapEntitiesToContentFile(entities, realmSet);
-    const converted = convertEntitiesToRealmsUpsertReq(entities, realms);
-    const decrypted = this.cryptoService.decryptRealmsUpsertReq(converted);
-    return mapDecryptedRealmsUpsert(decrypted);
   }
 
   async getRealm(realm: string) {

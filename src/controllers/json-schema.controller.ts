@@ -11,7 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
 import { SCHEMA_PREFIX } from '@/constants/app.constants';
-import { DeleteRealm, GetRealm, GetSchema, PostRealm } from '@/decorators/controller.method.decorators';
+import { DeleteRealm, GetRealm, GetRealmContent, PostRealm } from '@/decorators/controller.method.decorators';
 import {
   ParamId,
   ParamRealm,
@@ -23,7 +23,7 @@ import {
 import {
   OpenApi_DeleteRealm,
   OpenApi_GetRealm,
-  OpenApi_GetSchema,
+  OpenApi_GetRealmContent,
   OpenApi_SchemaUpsert,
   OpenApi_UpsertRealms,
 } from '@/decorators/open-api.controller.decorators';
@@ -50,7 +50,6 @@ export class JsonSchemaController {
 
   @PostRealm()
   @OpenApi_SchemaUpsert()
-  @UseInterceptors(ParseYmlInterceptor)
   async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: Array<ContentUpsertReq>) {
     // @ schema validation start
     try {
@@ -105,25 +104,6 @@ export class JsonSchemaController {
     return await Promise.all(tasks);
   }
 
-  @GetSchema()
-  @OpenApi_GetSchema()
-  async getSchemaConfig(@ParamRealm() realm: string, @ParamId() id: string) {
-    const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
-    const cachedRealm = await this.cache.get<CacheObject>(postfix);
-    const { content } = gunzipSyncCacheObject(cachedRealm);
-    if (content[id]) {
-      // @ we reset the ttl
-      await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
-      return content[id];
-    }
-    const data = await this.schemaService.getRealmContentByIds(realm, [id]);
-    const count = await this.schemaService.countRealmContents();
-    if (!data[id]) throw new NotFoundException(`No such ID::${id} on REALM::${realm}`);
-    const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
-    await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
-    return data[id];
-  }
-
   @GetRealm()
   @OpenApi_GetRealm()
   async getRealm(@QueryRealm() realm: string, @QueryIds() ids?: string[]) {
@@ -132,11 +112,15 @@ export class JsonSchemaController {
     const cache = gunzipSyncCacheObject(cachedRealm);
 
     if (!ids) {
-      if (Object.keys(cache.content)?.length) {
-        // @ we reset the ttl
+      // @ we update the ttl if the cache holds the same amount of content ids
+      // ! when upserting the realm, the cache is also upserted.
+      if (Object.keys(cache.content)?.length === cache.count) {
         await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
         return cache.content;
       }
+
+      // @ if not all realm content ids are in cache when fetching the realm,
+      // @ we fetch the whole realm, cache and return it.
       const data = reduceToContents(this.configFactory.app.realm.resolveEnv, await this.schemaService.getRealm(realm));
       if (!Object.keys(data)?.length) throw new NotFoundException(`No such REALM::${realm}`);
       const cacheObj = gzipSyncCacheObject(data, this.configFactory.app.realm.gzipThreshold, Object.keys(data).length);
@@ -160,6 +144,25 @@ export class JsonSchemaController {
     const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
     await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
     return content;
+  }
+
+  @GetRealmContent()
+  @OpenApi_GetRealmContent()
+  async getRealmContent(@ParamRealm() realm: string, @ParamId() id: string) {
+    const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
+    const cachedRealm = await this.cache.get<CacheObject>(postfix);
+    const { content } = gunzipSyncCacheObject(cachedRealm);
+    if (content[id]) {
+      // @ we reset the ttl
+      await this.cache.set(postfix, cachedRealm, this.configFactory.app.realm.ttl);
+      return content[id];
+    }
+    const data = await this.schemaService.getRealmContentByIds(realm, [id]);
+    const count = await this.schemaService.countRealmContents();
+    if (!data[id]) throw new NotFoundException(`No such ID::${id} on REALM::${realm}`);
+    const cacheObj = gzipSyncCacheObject({ ...content, ...data }, this.configFactory.app.realm.gzipThreshold, count);
+    await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
+    return data[id];
   }
 
   @DeleteRealm()

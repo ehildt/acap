@@ -7,7 +7,6 @@ import { catchError } from 'rxjs';
 import { BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
-import { mapEntitiesToContentFile } from '@/helpers/map-entities-to-content-file.helper';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { SchemaRepository } from '@/repositories/schema.repository';
@@ -75,18 +74,6 @@ export class SchemaService {
     this.bullmq?.add(realm, ids).catch((error) => error);
     this.mqttClient?.publish(realm, ids);
     return entity;
-  }
-
-  async downloadContents(realms?: Array<string>) {
-    if (!realms) {
-      const entities = await this.schemaRepository.findAll();
-      const realms = Array.from(new Set(entities.map(({ realm }) => realm)));
-      return mapEntitiesToContentFile(entities, realms);
-    }
-
-    const realmSet = Array.from(new Set(realms.map((space) => space.trim())));
-    const entities = await this.schemaRepository.where({ realm: { $in: realmSet } });
-    return mapEntitiesToContentFile(entities, realms);
   }
 
   async getRealm(realm: string) {

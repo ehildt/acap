@@ -27,6 +27,7 @@ import {
 } from './open-api.method.decorators';
 
 const REQUEST_SUCCESSFUL = 'request successful';
+const REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG = 'something has seriously gone wrong..';
 
 export function OpenApi_Upsert() {
   return applyDecorators(
@@ -46,19 +47,29 @@ export function OpenApi_Upsert() {
     ApiBodyRealmUpsert(),
     ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
     ApiUnprocessableEntityResponse({ description: 'schema validation failed' }),
-    ApiInternalServerErrorResponse({ description: 'something has seriously gone wrong..' }),
+    ApiInternalServerErrorResponse({ description: REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG }),
   );
 }
 
 export function OpenApi_SchemaUpsert() {
   return applyDecorators(
     ApiOperation({
-      description: 'Upserts a schema in the database. The schema is not cached',
+      description: `
+        This API endpoint enables you to upsert (update or insert) content into a specific realm. A realm represents a 
+        collection of data with a unique identifier. The endpoint validates the content to ensure it is a valid JSON schema, 
+        ensuring data consistency and adherence to the expected JSON schema format. If the provided content does not conform 
+        to the expected JSON schema format, the endpoint throws an UnprocessableEntityException error. The upsert operation 
+        selectively updates the cache with the new content for the data already present in the cache. Any content that does 
+        not exist in the cache remains unaffected. Upon completion of the upsert operation, the endpoint returns the updated 
+        result of the realm. In summary, this endpoint allows you to upsert JSON schema content into a specified realm. 
+        It performs validation to ensure the content adheres to the expected JSON schema format, throws an 
+        UnprocessableEntityException if the validation fails, and updates the cache accordingly. The endpoint ensures data 
+        consistency and returns the updated result of the realm.`,
     }),
-    ApiCreatedResponse(),
-    ApiBadRequestResponse(),
     ApiBodyRealmUpsert(),
-    ApiInternalServerErrorResponse(),
+    ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
+    ApiUnprocessableEntityResponse({ description: 'schema compilation failed' }),
+    ApiInternalServerErrorResponse({ description: REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG }),
   );
 }
 
@@ -78,7 +89,7 @@ export function OpenApi_UpsertRealms() {
     ApiBodyRealmUpsertPerRealm(),
     ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
     ApiUnprocessableEntityResponse({ description: 'schema validation failed' }),
-    ApiInternalServerErrorResponse({ description: 'something has seriously gone wrong..' }),
+    ApiInternalServerErrorResponse({ description: REQUEST_SOMETHING_HAS_GONE_SERIOUSLY_WRONG }),
   );
 }
 
@@ -112,20 +123,6 @@ export function OpenApi_GetRealm() {
     ApiNotFoundResponse({ description: 'requested realm or id not found' }),
     ApiQueryConfigIds(),
     ApiQueryRealm(),
-  );
-}
-
-export function OpenApi_GetSchema() {
-  return applyDecorators(
-    ApiOperation({
-      description:
-        'Returns the json schema from cache. Otherwise fetches it from the database, populates the cache and returns the entity',
-    }),
-    ApiOkResponse(),
-    ApiParamConfigId(),
-    ApiParamRealm(),
-    ApiInternalServerErrorResponse(),
-    ApiUnprocessableEntityResponse(),
   );
 }
 
