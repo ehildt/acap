@@ -49,10 +49,7 @@ export class RealmService {
   }
 
   async getRealmContentByIds(realm: string, ids: Array<string>) {
-    const entities = await this.configRepo.where({
-      realm,
-      id: { $in: ids },
-    });
+    const entities = await this.configRepo.where({ realm, id: { $in: ids } });
 
     if (entities?.length < ids?.length)
       throw new NotFoundException(
