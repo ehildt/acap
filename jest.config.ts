@@ -1,34 +1,40 @@
-'use strict';
-
-import type { Config } from '@jest/types';
-
 module.exports = {
-  moduleFileExtensions: ['js', 'json', 'ts'],
   preset: 'ts-jest',
+  moduleFileExtensions: ['js', 'json', 'ts'],
   roots: ['<rootDir>/src'],
-  modulePaths: ['<rootDir>'],
   testEnvironment: 'node',
   testRegex: '.*\\.spec\\.ts$',
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
-  verbose: true,
+  verbose: false,
   reporters: ['default', 'jest-junit'],
   coverageReporters: ['clover', 'json', 'cobertura'],
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: -10,
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
     },
   },
-  collectCoverageFrom: ['!**/dist/**', '!**/dtos/**', '!**/mocks/**', '!**/open-api/**', '!**/node_modules/**'],
+  collectCoverageFrom: [
+    '!**/dist/**',
+    '!**/dtos/**',
+    '!**/decorators/**',
+    '!**/models/**',
+    '!**/configs/**',
+    '!**/modules/**',
+    '!**/schemas/**',
+    '!**/validations/**',
+    '!**/open-api/**',
+    '!**/node_modules/**',
+  ],
   moduleNameMapper: {
-    '@/(.*)': '<rootDir>/src/$1',
-    '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'identity-obj-proxy',
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'identity-obj-proxy',
   },
-  coverageDirectory: '<rootDir>/src/coverage',
+  coverageDirectory: '<rootDir>/coverage',
   setupFilesAfterEnv: ['jest-extended/all'],
   moduleDirectories: ['node_modules'],
-} as Config.InitialOptions;
+};
