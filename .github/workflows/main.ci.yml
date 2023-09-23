@@ -43,6 +43,7 @@ jobs:
 
       - name: Run tests with coverage
         run: npm run test:cov
+        timeout-minutes: 10
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
