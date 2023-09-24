@@ -46,6 +46,7 @@ By delivering personalized and relevant content, ACAP helps other services impro
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
 ![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github&logoColor=white)
+[![codecov](https://codecov.io/gh/ehildt/acap/graph/badge.svg?token=MCL18OCNV7)](https://codecov.io/gh/ehildt/acap)
     </div>
 
   <div align="center">
