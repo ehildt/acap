@@ -2,7 +2,7 @@
   "name": "@litlbyte/acap",
   "description": "A simple and convenient way to distribute and provide content to your apps ;)",
   "repository": "git@github.com:ehildt/acap.git",
-  "version": "1.0.1-beta.1",
+  "version": "1.0.1",
   "license": "MIT",
   "author": {
     "email": "eugen.hildt@litlbyte.com",
