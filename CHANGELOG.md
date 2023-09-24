@@ -1,3 +1,18 @@
+## [1.0.1](https://github.com/ehildt/acap/compare/v1.0.0...v1.0.1) (2023-09-24)
+
+
+### CI/CD
+
+* added tests ([44c3f48](https://github.com/ehildt/acap/commit/44c3f482043c8c907842876ff34a8a3bafc72b76))
+* debugging BackMerge ([69e87dc](https://github.com/ehildt/acap/commit/69e87dc8cdc6003a226542681ef62e4772013428))
+* debugging BackMerge ([d56ef25](https://github.com/ehildt/acap/commit/d56ef25904c3bda24598556723c6f0ddf1ca3761))
+
+
+### Documentation
+
+* **README:** updated ([10c7e11](https://github.com/ehildt/acap/commit/10c7e114da8801e7425562573b155dc01a6eccfc))
+* **README:** updated ([9ca8b46](https://github.com/ehildt/acap/commit/9ca8b4608f5a817d0274fde3fae26715b5d4adfb))
+
 ## [1.0.1-beta.1](https://github.com/ehildt/acap/compare/v1.0.0...v1.0.1-beta.1) (2023-09-21)
 
 
