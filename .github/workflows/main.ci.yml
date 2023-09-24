@@ -78,8 +78,8 @@ jobs:
 
       - name: Back-Merge into DEV
         run: |
-          git config --global user.email "eugen.hildt@litlbyte.com"
-          git config --global user.name "Eugen Hildt"
+          git config --global user.email ${{ secrets.AUTHOR_EMAIL }}
+          git config --global user.name ${{ secrets.AUTHOR_NAME }}
           git fetch
           git checkout dev
           git merge --no-ff origin/main
