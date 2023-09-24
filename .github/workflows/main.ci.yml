@@ -80,7 +80,7 @@ jobs:
         run: |
           git fetch
           git checkout -b dev origin/dev
-          git merge --no-ff main
+          git merge --no-ff origin/main
           if [[ $? -eq 0 ]]; then
             git push origin dev
           fi
