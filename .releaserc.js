@@ -68,8 +68,7 @@ module.exports = {
     [
       '@saithodev/semantic-release-backmerge',
       {
-        'backmergeBranches': ['dev'],
-        'backmergeStrategy': 'rebase'
+        'backmergeBranches': ['dev']
       }
     ]
   ],
