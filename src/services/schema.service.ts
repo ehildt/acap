@@ -60,7 +60,7 @@ export class SchemaService {
 
   async deleteRealm(realm: string) {
     const entity = await this.schemaRepository.delete(realm);
-    if (!entity.deletedCount) return entity;
+    if (!entity.deletedCount) throw new NotFoundException(entity);
     this.redisPubSubClient?.emit(realm, null).pipe(catchError((error) => error));
     this.bullmq?.add(realm, null).catch((error) => error);
     this.mqttClient?.publish(realm, null);
@@ -69,7 +69,7 @@ export class SchemaService {
 
   async deleteRealmContentByIds(realm: string, ids: Array<string>) {
     const entity = await this.schemaRepository.delete(realm, ids);
-    if (!entity.deletedCount) return entity;
+    if (!entity.deletedCount) throw new NotFoundException(entity);
     this.redisPubSubClient?.emit(realm, ids).pipe(catchError((error) => error));
     this.bullmq?.add(realm, ids).catch((error) => error);
     this.mqttClient?.publish(realm, ids);

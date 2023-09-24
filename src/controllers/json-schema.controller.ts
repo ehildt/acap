@@ -1,12 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  Controller,
-  Inject,
-  NotFoundException,
-  Post,
-  UnprocessableEntityException,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Inject, NotFoundException, Post, UnprocessableEntityException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -25,7 +18,7 @@ import {
   OpenApi_GetRealm,
   OpenApi_GetRealmContent,
   OpenApi_SchemaUpsert,
-  OpenApi_UpsertRealms,
+  OpenApi_UpsertSchemas,
 } from '@/decorators/open-api.controller.decorators';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
@@ -33,7 +26,6 @@ import { CacheObject, gunzipSyncCacheObject } from '@/helpers/gunzip-sync-cache-
 import { gzipSyncCacheObject } from '@/helpers/gzip-sync-cache-object.helper';
 import { prepareCacheKey } from '@/helpers/prepare-cache-key.helper';
 import { reduceToContents } from '@/helpers/reduce-to-contents.helper';
-import { ParseYmlInterceptor } from '@/interceptors/parse-yml.interceptor';
 import { AvjService } from '@/services/avj.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { SchemaService } from '@/services/schema.service';
@@ -50,7 +42,7 @@ export class JsonSchemaController {
 
   @PostRealm()
   @OpenApi_SchemaUpsert()
-  async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: Array<ContentUpsertReq>) {
+  async upsertSchema(@ParamRealm() realm: string, @RealmUpsertBody() req: Array<ContentUpsertReq>) {
     // @ schema validation start
     try {
       req.forEach(({ value }) => this.avjService.compile(value));
@@ -75,9 +67,8 @@ export class JsonSchemaController {
   }
 
   @Post()
-  @OpenApi_UpsertRealms()
-  @UseInterceptors(ParseYmlInterceptor)
-  async upsertRealms(@RealmUpsertRealmBody() req: Array<RealmsUpsertReq>) {
+  @OpenApi_UpsertSchemas()
+  async upsertSchemas(@RealmUpsertRealmBody() req: Array<RealmsUpsertReq>) {
     const tasks = req.map(async ({ realm, contents }) => {
       // @ schema validation start
       try {
