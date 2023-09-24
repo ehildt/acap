@@ -4,6 +4,7 @@
   "diffEditor.codeLens": true,
   "editor.formatOnPaste": true,
   "json.format.enable": true,
+  "editor.tabSize": 2,
   "editor.bracketPairColorization.enabled": true,
   "editor.formatOnSaveMode": "modifications",
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",

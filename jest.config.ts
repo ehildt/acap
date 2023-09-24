@@ -29,6 +29,8 @@ module.exports = {
     '!**/validations/**',
     '!**/open-api/**',
     '!**/node_modules/**',
+    '!src/main.ts',
+    '!src/services/app.service.ts',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
