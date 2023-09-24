@@ -25,12 +25,9 @@ void (async () => {
   appService.useGlobalPipes(app);
   appService.enableVersioning(app);
   appService.enableOpenApi(app);
-  appService.addYamlContentType(app);
 
-  process.on('SIGINT', process.exit);
-  process.on('SIGTERM', process.exit);
-  process.on('SIGQUIT', process.exit);
+  app.enableShutdownHooks(['SIGINT', 'SIGTERM', 'SIGQUIT']);
 
   await app.listen(factory.app.port, factory.app.address);
-  appService.logOnServerStart(factory);
+  appService.logOnServerStart();
 })();

@@ -4,6 +4,7 @@
   "diffEditor.codeLens": true,
   "editor.formatOnPaste": true,
   "json.format.enable": true,
+  "editor.tabSize": 2,
   "editor.bracketPairColorization.enabled": true,
   "editor.formatOnSaveMode": "modifications",
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
@@ -126,6 +127,12 @@
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }

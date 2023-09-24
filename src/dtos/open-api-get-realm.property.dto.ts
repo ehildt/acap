@@ -1,14 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsString } from 'class-validator';
 
-export class ContentUpsertReq {
-  @IsString()
-  @ApiProperty()
-  id: string;
-
-  @IsDefined()
+export class OpenApiGetRealmProperty {
   @ApiProperty({
-    isArray: true,
+    type: 'object',
     oneOf: [
       { type: 'string' },
       { type: 'number' },
@@ -17,5 +11,5 @@ export class ContentUpsertReq {
       { type: 'object', additionalProperties: true },
     ],
   })
-  value: string | number | boolean | Record<string, unknown> | Array<unknown>;
+  EXAMPLE_ID?: string | number | boolean | Record<string, unknown> | Array<unknown>;
 }
