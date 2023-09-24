@@ -78,7 +78,8 @@ jobs:
 
       - name: Back-Merge into DEV
         run: |
-          git checkout dev
+          git fetch
+          git checkout -b dev origin/dev
           git merge --no-ff main
           if [[ $? -eq 0 ]]; then
             git push origin dev
