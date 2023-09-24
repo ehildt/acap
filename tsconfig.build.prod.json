@@ -8,6 +8,7 @@
   },
   "exclude": [
     "test/**/*",
+    "**/*.spec.ts",
     ".eslintrc.cjs",
     ".prettierrc.cjs",
   ]

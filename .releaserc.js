@@ -12,7 +12,6 @@ module.exports = {
       {
         preset: 'conventionalcommits',
         releaseRules: [
-          // Common rules
           { breaking: true, release: 'major' },
           { revert: true, release: 'patch' },
           { type: 'chore', release: false },
@@ -66,5 +65,12 @@ module.exports = {
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
+    [
+      '@saithodev/semantic-release-backmerge',
+      {
+        'backmergeBranches': ['dev'],
+        'backmergeStrategy': 'rebase'
+      }
+    ]
   ],
 };

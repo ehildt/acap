@@ -46,6 +46,7 @@ By delivering personalized and relevant content, ACAP helps other services impro
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
 ![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github&logoColor=white)
+[![codecov](https://codecov.io/gh/ehildt/acap/graph/badge.svg?token=MCL18OCNV7)](https://codecov.io/gh/ehildt/acap)
     </div>
 
   <div align="center">
@@ -58,9 +59,14 @@ powered by
 ![BullMQ](https://img.shields.io/badge/bullmq-%233C5280?style=for-the-badge&logo=redis&logoColor=white)
 ![PubSub](https://img.shields.io/badge/pubsub-aC5cce?style=for-the-badge&logo=redis&logoColor=white)    
 ![MQTT](https://img.shields.io/badge/MQTT-660066?style=for-the-badge&logo=mqtt&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)    
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 
   </div>
 </div>
