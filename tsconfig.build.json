@@ -12,5 +12,6 @@
     ".eslintrc.cjs",
     ".prettierrc.cjs",
     ".releaserc.js",
+    "jest.config.ts",
   ]
 }
