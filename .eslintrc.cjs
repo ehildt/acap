@@ -30,7 +30,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
   },
-  ignorePatterns: ['node_modules', 'dist', 'coverage', '.eslintrc.js', '**/*.config.js', '**/*.config.ts'],
+  ignorePatterns: ['node_modules', 'dist', 'coverage'],
   env: {
     node: true,
     jest: true,

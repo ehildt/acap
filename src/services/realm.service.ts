@@ -43,8 +43,8 @@ export class RealmService {
       reqs.forEach(({ realm, contents }) => {
         this.redisPubSubClient?.emit(realm, contents).pipe(catchError((error) => error));
         this.mqttClient?.publish(realm, contents);
+        this.bullmq?.add(realm, contents).catch((error) => error);
       });
-    this.bullmq?.addBulk(reqs.map(({ realm, contents }) => ({ name: realm, data: contents }))).catch((error) => error);
     return result;
   }
 

@@ -9,6 +9,7 @@ import RedisStore from 'cache-manager-ioredis';
 import { BULLMQ_REALMS_QUEUE, BULLMQ_SCHEMAS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { JsonSchemaController } from '@/controllers/json-schema.controller';
 import { MetaController } from '@/controllers/meta.controller';
+import { OutbreakController } from '@/controllers/outbreak.controller';
 import { RealmController } from '@/controllers/realm.controller';
 import { RealmRepository } from '@/repositories/realm.repository';
 import { SchemaRepository } from '@/repositories/schema.repository';
@@ -20,12 +21,12 @@ import { AppService } from '@/services/app.service';
 import { ConfigFactoryService } from '@/services/config-factory.service';
 import { CryptoService } from '@/services/crypto.service';
 import { MetaService } from '@/services/meta.service';
+import { OutbreakService } from '@/services/outbreak.service';
 import { RealmService } from '@/services/realm.service';
 import { SchemaService } from '@/services/schema.service';
 
 import { GlobalAvJModule } from './global-ajv.module';
 import { GlobalConfigFactoryModule } from './global-config-factory.module';
-import { GlobalRedisPubSubModule } from './global-redis-pubsub.module';
 import { MqttClientModule } from './mqtt-client.module';
 
 const useRedisPubSub = process.env.USE_REDIS_PUBSUB === 'true';
@@ -88,7 +89,6 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
     ]),
     GlobalAvJModule,
     GlobalConfigFactoryModule,
-    GlobalRedisPubSubModule,
     useMQTTClient &&
       MqttClientModule.registerAsync({
         imports: [ConfigModule],
@@ -112,8 +112,9 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
     SchemaService,
     SchemaRepository,
     MetaService,
+    OutbreakService,
     CryptoService,
   ],
-  controllers: [RealmController, JsonSchemaController, MetaController],
+  controllers: [RealmController, JsonSchemaController, MetaController, OutbreakController],
 })
 export class AppModule {}
