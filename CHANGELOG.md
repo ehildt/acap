@@ -1,3 +1,17 @@
+## [1.0.2](https://github.com/ehildt/acap/compare/v1.0.1...v1.0.2) (2023-09-25)
+
+
+### CI/CD
+
+* debugging BackMerge ([2431557](https://github.com/ehildt/acap/commit/24315576a04b76e0dcc397c845c9bc37c75879d7))
+* debugging BackMerge ([726df4b](https://github.com/ehildt/acap/commit/726df4bfb36c6d1a601a73356dab822c0e8373e1))
+* debugging BackMerge ([b7807f7](https://github.com/ehildt/acap/commit/b7807f7e4846d83a2e0acf1ed4247c9f08c016cd))
+* debugging BackMerge ([a6f7528](https://github.com/ehildt/acap/commit/a6f7528a60267e88bf088973138513610b7846b4))
+* debugging BackMerge ([4ea099c](https://github.com/ehildt/acap/commit/4ea099c7243576b27c6d061ec4ae80eef7489c44))
+* debugging BackMerge ([a0a8e89](https://github.com/ehildt/acap/commit/a0a8e89cfd592203c7ae0cb0a0bf421a4de3a1f4))
+* debugging BackMerge ([4758190](https://github.com/ehildt/acap/commit/4758190d9a229dd61c71d6e5dedd95f3a3c6b810))
+* debugging BackMerge ([#139](https://github.com/ehildt/acap/issues/139)) ([8f0edd2](https://github.com/ehildt/acap/commit/8f0edd220ff134a3fc7c6cf05fc20c1c372f8266))
+
 ## [1.0.2-beta.1](https://github.com/ehildt/acap/compare/v1.0.1...v1.0.2-beta.1) (2023-09-25)
 
 
