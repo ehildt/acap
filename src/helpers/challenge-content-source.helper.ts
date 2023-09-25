@@ -2,7 +2,7 @@ import { challengeParseContentValue } from './challenge-parse-content-value.help
 
 const ENV_CACHE = new Map();
 
-export function challengeContentValue(value: string, resolveEnv: boolean) {
+export function challengeContentValue(value: any, resolveEnv: boolean) {
   const result = challengeParseContentValue(value);
   if (typeof result === 'object') return result;
   if (!resolveEnv) return result;

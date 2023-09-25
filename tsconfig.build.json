@@ -11,5 +11,6 @@
     "**/*.spec.ts",
     ".eslintrc.cjs",
     ".prettierrc.cjs",
+    ".releaserc.js",
   ]
 }

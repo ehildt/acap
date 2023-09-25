@@ -15,11 +15,9 @@
   },
   "eslint.validate": [
     "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
+    "typescript"
   ],
- "sortJSON.contextMenu": {
+  "sortJSON.contextMenu": {
     "sortJSON": true,
     "sortJSONAlphaNum": false,
     "sortJSONAlphaNumReverse": false,
@@ -35,11 +33,8 @@
     "package.json",
     "package-lock.json"
   ],
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
   "better-comments.tags": [
-        {
+    {
       "tag": "!",
       "color": "#BB84D0",
       "strikethrough": false,
@@ -103,9 +98,6 @@
       "italic": false
     }
   ],
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -120,19 +112,10 @@
     "dist",
     "node_modules"
   ],
-  "[shellscript]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "[ignore]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
 }
