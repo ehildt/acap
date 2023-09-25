@@ -1,4 +1,4 @@
-export function challengeParseContentValue(value: string) {
+export function challengeParseContentValue(value: any) {
   try {
     return JSON.parse(value);
   } catch {
