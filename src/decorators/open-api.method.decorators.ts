@@ -13,6 +13,11 @@ export const ApiQuerySkip = () => ApiQuery({ name: 'skip', example: '0', require
 export const ApiQueryVerbose = () => ApiQuery({ name: 'verbose', type: Boolean, example: false });
 export const ApiQuerySearch = () => ApiQuery({ name: 'search', type: String, required: false });
 
+export const ApiQueryUseMqtt = () => ApiQuery({ name: 'useMqtt', type: Boolean, example: false, required: false });
+export const ApiQueryUseBullMQ = () => ApiQuery({ name: 'useBullMQ', type: Boolean, example: false, required: false });
+export const ApiQueryUseRedisPubSub = () =>
+  ApiQuery({ name: 'useRedisPubSub', type: Boolean, example: false, required: false });
+
 export const ApiBodyRealmUpsert = () =>
   ApiBody({
     isArray: true,
