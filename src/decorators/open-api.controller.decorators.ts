@@ -1,6 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -23,6 +22,9 @@ import {
   ApiQuerySearch,
   ApiQuerySkip,
   ApiQueryTake,
+  ApiQueryUseBullMQ,
+  ApiQueryUseMqtt,
+  ApiQueryUseRedisPubSub,
   ApiQueryVerbose,
 } from './open-api.method.decorators';
 
@@ -114,15 +116,21 @@ export function OpenApi_UpsertRealms() {
   );
 }
 
-export function OpenApi_PubSub() {
+export function OpenApi_Outbreak() {
   return applyDecorators(
     ApiOperation({
-      description: 'Immediately publishes the payload. The cache and database are bypassed',
+      description: `
+        This endpoint facilitates the distribution of data to various realms, driven by configurable options. 
+        It operates silently without providing a specific response, handling data delegation and messaging operations 
+        internally. Data is distributed using different mechanisms: Redis Pub-Sub for event emission, MQTT for data 
+        publication, and BullMQ for task addition to a job queue. This endpoint ensures efficient fire-and-forget 
+        functionality.`,
     }),
-    ApiOkResponse(),
-    ApiBadRequestResponse(),
+    ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
+    ApiQueryUseMqtt(),
+    ApiQueryUseBullMQ(),
+    ApiQueryUseRedisPubSub(),
     ApiBodyRealmUpsertPerRealm(),
-    ApiInternalServerErrorResponse(),
   );
 }
 

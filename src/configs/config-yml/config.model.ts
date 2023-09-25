@@ -2,6 +2,12 @@ import { Transport } from '@nestjs/microservices';
 
 import { MqttClientOptions } from '@/modules/mqtt-client.module';
 
+export type AppConfigServices = {
+  useBullMQ: boolean;
+  useRedisPubSub: boolean;
+  useMQTT: boolean;
+};
+
 export type AppConfig = {
   port: number;
   nodeEnv: string;
@@ -19,11 +25,7 @@ export type AppConfig = {
     resolveEnv: boolean;
     ttl: number;
   };
-  services: {
-    useBullMQ: boolean;
-    useRedisPubSub: boolean;
-    useMQTT: boolean;
-  };
+  services: AppConfigServices;
 };
 
 export type MongoConfig = {

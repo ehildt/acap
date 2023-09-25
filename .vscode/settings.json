@@ -15,11 +15,9 @@
   },
   "eslint.validate": [
     "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
+    "typescript"
   ],
- "sortJSON.contextMenu": {
+  "sortJSON.contextMenu": {
     "sortJSON": true,
     "sortJSONAlphaNum": false,
     "sortJSONAlphaNumReverse": false,
