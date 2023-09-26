@@ -1,3 +1,20 @@
+## [1.1.0-beta.1](https://github.com/ehildt/acap/compare/v1.0.2...v1.1.0-beta.1) (2023-09-26)
+
+
+### Features
+
+* enhanced breakout api ([94837bb](https://github.com/ehildt/acap/commit/94837bb7f58b27732bba03bb227d556b6378a5ca))
+
+
+### Bug Fixes
+
+* dependency resolution: no-non-package-json ([3ddd891](https://github.com/ehildt/acap/commit/3ddd8913061e3ccf03768b45a1bfad1fa827ebef))
+
+
+### Tests
+
+* outbreak controller ([c0effc7](https://github.com/ehildt/acap/commit/c0effc7e6d5a1a0528b4cd44fea2024aaab312f1))
+
 ## [1.0.2](https://github.com/ehildt/acap/compare/v1.0.1...v1.0.2) (2023-09-25)
 
 
