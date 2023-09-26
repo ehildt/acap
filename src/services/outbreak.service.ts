@@ -20,7 +20,6 @@ export class OutbreakService {
   ) {}
 
   async delegate(reqs: Array<BreakoutUpsertReq>, args: AppConfigServices) {
-    if (!args.useRedisPubSub && !args.useMQTT && !args.useBullMQ) return;
     reqs.forEach(({ channel, jobs }) => {
       jobs.forEach(({ job, jobOptions }) => {
         args.useRedisPubSub && this.redisPubSub?.emit(channel, job);

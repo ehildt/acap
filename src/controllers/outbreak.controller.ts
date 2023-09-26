@@ -19,12 +19,13 @@ export class OutbreakController {
 
   @PostOutbreak()
   @OpenApi_Outbreak()
-  async upsertOutbreak(
+  async delegate(
     @BreakoutUpsertBody() reqs: Array<BreakoutUpsertReq>,
     @QueryUseMqtt() useMQTT = false,
     @QueryUseBullMQ() useBullMQ = false,
     @QueryUseRedisPubSub() useRedisPubSub = false,
   ) {
+    if (!useRedisPubSub && !useMQTT && !useBullMQ) return;
     return await this.outbreakService.delegate(reqs, { useBullMQ, useMQTT, useRedisPubSub });
   }
 }
