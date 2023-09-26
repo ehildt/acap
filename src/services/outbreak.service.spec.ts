@@ -4,7 +4,7 @@ import { Queue } from 'bullmq';
 
 import { AppConfigServices } from '@/configs/config-yml/config.model';
 import { BULLMQ_REALMS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
-import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
+import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -12,7 +12,7 @@ import { OutbreakService } from './outbreak.service';
 
 const mockFactory = {
   app: {
-    realm: {
+    channel: {
       resolveEnv: false,
     },
     services: {
@@ -67,22 +67,20 @@ describe('OutbreakService', () => {
 
   describe('delegate', () => {
     it('should distribute data to realms using enabled messaging options', async () => {
-      const reqs: RealmsUpsertReq[] = [
+      const reqs: BreakoutUpsertReq[] = [
         {
-          realm: 'realm1',
-          contents: [
+          channel: 'realm1',
+          jobs: [
             {
-              id: '1',
-              value: 'value1',
+              job: 'value1',
             },
           ],
         },
         {
-          realm: 'realm2',
-          contents: [
+          channel: 'realm2',
+          jobs: [
             {
-              id: '2',
-              value: 'value2',
+              job: 'value2',
             },
           ],
         },
@@ -102,13 +100,12 @@ describe('OutbreakService', () => {
     });
 
     it('should not distribute data if no messaging options are enabled', async () => {
-      const reqs: RealmsUpsertReq[] = [
+      const reqs: BreakoutUpsertReq[] = [
         {
-          realm: 'realm1',
-          contents: [
+          channel: 'realm1',
+          jobs: [
             {
-              id: '1',
-              value: 'value1',
+              job: 'value1',
             },
           ],
         },

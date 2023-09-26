@@ -14,6 +14,7 @@ import { OpenApiMetaProperty } from '@/dtos/open-api-meta.property.dto';
 import {
   ApiBodyRealmUpsert,
   ApiBodyRealmUpsertPerRealm,
+  ApiBreakoutUpsert,
   ApiParamConfigId,
   ApiParamMeta,
   ApiParamRealm,
@@ -120,17 +121,17 @@ export function OpenApi_Outbreak() {
   return applyDecorators(
     ApiOperation({
       description: `
-        This endpoint facilitates the distribution of data to various realms, driven by configurable options. 
+        This endpoint facilitates the distribution of data to various channels, driven by configurable options. 
         It operates silently without providing a specific response, handling data delegation and messaging operations 
         internally. Data is distributed using different mechanisms: Redis Pub-Sub for event emission, MQTT for data 
-        publication, and BullMQ for task addition to a job queue. This endpoint ensures efficient fire-and-forget 
-        functionality.`,
+        publication, and BullMQ for task addition to a job queue. The BullMQ can take additional JobsOptions. 
+        This endpoint ensures efficient fire-and-forget functionality.`,
     }),
     ApiCreatedResponse({ description: REQUEST_SUCCESSFUL }),
     ApiQueryUseMqtt(),
     ApiQueryUseBullMQ(),
     ApiQueryUseRedisPubSub(),
-    ApiBodyRealmUpsertPerRealm(),
+    ApiBreakoutUpsert(),
   );
 }
 
@@ -166,15 +167,7 @@ export function OpenApi_GetRealmContent() {
     }),
     ApiOkResponse({
       description: REQUEST_SUCCESSFUL,
-      schema: {
-        oneOf: [
-          { type: 'string' },
-          { type: 'number' },
-          { type: 'boolean' },
-          { type: 'array', items: { type: 'object', additionalProperties: true } },
-          { type: 'object', additionalProperties: true },
-        ],
-      },
+      schema: { allOf: [{ type: 'any' }] },
     }),
     ApiNotFoundResponse({ description: 'requested realm or id not found' }),
     ApiParamConfigId(),
