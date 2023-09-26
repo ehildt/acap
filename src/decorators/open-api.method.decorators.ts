@@ -1,5 +1,6 @@
 import { ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
 
+import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 
@@ -30,4 +31,11 @@ export const ApiBodyRealmUpsertPerRealm = () =>
     isArray: true,
     required: true,
     type: RealmsUpsertReq,
+  });
+
+export const ApiBreakoutUpsert = () =>
+  ApiBody({
+    isArray: true,
+    required: true,
+    type: BreakoutUpsertReq,
   });
