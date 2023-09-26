@@ -5,8 +5,7 @@ import { Queue } from 'bullmq';
 
 import { AppConfigServices } from '@/configs/config-yml/config.model';
 import { BULLMQ_REALMS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
-import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
-import { challengeContentValue } from '@/helpers/challenge-content-source.helper';
+import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -20,14 +19,14 @@ export class OutbreakService {
     @Optional() @Inject(MQTT_CLIENT) private readonly mqtt: MqttClient,
   ) {}
 
-  async delegate(reqs: Array<RealmsUpsertReq>, args: AppConfigServices) {
-    const resolveEnv = this.factory.app.realm.resolveEnv;
+  async delegate(reqs: Array<BreakoutUpsertReq>, args: AppConfigServices) {
     if (!args.useRedisPubSub && !args.useMQTT && !args.useBullMQ) return;
-    reqs.forEach(({ realm, contents }) => {
-      const data = contents.map(({ id, value }) => ({ id, value: challengeContentValue(value, resolveEnv) }));
-      args.useRedisPubSub && this.redisPubSub?.emit(realm, data);
-      args.useMQTT && this.mqtt?.publish(realm, data);
-      args.useBullMQ && this.bullmq?.add(realm, data).catch((error) => error);
+    reqs.forEach(({ channel, jobs }) => {
+      jobs.forEach(({ job, jobOptions }) => {
+        args.useRedisPubSub && this.redisPubSub?.emit(channel, job);
+        args.useMQTT && this.mqtt?.publish(channel, JSON.stringify(job));
+        args.useBullMQ && this.bullmq?.add(channel, job, jobOptions).catch((error) => error);
+      });
     });
   }
 }
