@@ -1,3 +1,4 @@
+import { UnprocessableEntityException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -6,21 +7,25 @@ import { CryptoService } from './crypto.service';
 describe('CryptoService', () => {
   let cryptoService: CryptoService;
   let moduleRef: TestingModule;
+  let mockConfigFactory: Partial<ConfigFactoryService>;
 
   beforeEach(async () => {
+    mockConfigFactory = {
+      app: {
+        crypto: {
+          cryptable: true,
+          symmetricAlgorithm: 'aes-256-cbc',
+          symmetricKey: '694f676c7dc75a8d644c8cf7f66ac6d0efbcc10e8eaa7b65814577060dfedc35', // 32-byte key
+        },
+      } as any,
+    };
+
     moduleRef = await Test.createTestingModule({
       providers: [
         CryptoService,
         {
           provide: ConfigFactoryService,
-          useValue: {
-            app: {
-              crypto: {
-                symmetricAlgorithm: 'aes-256-cbc',
-                symmetricKey: '694f676c7dc75a8d644c8cf7f66ac6d0efbcc10e8eaa7b65814577060dfedc35', // 32-byte key
-              },
-            },
-          },
+          useValue: mockConfigFactory,
         },
       ],
     }).compile();
@@ -41,9 +46,29 @@ describe('CryptoService', () => {
       expect(encryptedPayload).not.toBe(payload);
     });
 
+    it('should throw an error when encrypting payload', async () => {
+      mockConfigFactory.app.crypto.symmetricKey = '1234';
+      mockConfigFactory.app.crypto.symmetricAlgorithm = 'abcd';
+      try {
+        cryptoService.encrypt(payload);
+      } catch (error) {
+        expect(error).toEqual(new UnprocessableEntityException('Unknown cipher'));
+      }
+    });
+
     it('should return a decrypted payload', () => {
       const decryptedPayload = cryptoService.decrypt(encryptedPayload);
       expect(decryptedPayload).toBe(payload);
+    });
+
+    it('should throw an error when decrypting payload', async () => {
+      mockConfigFactory.app.crypto.symmetricKey = '1234';
+      mockConfigFactory.app.crypto.symmetricAlgorithm = 'abcd';
+      try {
+        cryptoService.decrypt(payload);
+      } catch (error) {
+        expect(error).toEqual(new UnprocessableEntityException('Unknown cipher'));
+      }
     });
   });
 
