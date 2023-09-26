@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BackoffOptions, JobsOptions, KeepJobs, RepeatOptions } from 'bullmq';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsInt, IsOptional, IsString } from 'class-validator';
-import { DateType } from 'cron-parser';
 
 class BullBackoffOptions implements BackoffOptions {
   @IsOptional()
@@ -46,12 +45,12 @@ class BullRepeatOptions implements RepeatOptions {
   @IsOptional()
   @IsDate()
   @ApiProperty({ type: Date, required: false })
-  currentDate?: DateType;
+  currentDate?: Date;
 
   @IsOptional()
   @IsDate()
   @ApiProperty({ type: Date, required: false })
-  endDate?: DateType;
+  endDate?: Date;
 
   @IsOptional()
   @IsInt()
@@ -96,7 +95,7 @@ class BullRepeatOptions implements RepeatOptions {
   @IsOptional()
   @IsDate()
   @ApiProperty({ required: false, type: () => Date })
-  startDate?: DateType;
+  startDate?: Date;
 
   @IsOptional()
   @IsString()
