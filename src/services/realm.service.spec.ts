@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { MqttClient } from 'mqtt/*';
 
+import { MQTT_CLIENT } from '@/modules/mqtt-client.module';
 import { RealmRepository } from '@/repositories/realm.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -34,11 +36,17 @@ const mockCryptoService = {
 
 describe('RealmService', () => {
   let realmService: RealmService;
+  let mockMqttClient: Partial<MqttClient>;
 
   beforeEach(async () => {
+    mockMqttClient = {
+      publish: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RealmService,
+        { provide: MQTT_CLIENT, useValue: mockMqttClient },
         { provide: RealmRepository, useValue: mockConfigRepo },
         { provide: ConfigFactoryService, useValue: mockFactory },
         { provide: CryptoService, useValue: mockCryptoService },
@@ -46,6 +54,7 @@ describe('RealmService', () => {
     }).compile();
 
     realmService = module.get<RealmService>(RealmService);
+    mockMqttClient = module.get<MqttClient>(MQTT_CLIENT);
   });
 
   afterEach(() => {
@@ -83,6 +92,7 @@ describe('RealmService', () => {
       await realmService.upsertRealms(reqs);
       expect(mockCryptoService.encryptRealmsUpsertReq).toHaveBeenCalledWith(reqs);
       expect(mockConfigRepo.upsertMany).toHaveBeenCalledWith(reqs);
+      expect(mockMqttClient.publish).toHaveBeenCalled();
     });
 
     it('should call upsertRealms method with payload', async () => {
@@ -90,6 +100,7 @@ describe('RealmService', () => {
       await realmService.upsertRealms(reqs);
       expect(mockCryptoService.encryptRealmsUpsertReq).not.toHaveBeenCalled();
       expect(mockConfigRepo.upsertMany).toHaveBeenCalledWith(reqs);
+      expect(mockMqttClient.publish).toHaveBeenCalled();
     });
   });
 
