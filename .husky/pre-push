@@ -7,6 +7,8 @@ check_branch_identifier
 # makes sure all dependencies are up to date
 info 'npm run ncu:validate' && npm run ncu:validate
 
+info 'npm run lint' && npm run lint
+
 # dry run tests
 info 'npm run test:clearCache' && npm run test:clearCache
 info 'npm run test -- --silent' && npm run test -- --silent

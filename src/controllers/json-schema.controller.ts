@@ -69,30 +69,7 @@ export class JsonSchemaController {
   @Post()
   @OpenApi_UpsertSchemas()
   async upsertSchemas(@RealmUpsertRealmBody() req: Array<RealmsUpsertReq>) {
-    const tasks = req.map(async ({ realm, contents }) => {
-      // @ schema validation start
-      try {
-        contents.forEach(({ value }) => this.avjService.compile(value));
-      } catch (error) {
-        if (error.status === 400) throw new UnprocessableEntityException(error.message);
-        if (error.message.startsWith('strict')) throw new UnprocessableEntityException(error.message);
-        if (error.message === 'schema must be object or boolean') throw new UnprocessableEntityException(error.message);
-      }
-      // @ schema validation end
-      // ! we don't cache schemas on upsert.
-      // ! we don't want to spam the ram whenever we upsert
-      // * we want to keep the cache up to date
-      const entity = await this.schemaService.upsertRealm(realm, contents);
-      const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
-      const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      if (!Object.keys(content)?.length) return entity;
-      const count = await this.schemaService.countRealmContents();
-      contents.forEach(({ id, value }) => content[id] && (content[id] = value));
-      const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
-      await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
-      return entity;
-    });
-    return await Promise.all(tasks);
+    return await Promise.all(req.map(async ({ realm, contents }) => this.upsertSchema(realm, contents)));
   }
 
   @GetRealm()
@@ -101,7 +78,6 @@ export class JsonSchemaController {
     const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const cachedRealm = await this.cache.get<CacheObject>(postfix);
     const cache = gunzipSyncCacheObject(cachedRealm);
-
     if (!ids) {
       // @ we update the ttl if the cache holds the same amount of content ids
       // ! when upserting the realm, the cache is also upserted.

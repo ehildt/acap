@@ -20,19 +20,19 @@ ACAP is a cutting-edge system designed to revolutionize content distribution and
 
   
 ${\color{gold}Dynamic \space and \space Adaptable \space Content \space Distribution}$  
-ACAP ensures that other services receive the right content at the right time. By dynamically adapting to changing needs and preferences, ACAP enhances content distribution for other services.
+ACAP ensures that other services receive the right content at the right time by dynamically adapting to their changing needs and preferences. This enhances content distribution for other services, providing them with a flexible and adaptable solution.
 
-${\color{gold}Real-time \space Responsiveness}$   
-ACAP responds in real-time to changing needs and preferences, guaranteeing a seamless and personalized experience for other services. This real-time responsiveness enhances user engagement and satisfaction.
+${\color{gold}Real-time \space Responsiveness}$  
+ACAP responds in real-time to the evolving needs and preferences of other services, ensuring a seamless and personalized experience. Its real-time responsiveness guarantees enhanced user engagement and satisfaction, as content is delivered promptly to meet their demands.
 
 ${\color{gold}Effortless \space Content \space Distribution}$  
-ACAP automates content distribution processes, making it effortless for other services. This automation allows other services to focus on their core functionality while ACAP handles the efficient distribution of content.
+ACAP automates content distribution processes, relieving other services from the burden of manual distribution tasks. With ACAP handling the efficient distribution of content, other services can focus on their core functionality, minimizing effort and maximizing productivity.
 
 ${\color{gold}Enhanced \space User \space Engagement}$  
-ACAP empowers other services to deliver timely, relevant, and diverse content. By leveraging ACAP's platform or channels, other services can increase user engagement and satisfaction.
+ACAP empowers other services to deliver timely, relevant, and diverse content, enhancing user engagement. By leveraging ACAP's platform and channels, other services can optimize their content delivery strategies, resulting in increased user interaction and satisfaction.
 
 ${\color{gold}Increased \space Customer \space Satisfaction \space and \space Loyalty}$  
-By delivering personalized and relevant content, ACAP helps other services improve customer satisfaction and loyalty. This, in turn, can lead to business growth for those services.
+By delivering personalized and relevant content, ACAP helps other services improve customer satisfaction and foster loyalty. This, in turn, can lead to business growth and customer retention, driving long-term success for those services.
 
 </details>
 </div>
@@ -41,7 +41,8 @@ By delivering personalized and relevant content, ACAP helps other services impro
 
 ![Name](https://img.shields.io/badge/open_source-ACAP-gold)
 ![License](https://img.shields.io/github/license/ehildt/acap?style=flat&color=brown)
-![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)    
+![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)
+[![DockerPulls](https://img.shields.io/docker/pulls/ehildt/acap?color=brightgreen&label=docker%20pulls)](https://hub.docker.com/r/ehildt/acap)    
 ![Branch](https://img.shields.io/badge/branch-main-blue?style=flat&logo=git&logoColor=white)
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
