@@ -74,7 +74,7 @@
     "@nestjs/testing": "^10.2.6",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^9.1.0",
+    "@semantic-release/github": "^9.2.0",
     "@types/cache-manager": "^4.0.3",
     "@types/cache-manager-ioredis": "^2.0.4",
     "@types/eslint": "^8.44.3",

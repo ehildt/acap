@@ -146,33 +146,7 @@ export class RealmController {
   @Post()
   @OpenApi_UpsertRealms()
   async upsertRealms(@RealmUpsertRealmBody() req: RealmsUpsertReq[]) {
-    const tasks = req.map(async ({ realm, contents }) => {
-      // @ schema validation start
-      try {
-        const realmConfigKeys = Array.from(new Set(contents.map(({ id }) => id)));
-        const schemaConfigObject = await this.schemaService.getRealmContentByIds(realm, realmConfigKeys, false);
-        contents.forEach(({ value, id }) =>
-          this.avjService.validate(value, this.avjService.compile(schemaConfigObject[id])),
-        );
-      } catch (error) {
-        if (error.status !== 422) throw new UnprocessableEntityException(error);
-      }
-      // @ schema validation end
-      // ! we don't cache schemas on upsert.
-      // ! we don't want to spam the ram whenever we upsert
-      // * we want to keep the cache up to date
-      const postfix = prepareCacheKey(REALM_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
-      const { content } = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-      let payload: Array<ContentUpsertReq>;
-      const entity = await this.realmService.upsertRealm(realm, payload ?? contents);
-      if (!Object.keys(content)?.length) return entity;
-      const count = await this.realmService.countRealmContents();
-      contents.forEach(({ id, value }) => content[id] && (content[id] = value));
-      const cacheObj = gzipSyncCacheObject(content, this.configFactory.app.realm.gzipThreshold, count);
-      await this.cache.set(postfix, cacheObj, this.configFactory.app.realm.ttl);
-      return entity;
-    });
-    return await Promise.all(tasks);
+    return await Promise.all(req.map(async ({ realm, contents }) => this.upsertRealm(realm, contents)));
   }
 
   @GetRealmContent()
