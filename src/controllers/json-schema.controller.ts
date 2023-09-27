@@ -78,7 +78,6 @@ export class JsonSchemaController {
     const postfix = prepareCacheKey(SCHEMA_PREFIX, realm, this.configFactory.app.realm.namespacePostfix);
     const cachedRealm = await this.cache.get<CacheObject>(postfix);
     const cache = gunzipSyncCacheObject(cachedRealm);
-
     if (!ids) {
       // @ we update the ttl if the cache holds the same amount of content ids
       // ! when upserting the realm, the cache is also upserted.

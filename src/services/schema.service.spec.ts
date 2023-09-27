@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { SchemaRepository } from '@/repositories/schema.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
@@ -25,23 +24,17 @@ const mockFactory = {
 
 describe('SchemaService', () => {
   let schemaService: SchemaService;
-  let mockMqttClient: Partial<MqttClient>;
 
   beforeEach(async () => {
-    mockMqttClient = {
-      publish: jest.fn(),
-    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SchemaService,
-        { provide: MQTT_CLIENT, useValue: mockMqttClient },
         { provide: SchemaRepository, useValue: mockConfigRepo },
         { provide: ConfigFactoryService, useValue: mockFactory },
       ],
     }).compile();
 
     schemaService = module.get<SchemaService>(SchemaService);
-    mockMqttClient = module.get<MqttClient>(MQTT_CLIENT);
   });
 
   afterEach(() => {
@@ -72,14 +65,12 @@ describe('SchemaService', () => {
     it('should successfully upsert realms', async () => {
       await schemaService.upsertRealms(reqs);
       expect(mockConfigRepo.upsertMany).toHaveBeenCalledWith(reqs);
-      expect(mockMqttClient.publish).toHaveBeenCalled();
     });
 
     it('should throw an error if upserting multiple realms failed', async () => {
       mockConfigRepo.upsertMany.mockReturnValue({ ok: false });
       await expect(schemaService.upsertRealms(reqs)).rejects.toThrow();
       expect(mockConfigRepo.upsertMany).toHaveBeenCalledWith(reqs);
-      expect(mockMqttClient.publish).not.toHaveBeenCalled();
     });
   });
 
