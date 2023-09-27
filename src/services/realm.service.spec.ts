@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MqttClient } from 'mqtt/*';
 
-import { MQTT_CLIENT } from '@/modules/mqtt-client.module';
+import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 import { RealmRepository } from '@/repositories/realm.repository';
 
 import { ConfigFactoryService } from './config-factory.service';
