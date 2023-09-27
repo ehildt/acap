@@ -35,6 +35,7 @@ describe('RealmController', () => {
           useValue: {
             get: jest.fn(),
             set: jest.fn(),
+            del: jest.fn(),
           },
         },
         {
@@ -55,6 +56,8 @@ describe('RealmController', () => {
             getRealmContentByIds: jest.fn().mockReturnValue(COOKIES_ARE_YUMMY_RESULT),
             countRealmContents: jest.fn(),
             upsertRealm: jest.fn(),
+            deleteRealm: jest.fn(),
+            deleteRealmContentByIds: jest.fn(),
           },
         },
         {
@@ -74,8 +77,40 @@ describe('RealmController', () => {
     cache = moduleRef.get<Cache>(CACHE_MANAGER);
   });
 
-  describe('upsertRealm', () => {
-    it('should call upsertRealm with a realm and Array<ContentUpsertReq>, cached', async () => {
+  describe('deleteRealm', () => {
+    it('should call deleteRealm without ids', async () => {
+      const realm = 'TEST';
+      await controller.deleteRealm(realm);
+      expect(cache.del).toHaveBeenCalledOnce();
+      expect(realmService.deleteRealm).toHaveBeenCalledOnce();
+      expect(cache.set).not.toHaveBeenCalled();
+    });
+
+    it('should call deleteRealm with ids', async () => {
+      const realm = 'TEST';
+      const ids = ['ONE', 'TWO'];
+      await controller.deleteRealm(realm, ids);
+      expect(realmService.deleteRealmContentByIds).toHaveBeenCalledOnce();
+      expect(realmService.countRealmContents).toHaveBeenCalledOnce();
+      expect(cache.del).toHaveBeenCalledOnce();
+      expect(cache.set).not.toHaveBeenCalled();
+    });
+
+    it('should call deleteRealm with ids and remove the ids from cache', async () => {
+      const realm = 'TEST';
+      const ids = ['ONE', 'TWO'];
+      realmService.countRealmContents = jest.fn().mockReturnValue(1);
+      cache.get = jest.fn().mockReturnValue({ content: {} });
+      await controller.deleteRealm(realm, ids);
+      expect(realmService.deleteRealmContentByIds).toHaveBeenCalledOnce();
+      expect(realmService.countRealmContents).toHaveBeenCalledOnce();
+      expect(cache.set).toHaveBeenCalled();
+      expect(cache.del).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('upsertRealms', () => {
+    it('should call upsertRealms', async () => {
       const realm = 'TEST';
       cache.get = jest.fn().mockReturnValue({ content: COOKIES_ARE_YUMMY_RESULT });
       await controller.upsertRealms([
