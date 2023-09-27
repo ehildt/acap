@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { Queue } from 'bullmq';
 
 import { AppConfigServices } from '@/configs/config-yml/config.model';
-import { BULLMQ_REALMS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
+import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 
@@ -47,7 +47,7 @@ describe('OutbreakService', () => {
           },
         },
         {
-          provide: BULLMQ_REALMS_QUEUE,
+          provide: BULLMQ_REALM_QUEUE,
           useValue: {
             add: jest.fn(),
           },
@@ -58,7 +58,7 @@ describe('OutbreakService', () => {
     outbreakService = moduleRef.get<OutbreakService>(OutbreakService);
     mockRedisPubSub = moduleRef.get(REDIS_PUBSUB);
     mockMQTTClient = moduleRef.get(MQTT_CLIENT);
-    mockBullMQQueue = moduleRef.get(BULLMQ_REALMS_QUEUE);
+    mockBullMQQueue = moduleRef.get(BULLMQ_REALM_QUEUE);
   });
 
   afterEach(() => {
