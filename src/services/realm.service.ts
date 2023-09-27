@@ -4,7 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bullmq';
 import { catchError } from 'rxjs';
 
-import { BULLMQ_REALMS_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
+import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { reduceEntities } from '@/helpers/reduce-entities.helper';
@@ -21,7 +21,7 @@ export class RealmService {
     private readonly factory: ConfigFactoryService,
     private readonly cryptoService: CryptoService,
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSubClient: ClientProxy,
-    @Optional() @InjectQueue(BULLMQ_REALMS_QUEUE) private readonly bullmq: Queue,
+    @Optional() @InjectQueue(BULLMQ_REALM_QUEUE) private readonly bullmq: Queue,
     @Optional() @Inject(MQTT_CLIENT) private readonly mqttClient: MqttClient,
   ) {}
 
