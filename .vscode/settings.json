@@ -108,7 +108,8 @@
     "node_modules": true
   },
   "hide-files.files": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ],
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
