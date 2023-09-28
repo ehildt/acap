@@ -9,22 +9,20 @@ FROM node:20-slim AS builder
 WORKDIR /app
 
 ENV PORT=3001
-EXPOSE ${PORT}
 
 COPY package*.json tsconfig*.json shims.d.ts ./
 COPY src/ ./src/
+RUN npm ci --ignore-scripts --loglevel=error
 COPY src/configs/config-yml/config.yml ./dist/configs/config-yml/config.yml
 
-# Target: temporary (entrypoint for prepare-prod)
+# Target: temporary (entrypoint for prepare-dev)
 FROM builder AS builddev
 WORKDIR /app
-RUN npm ci --ignore-scripts --loglevel=error
 RUN npm run build
 
 # Target: temporary (entrypoint for prepare-prod)
 FROM builder AS buildprod
 WORKDIR /app
-RUN npm ci --ignore-scripts --loglevel=error
 RUN npm run build:prod
 
 # Target: development (entrypoint for dev-stage)
@@ -35,13 +33,13 @@ WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=256" \
   NODE_ENV="development" \
   PRINT_ENV="false" \
-  START_SWAGGER="false" \
-  PORT=3001
+  START_SWAGGER="false"
 
 EXPOSE ${PORT}
 
 COPY --chown=node:node --from=builddev /app/dist ./dist
 COPY --chown=node:node --from=builddev /app/package*.json ./
+COPY --chown=node:node --from=builddev /app/node_modules ./
 
 RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 
@@ -56,13 +54,13 @@ WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=256" \
   NODE_ENV="production" \
   PRINT_ENV="false" \
-  START_SWAGGER="false" \
-  PORT=3001
+  START_SWAGGER="false"
 
 EXPOSE ${PORT}
 
 COPY --chown=node:node --from=buildprod /app/dist ./dist
 COPY --chown=node:node --from=buildprod /app/package*.json ./
+COPY --chown=node:node --from=buildprod /app/node_modules ./
 
 RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 
