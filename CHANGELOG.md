@@ -1,3 +1,16 @@
+## [1.1.2](https://github.com/ehildt/acap/compare/v1.1.1...v1.1.2) (2023-09-28)
+
+
+### CI/CD
+
+* added deps.ci.yml ([30a4f77](https://github.com/ehildt/acap/commit/30a4f778937afe4b9e69eeef614993eba157ee32))
+
+
+### Bug Fixes
+
+* CHANGELOG.md ([426eabc](https://github.com/ehildt/acap/commit/426eabc7c8c0245f8d92c83fe394642f14a767ea))
+* Dockerfile ([057dc1a](https://github.com/ehildt/acap/commit/057dc1a81aef0f14499ddf72500a999214614181))
+
 ## [1.1.2-beta.2](https://github.com/ehildt/acap/compare/v1.1.2-beta.1...v1.1.2-beta.2) (2023-09-28)
 
 
