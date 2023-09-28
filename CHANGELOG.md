@@ -1,3 +1,30 @@
+## [1.1.0](https://github.com/ehildt/acap/compare/v1.0.2...v1.1.0) (2023-09-27)
+
+
+### Documentation
+
+* **README:** docker-hub badge added ([f1d2146](https://github.com/ehildt/acap/commit/f1d2146e954560d284a4ed7da3bf9d22de3ac53a))
+
+
+### Features
+
+* enhanced breakout api ([94837bb](https://github.com/ehildt/acap/commit/94837bb7f58b27732bba03bb227d556b6378a5ca))
+
+
+### Bug Fixes
+
+* dependency resolution: no-non-package-json ([3ddd891](https://github.com/ehildt/acap/commit/3ddd8913061e3ccf03768b45a1bfad1fa827ebef))
+* imports ([58c9e0b](https://github.com/ehildt/acap/commit/58c9e0b0d3b9f72726832ada6407831278eb15d9))
+
+
+### Tests
+
+* hardened realm and schema service tests ([c1fcb09](https://github.com/ehildt/acap/commit/c1fcb0999fb3a08480fdd92061cc9da24755e29e))
+* meta controller ([bc05447](https://github.com/ehildt/acap/commit/bc054473646b47217f49d47fdcc12061fefa377c))
+* outbreak controller ([c0effc7](https://github.com/ehildt/acap/commit/c0effc7e6d5a1a0528b4cd44fea2024aaab312f1))
+* realm controller ([8d84787](https://github.com/ehildt/acap/commit/8d84787861283308e27a787a976652c9035a1a14))
+* schema-json controller ([970eecb](https://github.com/ehildt/acap/commit/970eecb04f070867b6593d18f5e9b474c1231381))
+
 ## [1.1.0-beta.2](https://github.com/ehildt/acap/compare/v1.1.0-beta.1...v1.1.0-beta.2) (2023-09-27)
 
 
