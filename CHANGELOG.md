@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/ehildt/acap/compare/v1.1.0...v1.1.1) (2023-09-28)
+
+
+### Bug Fixes
+
+* dockerfile ([5948664](https://github.com/ehildt/acap/commit/5948664776a6854a5aed4e6fc76d4727c96ba2eb))
+
 ## [1.1.1-beta.1](https://github.com/ehildt/acap/compare/v1.1.0...v1.1.1-beta.1) (2023-09-28)
 
 
