@@ -39,7 +39,7 @@ EXPOSE ${PORT}
 
 COPY --chown=node:node --from=builddev /app/dist ./dist
 COPY --chown=node:node --from=builddev /app/package*.json ./
-COPY --chown=node:node --from=builddev /app/node_modules ./
+COPY --chown=node:node --from=builddev /app/node_modules ./node_modules
 
 RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 
@@ -60,7 +60,7 @@ EXPOSE ${PORT}
 
 COPY --chown=node:node --from=buildprod /app/dist ./dist
 COPY --chown=node:node --from=buildprod /app/package*.json ./
-COPY --chown=node:node --from=buildprod /app/node_modules ./
+COPY --chown=node:node --from=buildprod /app/node_modules ./node_modules
 
 RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 
