@@ -1,0 +1,53 @@
+name: Deps Update
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          
+      - name: Check branch name
+        id: check_branch
+        run: echo "BRANCH=${{ github.ref }}" >> $GITHUB_ENV
+
+      - name: Update dependencies
+        if: steps.check_branch.outputs.branch == 'refs/heads/dev'
+        run: npm run ncu:update
+        
+      - name: Commit changed files
+        if: steps.check_branch.outputs.branch == 'refs/heads/dev'
+        run: |
+          git config --global user.name ${{secrets.AUTHOR_NAME}}
+          git config --global user.email ${{secrets.AUTHOR_EMAIL}}
+          git commit -am "chore(deps): Updated dependencies"
+      
+      - name: Create pull request
+        if: steps.check_branch.outputs.branch == 'refs/heads/dev'
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo, number } = context.issue;
+            const title = "Bot - Updated dependencies";
+            const body = "This pull request was automatically generated to update ACAP's dependencies.";
+            const branch = `chore/${number}-dependency_update`;
+        
+            const pullRequest = await octokit.pulls.create({
+              owner,
+              repo,
+              title,
+              body,
+              head: branch,
+              base: 'dev'
+            });
