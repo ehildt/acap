@@ -38,7 +38,7 @@ By delivering personalized and relevant content, ACAP helps other services impro
 ![Name](https://img.shields.io/badge/open_source-ACAP-gold)
 ![License](https://img.shields.io/github/license/ehildt/acap?style=flat&color=brown)
 ![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)
-![DockerPulls](https://img.shields.io/docker/pulls/ehildt/acap?color=brightgreen&label=docker%20pulls&logo=docker)
+![DockerPulls](https://img.shields.io/docker/pulls/ehildt/acap?color=darkgreen&label=docker%20pulls&logo=docker)    
 ![Branch](https://img.shields.io/badge/branch-main-blue?style=flat&logo=git&logoColor=white)
 ![Version](https://img.shields.io/github/package-json/v/ehildt/acap?style=flat&color=orange)
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
