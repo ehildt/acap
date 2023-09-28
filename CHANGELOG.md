@@ -1,3 +1,10 @@
+## [1.1.2-beta.2](https://github.com/ehildt/acap/compare/v1.1.2-beta.1...v1.1.2-beta.2) (2023-09-28)
+
+
+### Bug Fixes
+
+* CHANGELOG.md ([426eabc](https://github.com/ehildt/acap/commit/426eabc7c8c0245f8d92c83fe394642f14a767ea))
+
 ## [1.1.1](https://github.com/ehildt/acap/compare/v1.1.0...v1.1.1) (2023-09-28)
 
 
