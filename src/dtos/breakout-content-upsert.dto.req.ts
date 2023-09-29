@@ -3,7 +3,7 @@ import { IsDefined, IsObject, IsOptional } from 'class-validator';
 
 import { BullMQJobsOptions } from './breakout-jobs-options.dto';
 
-export class ContentUpsertReq {
+export class BreakoutContentUpsertReq {
   @IsDefined()
   @ApiProperty({
     oneOf: [
@@ -14,7 +14,7 @@ export class ContentUpsertReq {
       { type: 'object', items: { type: 'any', additionalProperties: true } },
     ],
   })
-  content: string | number | boolean | Record<string, unknown> | Array<unknown>;
+  value: string | number | boolean | Record<string, unknown> | Array<unknown>;
 
   @IsOptional()
   @IsObject()

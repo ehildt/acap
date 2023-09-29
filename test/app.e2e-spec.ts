@@ -21,6 +21,6 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET)', async () => {
-    return await request(app.getHttpServer()).get('http://localhost:3001/api/v1/configs?take=1&skip=0').expect(200);
+    return await request(app.getHttpServer()).get('http://localhost:3001/api/v1/metae?take=1&skip=0').expect(200);
   });
 });

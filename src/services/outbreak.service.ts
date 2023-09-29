@@ -8,12 +8,9 @@ import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 
-import { ConfigFactoryService } from './config-factory.service';
-
 @Injectable()
 export class OutbreakService {
   constructor(
-    private readonly factory: ConfigFactoryService,
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSub: ClientProxy,
     @Optional() @InjectQueue(BULLMQ_REALM_QUEUE) private readonly bullmq: Queue,
     @Optional() @Inject(MQTT_CLIENT) private readonly mqtt: MqttClient,
@@ -21,10 +18,10 @@ export class OutbreakService {
 
   async delegate(reqs: Array<BreakoutUpsertReq>, args: AppConfigServices) {
     reqs.forEach(({ realm, contents }) => {
-      contents.forEach(({ content, jobOptions }) => {
-        args.useRedisPubSub && this.redisPubSub?.emit(realm, content);
-        args.useMQTT && this.mqtt?.publish(realm, JSON.stringify(content));
-        args.useBullMQ && this.bullmq?.add(realm, content, jobOptions).catch((error) => error);
+      contents.forEach(({ value, jobOptions }) => {
+        args.useRedisPubSub && this.redisPubSub?.emit(realm, value);
+        args.useMQTT && this.mqtt?.publish(realm, JSON.stringify(value));
+        args.useBullMQ && this.bullmq?.add(realm, value, jobOptions).catch((error) => error);
       });
     });
   }

@@ -21,7 +21,7 @@ describe('OutbreakController', () => {
 
   describe('delegate', () => {
     it('should call outbreakService.delegate with the correct arguments', async () => {
-      const reqs: Array<BreakoutUpsertReq> = [{ realm: 'TEST', contents: [{ content: 'do-test' }] }];
+      const reqs: Array<BreakoutUpsertReq> = [{ realm: 'TEST', contents: [{ value: 'do-test' }] }];
       const useMQTT = false;
       const useBullMQ = false;
       const useRedisPubSub = false;
@@ -31,7 +31,7 @@ describe('OutbreakController', () => {
     });
 
     it('should call outbreakService.delegate multiple times', async () => {
-      const reqs: Array<BreakoutUpsertReq> = [{ realm: 'TEST', contents: [{ content: 'do-test' }] }];
+      const reqs: Array<BreakoutUpsertReq> = [{ realm: 'TEST', contents: [{ value: 'do-test' }] }];
       const useMQTT = true;
       const useBullMQ = true;
       const useRedisPubSub = true;
