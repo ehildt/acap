@@ -1,3 +1,5 @@
+## [1.1.3-beta.1](https://github.com/ehildt/acap/compare/v1.1.2...v1.1.3-beta.1) (2023-09-29)
+
 ## [1.1.2](https://github.com/ehildt/acap/compare/v1.1.1...v1.1.2) (2023-09-28)
 
 
