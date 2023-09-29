@@ -12,7 +12,7 @@ import { OutbreakService } from './outbreak.service';
 
 const mockFactory = {
   app: {
-    channel: {
+    realm: {
       resolveEnv: false,
     },
     services: {
@@ -69,18 +69,18 @@ describe('OutbreakService', () => {
     it('should distribute data to realms using enabled messaging options', async () => {
       const reqs: BreakoutUpsertReq[] = [
         {
-          channel: 'realm1',
-          jobs: [
+          realm: 'realm1',
+          contents: [
             {
-              job: 'value1',
+              content: 'value1',
             },
           ],
         },
         {
-          channel: 'realm2',
-          jobs: [
+          realm: 'realm2',
+          contents: [
             {
-              job: 'value2',
+              content: 'value2',
             },
           ],
         },
@@ -102,10 +102,10 @@ describe('OutbreakService', () => {
     it('should not distribute data if no messaging options are enabled', async () => {
       const reqs: BreakoutUpsertReq[] = [
         {
-          channel: 'realm1',
-          jobs: [
+          realm: 'realm1',
+          contents: [
             {
-              job: 'value1',
+              content: 'value1',
             },
           ],
         },

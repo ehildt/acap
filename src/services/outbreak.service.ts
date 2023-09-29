@@ -20,11 +20,11 @@ export class OutbreakService {
   ) {}
 
   async delegate(reqs: Array<BreakoutUpsertReq>, args: AppConfigServices) {
-    reqs.forEach(({ channel, jobs }) => {
-      jobs.forEach(({ job, jobOptions }) => {
-        args.useRedisPubSub && this.redisPubSub?.emit(channel, job);
-        args.useMQTT && this.mqtt?.publish(channel, JSON.stringify(job));
-        args.useBullMQ && this.bullmq?.add(channel, job, jobOptions).catch((error) => error);
+    reqs.forEach(({ realm, contents }) => {
+      contents.forEach(({ content, jobOptions }) => {
+        args.useRedisPubSub && this.redisPubSub?.emit(realm, content);
+        args.useMQTT && this.mqtt?.publish(realm, JSON.stringify(content));
+        args.useBullMQ && this.bullmq?.add(realm, content, jobOptions).catch((error) => error);
       });
     });
   }
