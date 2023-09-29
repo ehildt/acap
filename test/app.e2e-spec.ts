@@ -1,4 +1,4 @@
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 
@@ -12,7 +12,7 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication<NestFastifyApplication>();
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
   });
 
@@ -20,7 +20,7 @@ describe('AppController (e2e)', () => {
     await app?.close();
   });
 
-  it('/ (GET)', async () => {
-    return await request(app.getHttpServer()).get('http://localhost:3001/api/v1/configs?take=1&skip=0').expect(200);
+  it('/api/v1/metae (GET)', async () => {
+    await request(app.getHttpServer()).get('/api/v1/metae?source=realms&take=1&skip=0&verbose=false').expect(200);
   });
 });

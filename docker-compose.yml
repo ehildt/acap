@@ -13,7 +13,7 @@ services:
       - redis
       - mosquitto
     env_file:
-      - env/defaults.env
+      - env/.env
     ports:
       - 3001:3001
 
@@ -56,4 +56,5 @@ volumes:
     
 networks:
   default:
+    driver: bridge
     name: ACAP_NETWORK
