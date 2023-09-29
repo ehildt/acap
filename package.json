@@ -20,7 +20,6 @@
     "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src",
     "depcruiser:graph": "npx depcruise -c .depcruiser.cjs -x \".+.spec.ts\" -T dot ./src | dot -T png > .depcruiser-graph.png",
     "format": "prettier --write .",
-    "gitleaks": "docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git",
     "licensee": "licensee --errors-only",
     "lint": "eslint .",
     "lint-staged": "npx lint-staged --allow-empty",
