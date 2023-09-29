@@ -105,14 +105,6 @@ check_licenses() {
     fi
 }
 
-# check gitleaks
-gitleaks_detect() {
-    info "Running gitleaks.. $(greenfy ON ERROR RUN GITLEAKS MANUALLY!)"
-    debug "see gitleaks.json to resolve credentials or whitelist in gitleaks.toml"
-    GITLEAKS_LEAKS=$(npm run gitleaks 2>/dev/null)
-    info "$(yellowfy ok): gitleaks"
-}
-
 # lint staged files
 check_lint_staged() {
     if [ -n '$(npx lint-staged --allow-empty | tail -1 | grep -E "No staged files|[SUCCESS]"' ]; then
