@@ -3,7 +3,6 @@
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
     "redhat.vscode-yaml",
-    "richie5um2.vscode-sort-json",
     "adpyke.codesnap",
     "oderwat.indent-rainbow",
     "hangxingliu.vscode-nginx-conf-hint",
@@ -11,6 +10,7 @@
     "aaron-bond.better-comments",
     "mikestead.dotenv",
     "mongodb.mongodb-vscode",
-    "pkief.material-icon-theme"
+    "pkief.material-icon-theme",
+    "bierner.markdown-preview-github-styles"
   ]
 }
