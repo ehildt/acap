@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ArrayNotEmpty, IsString } from 'class-validator';
 
-import { JobUpsertReq } from './breakout-job-upsert.dto.req';
+import { ContentUpsertReq } from './breakout-content-upsert.dto.req';
 
 export class BreakoutUpsertReq {
   @IsString()
   @ApiProperty()
-  channel: string;
+  realm: string;
 
   @ArrayNotEmpty()
-  @ApiProperty({ isArray: true, type: () => JobUpsertReq })
-  jobs: Array<JobUpsertReq>;
+  @ApiProperty({ isArray: true, type: () => ContentUpsertReq })
+  contents: Array<ContentUpsertReq>;
 }
