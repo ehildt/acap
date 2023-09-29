@@ -57,3 +57,5 @@ volumes:
 networks:
   default:
     name: ACAP_NETWORK
+  bridge: 
+    driver: host

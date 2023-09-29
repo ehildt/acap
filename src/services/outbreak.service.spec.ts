@@ -7,21 +7,7 @@ import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 
-import { ConfigFactoryService } from './config-factory.service';
 import { OutbreakService } from './outbreak.service';
-
-const mockFactory = {
-  app: {
-    realm: {
-      resolveEnv: false,
-    },
-    services: {
-      useBullMQ: true,
-      useRedisPubSub: true,
-      useMQTT: true,
-    },
-  },
-};
 
 describe('OutbreakService', () => {
   let outbreakService: OutbreakService;
@@ -33,7 +19,6 @@ describe('OutbreakService', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         OutbreakService,
-        { provide: ConfigFactoryService, useValue: mockFactory },
         {
           provide: REDIS_PUBSUB,
           useValue: {
@@ -70,19 +55,11 @@ describe('OutbreakService', () => {
       const reqs: BreakoutUpsertReq[] = [
         {
           realm: 'realm1',
-          contents: [
-            {
-              content: 'value1',
-            },
-          ],
+          contents: [{ value: 'value1' }],
         },
         {
           realm: 'realm2',
-          contents: [
-            {
-              content: 'value2',
-            },
-          ],
+          contents: [{ value: 'value2' }],
         },
       ];
 
@@ -105,7 +82,7 @@ describe('OutbreakService', () => {
           realm: 'realm1',
           contents: [
             {
-              content: 'value1',
+              value: 'value1',
             },
           ],
         },

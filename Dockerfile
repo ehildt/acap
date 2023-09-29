@@ -1,5 +1,5 @@
 # Target: local (entrypoint for local development)
-FROM node:20-slim AS local
+FROM node:20:latest AS local
 WORKDIR /app
 EXPOSE 3001
 ENTRYPOINT ["npm", "run", "start:dev"]
