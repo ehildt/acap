@@ -1,3 +1,10 @@
+## [1.1.3-beta.3](https://github.com/ehildt/acap/compare/v1.1.3-beta.2...v1.1.3-beta.3) (2023-10-01)
+
+
+### CI/CD
+
+* Dockerfile ([56310c4](https://github.com/ehildt/acap/commit/56310c4c27af7e59066aa6b0b63ec9729413329c))
+
 ## [1.1.3-beta.2](https://github.com/ehildt/acap/compare/v1.1.3-beta.1...v1.1.3-beta.2) (2023-09-29)
 
 
