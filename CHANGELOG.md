@@ -1,3 +1,15 @@
+## [1.1.3-beta.4](https://github.com/ehildt/acap/compare/v1.1.3-beta.3...v1.1.3-beta.4) (2023-10-01)
+
+
+### CI/CD
+
+* Dockerfile ([b52350a](https://github.com/ehildt/acap/commit/b52350ac7d32b40ea716c5fa8a4998ebc503071b))
+
+
+### Code Refactoring
+
+* outbreak api ([fe2b5f0](https://github.com/ehildt/acap/commit/fe2b5f01e875aad58a70277f6c076b59ba18ab2b))
+
 ## [1.1.3-beta.3](https://github.com/ehildt/acap/compare/v1.1.3-beta.2...v1.1.3-beta.3) (2023-10-01)
 
 
