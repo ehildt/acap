@@ -12,7 +12,7 @@ ENV PORT=3001
 
 COPY package*.json tsconfig*.json shims.d.ts ./
 COPY src/ ./src/
-RUN npm ci --ignore-scripts --loglevel=error
+RUN npm ci --ignore-scripts --loglevel=error && npm dedupe
 COPY src/configs/config-yml/config.yml ./dist/configs/config-yml/config.yml
 
 # Target: temporary (entrypoint for prepare-dev)

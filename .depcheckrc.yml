@@ -1,12 +1,15 @@
 skip-missing: true
 ignores: 
   - "@nestjs/schematics"
-  - "@types/eslint"
+  - "@semantic-release/changelog"
+  - "@semantic-release/git"
+  - "@semantic-release/github"
   - "@types/jest"
   - "@types/prettier"
-  - dependency-cruiser
-  - jest-junit
-  - source-map-support
-  - ts-jest
-  - ts-loader
-  - tsconfig-paths
+  - "conventional-changelog-conventionalcommits"
+  - "dependency-cruiser"
+  - "jest-junit"
+  - "source-map-support"
+  - "ts-jest"
+  - "ts-loader"
+  - "tsconfig-paths"
