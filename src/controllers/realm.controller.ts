@@ -84,38 +84,6 @@ export class RealmController {
     return content;
   }
 
-  @DeleteRealm()
-  @OpenApi_DeleteRealm()
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteRealm(@ParamRealm() realm: string, @QueryIds() ids?: string[]) {
-    const postfix = prepareCacheKey('REALM', realm, this.configFactory.config.namespacePostfix);
-
-    if (!ids) {
-      await this.cache.del(postfix);
-      return await this.realmService.deleteRealm(realm);
-    }
-
-    const filteredIds = Array.from(new Set(ids.filter((e) => e)));
-    const cache = gunzipSyncCacheObject(await this.cache.get<CacheObject>(postfix));
-    const keys = Object.keys(cache).filter((key) => delete cache[filteredIds.find((id) => id === key)]);
-    await this.realmService.deleteRealmConfigIds(realm, filteredIds);
-
-    if (keys.length) {
-      const cacheObj = gzipSyncCacheObject(cache, this.configFactory.config.gzipThreshold);
-      await this.cache.set(postfix, cacheObj, this.configFactory.config.ttl);
-    } else return await this.cache.del(postfix);
-  }
-
-  @Get()
-  @OpenApi_GetRealms()
-  async getRealms(@QueryRealms() realms?: string[], @QueryTake() take?: number, @QuerySkip() skip?: number) {
-    if (realms) return await this.realmService.getRealms(realms);
-    return {
-      data: await this.realmService.paginate(take ?? 100, skip ?? 0),
-      count: await this.realmService.countRealms(),
-    };
-  }
-
   @PostRealm()
   @OpenApi_Upsert()
   async upsertRealm(@ParamRealm() realm: string, @RealmUpsertBody() req: ContentUpsertReq[]) {
