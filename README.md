@@ -92,7 +92,7 @@ Getting Started
 </h1>
 </br>
 
-**ACAP** offers a ready-to-use setup for easy initialization. It utilizes a config.yml file instead of relying solely on system environment variables, while still allowing you to set them if necessary. When using ACAP in Docker or K8S, you can easily map the config.yml file through the volumes. In the container, the config.yml file is located at `/app/dist/config/config-yml/config.yml` and for simplicity has been aliased as `/app/config.yml`.
+**ACAP** offers a ready-to-use setup for easy initialization. It utilizes a config.yml file instead of relying solely on system environment variables, while still allowing you to set them if necessary. When using ACAP in Docker or K8S, you can easily map the config.yml file through the volumes `/app/config.yml`.
 
 The config.yml file contains default presets that make it easier to create a container for local development. 
 
@@ -346,18 +346,18 @@ With ACAP, it's your data, your choice, fortified by our robust security options
 <summary>Expand to get more insight into AES</summary>
 </br>
 
-${\color{pink}AES-256-CBC \space (32byte \space key)}$ 
+${\color{pink}AES-256-CBC}$ 
 
 
 Security: AES-256-CBC uses a 256-bit key, which provides a very high level of security. As of 2021, it is considered highly secure and resistant to brute force attacks. The key length is so long that it would require an astronomical amount of computational power and time to break the encryption by trying all possible keys.
 Drawbacks: The main drawback of AES-256-CBC is its computational overhead. Encrypting and decrypting data with a longer key can be slower compared to AES-128-CBC or AES-192-CBC. This difference may not be noticeable for small amounts of data but could become significant for large datasets or high-throughput applications.
 
-${\color{pink}AES-192-CBC \space (24byte \space key)}$ 
+${\color{pink}AES-192-CBC}$ 
 
 Security: AES-192-CBC uses a 192-bit key, which is also considered very secure. It strikes a balance between the strong security of AES-256-CBC and the computational efficiency of AES-128-CBC.
 Drawbacks: Like AES-256-CBC, the main drawback is the computational overhead, although it's generally slightly faster than AES-256-CBC. It may be a good choice when you need strong security but want slightly better performance than AES-256-CBC.
 
-${\color{pink}AES-128-CBC \space (16byte \space key)}$ 
+${\color{pink}AES-128-CBC}$ 
 
 Security: AES-128-CBC uses a 128-bit key, which is still considered secure but is theoretically more susceptible to brute force attacks compared to AES-192-CBC and AES-256-CBC. However, in practice, it offers a high level of security for most applications.
 Drawbacks: The primary advantage of AES-128-CBC is its speed and lower computational overhead. It's generally faster than AES-192-CBC and AES-256-CBC. The drawback is that, in rare cases of highly motivated attackers with immense computational resources, it might be less secure compared to the longer key lengths.
