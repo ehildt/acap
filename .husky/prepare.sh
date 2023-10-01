@@ -30,17 +30,6 @@ check_docker_service() {
     fi
 }
 
-check_docker_service() {
-    if ! docker info >/dev/null 2>&1; then
-        info "$(redfy error): This husky script uses docker.."
-        debug "Is docker installed and running?"
-        debug "WSL - sudo service docker start"
-        exit 1
-    else
-        info "$(yellowfy ok): docker"
-    fi
-}
-
 # all files must be stagged and commited!
 check_working_directory() {
     if [ -n "$GIT_STATUS_PORCELAIN" ]; then

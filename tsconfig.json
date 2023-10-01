@@ -25,6 +25,6 @@
     ".releaserc.js",
     "jest.config.ts",
     "src/**/*",
-    "test/**/*"
-  ]
+    "test/**/*",
+  ],
 }
