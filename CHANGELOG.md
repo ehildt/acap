@@ -16,7 +16,7 @@
 
 ### Features
 
-*  implemented the meta resources ([99f0ed8](https://github.com/ehildt/acap/commit/99f0ed817323eb387cc47cb213d4aa9dfae9203a))
+* implemented the meta resources ([99f0ed8](https://github.com/ehildt/acap/commit/99f0ed817323eb387cc47cb213d4aa9dfae9203a))
 * clients module register async ([#102](https://github.com/ehildt/acap/issues/102)) ([123b05b](https://github.com/ehildt/acap/commit/123b05b5dcf115e3eb4e21b042ecc9cc7e8c40dd))
 * config validation ([#95](https://github.com/ehildt/acap/issues/95)) ([216c683](https://github.com/ehildt/acap/commit/216c6830bdee3ac2231c714ee00549d8ecbb2d98))
 * custom cache ttl ([5e369b2](https://github.com/ehildt/acap/commit/5e369b2a9fdd38be17aa49e7ed49ef78fa5f5a24))
