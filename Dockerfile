@@ -1,11 +1,11 @@
 # Target: local (entrypoint for local development)
-FROM node:20 AS local
+FROM node:18 AS local
 WORKDIR /app
 EXPOSE 3001
 ENTRYPOINT ["npm", "run", "start:dev"]
 
 # Target: builder (shared build stage)
-FROM node:20-slim AS builder
+FROM node:18-slim AS builder
 WORKDIR /app
 
 ENV PORT=3001
@@ -26,7 +26,7 @@ WORKDIR /app
 RUN npm run build:prod
 
 # Target: development (entrypoint for dev-stage)
-FROM node:20-slim AS development
+FROM node:18-slim AS development
 WORKDIR /app
 
 # Single block for the environment variables
@@ -47,7 +47,7 @@ USER node
 ENTRYPOINT ["npm", "run", "start:node"]
 
 # Target: production (entrypoint for prod-stage)
-FROM node:20-slim AS production
+FROM node:18-slim AS production
 WORKDIR /app
 
 # Single block for the environment variables
