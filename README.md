@@ -93,9 +93,9 @@ Getting Started
 </h1>
 </br>
 
-**ACAP** offers a ready-to-use setup for easy initialization. It utilizes a config.yml file instead of relying solely on system environment variables, while still allowing you to set them if necessary. When using ACAP in Docker or K8S, you can easily map the config.yml file through the volumes `/app/config.yml`.
+**ACAP** simplifies the initialization process by providing a convenient ready-to-use setup. It leverages a `config.yml` file, reducing dependence on system environment variables, while still allowing flexibility to set them when required. 
 
-The config.yml file contains default presets that make it easier to create a container for local development. 
+When utilizing ACAP in Docker or Kubernetes (K8S), configuring the service is effortless. By binding the `/app/config.yml` to a volume, you can easily adjust the service settings. The `config.yml` file contains default presets, which, when combined with Docker Compose, enable a speedy setup for local development. This approach facilitates a seamless spin-up process for your projects.
 
 <details align="center">
 <summary>Expand to see the sample config.yml file</summary>
@@ -168,8 +168,6 @@ mqttClientConfig:
 ```
 </div>
 </details>
-
-Docker Compose further simplifies the process, allowing for a quick start and easy exploration of the application. 
 
 <details align="center">
 <summary>Expand to see the sample docker compose file</summary>
