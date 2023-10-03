@@ -1,3 +1,10 @@
+## [1.0.0-beta.2](https://github.com/ehildt/acap/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2023-10-03)
+
+
+### Bug Fixes
+
+* semantic-release for the main branch ([f82bc4b](https://github.com/ehildt/acap/commit/f82bc4baeba8c17e5504947206ee17430b816b00))
+
 ## 1.0.0-beta.1 (2023-10-03)
 
 
