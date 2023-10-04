@@ -1,3 +1,15 @@
+## [1.0.1-beta.1](https://github.com/ehildt/acap/compare/v1.0.0...v1.0.1-beta.1) (2023-10-04)
+
+
+### Documentation
+
+* improved the README ([7fca7f9](https://github.com/ehildt/acap/commit/7fca7f9ea11cc800de13aec71a039155ee612761))
+
+
+### Bug Fixes
+
+* npm audit fix ([74d3c86](https://github.com/ehildt/acap/commit/74d3c86a824f229d9078bb6f022651055ff373d7))
+
 ## 1.0.0 (2023-10-03)
 
 
