@@ -1,7 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/prepare.sh"
-
-check_docker_service
-gitleaks_detect
-check_licenses
-check_lint_staged
