@@ -11,11 +11,11 @@
     "semantic-release": "npx semantic-release"
   },
   "devDependencies": {
-    "husky": "^8.0.3",
-    "lerna": "^7.3.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^9.2.1",
+    "husky": "^8.0.3",
+    "lerna": "^7.3.0",
     "semantic-release": "^22.0.5"
   }
 }
