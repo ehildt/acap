@@ -1,0 +1,13 @@
+{
+  "noCircular": [],
+  "noDuplicateDepTypes": [
+    "\\.stories\\.tsx$"
+  ],
+  "noOrphans": [],
+  "notToDevDep": [
+    "src/types.d.ts"
+  ],
+  "notToUnresolvable": [
+    "src/types.d.ts"
+  ]
+}

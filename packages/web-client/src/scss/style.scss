@@ -1,0 +1,54 @@
+@use "../node_modules/css-reset-and-normalize/scss/reset-and-normalize";
+@use "../node_modules/css-reset-and-normalize/scss/button-reset";
+@use "../node_modules/css-reset-and-normalize/scss/link-reset";
+@use "./layouts";
+@use "./partials";
+@use "./widgets";
+
+:root {
+  @each $color, $shade in partials.$colors {
+    @each $prop, $value in $shade {
+      --clr-#{$color}-#{$prop}: #{$value};
+    }
+  }
+
+  @each $color, $shade in partials.$scrollbar {
+    @each $prop, $value in $shade {
+      --scrollbar-clr-#{$color}-#{$prop}: #{$value};
+    }
+  }
+
+  @each $rem, $scale in partials.$rem-scale {
+    @each $prop, $value in $scale {
+      --rem-#{$rem}-#{$prop}: #{$value};
+    }
+  }
+}
+
+body {
+  background-color: rgba(20, 20, 20, 0.92);
+  color: #eee;
+  font-size: 1.3rem;
+}
+
+// TODO Default Scrollbar
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-clr-thumb-bgColor);
+  outline: var(--scrollbar-clr-thumb-outline);
+  border-radius: var(--scrollbar-clr-thumb-brdRadius);
+}
+
+::-webkit-scrollbar {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0.15rem rgba(250, 250, 250, 0.5);
+  border-radius: 0.7rem;
+}
+
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-corner {
+  display: none;
+}

@@ -1,0 +1,10 @@
+{
+    "button": {
+        "add": "hinzufügen",
+        "cancel": "abbrechen",
+        "ok": "ok",
+        "reset": "zurücksetzen",
+        "save": "speichern",
+        "submit": "absenden"
+    }
+}

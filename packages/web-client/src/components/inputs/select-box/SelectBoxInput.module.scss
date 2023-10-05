@@ -1,0 +1,56 @@
+.select-box-input {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    input[type="button"] {
+        width: fit-content;
+        margin-top: 0.5rem;
+        transition: color 250ms ease-in-out;
+
+        &:hover {
+            color: goldenrod;
+        }
+    }
+
+    input[type="text"] {
+        padding-bottom: 0.5rem;
+        border: none;
+        outline: none;
+        color: gold;
+        appearance: none;
+        text-align: center;
+        background-color: transparent;
+        border-bottom: 2px solid goldenrod;
+    }
+
+    &.do-shake {
+        animation: shaking 250ms;
+        color: red;
+    }
+
+    &.do-shake > input[type="button"]:hover {
+        color: red !important;
+    }
+}
+
+@keyframes shaking {
+    0% {
+        transform: skewX(-15deg);
+    }
+    20% {
+        transform: skewX(15deg);
+    }
+    40% {
+        transform: skewX(-15deg);
+    }
+    60% {
+        transform: skewX(15deg);
+    }
+    80% {
+        transform: skewX(-15deg);
+    }
+    100% {
+        transform: skewX(0deg);
+    }
+}
