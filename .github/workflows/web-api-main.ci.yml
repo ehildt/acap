@@ -1,4 +1,4 @@
-name: MAIN CI/CD NodeJS
+name: WEB_API_MAIN
 
 on:
   push:
@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - '18'
-          - '20'
+          - "18"
+          - "20"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Cache Dependencies
         uses: actions/cache@v3

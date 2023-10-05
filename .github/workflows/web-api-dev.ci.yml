@@ -1,4 +1,4 @@
-name: CI/CD NodeJS
+name: WEB_API_DEV
 
 on:
   push:
@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - '18'
-          - '20'
+          - "18"
+          - "20"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Cache Dependencies
         uses: actions/cache@v3
@@ -39,10 +39,10 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Run Tests
-        run: npm test
+        run: npx lerna run test
 
       - name: Run tests with coverage
-        run: npm run test:cov -- --coverageThreshold=none
+        run: npx lerna run test:cov -- --coverageThreshold=none
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -50,19 +50,19 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Lint Code
-        run: npm run lint
+        run: npx lerna run lint
 
       - name: Analyze Dependencies
-        run: npm run depcruiser
+        run: npx lerna run depcruiser
 
       - name: Check Unused Exports
-        run: npm run ts-unused-exports
+        run: npx lerna run ts-unused-exports
 
       - name: Check Licenses
-        run: npm run licensee
+        run: npx lerna run licensee
 
       - name: Build (if present)
-        run: npm run build --if-present
+        run: npx lerna run build --if-present
 
       - name: Set up SSH key
         run: |
@@ -72,6 +72,6 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Semantic Release
-        run: npm run semantic-release
+        run: npx lerna run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
