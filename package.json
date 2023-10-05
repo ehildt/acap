@@ -4,11 +4,17 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "prepare": "husky install",
+    "release": "standard-version",
+    "semantic-release": "npx semantic-release"
+  },
   "devDependencies": {
     "husky": "^8.0.3",
-    "lerna": "^7.3.0"
-  },
-  "scripts": {
-    "prepare": "husky install"
+    "lerna": "^7.3.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.1",
+    "semantic-release": "^22.0.5"
   }
 }
