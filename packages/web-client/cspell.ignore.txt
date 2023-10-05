@@ -1,0 +1,16 @@
+acap
+dccs
+DCCS
+depcruiserrc
+Hildt
+langkey
+Langkey
+langkify
+Langkify
+languagedetector
+Lngs
+localstorage
+NKEY
+sonarjs
+vitest
+zustand

@@ -1,0 +1,80 @@
+{
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
+    "cSpell.advanced.feature.useReferenceProviderWithRename": true,
+    "cSpell.fixSpellingWithRenameProvider": true,
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "other": "off",
+      "strings": "off"
+    },
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "editor.wordWrap": "on"
+  },
+  "[scss]": {
+    "cSpell.fixSpellingWithRenameProvider": false,
+    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter",
+    "editor.formatOnSave": true
+  },
+  "dotenv.enableAutocloaking": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.markdownlint": true
+  },
+  "eslint.enable": true,
+  "eslint.execArgv": [
+    "--max_old_space_size=2048"
+  ],
+  "eslint.options": {
+    "extensions": [
+      ".js",
+      ".jsx",
+      ".ts",
+      ".tsx"
+    ]
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "explorerExclude.backup": {},
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "build": true,
+    "dist": true,
+    "**/node_modules": true
+  },
+  "sortJSON.contextMenu": {
+    "sortJSON": true,
+    "sortJSONAlphaNum": false,
+    "sortJSONAlphaNumReverse": false,
+    "sortJSONKeyLength": false,
+    "sortJSONKeyLengthReverse": false,
+    "sortJSONReverse": false,
+    "sortJSONType": false,
+    "sortJSONTypeReverse": false,
+    "sortJSONValues": false,
+    "sortJSONValuesReverse": false
+  },
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "./src/**/*.stories.tsx",
+    "./src/**/*.stories.jsx",
+    "./src/**/*.spec.tsx",
+    "./src/**/*.spec.jsx",
+    "./src/**/*.spec.ts",
+    "./src/**/*.spec.js"
+  ]
+}
