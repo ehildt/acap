@@ -12,12 +12,18 @@
           "lint",
           "lint-staged",
           "test",
-          "build-storybook"
+          "build-storybook",
+          "ncu:update"
         ]
       }
     }
   },
   "targetDefaults": {
+    "ncu:update": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
     "depcheck": {
       "dependsOn": [
         "^depcheck"
