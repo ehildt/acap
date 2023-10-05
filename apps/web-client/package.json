@@ -1,7 +1,6 @@
 {
   "name": "@litlbyte/acap-client",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "homepage": "N/A",
   "license": "LICENSE",
