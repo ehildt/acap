@@ -5,16 +5,16 @@ check_working_directory
 check_branch_identifier
 
 # makes sure all dependencies are up to date
-info 'npm run ncu:validate' && npm run ncu:validate
+info 'lerna run ncu:validate' && lerna run ncu:validate
 
-info 'npm run lint' && npm run lint
+info 'lerna run lint' && lerna run lint
 
 # dry run tests
-info 'npm run test:clearCache' && npm run test:clearCache
-info 'npm run test -- --silent' && npm run test -- --silent
+info 'lerna run test:clearCache' && lerna run test:clearCache
+info 'lerna run test -- --silent' && lerna run test -- --silent
 
 # no unused exports
-info 'npm run ts-unused-exports' && npm run ts-unused-exports
+info 'lerna run ts-unused-exports' && lerna run ts-unused-exports
 
 # add known orphans to .depcruiserrc.json
-info 'npm run depcruiser' && npm run depcruiser
+info 'lerna run depcruiser' && lerna run depcruiser
