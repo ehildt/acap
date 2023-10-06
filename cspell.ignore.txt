@@ -1,6 +1,8 @@
 acap
+cacheable
 dccs
 DCCS
+depcruiser
 depcruiserrc
 Hildt
 langkey
