@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "command": {
     "version": {
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "allowBranch": [
+        "dev",
+        "main"
+      ]
     }
   }
 }
