@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "acap"
+    },
+    {
+      "path": "apps/web-api",
+      "name": "web-api"
+    },
+    {
+      "path": "apps/web-client",
+      "name": "web-client"
+    }
+  ],
+  "settings": {}
+}
