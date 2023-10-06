@@ -1,4 +1,4 @@
-name: WEB_API_DEV
+name: CICD_DEV
 
 on:
   push:
@@ -71,7 +71,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Semantic Release
-        run: npm run semantic-release
+      - name: Lerna Version
+        run: npx lerna version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
