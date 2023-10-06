@@ -6,24 +6,19 @@
         "cacheableOperations": [
           "build",
           "build:prod",
+          "prebuild",
           "depcheck",
           "depcruiser",
           "licensee",
           "lint",
           "lint-staged",
           "test",
-          "build-storybook",
-          "ncu:update"
+          "build-storybook"
         ]
       }
     }
   },
   "targetDefaults": {
-    "ncu:update": {
-      "outputs": [
-        "{projectRoot}/dist"
-      ]
-    },
     "depcheck": {
       "dependsOn": [
         "^depcheck"
@@ -52,6 +47,11 @@
     "test": {
       "dependsOn": [
         "^test"
+      ]
+    },
+    "prebuild": {
+      "dependsOn": [
+        "^prebuild"
       ]
     },
     "build": {
