@@ -2,15 +2,15 @@
   "folders": [
     {
       "path": ".",
-      "name": "acap"
+      "name": "acap-root"
     },
     {
-      "path": "apps/web-api",
-      "name": "web-api"
+      "path": "apps/acap-service",
+      "name": "acap-service"
     },
     {
-      "path": "apps/web-client",
-      "name": "web-client"
+      "path": "apps/acap-client",
+      "name": "acap-client"
     }
   ],
   "settings": {}
