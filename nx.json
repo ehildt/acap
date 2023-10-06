@@ -49,6 +49,11 @@
         "^test"
       ]
     },
+    "ts-unused-exports": {
+      "dependsOn": [
+        "^ts-unused-exports"
+      ]
+    },
     "prebuild": {
       "dependsOn": [
         "^prebuild"
@@ -64,5 +69,16 @@
         "{projectRoot}/dist"
       ]
     }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "sharedGlobals": [],
+    "production": [
+      "default"
+    ]
   }
 }

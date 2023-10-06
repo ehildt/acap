@@ -1,17 +1,17 @@
 {
-  "name": "root",
+  "name": "@litlbyte/acap",
+  "repository": "git@github.com:ehildt/acap.git",
   "private": true,
   "engines": {
     "node": ">=20",
     "pnpm": ">=8"
   },
   "scripts": {
-    "prepare": "husky install",
-    "release": "standard-version",
-    "semantic-release": "npx semantic-release"
+    "prepare": "husky install"
   },
   "devDependencies": {
     "husky": "^8.0.3",
-    "lerna": "^7.3.0"
+    "lerna": "^7.3.0",
+    "nx": "^16.10.0"
   }
 }
