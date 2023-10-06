@@ -91,7 +91,7 @@
     "prettier": "^3.0.3",
     "prop-types": "^15.8.1",
     "react-refresh": "^0.14.0",
-    "sass": "^1.68.0",
+    "sass": "^1.69.0",
     "storybook": "^7.4.6",
     "ts-unused-exports": "^10.0.1",
     "typescript": "^5.2.2",
