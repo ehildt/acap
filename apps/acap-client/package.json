@@ -12,6 +12,10 @@
   "bugs": {
     "email": "eugen.hildt@litlbyte.com"
   },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=8"
+  },
   "scripts": {
     "version": "npm --no-git-tag-version version",
     "ncu:update": "npx npm-check-updates --doctor -u",

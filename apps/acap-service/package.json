@@ -11,6 +11,10 @@
   "bugs": {
     "email": "eugen.hildt@litlbyte.com"
   },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=8"
+  },
   "scripts": {
     "build": "nest build --path ./tsconfig.build.json",
     "build:prod": "nest build --path ./tsconfig.build.prod.json",
