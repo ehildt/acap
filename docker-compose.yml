@@ -3,32 +3,32 @@ services:
   web-client:
     container_name: web-client
     build:
-      context: ./packages/web-client
+      context: ./apps/web-client
       target: local
     depends_on:
       - web-api
     volumes:
-      - ./packages/web-client:/app
+      - ./apps/web-client:/app
       - ./node_modules:/app/node_modules
     environment:
-      - ./packages/web-client/.env.development
+      - ./apps/web-client/.env.development
     ports:
       - "5173:5173"
 
   web-api:
     container_name: web-api
     build:
-      context: ./packages/web-api
+      context: ./apps/web-api
       target: local
     volumes:
-      - ./packages/web-api:/app
+      - ./apps/web-api:/app
       - ./node_modules:/app/node_modules
     depends_on:
       - mongo
       - redis
       - mosquitto
     env_file:
-      - ./packages/web-api/env/.env
+      - ./apps/web-api/env/.env
     ports:
       - 3001:3001
 
