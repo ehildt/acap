@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
+    "declaration": false,
     "incremental": true,
     "sourceMap": true,
     "removeComments": false,
@@ -11,7 +11,6 @@
     "**/*.spec.ts",
     ".eslintrc.cjs",
     ".prettierrc.cjs",
-    ".releaserc.js",
     "jest.config.ts",
   ]
 }
