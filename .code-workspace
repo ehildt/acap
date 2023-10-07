@@ -11,6 +11,10 @@
     {
       "path": "apps/acap-client",
       "name": "acap-client"
+    },
+    {
+      "path": "packages/components",
+      "name": "components"
     }
   ],
   "settings": {},
