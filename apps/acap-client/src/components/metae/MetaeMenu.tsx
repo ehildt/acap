@@ -1,7 +1,8 @@
 import './MetaeMenu.scss';
 
+import { SelectBox } from 'components';
+
 import { PageSwitcher } from '../inputs/page-switcher/PageSwitcher';
-import { SelectBox } from '../inputs/select-box/SelectBox';
 
 type MetaeMenuProps = {
   source: string;
