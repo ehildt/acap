@@ -6,10 +6,10 @@ services:
       context: ./apps/acap-client
       target: local
     depends_on:
-      - web-api
+      - acap-service
     volumes:
       - ./apps/acap-client:/app
-      - ./node_modules:/app/node_modules
+      - ./node_modules:/node_modules
     environment:
       - ./apps/acap-client/.env.development
     ports:
@@ -22,7 +22,7 @@ services:
       target: local
     volumes:
       - ./apps/acap-service:/app
-      - ./node_modules:/app/node_modules
+      - ./node_modules:/node_modules
     depends_on:
       - mongo
       - redis
