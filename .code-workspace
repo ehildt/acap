@@ -13,5 +13,22 @@
       "name": "acap-client"
     }
   ],
-  "settings": {}
+  "settings": {},
+  "extensions": {
+    "recommendations": [
+      "mhutchie.git-graph",
+      "nrwl.angular-console",
+      "streetsidesoftware.code-spell-checker",
+      "dbaeumer.vscode-eslint",
+      "redhat.vscode-yaml",
+      "adpyke.codesnap",
+      "oderwat.indent-rainbow",
+      "hangxingliu.vscode-nginx-conf-hint",
+      "mikestead.dotenv",
+      "pkief.material-icon-theme",
+      "streetsidesoftware.code-spell-checker-medical-terms",
+      "streetsidesoftware.code-spell-checker-scientific-terms",
+      "ms-azuretools.vscode-docker"
+    ]
+  }
 }

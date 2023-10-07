@@ -1,16 +1,3 @@
 {
-  "recommendations": [
-    "streetsidesoftware.code-spell-checker",
-    "dbaeumer.vscode-eslint",
-    "redhat.vscode-yaml",
-    "adpyke.codesnap",
-    "oderwat.indent-rainbow",
-    "zainchen.json",
-    "dotenv.dotenv-vscode",
-    "mikestead.dotenv",
-    "sibiraj-s.vscode-scss-formatter",
-    "streetsidesoftware.code-spell-checker-medical-terms",
-    "streetsidesoftware.code-spell-checker-scientific-terms",
-    "ms-azuretools.vscode-docker"
-  ]
+  "recommendations": ["sibiraj-s.vscode-scss-formatter"]
 }
