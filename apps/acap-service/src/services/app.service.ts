@@ -43,7 +43,7 @@ export class AppService {
     const openApiObj = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle(packageJson.name.split('/').at(1).toUpperCase())
+        .setTitle(packageJson.name.toUpperCase())
         .setDescription(packageJson.description)
         .setVersion(packageJson.version)
         .build(),
