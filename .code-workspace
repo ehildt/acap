@@ -20,7 +20,8 @@
   "settings": {
     "files.exclude": {
       "**/node_modules": true,
-      "**/dist": true
+      "**/dist": true,
+      "**/.vscode": true
     }
   },
   "extensions": {
