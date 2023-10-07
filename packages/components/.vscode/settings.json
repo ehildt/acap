@@ -1,0 +1,42 @@
+{
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
+    "cSpell.advanced.feature.useReferenceProviderWithRename": true,
+    "cSpell.fixSpellingWithRenameProvider": true,
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "other": "off",
+      "strings": "off"
+    },
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "editor.wordWrap": "on"
+  },
+  "[scss]": {
+    "cSpell.fixSpellingWithRenameProvider": false,
+    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter",
+    "editor.formatOnSave": true
+  },
+  "editor.bracketPairColorization.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.markdownlint": true
+  },
+  "eslint.enable": true,
+  "eslint.options": {
+    "extensions": [".js", ".jsx", ".ts", ".tsx"]
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "./src/**/*.stories.tsx",
+    "./src/**/*.stories.jsx",
+    "./src/**/*.spec.tsx",
+    "./src/**/*.spec.jsx",
+    "./src/**/*.spec.ts",
+    "./src/**/*.spec.js"
+  ]
+}

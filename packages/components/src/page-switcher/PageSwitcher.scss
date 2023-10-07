@@ -1,0 +1,34 @@
+.page-switcher {
+    user-select: none;
+    padding: 0.5rem;
+    align-items: center;
+    display: inline-flex;
+
+    span {
+        min-width: 3rem;
+        text-align: center;
+        color: palevioletred;
+        font-weight: bolder;
+    }
+
+    :first-child {
+        padding-left: 0.5rem;
+    }
+
+    :last-child {
+        padding-right: 0.5rem;
+    }
+
+    :first-child,
+    :last-child {
+        cursor: pointer;
+        font-size: 1.8rem;
+    }
+
+    &--disabled {
+        cursor: none;
+        pointer-events: none;
+        color: dimgray;
+        opacity: 0.4;
+    }
+}

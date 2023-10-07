@@ -1,0 +1,11 @@
+{
+  "exclude": [
+    "dist",
+    ".husky",
+    ".vscode",
+    ".storybook",
+    "node_modules",
+    "src/**/*.stories.?sx"
+  ],
+  "extends": "./tsconfig.json"
+}

@@ -1,0 +1,17 @@
+skip-missing: true
+ignores: 
+  - "@storybook/addon-actions"
+  - "@storybook/addon-essentials"
+  - "@storybook/addon-interactions"
+  - "@storybook/addon-links"
+  - "@storybook/builder-vite"
+  - "@storybook/preset-create-react-app"
+  - "@storybook/testing-library"
+  - "@testing-library/react"
+  - "@testing-library/user-event"
+  - "@types/react"
+  - "@vitest/coverage-c8"
+  - css-reset-and-normalize
+  - dependency-cruiser
+  - eslint-plugin-import
+  - yarn-audit-fix
