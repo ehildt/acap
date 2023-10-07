@@ -30,7 +30,6 @@
     "lint": "eslint .",
     "lint-staged": "npx lint-staged --allow-empty",
     "ts-unused-exports": "npx ts-unused-exports ./tsconfig.exclude.json",
-    "gitleaks": "docker run --rm -v $(cd .. && pwd):/app zricethezav/gitleaks -c /app/${PWD##*/}/gitleaks.toml detect -v --source=\"/app/${PWD##*/}/\" --no-git",
     "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src"
   },
   "dependencies": {
