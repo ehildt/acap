@@ -1,14 +1,8 @@
 import cn from 'classnames';
-import { CSSProperties, ReactNode, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useMouseMove } from './PageMenu.hooks';
-
-type PageMouseItemProps = {
-  style?: CSSProperties;
-  children?: ReactNode;
-  onMouseEnter?: any;
-  onMouseLeave?: any;
-};
+import { PageMouseItemProps } from './PageMenuItem.model';
 
 export function PageMenuItem(props: PageMouseItemProps) {
   const ref = useRef<HTMLLIElement>(null);
