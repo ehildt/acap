@@ -1,10 +1,10 @@
+import { Button } from 'components';
+import { PageMenu } from 'components';
+import { PageMenuItem } from 'components';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaBacon, FaDatabase, FaHome, FaInfo } from 'react-icons/fa';
 
-import { Button } from './components/buttons';
-import { PageMenu } from './components/menus';
-import { PageMenuItem } from './components/menus/page-menu/PageMenuItem';
 import { Metae } from './components/metae/Metae';
 import { useCacheStore } from './store/zustand';
 
