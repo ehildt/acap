@@ -28,13 +28,15 @@
             "release": false
           },
           {
-            "type": "chore",
-            "scope": "deps",
+            "type": "deps",
+            "release": "patch"
+          },
+          {
+            "type": "peers",
             "release": "patch"
           },
           {
             "type": "docs",
-            "scope": "README",
             "release": "patch"
           },
           {
@@ -79,18 +81,15 @@
             },
             {
               "type": "chore",
-              "section": "Miscellaneous",
-              "hidden": false
+              "section": "Miscellaneous"
             },
             {
-              "type": "chore",
-              "scope": "deps",
+              "type": "deps",
               "section": "Dependency Updates"
             },
             {
-              "type": "chore",
-              "scope": "dev-deps",
-              "section": "Dependency Updates"
+              "type": "peers",
+              "section": "Peer-Dependency Updates"
             },
             {
               "type": "docs",
