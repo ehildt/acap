@@ -1,6 +1,7 @@
 {
   "name": "@litlbyte/acap",
   "repository": "git@github.com:ehildt/acap.git",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": ">=20",
