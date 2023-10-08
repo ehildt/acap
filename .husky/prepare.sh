@@ -19,17 +19,6 @@ bolderfy() { echo "\e[1m$*\e[0m"; }
 info() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(magentafy $(echo $0 | cut -c 8-))$(bolderfy \])$(bolderfy ' --') $(cyanfy $*)"; }
 debug() { echo "$(bolderfy \[)$(greenfy 'husky')$(bolderfy '@')$(yellowfy debug-hint)$(bolderfy \])$(bolderfy ' --') $(bluefy $*)"; }
 
-check_docker_service() {
-    if ! docker info >/dev/null 2>&1; then
-        info "$(redfy error): This husky script uses docker.."
-        debug "Is docker installed and running?"
-        debug "WSL - sudo service docker start"
-        exit 1
-    else
-        info "$(yellowfy ok): docker"
-    fi
-}
-
 # all files must be stagged and commited!
 check_working_directory() {
     if [ -n "$GIT_STATUS_PORCELAIN" ]; then
@@ -73,35 +62,6 @@ check_commit_msg_length() {
         exit 1
     else
         info "$(yellowfy ok): commit message length"
-    fi
-}
-
-# commit changes post npm install
-post_merge_install() {
-    info 'npm install | 2>/dev/null' && npm install | 2>/dev/null
-    if [ -n '$(git commit -am "chore(husky): ncu" -n | grep -o "nothing to commit")' ]; then
-        info "post-npm-install => working tree clean, nothing to commit!"
-    else
-        info "post-npm-install => package.json, package-lock.json committed!"
-    fi
-}
-
-# check if package-lock-json changed
-check_package_dependencies() {
-    if [ -n "$(git diff HEAD^ HEAD --exit-code -- ./package-lock.json | head -1)" ]; then
-        info "package-lock.json changed."
-        post_merge_install
-    fi
-}
-
-# check licenses
-check_licenses() {
-    if [ $(npx licensee --errors-only | wc -m) -eq 0 ]; then
-        info "$(yellowfy ok): licensee"
-    else
-        info "$(redfy error): licensee"
-        debug "resolve licenses (.lecensee.json)"
-        exit 1
     fi
 }
 
