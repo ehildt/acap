@@ -14,6 +14,9 @@ importers:
       lerna:
         specifier: ^7.3.0
         version: 7.3.0
+      npm-check-updates:
+        specifier: ^16.14.5
+        version: 16.14.5
       nx:
         specifier: ^16.10.0
         version: 16.10.0
@@ -157,8 +160,8 @@ importers:
         specifier: 0.21.0
         version: 0.21.0(eslint@8.51.0)
       eslint-plugin-storybook:
-        specifier: ^0.6.14
-        version: 0.6.14(eslint@8.51.0)(typescript@5.2.2)
+        specifier: ^0.6.15
+        version: 0.6.15(eslint@8.51.0)(typescript@5.2.2)
       eslint-plugin-unused-imports:
         specifier: ^3.0.0
         version: 3.0.0(@typescript-eslint/eslint-plugin@6.7.4)(eslint@8.51.0)
@@ -453,8 +456,8 @@ importers:
         specifier: ^1.4.6
         version: 1.4.6
       dependency-cruiser:
-        specifier: ^14.1.0
-        version: 14.1.0
+        specifier: ^14.1.1
+        version: 14.1.1
       eslint:
         specifier: ^8.51.0
         version: 8.51.0
@@ -477,8 +480,8 @@ importers:
         specifier: 0.21.0
         version: 0.21.0(eslint@8.51.0)
       eslint-plugin-storybook:
-        specifier: ^0.6.14
-        version: 0.6.14(eslint@8.51.0)(typescript@5.2.2)
+        specifier: ^0.6.15
+        version: 0.6.15(eslint@8.51.0)(typescript@5.2.2)
       eslint-plugin-unused-imports:
         specifier: ^3.0.0
         version: 3.0.0(@typescript-eslint/eslint-plugin@6.7.4)(eslint@8.51.0)
@@ -8085,39 +8088,6 @@ packages:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
     engines: {node: '>= 0.8'}
 
-  /dependency-cruiser@14.1.0:
-    resolution: {integrity: sha512-JF7F0SFG4K5vXmUMvgYHKQnMuU2JzO18/+r/hTuaGEr3KTlMYkR16WNc+WDqS0y5fjq8khDy/WKO4bR5xhw2sQ==}
-    engines: {node: ^18.17||>=20}
-    hasBin: true
-    dependencies:
-      acorn: 8.10.0
-      acorn-jsx: 5.3.2(acorn@8.10.0)
-      acorn-jsx-walk: 2.0.0
-      acorn-loose: 8.3.0
-      acorn-walk: 8.2.0
-      ajv: 8.12.0
-      chalk: 5.3.0
-      commander: 11.0.0
-      enhanced-resolve: 5.15.0
-      figures: 5.0.0
-      ignore: 5.2.4
-      indent-string: 5.0.0
-      interpret: 3.1.1
-      is-installed-globally: 0.4.0
-      json5: 2.2.3
-      lodash: 4.17.21
-      picomatch: 2.3.1
-      prompts: 2.4.2
-      rechoir: 0.8.0
-      safe-regex: 2.1.1
-      semver: 7.5.4
-      semver-try-require: 6.2.3
-      teamcity-service-messages: 0.1.14
-      tsconfig-paths-webpack-plugin: 4.1.0
-      watskeburt: 1.0.1
-      wrap-ansi: 8.1.0
-    dev: true
-
   /dependency-cruiser@14.1.1:
     resolution: {integrity: sha512-npNLWv11pMH9BW4GBLuA5p6KYOXA9UjVDKQ4DzorEhAac5BS1J23K5I2WpEfkJMpwl9PKMsF4T/GDLSq3pogTw==}
     engines: {node: ^18.17||>=20}
@@ -8770,8 +8740,8 @@ packages:
       eslint: 8.51.0
     dev: true
 
-  /eslint-plugin-storybook@0.6.14(eslint@8.51.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-IeYigPur/MvESNDo43Z+Z5UvlcEVnt0dDZmnw1odi9X2Th1R3bpGyOZsHXb9bp1pFecOpRUuoMG5xdID2TwwOg==}
+  /eslint-plugin-storybook@0.6.15(eslint@8.51.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-lAGqVAJGob47Griu29KXYowI4G7KwMoJDOkEip8ujikuDLxU+oWJ1l0WL6F2oDO4QiyUFXvtDkEkISMOPzo+7w==}
     engines: {node: 12.x || 14.x || >= 16}
     peerDependencies:
       eslint: '>=6'
@@ -16260,12 +16230,6 @@ packages:
     dependencies:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
-    dev: true
-
-  /watskeburt@1.0.1:
-    resolution: {integrity: sha512-MOvC8vf3hAVo1HPF/pkba7065mt6A/P9unLlFvYhZ7Yyuht16tmfCYi/LqHABG4hIRMZCbvY8eDWHPy81eSADA==}
-    engines: {node: ^16.14||>=18}
-    hasBin: true
     dev: true
 
   /watskeburt@2.0.0:

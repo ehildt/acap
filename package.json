@@ -7,11 +7,14 @@
     "pnpm": ">=8"
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "ncu:update": "npx npm-check-updates --doctor -u",
+    "test": "exit 0"
   },
   "devDependencies": {
     "husky": "^8.0.3",
     "lerna": "^7.3.0",
-    "nx": "^16.10.0"
+    "nx": "^16.10.0",
+    "npm-check-updates": "^16.14.5"
   }
 }
