@@ -1,11 +1,11 @@
 import './FileImporter.scss';
 
 import { Buffer } from 'buffer';
+import { Scrollbar } from 'components';
+import { PageMenu, PageMenuItem } from 'components';
 import { CSSProperties, useEffect, useState } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
 
-import { PageMenu, PageMenuItem } from '@/components/menus';
-import { Scrollbar, ScrollbarItem } from '@/components/scrollbars';
 import { useCacheStore } from '@/store/zustand';
 
 import { FileSelector } from '../file-selector/FileSelector';
@@ -61,16 +61,14 @@ export function FileImporter(props: FileImporterProps) {
         <div className="file-importer-content">
           <div className="file-importer-content-list">
             <Scrollbar behavior="smooth" overflow="auto" direction="rtl" stickY="top" style={props.style}>
-              <ScrollbarItem>
-                <PageMenu>
-                  {files.map((f: any, idx: number) => (
-                    <PageMenuItem key={idx}>
-                      {f.name}
-                      {f.extension === 'pdf' ? <FaFilePdf /> : null}
-                    </PageMenuItem>
-                  ))}
-                </PageMenu>
-              </ScrollbarItem>
+              <PageMenu>
+                {files.map((f: any, idx: number) => (
+                  <PageMenuItem key={idx}>
+                    {f.name}
+                    {f.extension === 'pdf' ? <FaFilePdf /> : null}
+                  </PageMenuItem>
+                ))}
+              </PageMenu>
             </Scrollbar>
           </div>
 
