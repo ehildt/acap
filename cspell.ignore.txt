@@ -2,6 +2,7 @@ acap
 adpyke
 azuretools
 cacheable
+callsite
 codesnap
 dbaeumer
 dccs
@@ -9,13 +10,16 @@ DCCS
 depcruiser
 depcruiserrc
 fastify
+gitconfiglocal
 hangxingliu
 Hildt
+jackspeak
 langkey
 Langkey
 langkify
 Langkify
 languagedetector
+litlbyte
 Lngs
 localstorage
 mhutchie
@@ -27,6 +31,7 @@ oderwat
 pkief
 redhat
 sonarjs
+spdx
 treeshake
 vitest
 zustand
