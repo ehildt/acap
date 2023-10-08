@@ -3,11 +3,17 @@
   "noDuplicateDepTypes": [
     "\\.stories\\.tsx$"
   ],
-  "noOrphans": [],
+  "noOrphans": [
+    "src/api/dccs.api.ts"
+  ],
   "notToDevDep": [
     "src/types.d.ts"
   ],
   "notToUnresolvable": [
-    "src/types.d.ts"
+    "src/types.d.ts",
+    "src/components/metae/MetaeMenu.tsx",
+    "src/components/metae/Metae.tsx",
+    "src/components/files/file-importer/FileImporter.tsx",
+    "src/App.tsx"
   ]
 }
