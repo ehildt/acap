@@ -27,7 +27,6 @@
   "extensions": {
     "recommendations": [
       "mhutchie.git-graph",
-      "nrwl.angular-console",
       "streetsidesoftware.code-spell-checker",
       "dbaeumer.vscode-eslint",
       "redhat.vscode-yaml",
