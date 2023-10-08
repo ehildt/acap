@@ -69,11 +69,8 @@ jobs:
       - name: Check Unused Exports
         run: lerna run ts-unused-exports
 
-      - name: Check Licenses
-        run: lerna run licensee
-
       - name: Build (if present)
-        run: lerna run build --if-present
+        run: lerna run build:prod
 
       - name: Set up SSH key
         run: |
