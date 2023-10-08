@@ -10,12 +10,20 @@
   "scripts": {
     "prepare": "husky install",
     "ncu:update": "npx npm-check-updates --doctor -u",
-    "test": "exit 0"
+    "test": "exit 0",
+    "semantic-release": "npx semantic-release"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^11.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.1",
+    "@semantic-release/npm": "^11.0.0",
+    "@semantic-release/release-notes-generator": "^12.0.0",
     "husky": "^8.0.3",
     "lerna": "^7.3.0",
+    "npm-check-updates": "^16.14.5",
     "nx": "^16.10.0",
-    "npm-check-updates": "^16.14.5"
+    "semantic-release": "^22.0.5"
   }
 }

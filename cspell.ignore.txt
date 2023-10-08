@@ -4,6 +4,7 @@ azuretools
 cacheable
 callsite
 codesnap
+conventionalcommits
 dbaeumer
 dccs
 DCCS
