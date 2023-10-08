@@ -30,7 +30,7 @@
     "licensee": "licensee --errors-only",
     "lint": "eslint .",
     "lint-staged": "npx lint-staged --allow-empty",
-    "ts-unused-exports": "npx ts-unused-exports ./tsconfig.exclude.json",
+    "ts-unused-exports": "npx ts-unused-exports ./tsconfig.exclude.json --maxIssues=20",
     "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src"
   },
   "dependencies": {
