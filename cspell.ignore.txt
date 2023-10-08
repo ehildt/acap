@@ -27,5 +27,6 @@ oderwat
 pkief
 redhat
 sonarjs
+treeshake
 vitest
 zustand

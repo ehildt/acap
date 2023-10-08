@@ -14,7 +14,8 @@
   "scripts": {
     "ncu:update": "npx npm-check-updates --doctor -u",
     "ncu:validate": "npx npm-check-updates -e 2 --packageFile=./package.json",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --mode development",
+    "build:prod": "tsc && vite build --mode production",
     "test": "vitest --run --passWithNoTests",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
