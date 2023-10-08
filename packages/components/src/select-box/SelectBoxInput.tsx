@@ -1,13 +1,8 @@
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 
+import { SelectBoxInputProps } from './SelectBoxInput.model';
 import style from './SelectBoxInput.module.scss';
-
-export type SelectBoxInputProps = {
-  label: string;
-  placeholder: string;
-  onClick: (value: string) => void;
-};
 
 export function SelectBoxInput(props: SelectBoxInputProps) {
   const ref = useRef<HTMLInputElement>(null);
