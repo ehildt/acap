@@ -2,9 +2,7 @@ import { useCacheStore } from 'libs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaBacon, FaDatabase, FaHome, FaInfo } from 'react-icons/fa';
-import { Button } from 'ui';
-import { PageMenu } from 'ui';
-import { PageMenuItem } from 'ui';
+import { Button, PageMenu, PageMenuItem } from 'ui';
 
 import { Metae } from './components/metae/Metae';
 
