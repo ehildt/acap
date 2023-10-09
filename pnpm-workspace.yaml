@@ -1,4 +1,4 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - '!packages/acap-storybook/'
+  - apps/*
+  - libs/*
+  - ui/*

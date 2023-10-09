@@ -2,19 +2,23 @@
   "folders": [
     {
       "path": ".",
-      "name": "acap-root"
+      "name": "."
     },
     {
-      "path": "apps/acap-service",
-      "name": "acap-service"
+      "path": "packages/ui",
+      "name": "ui"
     },
     {
-      "path": "apps/acap-client",
-      "name": "acap-client"
+      "path": "packages/libs",
+      "name": "libs"
     },
     {
-      "path": "packages/components",
-      "name": "components"
+      "path": "apps/backend",
+      "name": "backend"
+    },
+    {
+      "path": "apps/frontend",
+      "name": "frontend"
     }
   ],
   "settings": {
