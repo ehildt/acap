@@ -44,6 +44,7 @@ By delivering personalized and relevant content, ACAP helps other services impro
 ![Node](https://img.shields.io/badge/node-LTS-purple?style=flat&logo=node.js&logoColor=white)
 ![BuildStatus](https://img.shields.io/badge/build-passing-darkgreen?style=flat&logo=github&logoColor=white)
 ![codecov](https://codecov.io/gh/ehildt/acap/graph/badge.svg?token=MCL18OCNV7)
+
 </div>
 
   <div align="center">
@@ -64,6 +65,8 @@ powered by
 ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
 ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Lerna Version](https://img.shields.io/badge/Lerna-9333EA.svg?style=for-the-badge&logo=Lerna&logoColor=white)
+![Nx Version](https://img.shields.io/badge/Nx-143055.svg?style=for-the-badge&logo=Nx&logoColor=white)
 
   </div>
 </div>

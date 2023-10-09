@@ -66,7 +66,7 @@ jobs:
       - name: Check Unused Exports
         run: lerna run ts-unused-exports
 
-      - name: Build Check
+      - name: Build:PROD Check
         run: lerna run build:prod
 
       - name: Semantic Release
