@@ -1,34 +1,34 @@
 version: "3.9"
 services:
-  acap-client:
-    container_name: acap-client
+  frontend:
+    container_name: frontend
     build:
-      context: ./apps/acap-client
+      context: ./apps/frontend
       target: local
     depends_on:
-      - acap-service
+      - backend
     volumes:
-      - ./apps/acap-client:/app
+      - ./apps/frontend:/app
       - ./node_modules:/node_modules
     environment:
-      - ./apps/acap-client/.env.development
+      - ./apps/frontend/.env.development
     ports:
       - "5173:5173"
 
-  acap-service:
-    container_name: acap-service
+  backend:
+    container_name: backend
     build:
-      context: ./apps/acap-service
+      context: ./apps/backend
       target: local
     volumes:
-      - ./apps/acap-service:/app
+      - ./apps/backend:/app
       - ./node_modules:/node_modules
     depends_on:
       - mongo
       - redis
       - mosquitto
     env_file:
-      - ./apps/acap-service/env/.env
+      - ./apps/backend/env/.env
     ports:
       - 3001:3001
 
