@@ -1,12 +1,12 @@
-name: CICD_MAIN
+name: CICD_DEV
 
 on:
   push:
     branches:
-      - main
+      - dev
   pull_request:
     branches:
-      - main
+      - dev
 
 env:
   STORE_PATH:
