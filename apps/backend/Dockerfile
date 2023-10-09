@@ -2,7 +2,7 @@
 FROM node:18 AS local
 WORKDIR /app
 EXPOSE 3001
-ENTRYPOINT ["pnpm", "run", "start:dev"]
+ENTRYPOINT ["npm", "run", "start:dev"]
 
 # Target: builder (shared build stage)
 FROM node:18-slim AS builder

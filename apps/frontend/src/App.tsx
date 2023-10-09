@@ -1,23 +1,23 @@
-import { Button } from 'components';
-import { PageMenu } from 'components';
-import { PageMenuItem } from 'components';
+import { useCacheStore } from 'libs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaBacon, FaDatabase, FaHome, FaInfo } from 'react-icons/fa';
+import { Button } from 'ui';
+import { PageMenu } from 'ui';
+import { PageMenuItem } from 'ui';
 
 import { Metae } from './components/metae/Metae';
-import { useCacheStore } from './store/zustand';
 
 export function App() {
   const [isDisabled, setDisabled] = useState<boolean>(true);
-  const { cache } = useCacheStore();
+  const { currentTab } = useCacheStore();
   const { t } = useTranslation();
 
   return (
     // switch default layout if needed
     <div className="layout-default">
       <header className="bar bar--top">
-        {t('app.message')}: {cache.currentTab}
+        {t('app.message')}: {currentTab}
       </header>
       <aside style={{ gridArea: 'menu' }}>
         <PageMenu>

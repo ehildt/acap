@@ -11,9 +11,9 @@
   ],
   "notToUnresolvable": [
     "src/types.d.ts",
-    "src/components/metae/MetaeMenu.tsx",
-    "src/components/metae/Metae.tsx",
-    "src/components/files/file-importer/FileImporter.tsx",
+    "src/ui/metae/MetaeMenu.tsx",
+    "src/ui/metae/Metae.tsx",
+    "src/ui/files/file-importer/FileImporter.tsx",
     "src/App.tsx"
   ]
 }

@@ -1,0 +1,5 @@
+skip-missing: true
+ignores: 
+  - "@vitest/coverage-v8"
+  - dependency-cruiser
+  - eslint-plugin-import

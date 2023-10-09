@@ -1,12 +1,11 @@
 import './FileImporter.scss';
 
 import { Buffer } from 'buffer';
-import { Scrollbar } from 'components';
-import { PageMenu, PageMenuItem } from 'components';
+import { useFileSelectorStore } from 'libs';
 import { CSSProperties, useEffect, useState } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
-
-import { useCacheStore } from '@/store/zustand';
+import { Scrollbar } from 'ui';
+import { PageMenu, PageMenuItem } from 'ui';
 
 import { FileSelector } from '../file-selector/FileSelector';
 import { useIsFileSizeExceeded } from './FileImporter.hooks';
@@ -37,7 +36,7 @@ function loadFileContents(files: Array<File>) {
 
 export function FileImporter(props: FileImporterProps) {
   const [files, setFiles] = useState<any>([]);
-  const { fileSlice } = useCacheStore();
+  const fileSlice = useFileSelectorStore();
   const isFileSizeExceeded = useIsFileSizeExceeded(50_000_000, fileSlice.files);
 
   useEffect(() => {

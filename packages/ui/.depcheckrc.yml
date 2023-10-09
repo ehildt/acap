@@ -10,8 +10,13 @@ ignores:
   - "@testing-library/react"
   - "@testing-library/user-event"
   - "@types/react"
-  - "@vitest/coverage-c8"
+  - "@vitest/coverage-v8"
   - css-reset-and-normalize
   - dependency-cruiser
   - eslint-plugin-import
-  - yarn-audit-fix
+  - "@storybook/blocks"
+  - "@types/react-dom"
+  - autoprefixer
+  - postcss
+  - prop-types
+  - react-refresh
