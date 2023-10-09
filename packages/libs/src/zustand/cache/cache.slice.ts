@@ -4,8 +4,8 @@ export const cacheStateCreator: CacheStateCreator = (set) => ({
   currentTab: 'edit',
   setCurrentTab: (tab) =>
     set(
-      ({ cache }) => {
-        cache.currentTab = tab;
+      (store) => {
+        store.currentTab = tab;
       },
       false,
       CacheAction.SET_CURRENT_TAB,

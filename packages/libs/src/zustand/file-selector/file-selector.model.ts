@@ -1,7 +1,7 @@
-import { StateCreator } from "zustand";
+import { StateCreator } from 'zustand';
 
 export enum FileSelectorAction {
-  SELECT_FILES = "selectFiles",
+  SELECT_FILES = 'selectFiles',
 }
 
 export type FileSelectorState = {
@@ -15,7 +15,7 @@ export type FileSelectorMutations = {
 export type FileSelectorStore = FileSelectorState & FileSelectorMutations;
 export type FileSelectorStateCreator = StateCreator<
   FileSelectorStore,
-  [["zustand/immer", never], ["zustand/devtools", never]],
+  [['zustand/immer', never], ['zustand/devtools', never]],
   [],
   FileSelectorStore
 >;
