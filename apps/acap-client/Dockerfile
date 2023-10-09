@@ -1,12 +1,11 @@
 FROM node:lts AS local
 WORKDIR /app
-ENTRYPOINT ["npm", "run", "dev"]
+ENTRYPOINT ["pnpm", "run", "dev"]
 
 FROM node:lts AS bundle
 WORKDIR /app
 COPY ./ ./
-RUN npm ci --legacy-peer-deps=true --ignore-scripts --loglevel=error
-RUN npm run build
+RUN npm i -g pnpm && pnpm i --ignore-scripts && pnpm run build:prod
 
 FROM nginx:alpine AS production
 ENV NGINX_HOST 127.0.0.1

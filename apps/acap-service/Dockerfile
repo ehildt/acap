@@ -2,7 +2,7 @@
 FROM node:18 AS local
 WORKDIR /app
 EXPOSE 3001
-ENTRYPOINT ["npm", "run", "start:dev"]
+ENTRYPOINT ["pnpm", "run", "start:dev"]
 
 # Target: builder (shared build stage)
 FROM node:18-slim AS builder
@@ -12,18 +12,18 @@ ENV PORT=3001
 
 COPY package*.json tsconfig*.json shims.d.ts ./
 COPY src/ ./src/
-RUN npm ci --ignore-scripts --loglevel=error && npm dedupe
+RUN npm i -g pnpm && pnpm i --ignore-scripts && pnpm dedupe
 COPY src/configs/config-yml/config.yml ./dist/configs/config-yml/config.yml
 
 # Target: temporary (entrypoint for prepare-dev)
 FROM builder AS builddev
 WORKDIR /app
-RUN npm run build
+RUN pnpm run build
 
 # Target: temporary (entrypoint for prepare-prod)
 FROM builder AS buildprod
 WORKDIR /app
-RUN npm run build:prod
+RUN pnpm run build:prod
 
 # Target: development (entrypoint for dev-stage)
 FROM node:18-slim AS development
@@ -44,7 +44,7 @@ COPY --chown=node:node --from=builddev /app/node_modules ./node_modules
 RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 
 USER node
-ENTRYPOINT ["npm", "run", "start:node"]
+ENTRYPOINT ["pnpm", "run", "start:node"]
 
 # Target: production (entrypoint for prod-stage)
 FROM node:18-slim AS production
@@ -65,4 +65,4 @@ COPY --chown=node:node --from=buildprod /app/node_modules ./node_modules
 RUN ln -s /app/dist/configs/config-yml/config.yml /app/config.yml
 
 USER node
-ENTRYPOINT ["npm", "run", "start:node"]
+ENTRYPOINT ["pnpm", "run", "start:node"]
