@@ -1,3 +1,25 @@
+## [1.0.1](https://github.com/ehildt/acap/compare/v1.0.0...v1.0.1) (2023-10-09)
+
+
+### CI/CD
+
+* fixed branch target for push & pull in dev.ci.yml ([5f124c5](https://github.com/ehildt/acap/commit/5f124c5616d00beff9470256def612d053aed904))
+
+
+### Miscellaneous
+
+* added libs workspace ([a8a3091](https://github.com/ehildt/acap/commit/a8a30918c60a4b674fe2cbf9c605e587937d363f))
+* deps, docs an ci labels updated ([9ea99f3](https://github.com/ehildt/acap/commit/9ea99f313689556aa044d156d385581c208e307f))
+* moved all atomic components to ui ([c924d12](https://github.com/ehildt/acap/commit/c924d1297ba8a3dcd8fa05af73e0750847b035c2))
+* optimized the folder structure ([cc8fccc](https://github.com/ehildt/acap/commit/cc8fcccaf87d5bfc1aee61ee5e195fbb767601d7))
+* **release:** 1.0.1-beta.1 ([bbb64fe](https://github.com/ehildt/acap/commit/bbb64fe1a57fea08c0a31b7ee33fca9efacca858))
+
+
+### Bug Fixes
+
+* linting in libs, zustand global store ([80626e1](https://github.com/ehildt/acap/commit/80626e18883480ba288949a3c500d5009d4ea844))
+* removed unused exports in libs & ui ([8c25f8f](https://github.com/ehildt/acap/commit/8c25f8f87bbef1b23567183eaa01066caf4666e9))
+
 ## [1.0.1-beta.1](https://github.com/ehildt/acap/compare/v1.0.0...v1.0.1-beta.1) (2023-10-09)
 
 
