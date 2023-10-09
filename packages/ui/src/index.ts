@@ -1,4 +1,5 @@
 export { Button } from './button/Button';
+export { FileImporter } from './file-importer/FileImporter';
 export { FileSelector } from './file-selector/FileSelector';
 export { PageMenu } from './page-menu/PageMenu';
 export { PageMenuItem } from './page-menu/PageMenuItem';
