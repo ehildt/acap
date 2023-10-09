@@ -1,5 +1,6 @@
 acap
 adpyke
+autoprefixer
 azuretools
 cacheable
 callsite
@@ -30,9 +31,11 @@ NKEY
 nrwl
 oderwat
 pkief
+postcss
 redhat
 sonarjs
 spdx
 treeshake
+vite
 vitest
 zustand

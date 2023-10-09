@@ -1,7 +1,7 @@
 import './Metae.scss';
 
-import { Scrollbar } from 'components';
 import { ReactNode, useEffect, useState } from 'react';
+import { Scrollbar } from 'ui';
 
 import { useACAPApi } from '@/api/acap/acap-api.hook';
 import { METAE_SOURCE } from '@/api/acap/acap-api.model';

@@ -1,6 +1,6 @@
 FROM node:lts AS local
 WORKDIR /app
-ENTRYPOINT ["pnpm", "run", "dev"]
+ENTRYPOINT ["npm", "run", "dev"]
 
 FROM node:lts AS bundle
 WORKDIR /app
