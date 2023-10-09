@@ -2,8 +2,6 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
 import { FaAd, FaHeart, FaSmile, FaVoteYea } from 'react-icons/fa';
 
-import { I18nextButtonKey } from '@/lang/i18next.lk';
-
 import { Button as Component } from './Button';
 
 export default {
@@ -19,12 +17,12 @@ const Template: ComponentStory<typeof Component> = (args) => {
 
 export const ButtonText = Template.bind({});
 ButtonText.args = {
-  text: I18nextButtonKey.button.ok,
+  text: 'button.ok',
 };
 
 export const ButtonTextValueProxy = Template.bind({});
 ButtonTextValueProxy.args = {
-  text: I18nextButtonKey.button.ok,
+  text: 'button.ok',
   valueProxy(value) {
     return value
       .split('')
@@ -45,26 +43,26 @@ ButtonIconAfter.args = {
 
 export const ButtonTextIconBefore = Template.bind({});
 ButtonTextIconBefore.args = {
-  text: I18nextButtonKey.button.ok,
+  text: 'button.ok',
   iconBefore: <FaAd />,
 };
 
 export const ButtonTextIconAfter = Template.bind({});
 ButtonTextIconAfter.args = {
-  text: I18nextButtonKey.button.save,
+  text: 'button.save',
   iconAfter: <FaSmile />,
 };
 
 export const ButtonTextIconBeforeAfter = Template.bind({});
 ButtonTextIconBeforeAfter.args = {
-  text: I18nextButtonKey.button.submit,
+  text: 'button.submit',
   iconAfter: <FaSmile />,
   iconBefore: <FaAd />,
 };
 
 export const ButtonTextUpperCaseIconBeforeAfter = Template.bind({});
 ButtonTextUpperCaseIconBeforeAfter.args = {
-  text: I18nextButtonKey.button.cancel,
+  text: 'button.cancel',
   iconAfter: <FaHeart color="var(--clr-primary-300)" size={'3rem'} />,
   iconBefore: <FaAd />,
   onClick(t) {

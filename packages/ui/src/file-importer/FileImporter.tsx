@@ -4,10 +4,10 @@ import { Buffer } from 'buffer';
 import { useFileSelectorStore } from 'libs';
 import { CSSProperties, useEffect, useState } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
-import { Scrollbar } from 'ui';
-import { PageMenu, PageMenuItem } from 'ui';
 
-import { FileSelector } from '../file-selector/FileSelector';
+import { PageMenu, PageMenuItem } from '../';
+import { FileSelector } from '../';
+import { Scrollbar } from '../';
 import { useIsFileSizeExceeded } from './FileImporter.hooks';
 
 type FileImporterProps = {
