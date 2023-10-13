@@ -1,3 +1,20 @@
+## [1.0.2-beta.1](https://github.com/ehildt/acap/compare/v1.0.1...v1.0.2-beta.1) (2023-10-13)
+
+
+### Miscellaneous
+
+* improved the dockerfile in backend ([d931aec](https://github.com/ehildt/acap/commit/d931aec4f6829b6f92c03e460b2994769582b4e5))
+
+
+### Dependency Updates
+
+* updated dependencies in whole monorepo ([d597a31](https://github.com/ehildt/acap/commit/d597a3134dc5a043c98b52b01b261c21136e13e8))
+
+
+### Bug Fixes
+
+* linting config across the monorepo ([da183b6](https://github.com/ehildt/acap/commit/da183b6601f8460c55c4e6820479b5213d1203d0))
+
 ## [1.0.1](https://github.com/ehildt/acap/compare/v1.0.0...v1.0.1) (2023-10-09)
 
 
