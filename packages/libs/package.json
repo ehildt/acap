@@ -27,8 +27,10 @@
     "ts-unused-exports": "npx ts-unused-exports ./tsconfig.exclude.json --excludePathsFromReport=src/index.ts",
     "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src"
   },
+  "dependencies": {
+    "immer": "^10.0.3"
+  },
   "peerDependencies": {
-    "immer": "^10.0.3",
     "zustand": "^4.4.3"
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "depcheck": "^1.4.6",
     "dependency-cruiser": "^14.1.1",
     "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-sonarjs": "0.21.0",
