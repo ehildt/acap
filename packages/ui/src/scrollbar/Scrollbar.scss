@@ -1,0 +1,56 @@
+.scrollbar {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    resize: inherit;
+    padding: var(--scrollbar-clr-container-padding);
+    display: flex;
+    flex-direction: column;
+
+    &--ltr {
+        direction: ltr;
+    }
+
+    &--rtl {
+        direction: rtl;
+    }
+
+    &--overflow {
+        &-x::-webkit-scrollbar-thumb,
+        &-y::-webkit-scrollbar-thumb,
+        &-auto::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-clr-thumb-bgColor);
+            outline: var(--scrollbar-clr-thumb-outline);
+            border-radius: var(--scrollbar-clr-thumb-brdRadius);
+        }
+
+        &-x {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        &-y {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        &-auto {
+            overflow: auto;
+        }
+    }
+
+    &::-webkit-scrollbar {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 0.15rem rgba(250, 250, 250, 0.5);
+        border-radius: 0.7rem;
+    }
+
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-corner {
+        display: none;
+    }
+}

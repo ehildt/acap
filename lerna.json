@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
+  "npmClient": "pnpm",
+  "verbose": true,
+  "useNx": true,
+  "command": {
+    "version": {
+      "conventionalCommits": false,
+      "gitTagVersion": false,
+      "includeMergedTags": false,
+      "changelog": false,
+      "allowBranch": [],
+      "ignoreChanges": []
+    }
+  }
+}

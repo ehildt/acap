@@ -1,0 +1,23 @@
+#!/bin/sh
+. "$(dirname "$0")/prepare.sh"
+
+check_working_directory
+check_branch_identifier
+
+# makes sure all dependencies are up to date
+info 'lerna run ncu:validate' && lerna run ncu:validate
+
+info 'lerna run lint' && lerna run lint
+
+# dry run tests
+info 'lerna run test:clearCache' && lerna run test:clearCache
+info 'lerna run test -- --silent' && lerna run test -- --silent
+
+# no unused exports
+info 'lerna run ts-unused-exports' && lerna run ts-unused-exports
+
+# add known orphans to .depcruiserrc.json
+info 'lerna run depcruiser' && lerna run depcruiser
+
+# add known orphans to .depcruiserrc.json
+info 'lerna run build' && lerna run build

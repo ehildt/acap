@@ -1,0 +1,32 @@
+.bar {
+  &--top {
+    grid-area: header;
+    background-color: rgba(30, 30, 30, 0.8);
+  }
+
+  &--side {
+    grid-area: menu;
+    background-color: #999;
+
+    ul {
+      appearance: none;
+
+      &-tabs {
+        display: flex;
+
+        li {
+          width: 100%;
+          padding: 0.5vw;
+          cursor: pointer;
+          user-select: none;
+          text-align: center;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #ccc;
+          }
+        }
+      }
+    }
+  }
+}

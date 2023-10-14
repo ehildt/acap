@@ -1,0 +1,21 @@
+version: "0.2"
+gitignoreRoot: '.gitignore'
+language: 'en,de'
+ignorePaths:
+  - node_modules
+  - dist
+  - package-lock.json
+  - package.json
+  - public
+languageSettings:
+  - allowCompoundWords: false
+    caseSensitive: true
+    enabled: true
+    languageId: "*"
+    locale: "*"
+dictionaries:
+  - ignore-words
+dictionaryDefinitions:
+  - name: ignore-words
+    path: ./cspell.ignore.txt
+    addWords: true

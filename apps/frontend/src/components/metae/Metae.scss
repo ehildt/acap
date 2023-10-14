@@ -1,0 +1,42 @@
+.metae {
+    padding: 1rem;
+    background-color: #13161c;
+    border-radius: 0.5dvw;
+    user-select: none;
+    opacity: 0;
+    animation: fade-in 300ms ease-in-out forwards;
+    margin-block: 0.2rem;
+
+    :first-child,
+    :last-child {
+        margin-block: 0;
+    }
+
+    ul {
+        padding: 1rem;
+
+        li {
+            text-indent: 0.5rem;
+            cursor: pointer;
+            background-color: rgba($color: #cccccc, $alpha: 0.1);
+            margin: 0.5rem;
+            padding: 0.3rem;
+            border-radius: 0.5dvw;
+            opacity: 0;
+            animation: fade-in 300ms ease-in-out forwards;
+        }
+    }
+
+    &-title {
+        color: palevioletred;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

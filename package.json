@@ -1,0 +1,30 @@
+{
+  "name": "@litlbyte/acap",
+  "repository": "git@github.com:ehildt/acap.git",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
+  "scripts": {
+    "test": "exit 0",
+    "prepare": "husky install",
+    "semantic-release": "npx semantic-release",
+    "ncu:update": "npx npm-check-updates --doctor -u"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^11.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.1",
+    "@semantic-release/npm": "^11.0.0",
+    "@semantic-release/release-notes-generator": "^12.0.0",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
+    "husky": "^8.0.3",
+    "lerna": "^7.3.1",
+    "npm-check-updates": "^16.14.6",
+    "nx": "^16.10.0",
+    "semantic-release": "^22.0.5"
+  }
+}

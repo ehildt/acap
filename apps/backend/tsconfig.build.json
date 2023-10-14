@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "incremental": true,
+    "sourceMap": true,
+    "removeComments": false,
+  },
+  "exclude": [
+    "test/**/*",
+    "**/*.spec.ts",
+    ".eslintrc.cjs",
+    ".prettierrc.cjs",
+    "jest.config.ts",
+  ]
+}

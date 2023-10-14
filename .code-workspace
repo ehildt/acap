@@ -1,0 +1,47 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "."
+    },
+    {
+      "path": "packages/ui",
+      "name": "ui"
+    },
+    {
+      "path": "packages/libs",
+      "name": "libs"
+    },
+    {
+      "path": "apps/backend",
+      "name": "backend"
+    },
+    {
+      "path": "apps/frontend",
+      "name": "frontend"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.vscode": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "mhutchie.git-graph",
+      "streetsidesoftware.code-spell-checker",
+      "dbaeumer.vscode-eslint",
+      "redhat.vscode-yaml",
+      "adpyke.codesnap",
+      "oderwat.indent-rainbow",
+      "hangxingliu.vscode-nginx-conf-hint",
+      "mikestead.dotenv",
+      "pkief.material-icon-theme",
+      "streetsidesoftware.code-spell-checker-medical-terms",
+      "streetsidesoftware.code-spell-checker-scientific-terms",
+      "ms-azuretools.vscode-docker"
+    ]
+  }
+}

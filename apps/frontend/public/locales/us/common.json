@@ -1,0 +1,10 @@
+{
+    "button": {
+        "add": "add",
+        "cancel": "cancel",
+        "ok": "ok",
+        "reset": "reset",
+        "save": "save",
+        "submit": "submit"
+    }
+}

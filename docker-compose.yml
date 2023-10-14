@@ -1,0 +1,75 @@
+version: "3.9"
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./apps/frontend
+      target: local
+    depends_on:
+      - backend
+    volumes:
+      - ./apps/frontend:/app
+      - ./node_modules:/node_modules
+    environment:
+      - ./apps/frontend/.env.development
+    ports:
+      - "5173:5173"
+
+  backend:
+    container_name: backend
+    build:
+      context: ./apps/backend
+      target: local
+    volumes:
+      - ./apps/backend:/app
+      - ./node_modules:/node_modules
+    depends_on:
+      - mongo
+      - redis
+      - mosquitto
+    env_file:
+      - ./apps/backend/env/.env
+    ports:
+      - 3001:3001
+
+  mongo:
+    command: mongod --quiet --wiredTigerCacheSizeGB 1.5 --logpath /dev/null
+    image: mongo
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+      - MONGO_INITDB_DATABASE=ACAP
+    volumes:
+      - mongo_acap_data:/data/db
+    ports:
+      - 27017:27017
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass "redis" --logfile /dev/null
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_log:/mosquitto/log
+
+volumes:
+  mongo_acap_data:
+  mosquitto_data:
+  mosquitto_config:
+  mosquitto_log:
+
+networks:
+  default:
+    driver: bridge
+    name: ACAP_NETWORK

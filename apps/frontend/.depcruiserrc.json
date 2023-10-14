@@ -1,0 +1,19 @@
+{
+  "noCircular": [],
+  "noDuplicateDepTypes": [
+    "\\.stories\\.tsx$"
+  ],
+  "noOrphans": [
+    "src/api/dccs.api.ts"
+  ],
+  "notToDevDep": [
+    "src/types.d.ts"
+  ],
+  "notToUnresolvable": [
+    "src/types.d.ts",
+    "src/ui/metae/MetaeMenu.tsx",
+    "src/ui/metae/Metae.tsx",
+    "src/ui/files/file-importer/FileImporter.tsx",
+    "src/App.tsx"
+  ]
+}

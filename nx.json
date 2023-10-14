@@ -1,0 +1,84 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "build:prod",
+          "prebuild",
+          "depcheck",
+          "depcruiser",
+          "licensee",
+          "lint",
+          "lint-staged",
+          "test",
+          "build-storybook"
+        ]
+      }
+    }
+  },
+  "targetDefaults": {
+    "depcheck": {
+      "dependsOn": [
+        "^depcheck"
+      ]
+    },
+    "depcruiser": {
+      "dependsOn": [
+        "^depcruiser"
+      ]
+    },
+    "licensee": {
+      "dependsOn": [
+        "^licensee"
+      ]
+    },
+    "lint": {
+      "dependsOn": [
+        "^lint"
+      ]
+    },
+    "lint-staged": {
+      "dependsOn": [
+        "^lint-staged"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "^test"
+      ]
+    },
+    "ts-unused-exports": {
+      "dependsOn": [
+        "^ts-unused-exports"
+      ]
+    },
+    "prebuild": {
+      "dependsOn": [
+        "^prebuild"
+      ]
+    },
+    "build": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "build:prod": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "sharedGlobals": [],
+    "production": [
+      "default"
+    ]
+  }
+}

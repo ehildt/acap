@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+  },
+  "files": [
+    "shims.d.ts"
+  ],
+  "include": [
+    ".eslintrc.cjs",
+    ".prettierrc.cjs",
+    ".releaserc.js",
+    "jest.config.ts",
+    "src/**/*",
+    "test/**/*",
+  ],
+}
