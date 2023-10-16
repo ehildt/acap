@@ -10,20 +10,21 @@
         display: block;
         transition: 250ms;
         font-size: 1rem;
-        color: grey;
+        color: var(--clr-sliderLabel, dimgray);
         font-weight: 700;
     }
 
     &__field {
         appearance: none;
         width: 100%;
+        margin-top: 0.75rem;
         height: 0.6dvw;
         outline: none;
         opacity: 0.8;
-        transition: opacity 250ms;
+        transition: all 250ms;
         border-radius: 1dvw;
         cursor: pointer;
-        background-color: lightgray;
+        background-color: var(--clr-slider, lightgray);
 
         &:required,
         &:invalid {
@@ -31,8 +32,9 @@
         }
 
         &:focus {
+            background-color: var(--clr-slider, silver);
             &::-webkit-slider-thumb {
-                background-color: var(--clr-highlights-cyan-1000);
+                background-color: var(--clr-onFocus-sliderThumb, orchid);
             }
 
             ~ .slider__label {
@@ -41,7 +43,7 @@
                 display: block;
                 transition: 250ms;
                 font-size: 1rem;
-                color: var(--clr-highlights-cyan-1000);
+                color: var(--clr-onFocus-sliderLabel, purple);
                 font-weight: 700;
                 opacity: 1;
             }
@@ -51,13 +53,13 @@
             appearance: none;
             width: 1dvw;
             height: 1dvw;
-            background: grey;
+            background: var(--clr-sliderThumb, dimgray);
             border-radius: 100%;
             border: 0.05dvw solid black;
         }
 
         &::placeholder {
-            color: transparent;
+            color: black;
         }
 
         &:placeholder-shown ~ .slider__label {

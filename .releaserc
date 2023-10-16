@@ -52,6 +52,10 @@
             "release": "patch"
           },
           {
+            "type": "ui",
+            "release": "patch"
+          },
+          {
             "type": "perf",
             "release": "patch"
           },
@@ -82,6 +86,10 @@
             {
               "type": "chore",
               "section": "Miscellaneous"
+            },
+            {
+              "type": "ui",
+              "section": "UI/UX"
             },
             {
               "type": "deps",

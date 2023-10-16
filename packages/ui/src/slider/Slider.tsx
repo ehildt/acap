@@ -1,15 +1,14 @@
-import './Slider.scss';
-
 import { forwardRef, useRef } from 'react';
 
 import { useChangeEventProxy, useWheelEventProxy } from './Slider.hooks';
 import { SliderProps } from './Slider.modal';
+import style from './Slider.module.scss';
 
 export const Slider = forwardRef(function Slider(props: SliderProps, forwardedRef?: any) {
   const ref = forwardedRef ?? useRef<HTMLInputElement>(null);
   return (
     <div
-      className="slider"
+      className={style.slider}
       onWheel={useWheelEventProxy(ref, props.onWheel)}
       onMouseEnter={() => {
         ref.current?.focus();
@@ -26,16 +25,12 @@ export const Slider = forwardRef(function Slider(props: SliderProps, forwardedRe
         step="0.1"
         max="5"
         defaultValue={props.defaultValue}
-        className="slider__field"
+        className={style.sliderField}
         placeholder={props.label}
         name={`slider_${props.label}`}
       />
 
-      <label
-        onWheel={useWheelEventProxy(ref, props.onWheel)}
-        htmlFor={`slider_${props.label}`}
-        className="slider__label"
-      >
+      <label htmlFor={`slider_${props.label}`} className={style.sliderLabel}>
         {props.label}
       </label>
     </div>
