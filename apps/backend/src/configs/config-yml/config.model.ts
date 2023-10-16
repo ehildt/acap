@@ -15,9 +15,8 @@ export type AppConfig = {
   printEnv: boolean;
   startSwagger: boolean;
   crypto: {
-    symmetricKey: string;
-    symmetricAlgorithm: string;
-    cryptable: boolean;
+    secret: string;
+    algorithm: string;
   };
   realm: {
     gzipThreshold: number;
