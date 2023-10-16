@@ -1,3 +1,5 @@
+import './PageMenuItem.scss';
+
 import cn from 'classnames';
 import { useRef, useState } from 'react';
 
