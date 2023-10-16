@@ -113,8 +113,7 @@ appConfig:
   startSwagger: true
   nodeEnv: "local"
   crypto:
-    symmetricKey: null
-    symmetricAlgorithm: null
+    secret: null
   realm:
     ttl: 300
     resolveEnv: false
@@ -263,7 +262,6 @@ USE_REDIS_PUBSUB=false          # Default
 USE_BULLMQ=false                # Default
 USE_MQTT=false                  # Default
 SYMMETRIC_KEY=''                # Optional - 16, 24, 32 byte of key length
-SYMMETRIC_ALGORITHM=''          # Optional - AES-128-CBC, AES-192-CBC, AES-256-CBC
 
 REDIS_PUBSUB_PORT=6379
 REDIS_PUBSUB_USER='default'
@@ -352,18 +350,15 @@ With ACAP, it's your data, your choice, fortified by our robust security options
 
 ${\color{pink}AES-256-CBC}$
 
-Security: AES-256-CBC uses a 256-bit key, which provides a very high level of security. As of 2021, it is considered highly secure and resistant to brute force attacks. The key length is so long that it would require an astronomical amount of computational power and time to break the encryption by trying all possible keys.
-Drawbacks: The main drawback of AES-256-CBC is its computational overhead. Encrypting and decrypting data with a longer key can be slower compared to AES-128-CBC or AES-192-CBC. This difference may not be noticeable for small amounts of data but could become significant for large datasets or high-throughput applications.
+Security: AES-256-CBC uses a 256-bit key, which provides a very high level of security. As of 2021, it is considered highly secure and resistant to brute force attacks. The key length is so long that it would require an astronomical amount of computational power and time to break the encryption by trying all possible keys. Drawbacks: The main drawback of AES-256-CBC is its computational overhead. Encrypting and decrypting data with a longer key can be slower compared to AES-128-CBC or AES-192-CBC. This difference may not be noticeable for small amounts of data but could become significant for large datasets or high-throughput applications.
 
 ${\color{pink}AES-192-CBC}$
 
-Security: AES-192-CBC uses a 192-bit key, which is also considered very secure. It strikes a balance between the strong security of AES-256-CBC and the computational efficiency of AES-128-CBC.
-Drawbacks: Like AES-256-CBC, the main drawback is the computational overhead, although it's generally slightly faster than AES-256-CBC. It may be a good choice when you need strong security but want slightly better performance than AES-256-CBC.
+Security: AES-192-CBC uses a 192-bit key, which is also considered very secure. It strikes a balance between the strong security of AES-256-CBC and the computational efficiency of AES-128-CBC. Drawbacks: Like AES-256-CBC, the main drawback is the computational overhead, although it's generally slightly faster than AES-256-CBC. It may be a good choice when you need strong security but want slightly better performance than AES-256-CBC.
 
 ${\color{pink}AES-128-CBC}$
 
-Security: AES-128-CBC uses a 128-bit key, which is still considered secure but is theoretically more susceptible to brute force attacks compared to AES-192-CBC and AES-256-CBC. However, in practice, it offers a high level of security for most applications.
-Drawbacks: The primary advantage of AES-128-CBC is its speed and lower computational overhead. It's generally faster than AES-192-CBC and AES-256-CBC. The drawback is that, in rare cases of highly motivated attackers with immense computational resources, it might be less secure compared to the longer key lengths.
+Security: AES-128-CBC uses a 128-bit key, which is still considered secure but is theoretically more susceptible to brute force attacks compared to AES-192-CBC and AES-256-CBC. However, in practice, it offers a high level of security for most applications. Drawbacks: The primary advantage of AES-128-CBC is its speed and lower computational overhead. It's generally faster than AES-192-CBC and AES-256-CBC. The drawback is that, in rare cases of highly motivated attackers with immense computational resources, it might be less secure compared to the longer key lengths.
 
 </details>
 </div>

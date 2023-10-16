@@ -9,6 +9,7 @@ import {
   RedisConfig,
   RedisPubSubConfig,
 } from '@/configs/config-yml/config.model';
+import { ALGORITHM } from '@/constants/app.constants';
 import { MqttClientOptions } from '@/modules/mqtt-client.module';
 
 @Injectable()
@@ -16,8 +17,8 @@ export class ConfigFactoryService {
   constructor(private readonly configService: ConfigService) {}
 
   get app() {
-    const symmetricKey = this.configService.get<string>('AppConfig.SYMMETRIC_KEY');
-    const symmetricAlgorithm = this.configService.get<string>('AppConfig.SYMMETRIC_ALGORITHM');
+    const secret = this.configService.get<string>('AppConfig.SYMMETRIC_KEY');
+    const algorithm = secret ? ALGORITHM[secret.length] : null;
     return Object.freeze<AppConfig>({
       port: this.configService.get<number>('AppConfig.PORT'),
       address: this.configService.get<string>('AppConfig.ADDRESS'),
@@ -25,9 +26,8 @@ export class ConfigFactoryService {
       printEnv: this.configService.get<boolean>('AppConfig.PRINT_ENV'),
       nodeEnv: this.configService.get<string>('AppConfig.NODE_ENV'),
       crypto: {
-        symmetricKey,
-        symmetricAlgorithm,
-        cryptable: Boolean(symmetricKey && symmetricAlgorithm),
+        secret,
+        algorithm,
       },
       realm: {
         ttl: this.configService.get<number>('AppConfig.TTL'),
