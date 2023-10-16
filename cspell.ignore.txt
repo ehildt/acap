@@ -2,6 +2,7 @@ acap
 adpyke
 autoprefixer
 azuretools
+BULLMQ
 cacheable
 callsite
 codesnap
@@ -11,6 +12,7 @@ dccs
 DCCS
 depcruiser
 depcruiserrc
+dtos
 fastify
 gitconfiglocal
 hangxingliu
@@ -26,6 +28,7 @@ Lngs
 localstorage
 mhutchie
 mikestead
+mongodb
 nginx
 NKEY
 nrwl
@@ -33,9 +36,11 @@ oderwat
 pkief
 postcss
 redhat
+redis
 sonarjs
 spdx
 treeshake
+upserts
 vite
 vitest
 zustand
