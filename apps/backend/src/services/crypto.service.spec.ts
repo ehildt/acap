@@ -13,13 +13,11 @@ describe('CryptoService', () => {
     mockConfigFactory = {
       app: {
         crypto: {
-          cryptable: true,
-          symmetricAlgorithm: 'aes-256-cbc',
-          symmetricKey: '694f676c7dc75a8d644c8cf7f66ac6d0efbcc10e8eaa7b65814577060dfedc35', // 32-byte key
+          secret: 'a4e8b65e2c3e167942bcf48abf6e9d71',
+          algorithm: 'aes-256-cbc',
         },
       } as any,
     };
-
     moduleRef = await Test.createTestingModule({
       providers: [
         CryptoService,
@@ -47,12 +45,11 @@ describe('CryptoService', () => {
     });
 
     it('should throw an error when encrypting payload', async () => {
-      mockConfigFactory.app.crypto.symmetricKey = '1234';
-      mockConfigFactory.app.crypto.symmetricAlgorithm = 'abcd';
+      mockConfigFactory.app.crypto.secret = '1234';
       try {
         cryptoService.encrypt(payload);
       } catch (error) {
-        expect(error).toEqual(new UnprocessableEntityException('Unknown cipher'));
+        expect(error).toEqual(new UnprocessableEntityException('Invalid initialization vector'));
       }
     });
 
@@ -62,12 +59,11 @@ describe('CryptoService', () => {
     });
 
     it('should throw an error when decrypting payload', async () => {
-      mockConfigFactory.app.crypto.symmetricKey = '1234';
-      mockConfigFactory.app.crypto.symmetricAlgorithm = 'abcd';
+      mockConfigFactory.app.crypto.secret = '1234';
       try {
         cryptoService.decrypt(payload);
       } catch (error) {
-        expect(error).toEqual(new UnprocessableEntityException('Unknown cipher'));
+        expect(error).toEqual(new UnprocessableEntityException('Invalid initialization vector'));
       }
     });
   });
