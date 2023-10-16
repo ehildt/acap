@@ -1,15 +1,16 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
-import { Slider as Component } from './Slider';
+import { Slider } from './Slider';
 
 export default {
-  title: 'inputs/slider',
-  component: Component,
-} as ComponentMeta<typeof Component>;
+  title: 'sliders/slider',
+  component: Slider,
+} satisfies Meta<typeof Slider>;
 
-const Template: ComponentStory<typeof Component> = (args) => <Component {...args} />;
+export const DefaultSlider = {
+  render: () => <Slider label="DefaultSlider" />,
+} satisfies StoryObj<typeof Slider>;
 
-export const Slider = Template.bind({});
-Slider.args = {
-  label: 'Example',
-};
+export const SliderWithOnWheelEvent = {
+  render: () => <Slider label="SliderWithOnWheelEvent" onWheel={console.log} />,
+} satisfies StoryObj<typeof Slider>;

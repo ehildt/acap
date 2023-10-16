@@ -2,6 +2,7 @@ acap
 adpyke
 autoprefixer
 azuretools
+bgclr
 BULLMQ
 cacheable
 callsite
