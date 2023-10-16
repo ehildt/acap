@@ -20,4 +20,3 @@ ignores:
   - postcss
   - prop-types
   - react-refresh
-  - buffer

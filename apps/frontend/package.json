@@ -38,6 +38,7 @@
     "i18next-chained-backend": "^4.5.0",
     "i18next-http-backend": "^2.2.2",
     "i18next-localstorage-backend": "^4.2.0",
+    "immer": "^10.0.3",
     "libs": "^1.0.0",
     "nanoid": "^5.0.1",
     "react": "^18.2.0",
