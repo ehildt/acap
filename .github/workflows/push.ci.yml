@@ -1,9 +1,9 @@
-name: ON_DEV_PUSH
+name: ON_PUSH
 
 on:
   push:
     branches:
-      - dev
+      - "*"
 
 env:
   STORE_PATH:
