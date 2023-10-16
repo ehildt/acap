@@ -1,5 +1,5 @@
 # Target: local (entrypoint for local development)
-FROM node:20 AS local
+FROM node:20-slim AS local
 WORKDIR /app
 ENV PNPM_HOME="/pnpm" PATH="$PNPM_HOME:$PATH"
 EXPOSE 3001

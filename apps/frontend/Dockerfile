@@ -1,8 +1,8 @@
-FROM node:20 AS local
+FROM node:lts AS local
 WORKDIR /app
 ENTRYPOINT ["npm", "run", "dev"]
 
-FROM node:20-slim AS bundle
+FROM node:lts AS bundle
 WORKDIR /app
 COPY ./ ./
 RUN npm i -g pnpm && pnpm i --ignore-scripts && pnpm run build:prod
