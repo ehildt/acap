@@ -1,6 +1,7 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import crypto from 'crypto';
 
+import { ALGORITHM } from '@/constants/app.constants';
 import { ContentUpsertReq } from '@/dtos/content-upsert-req.dto';
 import { RealmsUpsertReq } from '@/dtos/realms-upsert.dto.req';
 import { RealmContentsDocument } from '@/schemas/realm-content-definition.schema';
@@ -9,22 +10,30 @@ import { ConfigFactoryService } from './config-factory.service';
 
 @Injectable()
 export class CryptoService {
-  constructor(private readonly configFactory: ConfigFactoryService) {}
+  private secret: Buffer;
+  private algorithm: string;
+  constructor(private readonly configFactory: ConfigFactoryService) {
+    if (this.configFactory.app.crypto.secret) {
+      this.secret = Buffer.from(this.configFactory.app.crypto.secret);
+      this.algorithm = ALGORITHM[this.configFactory.app.crypto.secret.length];
+    }
+  }
 
-  protected handleEncrypt(data: string, algorithm: string, key: string): string {
+  protected handleEncrypt(data: string, algorithm: string, key: Buffer): string {
     try {
       const iv = crypto.randomBytes(16);
-      const cipher = crypto.createCipheriv(algorithm, Buffer.from(key, 'hex'), iv);
-      return `${iv.toString('hex')}:${cipher.update(data, 'utf8', 'hex')}${cipher.final('hex')}`;
+      const cipher = crypto.createCipheriv(algorithm, key, iv);
+      return `${iv.toString('hex')}${cipher.update(data, 'utf8', 'hex')}${cipher.final('hex')}`;
     } catch (error) {
       throw new UnprocessableEntityException(error);
     }
   }
 
-  protected handleDecrypt(value: string, algorithm: string, key: string): string {
+  protected handleDecrypt(value: string, algorithm: string, key: Buffer): string {
     try {
-      const [iv, payload] = value.split(':');
-      const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
+      const iv = value.slice(0, 32);
+      const payload = value.slice(32);
+      const decipher = crypto.createDecipheriv(algorithm, key, Buffer.from(iv, 'hex'));
       return `${decipher.update(payload, 'hex', 'utf8')}${decipher.final('utf8')}`;
     } catch (error) {
       throw new UnprocessableEntityException(error);
@@ -34,17 +43,13 @@ export class CryptoService {
   encrypt(payload: any) {
     return this.handleEncrypt(
       typeof payload === 'object' ? JSON.stringify(payload) : payload,
-      this.configFactory.app.crypto.symmetricAlgorithm,
-      this.configFactory.app.crypto.symmetricKey,
+      this.algorithm,
+      this.secret,
     );
   }
 
   decrypt(payload: string) {
-    return this.handleDecrypt(
-      payload,
-      this.configFactory.app.crypto.symmetricAlgorithm,
-      this.configFactory.app.crypto.symmetricKey,
-    );
+    return this.handleDecrypt(payload, this.algorithm, this.secret);
   }
 
   decryptEntityValues(entities: Array<RealmContentsDocument>): Array<any> {
