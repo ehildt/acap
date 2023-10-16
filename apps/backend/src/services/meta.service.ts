@@ -55,7 +55,7 @@ export class MetaService {
       const realmConfigs = collection[realm];
       const schemaConfigs = schemaCollection?.[realm];
       let hasSchema = false;
-      const payload = this.configFactory.app.crypto.algorithm && value ? this.cryptoService.decrypt(value) : value;
+      const payload = this.configFactory.app.crypto.cryptable && value ? this.cryptoService.decrypt(value) : value;
       const challengedPayload = challengeContentValue(payload, this.configFactory.app.realm.resolveEnv);
       if (schemaConfigs) hasSchema = Boolean(schemaConfigs.find(({ id }) => rest.id === id));
       if (!Array.isArray(realmConfigs))

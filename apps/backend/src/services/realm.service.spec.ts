@@ -19,7 +19,7 @@ const mockConfigRepo = {
 const mockFactory = {
   app: {
     crypto: {
-      algorithm: false,
+      cryptable: false,
     },
     realm: {
       resolveEnv: jest.fn(),
@@ -65,7 +65,7 @@ describe('RealmService', () => {
     const reqs = [{ id: '1', value: 'one' }];
 
     it('should call upsertRealm method with encrypted payload', async () => {
-      mockFactory.app.crypto.algorithm = true;
+      mockFactory.app.crypto.cryptable = true;
       mockCryptoService.encryptContentUpsertReqs.mockReturnValue(reqs);
       await realmService.upsertRealm(realm, reqs);
       expect(mockCryptoService.encryptContentUpsertReqs).toHaveBeenCalledWith(reqs);
@@ -73,7 +73,7 @@ describe('RealmService', () => {
     });
 
     it('should call upsertRealm method with payload', async () => {
-      mockFactory.app.crypto.algorithm = false;
+      mockFactory.app.crypto.cryptable = false;
       await realmService.upsertRealm(realm, reqs);
       expect(mockCryptoService.encryptContentUpsertReqs).not.toHaveBeenCalled();
       expect(mockConfigRepo.upsert).toHaveBeenCalledWith(realm, reqs);
@@ -86,7 +86,7 @@ describe('RealmService', () => {
     const reqs = [{ realm, contents }];
 
     it('should call upsertRealms method with encrypted payload', async () => {
-      mockFactory.app.crypto.algorithm = true;
+      mockFactory.app.crypto.cryptable = true;
       mockCryptoService.encryptRealmsUpsertReq.mockReturnValue(reqs);
       await realmService.upsertRealms(reqs);
       expect(mockCryptoService.encryptRealmsUpsertReq).toHaveBeenCalledWith(reqs);
@@ -95,7 +95,7 @@ describe('RealmService', () => {
     });
 
     it('should call upsertRealms method with payload', async () => {
-      mockFactory.app.crypto.algorithm = false;
+      mockFactory.app.crypto.cryptable = false;
       await realmService.upsertRealms(reqs);
       expect(mockCryptoService.encryptRealmsUpsertReq).not.toHaveBeenCalled();
       expect(mockConfigRepo.upsertMany).toHaveBeenCalledWith(reqs);
@@ -108,7 +108,7 @@ describe('RealmService', () => {
     const contents = [{ id: '1', value: 'one' }];
 
     it('should call getRealm method with encrypted payload', async () => {
-      mockFactory.app.crypto.algorithm = true;
+      mockFactory.app.crypto.cryptable = true;
       mockConfigRepo.where.mockReturnValue(contents);
       mockCryptoService.decryptEntityValues.mockReturnValue(contents);
       await realmService.getRealm(realm);
@@ -117,7 +117,7 @@ describe('RealmService', () => {
     });
 
     it('should call getRealm method with payload', async () => {
-      mockFactory.app.crypto.algorithm = false;
+      mockFactory.app.crypto.cryptable = false;
       mockConfigRepo.where.mockReturnValue(contents);
       mockCryptoService.decryptEntityValues.mockReturnValue(contents);
       await realmService.getRealm(realm);
@@ -135,7 +135,7 @@ describe('RealmService', () => {
     ];
 
     it('should call getRealmContentByIds method with encrypted payload', async () => {
-      mockFactory.app.crypto.algorithm = true;
+      mockFactory.app.crypto.cryptable = true;
       mockConfigRepo.where.mockReturnValue(contents);
       mockCryptoService.decryptEntityValues.mockReturnValue(contents);
       await realmService.getRealmContentByIds(realm, ids);
@@ -144,7 +144,7 @@ describe('RealmService', () => {
     });
 
     it('should call getRealmContentByIds method with payload', async () => {
-      mockFactory.app.crypto.algorithm = false;
+      mockFactory.app.crypto.cryptable = false;
       mockConfigRepo.where.mockReturnValue(contents);
       mockCryptoService.decryptEntityValues.mockReturnValue(contents);
       await realmService.getRealmContentByIds(realm, ids);
@@ -153,7 +153,7 @@ describe('RealmService', () => {
     });
 
     it('should throw if not all ids can be fetched', async () => {
-      mockFactory.app.crypto.algorithm = false;
+      mockFactory.app.crypto.cryptable = false;
       mockConfigRepo.where.mockReturnValue(contents.slice(1));
       mockCryptoService.decryptEntityValues.mockReturnValue(contents.slice(1));
       await expect(realmService.getRealmContentByIds(realm, ids)).rejects.toThrow();

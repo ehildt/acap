@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
 
 import { FILTER } from '@/models/filter.model';
+import { GlobalConfigFactoryModule } from '@/modules/global-config-factory.module';
 import { RealmRepository } from '@/repositories/realm.repository';
 import { SchemaRepository } from '@/repositories/schema.repository';
 import { JsonSchemaContentsDefinition } from '@/schemas/json-schema-content-definition.schema';
 import { RealmContentsSchemaDefinition } from '@/schemas/realm-content-definition.schema';
 
-import { ConfigFactoryService } from './config-factory.service';
 import { CryptoService } from './crypto.service';
 import { MetaService } from './meta.service';
 
@@ -16,20 +16,8 @@ describe('MetaService', () => {
   let metaService: MetaService;
   let realmRepositoryMock: Partial<RealmRepository>;
   let schemaRepositoryMock: Partial<SchemaRepository>;
-  let mockConfigFactory: Partial<ConfigFactoryService>;
 
   beforeEach(async () => {
-    mockConfigFactory = {
-      app: {
-        realm: {
-          resolveEnv: false,
-        },
-        crypto: {
-          secret: 'aaaaaaaabbbbbbbb', // 16-byte key
-        },
-      } as any,
-    };
-
     realmRepositoryMock = {
       find: jest.fn().mockResolvedValue(
         Promise.resolve<Array<RealmContentsSchemaDefinition>>([
@@ -57,13 +45,10 @@ describe('MetaService', () => {
     };
 
     const moduleRef = await Test.createTestingModule({
+      imports: [GlobalConfigFactoryModule],
       providers: [
         MetaService,
         CryptoService,
-        {
-          provide: ConfigFactoryService,
-          useValue: mockConfigFactory,
-        },
         { provide: RealmRepository, useValue: realmRepositoryMock },
         { provide: SchemaRepository, useValue: schemaRepositoryMock },
       ],

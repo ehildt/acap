@@ -26,7 +26,8 @@ describe('ConfigFactoryService', () => {
         if (key === 'AppConfig.START_SWAGGER') return true;
         if (key === 'AppConfig.PRINT_ENV') return true;
         if (key === 'AppConfig.NODE_ENV') return 'production';
-        if (key === 'AppConfig.SYMMETRIC_KEY') return 'aaaaaaaaaaaabbbbbbbbbbbb';
+        if (key === 'AppConfig.SYMMETRIC_KEY') return 'my-secret-key';
+        if (key === 'AppConfig.SYMMETRIC_ALGORITHM') return 'AES-256-CBC';
         if (key === 'AppConfig.TTL') return 3600;
         if (key === 'AppConfig.NAMESPACE_POSTFIX') return 'prod';
         if (key === 'AppConfig.RESOLVE_ENV') return true;
@@ -44,8 +45,9 @@ describe('ConfigFactoryService', () => {
         printEnv: true,
         nodeEnv: 'production',
         crypto: {
-          secret: 'aaaaaaaaaaaabbbbbbbbbbbb',
-          algorithm: 'aes-192-cbc',
+          symmetricKey: 'my-secret-key',
+          symmetricAlgorithm: 'AES-256-CBC',
+          cryptable: true,
         },
         realm: {
           ttl: 3600,

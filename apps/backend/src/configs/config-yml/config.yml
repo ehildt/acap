@@ -5,7 +5,8 @@ appConfig:
   startSwagger: true
   nodeEnv: 'local'
   crypto: 
-    secret: null
+    symmetricKey: null
+    symmetricAlgorithm: null
   realm: 
     ttl: 300
     resolveEnv: false
@@ -19,7 +20,7 @@ appConfig:
 mongoConfig:
   uri: mongodb://mongo:27017
   ssl: false
-  tlsAllowInvalidCertificates: false
+  tlsAllowInvalidCertificates: true
   dbName: ACAP
   user: mongo
   pass: mongo

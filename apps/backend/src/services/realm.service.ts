@@ -26,7 +26,7 @@ export class RealmService {
   ) {}
 
   async upsertRealm(realm: string, reqs: Array<ContentUpsertReq>) {
-    const payload = this.factory.app.crypto.algorithm ? this.cryptoService.encryptContentUpsertReqs(reqs) : reqs;
+    const payload = this.factory.app.crypto.cryptable ? this.cryptoService.encryptContentUpsertReqs(reqs) : reqs;
     const result = await this.configRepo.upsert(realm, payload);
     if (!result?.ok) throw new InternalServerErrorException(result);
     this.redisPubSubClient?.emit(realm, reqs).pipe(catchError((error) => error));
@@ -36,7 +36,7 @@ export class RealmService {
   }
 
   async upsertRealms(reqs: Array<RealmsUpsertReq>) {
-    const payload = this.factory.app.crypto.algorithm ? this.cryptoService.encryptRealmsUpsertReq(reqs) : reqs;
+    const payload = this.factory.app.crypto.cryptable ? this.cryptoService.encryptRealmsUpsertReq(reqs) : reqs;
     const result = await this.configRepo.upsertMany(payload);
     if (!result?.ok) throw new InternalServerErrorException(result);
     if (this.redisPubSubClient || this.mqttClient)
@@ -56,7 +56,7 @@ export class RealmService {
         `No such ID::${ids.filter((id) => !entities.find(({ _id }) => _id === id))} in REALM::${realm}`,
       );
 
-    return !this.factory.app.crypto.algorithm
+    return !this.factory.app.crypto.cryptable
       ? reduceEntities(this.factory.app.realm.resolveEnv, entities)
       : reduceEntities(this.factory.app.realm.resolveEnv, this.cryptoService.decryptEntityValues(entities));
   }
@@ -81,7 +81,7 @@ export class RealmService {
 
   async getRealm(realm: string) {
     const entities = await this.configRepo.where({ realm });
-    return !this.factory.app.crypto.algorithm ? entities : this.cryptoService.decryptEntityValues(entities);
+    return !this.factory.app.crypto.cryptable ? entities : this.cryptoService.decryptEntityValues(entities);
   }
 
   async countRealmContents() {

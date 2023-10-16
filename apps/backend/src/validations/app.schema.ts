@@ -51,17 +51,14 @@ export const APP_SCHEMA = {
     ? Joi.number().default(CONFIG_YML.appConfig.realm.gzipThreshold)
     : Joi.number().required(),
 
-  SYMMETRIC_KEY: CONFIG_YML?.appConfig.crypto?.secret
+  SYMMETRIC_KEY: CONFIG_YML?.appConfig.crypto?.symmetricKey
     ? Joi.string()
+        .hex()
         .length(32)
-        .length(24)
-        .length(16)
-        .error(new Error('secret must have a length of [32, 24, 16]'))
-        .default(CONFIG_YML?.appConfig.crypto?.secret)
-    : Joi.string()
-        .length(32)
-        .length(24)
-        .length(16)
-        .error(new Error('secret must have a character length of [32 | 24 | 16]'))
-        .optional(),
+        .default(CONFIG_YML?.appConfig.crypto?.symmetricKey)
+    : Joi.optional(),
+
+  SYMMETRIC_ALGORITHM: CONFIG_YML?.appConfig.crypto?.symmetricAlgorithm
+    ? Joi.string().default(CONFIG_YML?.appConfig.crypto?.symmetricAlgorithm)
+    : Joi.optional(),
 };
