@@ -1,5 +1,3 @@
-import './Scrollbar.scss';
-
 import { forwardRef, useRef } from 'react';
 
 import {
@@ -39,3 +37,9 @@ export const Scrollbar = forwardRef(function Scrollbar(props: ScrollbarProps, re
     </div>
   );
 });
+
+Scrollbar.defaultProps = {
+  overflow: 'auto',
+  direction: 'ltr',
+  behavior: 'smooth',
+} satisfies ScrollbarProps;
