@@ -2,16 +2,17 @@ import cn from 'classnames';
 import { RefObject, useCallback, useEffect, useState } from 'react';
 
 import { ProxyFunc, ScrollbarProps } from './Scrollbar.modal';
+import style from './Scrollbar.module.scss';
 
 export function useScrollbarCn(props: ScrollbarProps) {
   return cn([
-    'scrollbar',
-    { 'scrollbar--ltr': props.direction === 'ltr' },
-    { 'scrollbar--rtl': props.direction === 'rtl' },
-    { 'scrollbar--overflow': props.overflow },
-    { 'scrollbar--overflow-y': props.overflow === 'y' },
-    { 'scrollbar--overflow-x': props.overflow === 'x' },
-    { 'scrollbar--overflow-auto': props.overflow === 'auto' },
+    style.scrollbar,
+    { [style.scrollbarLtr]: props.direction === 'ltr' },
+    { [style.scrollbarRtl]: props.direction === 'rtl' },
+    { [style.scrollbarOverflow]: props.overflow },
+    { [style.scrollbarOverflowY]: props.overflow === 'y' },
+    { [style.scrollbarOverflowX]: props.overflow === 'x' },
+    { [style.scrollbarOverflowAuto]: props.overflow === 'auto' },
   ]);
 }
 
@@ -30,8 +31,8 @@ export function useParentDimensionsWithStyle(props: ScrollbarProps, parentRef?: 
 
   return {
     ...props.style,
-    width,
-    height,
+    width: typeof width === 'string' ? width : `${width}px`,
+    height: typeof height === 'string' ? height : `${height}px`,
   };
 }
 
