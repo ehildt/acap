@@ -18,7 +18,7 @@ export default {
  */
 export const Importer = {
   args: {
-    style: { height: '300px', width: '300px', color: 'white' },
+    //style: { height: '100px', width: '300px' },
   },
   render: (args) => <FileImporter {...args} />,
 } satisfies StoryObj<typeof FileImporter>;
