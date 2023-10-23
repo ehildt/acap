@@ -1,16 +1,16 @@
 .menu-item {
     width: 100%;
-    height: 100%;
-    background: radial-gradient(50dvw circle at 0 0, var(--clr-highlights-cyan-1000), transparent 0%);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 0.5dvw;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     transition: all 250ms;
-    padding: 0.1rem;
+    padding: 0.15rem;
 
     &:hover {
+        cursor: pointer;
         transform: scale(0.98);
         background: radial-gradient(
             50dvw circle at var(--xPos) var(--yPos),
@@ -48,14 +48,7 @@
         transition: all 250ms;
         height: calc(100% - 0.15dvw);
         width: calc(100% - 0.15dvw);
-        justify-content: center;
-        align-items: center;
         direction: ltr;
-        padding: 0.7rem;
-
-        & > .button {
-            width: 98%;
-            z-index: 1;
-        }
+        padding: 0.5rem;
     }
 }

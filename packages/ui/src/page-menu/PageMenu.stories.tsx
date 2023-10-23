@@ -6,7 +6,7 @@ import { PageMenuItem } from './PageMenuItem';
 export default {
   title: 'menus/page-menu',
   component: Component,
-  decorators: [(Story) => <div style={{ width: '20rem', height: '30rem' }}>{Story()}</div>],
+  decorators: [(Story) => <div style={{ width: '20rem' }}>{Story()}</div>],
 } as Meta<typeof Component>;
 
 const Template: ComponentStory<typeof Component> = (args) => (

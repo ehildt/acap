@@ -1,10 +1,9 @@
-import './PageMenuItem.scss';
-
 import cn from 'classnames';
 import { useRef, useState } from 'react';
 
 import { useMouseMove } from './PageMenu.hooks';
 import { PageMouseItemProps } from './PageMenuItem.model';
+import style from './PageMenuItem.module.scss';
 
 export function PageMenuItem(props: PageMouseItemProps) {
   const ref = useRef<HTMLLIElement>(null);
@@ -14,7 +13,8 @@ export function PageMenuItem(props: PageMouseItemProps) {
     <li
       ref={ref}
       style={props.style}
-      className={cn(['menu-item', { 'menu-item--active': isActive }])}
+      className={cn([style.menuItem, { [style.menuItemActive]: isActive }])}
+      onClick={() => props.onClick?.()}
       onMouseEnter={() => {
         setActive(() => true);
         props.onMouseEnter?.();
@@ -27,7 +27,7 @@ export function PageMenuItem(props: PageMouseItemProps) {
         useMouseMove(ref, e);
       }}
     >
-      <div className="menu-item-content">{props.children}</div>
+      <div className={style.menuItemContent}>{props.children}</div>
     </li>
   );
 }
