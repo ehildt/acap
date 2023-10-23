@@ -1,4 +1,4 @@
-// import '../src/scss/style.scss';
+import '../scss/style.scss';
 import type { Preview } from '@storybook/react';
 // import i18next, { SUPPORTED_LANGUAGES } from '../src/lang/i18next';
 
@@ -15,4 +15,3 @@ export default {
     },
   },
 } satisfies Preview;
-
