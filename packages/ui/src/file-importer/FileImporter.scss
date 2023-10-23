@@ -1,5 +1,49 @@
 .file-importer {
-    display: block;
-    position: relative;
-    width: 100%;
+    display: grid;
+    grid-template-areas:
+        "menu menu"
+        "content content";
+    gap: 0.5rem;
+
+    &-menu {
+        grid-area: menu;
+    }
+
+    &-content {
+        grid-area: content;
+        display: grid;
+        grid-template-columns: 1fr 2fr 3fr;
+        grid-template-areas: "list tags preview";
+        grid-template-rows: auto;
+        gap: 0.5rem;
+
+        &-list {
+            grid-area: list;
+            height: 100%;
+        }
+
+        &-tags {
+            grid-area: tags;
+        }
+
+        &-preview {
+            grid-area: preview;
+            padding: 0.2rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-height: 65dvh;
+        }
+    }
+}
+
+.file-card {
+    display: flex;
+    align-items: center;
+    width: 50ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: normal;
+    line-break: loose;
 }
