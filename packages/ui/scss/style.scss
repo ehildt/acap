@@ -1,0 +1,31 @@
+@use "../node_modules/css-reset-and-normalize/scss/reset-and-normalize";
+@use "../node_modules/css-reset-and-normalize/scss/button-reset";
+@use "../node_modules/css-reset-and-normalize/scss/link-reset";
+@use "./layouts";
+@use "./partials";
+@use "./widgets";
+
+:root {
+  @each $color, $shade in partials.$colors {
+    @each $prop, $value in $shade {
+      --clr-#{$color}-#{$prop}: #{$value};
+    }
+  }
+
+  @each $color, $shade in partials.$scrollbar {
+    @each $prop, $value in $shade {
+      --scrollbar-clr-#{$color}-#{$prop}: #{$value};
+    }
+  }
+
+  @each $rem, $scale in partials.$rem-scale {
+    @each $prop, $value in $scale {
+      --rem-#{$rem}-#{$prop}: #{$value};
+    }
+  }
+}
+
+body {
+  background-color: rgba(20, 20, 20, 0.92);
+  color: #eee;
+}
