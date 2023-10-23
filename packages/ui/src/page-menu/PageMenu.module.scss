@@ -4,9 +4,6 @@
 
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5dvw;
-    width: 100%;
+    flex-direction: row;
+    gap: 0.2rem;
 }
