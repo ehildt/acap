@@ -18,7 +18,7 @@ export class ConfigFactoryService {
 
   get app() {
     const secret = this.configService.get<string>('AppConfig.SYMMETRIC_KEY');
-    const algorithm = secret ? ALGORITHM[secret.length] : null;
+    const algorithm = secret ? ALGORITHM[secret.length] : undefined;
     return Object.freeze<AppConfig>({
       port: this.configService.get<number>('AppConfig.PORT'),
       address: this.configService.get<string>('AppConfig.ADDRESS'),
