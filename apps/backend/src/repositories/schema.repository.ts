@@ -26,11 +26,11 @@ export class SchemaRepository {
   ) {}
 
   async countContents() {
-    return await this.contentsModel.count();
+    return await this.contentsModel.estimatedDocumentCount();
   }
 
   async countSchemas() {
-    return await this.schemaModel.count();
+    return await this.schemaModel.estimatedDocumentCount();
   }
 
   async find(filter: FILTER, propertiesToSelect?: Array<string>) {
@@ -100,7 +100,7 @@ export class SchemaRepository {
   async delete(realm: string, req?: string[]) {
     const rowsToDelete = prepareBulkWriteDeleteContents(realm, req);
     const rowsDeleted = await this.contentsModel.bulkWrite(rowsToDelete);
-    const isNotEmpty = Boolean(await this.contentsModel.count().where({ realm }));
+    const isNotEmpty = Boolean(await this.contentsModel.estimatedDocumentCount().where({ realm }));
 
     if (!isNotEmpty) {
       const realms = prepareBulkWriteDeleteRealms([realm]);
