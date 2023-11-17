@@ -27,11 +27,11 @@ export class RealmRepository {
   }
 
   async countContents() {
-    return await this.contentModel.count();
+    return await this.contentModel.estimatedDocumentCount();
   }
 
   async countRealms() {
-    return await this.realmModel.count();
+    return await this.realmModel.estimatedDocumentCount();
   }
 
   async getMetaRealmsBySchemas(realms: Array<string>, propertiesToSelect: Array<string>) {
@@ -97,7 +97,7 @@ export class RealmRepository {
   async delete(realm: string, req?: string[]) {
     const rowsToDelete = prepareBulkWriteDeleteContents(realm, req);
     const rowsDeleted = await this.contentModel.bulkWrite(rowsToDelete);
-    const isNotEmpty = Boolean(await this.contentModel.count().where({ realm }));
+    const isNotEmpty = Boolean(await this.contentModel.estimatedDocumentCount().where({ realm }));
 
     if (!isNotEmpty) {
       const realms = prepareBulkWriteDeleteRealms([realm]);
