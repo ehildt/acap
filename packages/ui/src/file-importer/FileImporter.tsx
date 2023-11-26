@@ -47,6 +47,9 @@ export function FileImporter(props: FileImporterProps) {
     }
   }, [fileSlice.files]);
 
+  // instead provide the components which should render the files
+  // or use the importer just to select and load files
+  // then in other components use the file store to display them
   return (
     <div className="file-importer">
       <div className="file-importer-menu">
