@@ -1,0 +1,51 @@
+.pdf-viewer {
+    position: relative;
+    height: fit-content;
+    width: fit-content;
+    border-radius: 0.5rem;
+    background: #13161c;
+
+    p {
+        background-color: unset;
+    }
+
+    &-container {
+        & > * {
+            border-radius: 0.5rem;
+        }
+    }
+
+    &-button-menu {
+        user-select: none;
+        padding: 0.5rem;
+        z-index: 2;
+        background-color: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        position: absolute;
+        width: 100%;
+        bottom: 1.5rem;
+        display: inline-flex;
+        transition: all 250ms ease-in-out;
+        margin: auto;
+        align-items: center;
+
+        p {
+            margin: 0px;
+            padding: 0px;
+            font-size: 0.8rem;
+
+            text-align: center;
+            margin: auto;
+        }
+
+        button {
+            display: inline-flex;
+            padding: 0px;
+            margin: 0px;
+        }
+    }
+
+    &:hover &-button-menu {
+        opacity: 1;
+    }
+}
