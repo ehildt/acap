@@ -8,7 +8,8 @@
     box-shadow: 0 0 0.1rem black;
     color: black;
     border: 0.1rem solid transparent;
-    background: linear-gradient(transparent, transparent) padding-box,
+    background:
+        linear-gradient(transparent, transparent) padding-box,
         linear-gradient(to right top, darkblue, darkorchid, darkorchid, darkblue) border-box;
     transition: 500ms all ease-in-out;
     background-position: left;
