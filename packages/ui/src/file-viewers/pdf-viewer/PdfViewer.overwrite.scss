@@ -1,0 +1,18 @@
+@use "react-pdf/dist/Page/AnnotationLayer.css";
+@use "react-pdf/dist/Page/TextLayer.css";
+
+.react-pdf__Document,
+.react-pdf__Page {
+    border-radius: 0.5rem;
+
+    &__canvas {
+        border-radius: 0.5rem;
+    }
+}
+
+.react-pdf__Page__textContent {
+    & > span {
+        user-select: none;
+        cursor: default;
+    }
+}
