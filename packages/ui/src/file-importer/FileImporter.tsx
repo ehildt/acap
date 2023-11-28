@@ -1,16 +1,12 @@
 import './FileImporter.scss';
 
 import { Buffer } from 'buffer';
-import { CSSProperties, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import { FileSelector } from '../file-selector/FileSelector';
 import { useIsFileSizeExceeded } from './FileImporter.hooks';
 import { useFileImporterImmerStore } from './FileImporter.store';
 import { FileImporterContentList } from './FileImporterContentList';
-
-type FileImporterProps = {
-  style?: CSSProperties;
-};
 
 function loadFileContents(files: Array<File>) {
   const uploadedOn = new Date();
@@ -33,7 +29,7 @@ function loadFileContents(files: Array<File>) {
   });
 }
 
-export function FileImporter(props: FileImporterProps) {
+export function FileImporter() {
   const [files, setFiles] = useState<any>([]);
   const fileSlice = useFileImporterImmerStore();
   const isFileSizeExceeded = useIsFileSizeExceeded(50_000_000, fileSlice.files);
