@@ -1,9 +1,8 @@
 import { useRef, useState } from 'react';
 import { FaFile, FaFileCsv, FaFileExcel, FaFilePdf, FaFileWord, FaRegFileImage } from 'react-icons/fa6';
 
-import { ImageViewer } from '../file-viewers/image-viewer/ImageViewer';
-
 import { PageMenu, PageMenuItem, Scrollbar } from '..';
+import { ImageViewer } from '../file-viewers/image-viewer/ImageViewer';
 import { PdfViewer } from '../file-viewers/pdf-viewer/PdfViewer';
 import { useImageRenderer } from './FileImporter.hooks';
 
