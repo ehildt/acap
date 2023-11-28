@@ -14,14 +14,10 @@
     transition: 500ms all ease-in-out;
     background-position: left;
     background-size: 200%;
+    animation: active 5s ease-out infinite;
 
     &:disabled {
         opacity: 0.4;
-    }
-
-    &:hover:not(:disabled) {
-        background-position: right;
-        background-size: 100%;
     }
 
     &__iconBefore {
@@ -45,5 +41,17 @@
         font-weight: bold;
         user-select: none;
         text-shadow: 0.1rem 0.1rem black;
+    }
+}
+
+@keyframes active {
+    0% {
+        background-position: left;
+    }
+    50% {
+        background-position: right;
+    }
+    100% {
+        background-position: left;
     }
 }
