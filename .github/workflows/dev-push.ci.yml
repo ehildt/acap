@@ -1,9 +1,9 @@
-name: ON_PUSH
+name: ON_DEV_PUSH
 
 on:
   push:
     branches:
-      - "*"
+      - dev
 
 env:
   STORE_PATH:
@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install pnpm
+      - name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -65,3 +65,13 @@ jobs:
 
       - name: Build Check
         run: lerna run build
+
+      - name: Semantic Release
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          pnpm run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

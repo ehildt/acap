@@ -1,9 +1,9 @@
-name: ON_MAIN_PULL_REQUEST
+name: ON_PR
 
 on:
   pull_request:
     branches:
-      - main
+      - "*"
 
 env:
   STORE_PATH:
@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install PNPM
+      - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -64,14 +64,4 @@ jobs:
         run: lerna run ts-unused-exports
 
       - name: Build Check
-        run: lerna run build:prod
-
-      - name: Semantic Release
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          pnpm run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: lerna run build
