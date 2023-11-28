@@ -1,4 +1,14 @@
 {
-  "exclude": ["dist", ".husky", ".vscode", ".storybook", "node_modules", "src/**/*.stories.?sx", "src/**/[A-Z]*.*"],
+  "exclude": [
+    "dist",
+    ".husky",
+    ".vscode",
+    ".storybook",
+    "node_modules",
+    "src/**/*.stories.?sx",
+    "src/**/[A-Z]*.*",
+    "src/file-viewers/image-viewer/base64.jpg.ts",
+    "src/file-viewers/pdf-viewer/base64.pdf.ts"
+  ],
   "extends": "./tsconfig.json"
 }
