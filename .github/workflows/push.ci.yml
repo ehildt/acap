@@ -1,9 +1,11 @@
-name: ON_PR
+name: ON_PUSH
 
 on:
-  pull_request:
+  push:
     branches:
-      - "*"
+      - "feat/**"
+      - "fix/**"
+      - "chore/**"
 
 env:
   STORE_PATH:
