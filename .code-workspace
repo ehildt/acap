@@ -25,7 +25,8 @@
     "files.exclude": {
       "**/node_modules": true,
       "**/dist": true,
-      "**/.vscode": true
+      "**/.vscode": true,
+      ".nx": true
     }
   },
   "extensions": {
