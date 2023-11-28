@@ -17,8 +17,5 @@ export default {
  * to learn how to use render functions.
  */
 export const Importer = {
-  args: {
-    //style: { height: '100px', width: '300px' },
-  },
-  render: (args) => <FileImporter {...args} />,
+  render: () => <FileImporter />,
 } satisfies StoryObj<typeof FileImporter>;
