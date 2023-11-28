@@ -24,7 +24,7 @@
     "coverage": "vitest run --coverage",
     "depcheck": "npx depcheck .",
     "format": "prettier --write ./src",
-    "lint": "eslint ./src",
+    "lint": "eslint .",
     "lint-staged": "npx lint-staged --allow-empty",
     "ts-unused-exports": "npx ts-unused-exports ./tsconfig.exclude.json --excludePathsFromReport=src/index.ts",
     "depcruiser": "npx depcruise -c .depcruiser.cjs --ts-config tsconfig.json src"
