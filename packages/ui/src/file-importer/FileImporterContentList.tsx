@@ -1,10 +1,7 @@
 import { useRef, useState } from 'react';
 import { FaFile, FaFileCsv, FaFileExcel, FaFilePdf, FaFileWord, FaRegFileImage } from 'react-icons/fa6';
 
-import { PageMenu, PageMenuItem, Scrollbar } from '..';
-import { ImageViewer } from '../file-viewers/image-viewer/ImageViewer';
-import { PdfViewer } from '../file-viewers/pdf-viewer/PdfViewer';
-import { useImageRenderer } from './FileImporter.hooks';
+import { JsonViewer, PageMenu, PageMenuItem, Scrollbar } from '..';
 
 type SUPPORTED_EXTENSIONS = 'pdf' | 'csv' | 'xlsx' | 'odt' | 'docx' | 'jpg' | 'png';
 
@@ -35,19 +32,7 @@ export function FileImporterContentList(props: PropsFileImporterContentList) {
 
   const items = props.files?.map((f, idx) => {
     return (
-      <PageMenuItem
-        key={idx}
-        onClick={() => {
-          setFile(f);
-          if (f.extension !== 'txt' && f.extension !== 'json') {
-            useImageRenderer(f, canvasRef);
-          } else {
-            if (f.extension === 'json' || f.extension === 'txt') {
-              preRef.current!.innerText = f.buffer.toString('utf8');
-            }
-          }
-        }}
-      >
+      <PageMenuItem key={idx} onClick={() => setFile(f)}>
         <div className="file-card">
           {mapFileExtensionToIcon(f.extension)} {f.name} <br />
           {f.size} {f.lastModified}
@@ -65,13 +50,7 @@ export function FileImporterContentList(props: PropsFileImporterContentList) {
       </div>
       <div className="file-importer-content-tags">tags are mine</div>
       <div className="file-importer-content-preview">
-        <Scrollbar>
-          {file?.extension !== 'pdf' && file?.extension !== 'jpg' && <p ref={preRef} />}
-          {file?.extension === 'jpg' && (
-            <ImageViewer mimeType={file.mimeType} base64={file.buffer.toString('base64')} />
-          )}
-          {file?.extension === 'pdf' && <PdfViewer base64={file.buffer.toString('base64')} scale={0.59} />}
-        </Scrollbar>
+        <Scrollbar>{file?.extension === 'json' && <JsonViewer json={file.buffer.toString()} />}</Scrollbar>
       </div>
     </div>
   );
