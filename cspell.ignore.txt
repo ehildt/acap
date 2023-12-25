@@ -3,6 +3,7 @@ adpyke
 autoprefixer
 azuretools
 bgclr
+bullmq
 BULLMQ
 cacheable
 callsite
@@ -34,6 +35,7 @@ mongodb
 mosquitto
 mqtt
 MQTT
+nestjs
 nginx
 NKEY
 nrwl
