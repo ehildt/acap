@@ -23,8 +23,8 @@
   },
   "editor.bracketPairColorization.enabled": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.fixAll.markdownlint": true
+    "source.fixAll": "explicit",
+    "source.fixAll.markdownlint": "explicit"
   },
   "eslint.enable": true,
   "eslint.execArgv": ["--max_old_space_size=2048"],
