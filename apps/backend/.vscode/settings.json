@@ -8,9 +8,9 @@
   "editor.formatOnSaveMode": "modifications",
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.sortMembers": true,
-    "source.fixAll.markdownlint": true
+    "source.fixAll": "explicit",
+    "source.sortMembers": "explicit",
+    "source.fixAll.markdownlint": "explicit"
   },
   "eslint.validate": [
     "javascript",

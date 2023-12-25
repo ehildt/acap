@@ -19,6 +19,7 @@ gitconfiglocal
 hangxingliu
 Hildt
 jackspeak
+keepalive
 langkey
 Langkey
 langkify
@@ -30,6 +31,9 @@ localstorage
 mhutchie
 mikestead
 mongodb
+mosquitto
+mqtt
+MQTT
 nginx
 NKEY
 nrwl

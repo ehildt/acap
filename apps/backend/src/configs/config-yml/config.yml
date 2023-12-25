@@ -5,7 +5,7 @@ appConfig:
   startSwagger: true
   nodeEnv: 'local'
   crypto: 
-    secret: null
+    secret: CryptoShield2023
   realm: 
     ttl: 300
     resolveEnv: false
