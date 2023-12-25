@@ -6,7 +6,6 @@ import { Document, Page, pdfjs } from 'react-pdf';
 
 import style from './PdfViewer.module.scss';
 
-// TODO: get the file from window.location/../pdf.worker.min.js
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 type PdfViewerProps = {

@@ -1,0 +1,45 @@
+.row-string,
+.row-number,
+.row-boolean,
+.row-array,
+.row-object {
+    padding: 0.3rem;
+
+    span {
+        font-size: 1rem;
+    }
+
+    span:last-child {
+        margin-left: 0.5rem;
+    }
+}
+
+.row-boolean {
+    .row-key {
+        color: plum !important;
+    }
+
+    .row-value {
+        color: pink !important;
+    }
+}
+
+.row-array {
+    .row-key {
+        color: green !important;
+    }
+}
+
+.row-object {
+    .row-key {
+        color: orange;
+    }
+
+    .row-value {
+        color: lightsalmon;
+
+        .object-item {
+            margin-left: 0.5rem;
+        }
+    }
+}

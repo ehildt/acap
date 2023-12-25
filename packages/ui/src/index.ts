@@ -2,6 +2,7 @@ export { Button } from './button/Button';
 export { FileImporter } from './file-importer/FileImporter';
 export { useFileImporterImmerStore } from './file-importer/FileImporter.store';
 export { FileSelector } from './file-selector/FileSelector';
+export { JsonViewer } from './file-viewers/json-viewer/JsonViewer';
 export { PageMenu } from './page-menu/PageMenu';
 export { PageMenuItem } from './page-menu/PageMenuItem';
 export { PageSwitcher } from './page-switcher/PageSwitcher';
