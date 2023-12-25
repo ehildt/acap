@@ -96,6 +96,8 @@ Getting Started
 </h1>
 </br>
 
+Install Lerna & Nx by running the command `npm i -g lerna nx`. In the project root run `docker compose up backend`. The frontend is still WIP. You can still run it with `lerna run dev --scope frontend`. That's it for the kickoff.
+
 **ACAP** simplifies the initialization process by providing a convenient ready-to-use setup. It leverages a `config.yml` file, reducing dependence on system environment variables, while still allowing flexibility to set them when required.
 
 When utilizing ACAP in Docker or Kubernetes (K8S), configuring the service is effortless. By binding the `/app/config.yml` to a volume, you can easily adjust the service settings. The `config.yml` file contains default presets, which, when combined with Docker Compose, enable a speedy setup for local development. This approach facilitates a seamless spin-up process for your projects.
