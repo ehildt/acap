@@ -2,7 +2,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Test } from '@nestjs/testing';
 import { Queue } from 'bullmq';
 
-import { AppConfigServices } from '@/configs/config-yml/config.model';
+import { AppConfigBrokers } from '@/configs/config-yml/config.model';
 import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
@@ -63,7 +63,7 @@ describe('OutbreakService', () => {
         },
       ];
 
-      const args: AppConfigServices = {
+      const args: AppConfigBrokers = {
         useRedisPubSub: true,
         useMQTT: true,
         useBullMQ: true,
@@ -88,7 +88,7 @@ describe('OutbreakService', () => {
         },
       ];
 
-      const args: AppConfigServices = {
+      const args: AppConfigBrokers = {
         useRedisPubSub: false,
         useMQTT: false,
         useBullMQ: false,

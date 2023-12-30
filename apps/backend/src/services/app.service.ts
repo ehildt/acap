@@ -40,30 +40,38 @@ export class AppService {
 
   enableOpenApi(app: NestFastifyApplication) {
     if (!this.configFactory.app.startSwagger) return;
-    const openApiObj = SwaggerModule.createDocument(
+    SwaggerModule.setup(
+      API_DOCS,
       app,
-      new DocumentBuilder()
-        .setTitle(packageJson.name.toUpperCase())
-        .setDescription(packageJson.description)
-        .setVersion(packageJson.version)
-        .build(),
+      SwaggerModule.createDocument(
+        app,
+        new DocumentBuilder()
+          .setTitle(packageJson.name.toUpperCase())
+          .setDescription(packageJson.description)
+          .setVersion(packageJson.version)
+          .build(),
+      ),
     );
-    SwaggerModule.setup(API_DOCS, app, openApiObj);
   }
 
   logOnServerStart() {
-    if (this.configFactory.app.printEnv)
+    if (this.configFactory.app.printEnv) {
       this.logger.log(
         {
-          APP: this.configFactory.app,
-          MONGO: this.configFactory.mongo,
-          REDIS: this.configFactory.redis,
-          REDIS_PUBSUB: this.configFactory.app.services.useRedisPubSub ? this.configFactory.redisPubSub : undefined,
-          BULLMQ: this.configFactory.app.services.useBullMQ ? this.configFactory.bullMQ : undefined,
-          MQTT: this.configFactory.app.services.useMQTT ? this.configFactory.mqtt : undefined,
+          ...this.configFactory.app,
+          brokers: {
+            useBullMQ: this.configFactory.app.brokers.useBullMQ ? this.configFactory.bullMQ : false,
+            useRedisPubSub: this.configFactory.app.brokers.useRedisPubSub ? this.configFactory.redisPubSub : false,
+            useMqtt: this.configFactory.app.brokers.useMQTT ? this.configFactory.mqtt : false,
+          },
+          databases: {
+            mongo: this.configFactory.mongo,
+            redis: this.configFactory.redis,
+          },
         },
-        'ENVIRONMENT',
+        'ACAP_CONFIGURATION',
       );
+    }
 
     if (this.configFactory.app.startSwagger) {
       const swaggerPath = `http://localhost:${this.configFactory.app.port}`;

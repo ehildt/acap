@@ -35,16 +35,15 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
 
 @Module({
   imports: [
-    ClientsModule.registerAsync(
-      [
-        useRedisPubSub && {
+    useRedisPubSub &&
+      ClientsModule.registerAsync([
+        {
           name: REDIS_PUBSUB,
           imports: [ConfigModule],
           inject: [ConfigFactoryService],
           useFactory: async ({ redisPubSub }: ConfigFactoryService) => redisPubSub,
         },
-      ].filter((exists) => exists),
-    ),
+      ]),
     useBullMQ &&
       BullModule.registerQueueAsync({
         imports: [ConfigModule],
