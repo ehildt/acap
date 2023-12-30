@@ -15,6 +15,7 @@ DCCS
 depcruiser
 depcruiserrc
 dtos
+errorlens
 fastify
 gitconfiglocal
 hangxingliu
@@ -48,6 +49,7 @@ sonarjs
 spdx
 treeshake
 upserts
+usernamehw
 vite
 vitest
 zustand

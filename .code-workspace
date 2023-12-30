@@ -41,7 +41,8 @@
       "pkief.material-icon-theme",
       "streetsidesoftware.code-spell-checker-medical-terms",
       "streetsidesoftware.code-spell-checker-scientific-terms",
-      "ms-azuretools.vscode-docker"
+      "ms-azuretools.vscode-docker",
+      "usernamehw.errorlens"
     ]
   }
 }
