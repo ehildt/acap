@@ -3,7 +3,7 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bullmq';
 
-import { AppConfigServices } from '@/configs/config-yml/config.model';
+import { AppConfigBrokers } from '@/configs/config-yml/config.model';
 import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
@@ -16,7 +16,7 @@ export class OutbreakService {
     @Optional() @Inject(MQTT_CLIENT) private readonly mqtt: MqttClient,
   ) {}
 
-  async delegate(reqs: Array<BreakoutUpsertReq>, args: AppConfigServices) {
+  async delegate(reqs: Array<BreakoutUpsertReq>, args: AppConfigBrokers) {
     reqs.forEach(({ realm, contents }) => {
       contents.forEach(({ value, jobOptions }) => {
         args.useRedisPubSub && this.redisPubSub?.emit(realm, value);

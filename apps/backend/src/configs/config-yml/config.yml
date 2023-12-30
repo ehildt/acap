@@ -11,7 +11,7 @@ appConfig:
     resolveEnv: false
     namespacePostfix: ACAP
     gzipThreshold: 20
-  services: 
+  brokers: 
     useRedisPubSub: false
     useBullMQ: false
     useMQTT: false

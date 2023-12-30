@@ -121,7 +121,7 @@ appConfig:
     resolveEnv: false
     namespacePostfix: ACAP
     gzipThreshold: 20
-  services:
+  brokers:
     useRedisPubSub: false
     useBullMQ: false
     useMQTT: false
@@ -181,7 +181,7 @@ mqttClientConfig:
 
 ```yml
 version: "3.9"
-services:
+brokers:
   acap:
     container_name: acap
     build:

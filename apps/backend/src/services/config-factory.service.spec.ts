@@ -53,7 +53,7 @@ describe('ConfigFactoryService', () => {
           resolveEnv: true,
           gzipThreshold: 1024,
         },
-        services: {
+        brokers: {
           useBullMQ: true,
           useRedisPubSub: true,
           useMQTT: true,
