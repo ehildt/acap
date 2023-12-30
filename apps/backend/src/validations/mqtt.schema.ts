@@ -45,7 +45,7 @@ export const MQTT_SCHEMA = {
       : Joi.boolean().optional(),
 
   USE_MQTT:
-    CONFIG_YML?.appConfig?.services.useMQTT !== undefined
-      ? Joi.boolean().default(CONFIG_YML?.appConfig?.services.useMQTT)
+    CONFIG_YML?.appConfig?.brokers.useMQTT !== undefined
+      ? Joi.boolean().default(CONFIG_YML?.appConfig?.brokers.useMQTT)
       : Joi.boolean().default(false),
 };

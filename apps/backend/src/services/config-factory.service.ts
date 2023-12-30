@@ -35,7 +35,7 @@ export class ConfigFactoryService {
         resolveEnv: this.configService.get<boolean>('AppConfig.RESOLVE_ENV'),
         gzipThreshold: this.configService.get<number>('AppConfig.GZIP_THRESHOLD'),
       },
-      services: {
+      brokers: {
         useBullMQ: this.configService.get<boolean>('AppConfig.USE_BULLMQ'),
         useRedisPubSub: this.configService.get<boolean>('AppConfig.USE_REDIS_PUBSUB'),
         useMQTT: this.configService.get<boolean>('AppConfig.USE_MQTT'),
