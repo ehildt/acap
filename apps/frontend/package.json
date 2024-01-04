@@ -56,7 +56,7 @@
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "@vitest/coverage-v8": "^1.1.1",
+    "@vitest/coverage-v8": "^1.1.2",
     "@vitest/ui": "latest",
     "autoprefixer": "^10.4.16",
     "css-reset-and-normalize": "^2.3.6",
@@ -82,7 +82,7 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.10",
     "vite-tsconfig-paths": "^4.2.3",
-    "vitest": "^1.1.1"
+    "vitest": "^1.1.2"
   },
   "stackblitz": {
     "startCommand": "npm run test:ui"
