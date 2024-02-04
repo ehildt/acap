@@ -48,10 +48,7 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       BullModule.registerQueueAsync({
         imports: [ConfigModule],
         inject: [ConfigFactoryService],
-        useFactory: async ({ bullMQ }: ConfigFactoryService) => {
-          // TODO: move BULLMQ_REALM_QUEUE into config
-          return { ...bullMQ, name: BULLMQ_REALM_QUEUE };
-        },
+        useFactory: async ({ bullMQ }: ConfigFactoryService) => ({ ...bullMQ, name: BULLMQ_REALM_QUEUE }),
       }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
