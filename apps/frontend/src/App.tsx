@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaBacon, FaDatabase, FaHome, FaInfo } from 'react-icons/fa';
+import { FaHome, FaInfo } from 'react-icons/fa';
 import { Button, PageMenu, PageMenuItem } from 'ui';
 
 import { Metae } from './components/metae/Metae';
@@ -28,26 +28,6 @@ export function App() {
             }}
           >
             <Button iconBefore={<FaHome />} text="Intro" disabled={isDisabled} />
-          </PageMenuItem>
-          <PageMenuItem
-            onMouseEnter={() => {
-              setDisabled((isDisabled) => !isDisabled);
-            }}
-            onMouseLeave={() => {
-              setDisabled((isDisabled) => !isDisabled);
-            }}
-          >
-            <Button iconBefore={<FaDatabase />} text="Realms" disabled={isDisabled} />
-          </PageMenuItem>
-          <PageMenuItem
-            onMouseEnter={() => {
-              setDisabled((isDisabled) => !isDisabled);
-            }}
-            onMouseLeave={() => {
-              setDisabled((isDisabled) => !isDisabled);
-            }}
-          >
-            <Button iconBefore={<FaBacon />} text="Schemas" disabled={isDisabled} />
           </PageMenuItem>
           <PageMenuItem
             onMouseEnter={() => {
