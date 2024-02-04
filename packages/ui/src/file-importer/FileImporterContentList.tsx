@@ -1,7 +1,10 @@
 import { useRef, useState } from 'react';
 import { FaFile, FaFileCsv, FaFileExcel, FaFilePdf, FaFileWord, FaRegFileImage } from 'react-icons/fa6';
 
-import { JsonViewer, PageMenu, PageMenuItem, Scrollbar } from '..';
+import { TreeViewer } from '@/file-viewers/tree-viewer/TreeViewer';
+import { YmlViewer } from '@/file-viewers/yml-viewer/YmlViewer';
+
+import { ImageViewer, JsonViewer, PageMenu, PageMenuItem, PdfViewer, Scrollbar } from '..';
 
 type SUPPORTED_EXTENSIONS = 'pdf' | 'csv' | 'xlsx' | 'odt' | 'docx' | 'jpg' | 'png';
 
@@ -27,9 +30,7 @@ type PropsFileImporterContentList = {
 
 export function FileImporterContentList(props: PropsFileImporterContentList) {
   const [file, setFile] = useState<any>();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const preRef = useRef<HTMLParagraphElement>(null);
-
+  const ref = useRef(null);
   const items = props.files?.map((f, idx) => {
     return (
       <PageMenuItem key={idx} onClick={() => setFile(f)}>
@@ -48,9 +49,17 @@ export function FileImporterContentList(props: PropsFileImporterContentList) {
           <PageMenu>{items}</PageMenu>
         </Scrollbar>
       </div>
-      <div className="file-importer-content-tags">tags are mine</div>
-      <div className="file-importer-content-preview">
-        <Scrollbar>{file?.extension === 'json' && <JsonViewer json={file.buffer.toString()} />}</Scrollbar>
+      <div ref={ref} className="file-importer-content-preview">
+        <Scrollbar overflow="auto">
+          {file?.extension === 'json' && <TreeViewer object={JSON.parse(file.buffer.toString())} ref={ref} />}
+          {file?.extension === 'json' && <JsonViewer json={file.buffer.toString()} />}
+          {file?.extension === 'yml' && <YmlViewer yml={file.buffer.toString()} />}
+          {file?.extension === 'yaml' && <YmlViewer yml={file.buffer.toString()} />}
+          {file?.extension === 'pdf' && <PdfViewer base64={file.buffer.toString('base64')} />}
+          {file?.extension === 'jpg' && (
+            <ImageViewer base64={file.buffer.toString('base64')} mimeType={file.mimeType} />
+          )}
+        </Scrollbar>
       </div>
     </div>
   );

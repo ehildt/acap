@@ -37,9 +37,7 @@ export function FileImporter() {
   useLayoutEffect(() => {
     if (fileSlice.files?.length) {
       const promises = loadFileContents(fileSlice.files);
-      Promise.all(promises).then((data) => {
-        setFiles(data);
-      });
+      Promise.all(promises).then((data) => setFiles(data));
     }
   }, [fileSlice.files]);
 

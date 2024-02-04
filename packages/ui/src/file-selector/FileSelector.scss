@@ -1,4 +1,5 @@
 .file-selector {
+    width: 80%;
     cursor: pointer;
     display: flex;
     background-color: #13161c;
@@ -12,4 +13,12 @@
         user-select: none;
         cursor: pointer;
     }
+}
+
+.file-menu {
+    width: 20%;
+    background-color: #13161c;
+    color: ghostwhite;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
 }
