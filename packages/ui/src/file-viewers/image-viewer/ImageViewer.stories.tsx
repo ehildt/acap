@@ -9,9 +9,5 @@ export default {
 } satisfies Meta<typeof ImageViewer>;
 
 export const Default = {
-  render: () => (
-    <div style={{ width: '45dvw', height: '45dvh' }}>
-      <ImageViewer mimeType="image/jpeg" base64={base64} />
-    </div>
-  ),
+  render: () => <ImageViewer mimeType="image/jpeg" base64={base64} />,
 } satisfies StoryObj<typeof ImageViewer>;

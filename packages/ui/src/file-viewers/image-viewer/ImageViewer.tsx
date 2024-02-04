@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 
+import { Container } from '@/container/Container';
+
 import style from './ImageViewer.module.scss';
 
 type ImageViewerProps = {
@@ -24,5 +26,9 @@ export function ImageViewer(props: ImageViewerProps) {
     }
   }, [props.base64]);
 
-  return <canvas ref={ref} className={style.imageViewer} />;
+  return (
+    <Container>
+      <canvas ref={ref} className={style.imageViewer} />
+    </Container>
+  );
 }
