@@ -1,0 +1,90 @@
+.yml-viewer__row-array,
+.yml-viewer__row-object,
+.yml-viewer__row-string,
+.yml-viewer__row-number,
+.yml-viewer__row-null,
+.yml-viewer__row-boolean {
+    border: solid black 0px;
+    transition: all 250ms ease-in;
+    padding: 0.2rem;
+    font-size: 1rem;
+    margin-left: 0.25rem;
+    margin-top: 0.2rem;
+
+    span:nth-child(2) {
+        font-weight: bolder;
+        margin-left: 0.2rem;
+        margin-right: 0.5rem;
+    }
+}
+
+.yml-viewer__row-null {
+    span:first-child {
+        color: orchid;
+    }
+
+    span:last-child {
+        color: plum;
+    }
+}
+
+.yml-viewer__row-string {
+    span:first-child {
+        color: darkorange;
+    }
+
+    span:last-child {
+        color: orange;
+    }
+}
+
+.yml-viewer__row-number {
+    span:first-child {
+        color: skyblue;
+    }
+
+    span:last-child {
+        color: lightblue;
+    }
+}
+
+.yml-viewer__row-boolean {
+    span:first-child {
+        color: yellowgreen;
+    }
+
+    span:last-child {
+        color: lightgreen;
+    }
+}
+
+.yml-viewer__row-null,
+.yml-viewer__row-string,
+.yml-viewer__row-number,
+.yml-viewer__row-boolean {
+    span:first-child {
+        font-weight: bolder;
+    }
+
+    span:last-child {
+        font-weight: bolder;
+    }
+}
+
+.yml-viewer-row--hovered--purple,
+.yml-viewer-row--hovered--red {
+    background-color: rgba(#000000, 0.05);
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 1px white;
+    transition: all 250ms ease-in;
+    margin: 0.5rem;
+    padding: 0.5rem 0px 0.5rem 0.5rem;
+}
+
+.yml-viewer-row--hovered--red {
+    border-right: solid red 10px;
+}
+
+.yml-viewer-row--hovered--purple {
+    border-right: solid purple 10px;
+}
