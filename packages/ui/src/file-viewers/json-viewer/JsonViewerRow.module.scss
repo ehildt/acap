@@ -1,0 +1,76 @@
+.json-viewer__row-array,
+.json-viewer__row-object,
+.json-viewer__row-string,
+.json-viewer__row-number,
+.json-viewer__row-null,
+.json-viewer__row-boolean {
+    border: solid black 0px;
+    transition: all 250ms ease-in;
+    padding: 0.2rem;
+    font-size: 1rem;
+    margin-left: 0.75rem;
+    margin-top: 0.2rem;
+
+    span:nth-child(2) {
+        font-weight: bolder;
+        margin-inline: 0.3rem;
+    }
+}
+
+.json-viewer__row-null {
+    span:first-child {
+        color: orchid;
+    }
+
+    span:last-child {
+        color: plum;
+    }
+}
+
+.json-viewer__row-string {
+    span:first-child {
+        color: darkorange;
+    }
+
+    span:last-child {
+        color: orange;
+    }
+}
+
+.json-viewer__row-number {
+    span:first-child {
+        color: skyblue;
+    }
+
+    span:last-child {
+        color: lightblue;
+    }
+}
+
+.json-viewer__row-boolean {
+    span:first-child {
+        color: yellowgreen;
+    }
+
+    span:last-child {
+        color: lightgreen;
+    }
+}
+
+.json-viewer-row--hovered--purple,
+.json-viewer-row--hovered--red {
+    background-color: rgba(#000000, 0.05);
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 1px white;
+    transition: all 250ms ease-in;
+    margin: 0.5rem;
+    padding: 0.5rem 0px 0.5rem 0.5rem;
+}
+
+.json-viewer-row--hovered--red {
+    border-right: solid red 10px;
+}
+
+.json-viewer-row--hovered--purple {
+    border-right: solid purple 10px;
+}
