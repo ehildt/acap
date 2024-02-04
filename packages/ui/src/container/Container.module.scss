@@ -1,0 +1,12 @@
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5dvw;
+    padding: 0.2rem;
+
+    &__content {
+        position: relative;
+        padding: 0.5rem;
+        border-radius: 0.5dvw;
+        background-color: #13161c;
+    }
+}
