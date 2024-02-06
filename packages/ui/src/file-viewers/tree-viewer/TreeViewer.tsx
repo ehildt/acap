@@ -25,6 +25,7 @@ export const TreeViewer = forwardRef(function TreeViewer(props: TreeViewerProps,
         svgClassName={style.svgTree}
         branchNodeClassName={style.branchNode}
         leafNodeClassName={style.leafNode}
+        rootNodeClassName={style.rootNode}
       />
     </Container>
   );
