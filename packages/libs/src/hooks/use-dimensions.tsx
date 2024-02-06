@@ -1,10 +1,10 @@
-import { RefObject, useEffect, useState } from 'react';
+import { RefObject, useCallback, useEffect, useState } from 'react';
 
 export function useDimensions(parentRef?: RefObject<HTMLElement | null>) {
   const [width, setClientWidth] = useState<number | undefined>();
   const [height, setClientHeight] = useState<number | undefined>();
 
-  useEffect(() => {
+  const handleResize = useCallback(() => {
     if (!parentRef?.current) return;
     let parentElement = parentRef.current.parentElement;
     let width = parentElement?.offsetWidth;
@@ -19,7 +19,13 @@ export function useDimensions(parentRef?: RefObject<HTMLElement | null>) {
 
     setClientWidth(() => width);
     setClientHeight(() => height);
-  }, [parentRef?.current]);
+  }, [parentRef]);
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleResize]);
 
   return { width, height };
 }

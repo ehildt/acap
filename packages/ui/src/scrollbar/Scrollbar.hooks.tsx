@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { RefObject, useCallback, useEffect, useState } from 'react';
+import { RefObject, useCallback, useEffect } from 'react';
 
 import { ProxyFunc, ScrollbarProps } from './Scrollbar.modal';
 import style from './Scrollbar.module.scss';
@@ -14,26 +14,6 @@ export function useScrollbarCn(props: ScrollbarProps) {
     { [style.scrollbarOverflowX]: props.overflow === 'x' },
     { [style.scrollbarOverflowAuto]: props.overflow === 'auto' },
   ]);
-}
-
-export function useParentDimensionsWithStyle(props: ScrollbarProps, parentRef?: RefObject<HTMLElement | null>) {
-  let clientHeight;
-  let clientWidth;
-
-  if (!props.style?.width || !props.style?.height) {
-    const dimensions = useParentDimensions(parentRef);
-    clientHeight = dimensions.clientHeight;
-    clientWidth = dimensions.clientWidth;
-  }
-
-  const width = props.style?.width ?? clientWidth ?? '100%';
-  const height = props.style?.height ?? clientHeight ?? '100%';
-
-  return {
-    ...props.style,
-    width: typeof width === 'string' ? width : `${width}px`,
-    height: typeof height === 'string' ? height : `${height}px`,
-  };
 }
 
 export function useMouseEventProxy(ref: RefObject<HTMLDivElement>, callback?: ProxyFunc) {
@@ -70,30 +50,6 @@ export function useScrollDirectionRtl(ref: RefObject<HTMLDivElement>, props: Scr
     else if (props.stickX === 'left') scroll.left();
     else if (props.stickX === 'right') scroll.rightRtl();
   }, [props.children]);
-}
-
-function useParentDimensions(ref?: RefObject<HTMLElement | null>) {
-  const [clientWidth, setClientWidth] = useState<number | undefined>();
-  const [clientHeight, setClientHeight] = useState<number | undefined>();
-
-  useEffect(() => {
-    if (!ref?.current) return;
-    let parentElement = ref.current.parentElement;
-    let width = parentElement?.offsetWidth;
-    let height = parentElement?.offsetHeight;
-
-    while (width === 0 || height === 0) {
-      if (!parentElement?.parentElement) break;
-      parentElement = parentElement.parentElement;
-      width = parentElement.offsetWidth;
-      height = parentElement.offsetHeight;
-    }
-
-    setClientWidth(() => width);
-    setClientHeight(() => height);
-  }, [ref?.current]);
-
-  return { clientWidth, clientHeight };
 }
 
 function useScroll(ref: RefObject<HTMLDivElement>, props: ScrollbarProps) {

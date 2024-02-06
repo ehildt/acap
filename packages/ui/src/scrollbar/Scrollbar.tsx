@@ -1,12 +1,7 @@
+import { useDimensionsWithStyle } from 'libs';
 import { forwardRef, useRef } from 'react';
 
-import {
-  useMouseEventProxy,
-  useParentDimensionsWithStyle,
-  useScrollbarCn,
-  useScrollDirectionLtr,
-  useScrollDirectionRtl,
-} from './Scrollbar.hooks';
+import { useMouseEventProxy, useScrollbarCn, useScrollDirectionLtr, useScrollDirectionRtl } from './Scrollbar.hooks';
 import { ScrollbarProps } from './Scrollbar.modal';
 
 /**
@@ -27,7 +22,7 @@ export const Scrollbar = forwardRef(function Scrollbar(props: ScrollbarProps, re
     <div
       ref={scrollbarRef}
       className={useScrollbarCn(props)}
-      style={useParentDimensionsWithStyle(props, ref ?? scrollbarRef)}
+      style={useDimensionsWithStyle(props, ref ?? scrollbarRef)}
       onClick={useMouseEventProxy(scrollbarRef, props.onClick)}
       onMouseEnter={useMouseEventProxy(scrollbarRef, props.onMouseEnter)}
       onMouseLeave={useMouseEventProxy(scrollbarRef, props.onMouseLeave)}
