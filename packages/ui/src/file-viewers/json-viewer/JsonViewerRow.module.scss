@@ -28,6 +28,8 @@
 }
 
 .json-viewer__row-string {
+    text-wrap: pretty;
+
     span:first-child {
         color: darkorange;
     }
