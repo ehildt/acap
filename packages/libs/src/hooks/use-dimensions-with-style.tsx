@@ -3,7 +3,7 @@ import { CSSProperties, RefObject } from 'react';
 import { useDimensions } from './use-dimensions';
 
 type DimensionsProps = {
-  style: CSSProperties;
+  style?: CSSProperties;
 };
 
 export function useDimensionsWithStyle(props: DimensionsProps, parentRef?: RefObject<HTMLElement | null>) {

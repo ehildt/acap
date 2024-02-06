@@ -25,11 +25,9 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['simple-import-sort', '@typescript-eslint', 'prettier', 'unused-imports'],
+  plugins: ['unused-imports', '@typescript-eslint', 'prettier'],
   rules: {
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],
-    'simple-import-sort/imports': 'error',
-    'simple-import-sort/exports': 'error',
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
       'warn',
