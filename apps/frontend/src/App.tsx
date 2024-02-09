@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaHome, FaInfo } from 'react-icons/fa';
-import { Button, PageMenu, PageMenuItem } from 'ui';
+import { Button, FileImporter, PageMenu, PageMenuItem } from 'ui';
 
 import { Metae } from './components/metae/Metae';
 import { useImmerPersistCacheStore } from './store/cache';
 
 export function App() {
   const [isDisabled, setDisabled] = useState<boolean>(true);
-  const { tab } = useImmerPersistCacheStore();
+  const { tab, setTab } = useImmerPersistCacheStore();
   const { t } = useTranslation();
 
   return (
@@ -20,6 +20,9 @@ export function App() {
       <aside style={{ gridArea: 'menu' }}>
         <PageMenu>
           <PageMenuItem
+            onClick={() => {
+              setTab('files');
+            }}
             onMouseEnter={() => {
               setDisabled((isDisabled) => !isDisabled);
             }}
@@ -27,9 +30,12 @@ export function App() {
               setDisabled((isDisabled) => !isDisabled);
             }}
           >
-            <Button iconBefore={<FaHome />} text="Intro" disabled={isDisabled} />
+            <Button iconBefore={<FaHome />} text="Files" disabled={isDisabled} />
           </PageMenuItem>
           <PageMenuItem
+            onClick={() => {
+              setTab('metae');
+            }}
             onMouseEnter={() => {
               setDisabled((isDisabled) => !isDisabled);
             }}
@@ -37,20 +43,14 @@ export function App() {
               setDisabled((isDisabled) => !isDisabled);
             }}
           >
-            <Button
-              iconBefore={<FaInfo />}
-              text="metae"
-              disabled={isDisabled}
-              onClick={() => {
-                console.log('removed');
-              }}
-            />
+            <Button iconBefore={<FaInfo />} text="Metae" disabled={isDisabled} />
           </PageMenuItem>
         </PageMenu>
       </aside>
 
       <main className="content">
-        <Metae />
+        {tab === 'metae' && <Metae />}
+        {tab === 'files' && <FileImporter />}
       </main>
     </div>
   );

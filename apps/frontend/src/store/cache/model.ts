@@ -1,9 +1,9 @@
 export type State = Data & Mutations;
 
 export type Data = {
-  tab: string;
+  tab: 'edit' | 'metae' | 'files';
 };
 
 export type Mutations = {
-  setTab: (tab: string) => void;
+  setTab: (tab: 'edit' | 'metae' | 'files') => void;
 };

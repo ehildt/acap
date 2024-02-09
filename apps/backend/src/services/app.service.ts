@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { API_DOCS, API_DOCS_JSON } from '../constants/app.constants';
+import { ACAP_BULLMQ_REALM_QUEUE, API_DOCS, API_DOCS_JSON } from '../constants/app.constants';
 import { ConfigFactoryService } from './config-factory.service';
 
 const packageJson = JSON.parse(readFileSync(join(__dirname, '../../package.json'), 'utf8'));
@@ -60,7 +60,9 @@ export class AppService {
         {
           ...this.configFactory.app,
           brokers: {
-            useBullMQ: this.configFactory.app.brokers.useBullMQ ? this.configFactory.bullMQ : false,
+            useBullMQ: this.configFactory.app.brokers.useBullMQ
+              ? { channel: ACAP_BULLMQ_REALM_QUEUE, ...this.configFactory.bullMQ }
+              : false,
             useRedisPubSub: this.configFactory.app.brokers.useRedisPubSub ? this.configFactory.redisPubSub : false,
             useMqtt: this.configFactory.app.brokers.useMQTT ? this.configFactory.mqtt : false,
           },

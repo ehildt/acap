@@ -35,11 +35,11 @@ export function PdfViewer(props: PdfViewerProps) {
         </div>
         <div className={style.pdfViewerButtonMenu}>
           <button disabled={currentPage <= 1} onClick={() => setCurrentPage((val) => val - 1)}>
-            <FaChevronLeft size={'1.5rem'} />
+            <FaChevronLeft size={'1.5rem'} color={currentPage > 1 ? 'unset' : 'grey'} />
           </button>
           <p>{props.formatter?.(currentPage, pages) ?? `Page ${currentPage} of ${pages}`}</p>
           <button disabled={currentPage >= pages} onClick={() => setCurrentPage((val) => val + 1)}>
-            <FaChevronRight size={'1.5rem'} />
+            <FaChevronRight size={'1.5rem'} color={currentPage >= pages ? 'gray' : 'unset'} />
           </button>
         </div>
       </div>
