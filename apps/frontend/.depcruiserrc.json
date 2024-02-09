@@ -14,6 +14,10 @@
     "src/ui/metae/MetaeMenu.tsx",
     "src/ui/metae/Metae.tsx",
     "src/ui/files/file-importer/FileImporter.tsx",
-    "src/App.tsx"
+    "src/App.tsx",
+    "src/file-viewers/pdf-viewer/PdfViewer.tsx",
+    "src/file-viewers/json-viewer/JsonViewer.tsx",
+    "src/file-viewers/image-viewer/ImageViewer.tsx",
+    "src/file-importer/FileImporterContentList.tsx"
   ]
 }
