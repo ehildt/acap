@@ -3,11 +3,13 @@ import './FileSelector.scss';
 import { useRef } from 'react';
 import { FaFileImport } from 'react-icons/fa';
 
+import { Button, useFileImporterImmerStore } from '..';
 import { useChangeEventProxy } from './FileSelector.hooks';
 import { FileSelectorProps } from './FileSelector.modal';
 
 export function FileSelector(props: FileSelectorProps) {
   const inputRef = useRef<any>(null);
+  const fileSlice = useFileImporterImmerStore();
 
   return (
     <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -24,7 +26,9 @@ export function FileSelector(props: FileSelectorProps) {
           multiple
         />
       </div>
-      <div className="file-menu">file menu here</div>
+      <div className="file-menu">
+        <Button onClick={fileSlice.setToggleTreeView} text="tree-view" />
+      </div>
     </div>
   );
 }

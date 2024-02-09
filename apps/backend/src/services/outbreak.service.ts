@@ -4,7 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bullmq';
 
 import { AppConfigBrokers } from '@/configs/config-yml/config.model';
-import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
+import { ACAP_BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { BreakoutUpsertReq } from '@/dtos/breakout-upsert.dto.req';
 import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 
@@ -12,7 +12,7 @@ import { MQTT_CLIENT, MqttClient } from '@/modules/mqtt-client.module';
 export class OutbreakService {
   constructor(
     @Optional() @Inject(REDIS_PUBSUB) private readonly redisPubSub: ClientProxy,
-    @Optional() @InjectQueue(BULLMQ_REALM_QUEUE) private readonly bullmq: Queue,
+    @Optional() @InjectQueue(ACAP_BULLMQ_REALM_QUEUE) private readonly bullmq: Queue,
     @Optional() @Inject(MQTT_CLIENT) private readonly mqtt: MqttClient,
   ) {}
 
