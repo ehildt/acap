@@ -6,7 +6,7 @@ import { ClientsModule } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import RedisStore from 'cache-manager-ioredis';
 
-import { BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
+import { ACAP_BULLMQ_REALM_QUEUE, REDIS_PUBSUB } from '@/constants/app.constants';
 import { JsonSchemaController } from '@/controllers/json-schema.controller';
 import { MetaController } from '@/controllers/meta.controller';
 import { OutbreakController } from '@/controllers/outbreak.controller';
@@ -48,7 +48,7 @@ const useMQTTClient = process.env.USE_MQTT === 'true';
       BullModule.registerQueueAsync({
         imports: [ConfigModule],
         inject: [ConfigFactoryService],
-        useFactory: async ({ bullMQ }: ConfigFactoryService) => ({ ...bullMQ, name: BULLMQ_REALM_QUEUE }),
+        useFactory: async ({ bullMQ }: ConfigFactoryService) => ({ ...bullMQ, name: ACAP_BULLMQ_REALM_QUEUE }),
       }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

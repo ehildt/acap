@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
 import { FaFile, FaFileCsv, FaFileExcel, FaFilePdf, FaFileWord, FaRegFileImage } from 'react-icons/fa6';
+import { parse } from 'yaml';
 
 import { TreeViewer } from '@/file-viewers/tree-viewer/TreeViewer';
 import { YmlViewer } from '@/file-viewers/yml-viewer/YmlViewer';
 
-import { ImageViewer, JsonViewer, PageMenu, PageMenuItem, PdfViewer, Scrollbar } from '..';
+import { ImageViewer, JsonViewer, PageMenu, PageMenuItem, PdfViewer, Scrollbar, useFileImporterImmerStore } from '..';
 
 type SUPPORTED_EXTENSIONS = 'pdf' | 'csv' | 'xlsx' | 'odt' | 'docx' | 'jpg' | 'png';
 
@@ -29,6 +30,7 @@ type PropsFileImporterContentList = {
 };
 
 export function FileImporterContentList(props: PropsFileImporterContentList) {
+  const fileSlice = useFileImporterImmerStore();
   const [file, setFile] = useState<any>();
   const ref = useRef(null);
   const items = props.files?.map((f, idx) => {
@@ -50,11 +52,15 @@ export function FileImporterContentList(props: PropsFileImporterContentList) {
         </Scrollbar>
       </div>
       <div ref={ref} className="file-importer-content-preview">
-        <Scrollbar overflow="auto">
-          {file?.extension === 'json' && <TreeViewer object={JSON.parse(file.buffer.toString())} ref={ref} />}
-          {file?.extension === 'json' && <JsonViewer json={file.buffer.toString()} />}
-          {file?.extension === 'yml' && <YmlViewer yml={file.buffer.toString()} />}
-          {file?.extension === 'yaml' && <YmlViewer yml={file.buffer.toString()} />}
+        <Scrollbar overflow={fileSlice.toggleTreeView ? 'hidden' : 'auto'}>
+          {file?.extension === 'json' && fileSlice.toggleTreeView && (
+            <TreeViewer object={JSON.parse(file.buffer.toString())} ref={ref} />
+          )}
+          {file?.extension === 'yml' && fileSlice.toggleTreeView && (
+            <TreeViewer object={parse(file.buffer.toString())} ref={ref} />
+          )}
+          {file?.extension === 'json' && !fileSlice.toggleTreeView && <JsonViewer json={file.buffer.toString()} />}
+          {file?.extension === 'yml' && !fileSlice.toggleTreeView && <YmlViewer yml={parse(file.buffer.toString())} />}
           {file?.extension === 'pdf' && <PdfViewer base64={file.buffer.toString('base64')} />}
           {file?.extension === 'jpg' && (
             <ImageViewer base64={file.buffer.toString('base64')} mimeType={file.mimeType} />

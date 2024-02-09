@@ -5,5 +5,5 @@ export type RowProps = {
 };
 
 export type YmlViewerProps = {
-  yml: string;
+  yml: any;
 };

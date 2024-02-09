@@ -1,28 +1,10 @@
 .svgTree path {
-    stroke: lime;
+    stroke: rgb(112, 112, 112);
     stroke-width: 2;
 }
 
-.root-node > circle {
-    fill: goldenrod;
-    transform: scale(1.3);
-}
-
-.branch-node > circle {
-    fill: orangered;
-    transform: scale(1.3);
-}
-
-.leaf-node > circle {
-    fill: purple;
-}
-
-.root-node > circle,
-.leaf-node > circle,
-.branch-node > circle {
-    &:hover {
-        animation: pulse 750ms infinite alternate; // Animation applied
-    }
+.leaf-node-hover:hover {
+    animation: pulse 750ms infinite alternate;
 }
 
 @keyframes pulse {
@@ -32,4 +14,58 @@
     100% {
         transform: scale(1.2);
     }
+}
+
+.leaf-node-orange {
+    fill: orangered;
+}
+
+.leaf-node-blue {
+    fill: blue;
+}
+
+.leaf-node-lime {
+    fill: lime;
+}
+
+.leaf-node-white {
+    fill: ghostwhite;
+}
+
+.leaf-node-gray {
+    fill: gray;
+}
+
+.leaf-node-array {
+    fill: purple;
+}
+
+.leaf-node-object {
+    fill: red;
+}
+
+.leaf-node-text--gold {
+    fill: ghostwhite;
+    stroke: none;
+}
+
+.leaf-node-object,
+.leaf-node-orange,
+.leaf-node-blue,
+.leaf-node-lime,
+.leaf-node-white,
+.leaf-node-gray,
+.leaf-node-array,
+.leaf-node-object {
+    stroke: none;
+    r: 1rem;
+}
+
+.leaf-node-white,
+.leaf-node-orange,
+.leaf-node-blue,
+.leaf-node-lime,
+.leaf-node-white,
+.leaf-node-gray {
+    cursor: default;
 }
