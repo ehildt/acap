@@ -1,71 +1,26 @@
-.svgTree path {
-    stroke: rgb(112, 112, 112);
+.svg-leaf-path {
+    stroke: rgb(112, 112, 112) !important;
+    stroke-width: 2;
+    stroke-opacity: 0.4;
+}
+
+.svg-branch-path {
+    stroke: rgb(222, 189, 2) !important;
     stroke-width: 2;
 }
 
-.leaf-node-hover:hover {
-    animation: pulse 750ms infinite alternate;
-}
+.tree-viewer {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5dvw;
+    padding: 0.2rem;
+    height: 100%;
+    position: relative;
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
+    &__content {
+        padding: 0.5rem;
+        border-radius: 0.5dvw;
+        background-color: #13161c;
+        height: 100%;
+        position: relative;
     }
-    100% {
-        transform: scale(1.2);
-    }
-}
-
-.leaf-node-orange {
-    fill: orangered;
-}
-
-.leaf-node-blue {
-    fill: blue;
-}
-
-.leaf-node-lime {
-    fill: lime;
-}
-
-.leaf-node-white {
-    fill: ghostwhite;
-}
-
-.leaf-node-gray {
-    fill: gray;
-}
-
-.leaf-node-array {
-    fill: purple;
-}
-
-.leaf-node-object {
-    fill: red;
-}
-
-.leaf-node-text--gold {
-    fill: ghostwhite;
-    stroke: none;
-}
-
-.leaf-node-object,
-.leaf-node-orange,
-.leaf-node-blue,
-.leaf-node-lime,
-.leaf-node-white,
-.leaf-node-gray,
-.leaf-node-array,
-.leaf-node-object {
-    stroke: none;
-    r: 1rem;
-}
-
-.leaf-node-white,
-.leaf-node-orange,
-.leaf-node-blue,
-.leaf-node-lime,
-.leaf-node-white,
-.leaf-node-gray {
-    cursor: default;
 }

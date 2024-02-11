@@ -3,7 +3,7 @@ import './FileSelector.scss';
 import { useRef } from 'react';
 import { FaFileImport } from 'react-icons/fa';
 
-import { Button, useFileImporterImmerStore } from '..';
+import { useFileImporterImmerStore } from '..';
 import { useChangeEventProxy } from './FileSelector.hooks';
 import { FileSelectorProps } from './FileSelector.modal';
 
@@ -27,7 +27,7 @@ export function FileSelector(props: FileSelectorProps) {
         />
       </div>
       <div className="file-menu">
-        <Button onClick={fileSlice.setToggleTreeView} text="tree-view" />
+        <button onClick={fileSlice.setToggleTreeView}>{'tree-view'}</button>
       </div>
     </div>
   );
