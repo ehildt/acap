@@ -1,0 +1,115 @@
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        outline: 2px solid gold;
+    }
+    100% {
+        transform: scale(1);
+        outline: 5px solid gold;
+    }
+}
+
+@keyframes pulse-collapsed {
+    0% {
+        transform: scale(0.8);
+        outline: 2px solid rgba(109, 109, 109, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        outline: 5px solid rgba(109, 109, 109, 0.4);
+    }
+}
+
+@keyframes rotation {
+    0% {
+        outline: 1px solid gold;
+        border-radius: 1rem;
+    }
+
+    100% {
+        outline: 5px dashed gold;
+        border-radius: 0rem;
+    }
+}
+
+.leaf-node-pulse {
+    transition: all 250ms ease;
+    animation: pulse 750ms infinite alternate;
+}
+
+.leaf-node-pulse-collapsed {
+    transition: all 250ms ease;
+    animation: pulse-collapsed 750ms infinite alternate;
+}
+
+.leaf-node-sleep {
+    transition: all 250ms ease;
+    outline: 2px solid rgba(109, 109, 109, 0.4);
+    border-radius: 1rem;
+}
+
+.leaf-node-hover {
+    border-radius: 1rem;
+
+    &:hover {
+        animation: rotation 750ms infinite alternate-reverse;
+    }
+}
+
+.leaf-node-hover:hover.leaf-node-pulse {
+    fill: gold;
+    transition: all 250ms ease;
+}
+
+.leaf-node-orange {
+    fill: orangered;
+}
+
+.leaf-node-blue {
+    fill: blue;
+}
+
+.leaf-node-lime {
+    fill: lime;
+}
+
+.leaf-node-white {
+    fill: ghostwhite;
+}
+
+.leaf-node-gray {
+    fill: gray;
+}
+
+.leaf-node-array {
+    fill: purple;
+}
+
+.leaf-node-object {
+    fill: red;
+}
+
+.leaf-node-text {
+    fill: ghostwhite;
+    stroke: none;
+}
+
+.leaf-node-object,
+.leaf-node-orange,
+.leaf-node-blue,
+.leaf-node-lime,
+.leaf-node-white,
+.leaf-node-gray,
+.leaf-node-array,
+.leaf-node-object {
+    stroke: none;
+}
+
+.leaf-node-white,
+.leaf-node-orange,
+.leaf-node-blue,
+.leaf-node-lime,
+.leaf-node-white,
+.leaf-node-gray {
+    cursor: default;
+}
