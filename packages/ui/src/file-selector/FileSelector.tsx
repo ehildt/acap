@@ -1,7 +1,9 @@
 import './FileSelector.scss';
 
 import { useRef } from 'react';
-import { FaFileImport } from 'react-icons/fa';
+import { FaEdit, FaSave } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaFileImport } from 'react-icons/fa6';
+import { GiPlantRoots } from 'react-icons/gi';
 
 import { useFileImporterImmerStore } from '..';
 import { useChangeEventProxy } from './FileSelector.hooks';
@@ -27,7 +29,24 @@ export function FileSelector(props: FileSelectorProps) {
         />
       </div>
       <div className="file-menu">
-        <button onClick={fileSlice.setToggleTreeView}>{'tree-view'}</button>
+        <GiPlantRoots
+          size={'2rem'}
+          onClick={fileSlice.setToggleTreeView}
+          cursor={'pointer'}
+          color={fileSlice.toggleTreeView ? 'lime' : 'grey'}
+        />
+        {fileSlice.toggleLeafNodeValues ? (
+          <FaEye
+            onClick={fileSlice.setToggleLeafNodeValues}
+            size={'2rem'}
+            cursor={'pointer'}
+            color={fileSlice.toggleLeafNodeValues ? 'skyblue' : 'grey'}
+          />
+        ) : (
+          <FaEyeSlash onClick={fileSlice.setToggleLeafNodeValues} size={'2rem'} cursor={'pointer'} color="grey" />
+        )}
+        <FaSave size={'2rem'} color="orange" />
+        <FaEdit size={'2rem'} color="yellow" />
       </div>
     </div>
   );

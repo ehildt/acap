@@ -1,9 +1,12 @@
 import cn from 'classnames';
 import { CustomNodeElementProps } from 'react-d3-tree';
 
+import { useFileImporterImmerStore } from '@/file-importer/FileImporter.store';
+
 import style from './TreeViewerNode.module.scss';
 
 export function TreeViewerNode(props: CustomNodeElementProps) {
+  const { toggleLeafNodeValues } = useFileImporterImmerStore();
   return (
     <g>
       <circle
@@ -31,12 +34,19 @@ export function TreeViewerNode(props: CustomNodeElementProps) {
       <text className={style.leafNodeText} x={0} y={-30} textAnchor="middle">
         {props.nodeDatum.name}
       </text>
-      <text className={style.leafNodeText} x={0} y={35} textAnchor="middle">
-        {props.nodeDatum.attributes?.string}
-        {props.nodeDatum.attributes?.number}
-        {props.nodeDatum.attributes?.boolean?.toString()}
-        {props.nodeDatum.attributes?.null}
-      </text>
+      {
+        <text
+          className={cn([style.leafNodeText, { [style.leafNodeTextHidden]: !toggleLeafNodeValues }])}
+          x={0}
+          y={35}
+          textAnchor="middle"
+        >
+          {props.nodeDatum.attributes?.string}
+          {props.nodeDatum.attributes?.number}
+          {props.nodeDatum.attributes?.boolean?.toString()}
+          {props.nodeDatum.attributes?.null}
+        </text>
+      }
     </g>
   );
 }
