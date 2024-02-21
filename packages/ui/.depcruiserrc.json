@@ -6,7 +6,8 @@
   "noOrphans": [],
   "notToDevDep": [
     "src/types.d.ts",
-    "src/file-viewers/tree-viewer/TreeViewer.tsx"
+    "src/file-viewers/tree-viewer/TreeViewer.tsx",
+    "src/file-viewers/tree-viewer/TreeViewerNode.tsx"
   ],
   "notToUnresolvable": [
     "src/types.d.ts"
