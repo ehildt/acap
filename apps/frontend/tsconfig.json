@@ -12,7 +12,7 @@
     "moduleResolution": "Node",
     "noEmit": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*", "../../packages/ui/src/*", "../../packages/libs/src/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -20,7 +20,7 @@
     "target": "ESNext",
     "useDefineForClassFields": true
   },
-  "include": ["src", "../../packages/ui/src/page-menu/PageMenu.stories.tsx"],
+  "include": ["src"],
   "references": [
     {
       "path": "./tsconfig.node.json"

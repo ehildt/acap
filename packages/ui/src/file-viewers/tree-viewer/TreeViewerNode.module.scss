@@ -24,11 +24,12 @@
     0% {
         outline: 1px solid gold;
         border-radius: 1rem;
+        transform: scale(1);
     }
 
     100% {
         outline: 5px dashed gold;
-        border-radius: 0rem;
+        border-radius: 0.1rem;
     }
 }
 
@@ -92,6 +93,16 @@
 .leaf-node-text {
     fill: ghostwhite;
     stroke: none;
+}
+
+.leaf-node-text--hidden {
+    transition: all 250ms;
+    opacity: 0;
+}
+
+.leaf-node-sleep:hover ~ .leaf-node-text--hidden {
+    transition: all 250ms;
+    opacity: 1;
 }
 
 .leaf-node-object,

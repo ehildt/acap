@@ -17,8 +17,11 @@
 
 .file-menu {
     width: 20%;
+    float: right;
     background-color: #13161c;
     color: ghostwhite;
     padding: 1rem 2rem;
     border-radius: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
 }
