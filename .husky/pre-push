@@ -5,19 +5,19 @@ check_working_directory
 check_branch_identifier
 
 # makes sure all dependencies are up to date
-info 'lerna run ncu:validate' && lerna run ncu:validate
+info 'pnpm -r ncu:validate' && pnpm -r ncu:validate
 
-info 'lerna run lint' && lerna run lint
+info 'pnpm -r lint' && pnpm -r lint
 
 # dry run tests
-info 'lerna run test:clearCache' && lerna run test:clearCache
-info 'lerna run test -- --silent' && lerna run test -- --silent
+info 'pnpm -r test:clearCache' && pnpm -r test:clearCache
+info 'pnpm -r test -- --silent' && pnpm -r test -- --silent
 
 # no unused exports
-info 'lerna run ts-unused-exports' && lerna run ts-unused-exports
+info 'pnpm -r ts-unused-exports' && pnpm -r ts-unused-exports
 
 # add known orphans to .depcruiserrc.json
-info 'lerna run depcruiser' && lerna run depcruiser
+info 'pnpm -r depcruiser' && pnpm -r depcruiser
 
 # add known orphans to .depcruiserrc.json
-info 'lerna run build' && lerna run build
+info 'pnpm -r build' && pnpm -r build -- --if-present
