@@ -50,7 +50,7 @@ export function FileImporter() {
         <FileSelector onChange={async ({ files }) => fileSlice.selectFiles(files)} />
         {isFileSizeExceeded && <p>file size exceeded</p>}
       </div>
-      {files?.length && <FileImporterContentList files={files} />}
+      {files?.length > 0 && <FileImporterContentList files={files} />}
     </div>
   );
 }
