@@ -1,7 +1,14 @@
 .file-selector {
-    width: 80%;
-    cursor: pointer;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 2fr 1.5fr 1fr;
+    grid-template-areas: "lsm msm rsm";
+}
+
+.file-selector-button {
     display: flex;
+    grid-area: lsm;
+    cursor: pointer;
     background-color: #13161c;
     color: ghostwhite;
     padding: 1rem 2rem;
@@ -15,13 +22,32 @@
     }
 }
 
-.file-menu {
-    width: 20%;
-    float: right;
+.file-selector-menu {
+    grid-area: rsm;
     background-color: #13161c;
     color: ghostwhite;
     padding: 1rem 2rem;
     border-radius: 0.5rem;
+    text-align: center;
+
+    & > * {
+        margin-inline: 0.5rem;
+    }
+}
+
+.file-selector-current-file {
     display: flex;
-    gap: 0.5rem;
+    grid-area: msm;
+    align-items: center;
+    background-color: #13161c;
+    color: ghostwhite;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+
+    span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 60%;
+    }
 }
