@@ -12,43 +12,4 @@
             border-radius: 0.5rem;
         }
     }
-
-    &-button-menu {
-        user-select: none;
-        padding: 2rem;
-        z-index: 2;
-        background-color: rgba(0, 0, 0, 0.7);
-        opacity: 0;
-        position: absolute;
-        width: 100%;
-        top: 5rem;
-        display: inline-flex;
-        transition: all 250ms ease-in-out;
-        margin: auto;
-        align-items: center;
-
-        &:hover {
-            opacity: 1 !important;
-        }
-
-        p {
-            margin: 0px;
-            padding: 0px;
-            font-size: 1.2rem;
-            text-align: center;
-            margin: auto;
-            font-weight: 900;
-            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.7);
-        }
-
-        button {
-            display: inline-flex;
-            padding: 0px;
-            margin: 0px;
-        }
-    }
-
-    &:hover &-button-menu {
-        opacity: 0.7;
-    }
 }
