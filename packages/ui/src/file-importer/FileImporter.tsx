@@ -8,7 +8,17 @@ import { useIsFileSizeExceeded } from './FileImporter.hooks';
 import { useFileImporterImmerStore } from './FileImporter.store';
 import { FileImporterContentList } from './FileImporterContentList';
 
-function loadFileContents(files: Array<File>) {
+export type CalculatedFile = {
+  uploadedOn: Date;
+  extension: string | undefined;
+  name: string;
+  mimeType: string;
+  lastModified: number;
+  buffer: Buffer;
+  size: string;
+};
+
+function loadFileContents(files: Array<File>): Array<Promise<CalculatedFile>> {
   const uploadedOn = new Date();
   return files?.map(async (file) => {
     const words = file.name.split('.');

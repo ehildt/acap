@@ -2,8 +2,10 @@ import './FileSelector.scss';
 
 import { useRef } from 'react';
 import { FaEdit, FaSave } from 'react-icons/fa';
-import { FaEye, FaEyeSlash, FaFileImport } from 'react-icons/fa6';
-import { GiPlantRoots } from 'react-icons/gi';
+import { FaFileImport } from 'react-icons/fa6';
+
+import { JsonViewerMenu } from '@/file-viewers/json-viewer/JsonViewerMenu';
+import { PdfViewerMenu } from '@/file-viewers/pdf-viewer/PdfViewerMenu';
 
 import { useFileImporterImmerStore } from '..';
 import { useChangeEventProxy } from './FileSelector.hooks';
@@ -14,8 +16,8 @@ export function FileSelector(props: FileSelectorProps) {
   const fileSlice = useFileImporterImmerStore();
 
   return (
-    <div style={{ display: 'flex', gap: '0.5rem' }}>
-      <div className="file-selector" onClick={() => inputRef.current?.click()}>
+    <div className="file-selector">
+      <div className="file-selector-button" onClick={() => inputRef.current?.click()}>
         <FaFileImport size={'2rem'} />
         <label htmlFor={props.label}>{props.label}</label>
         <input
@@ -28,23 +30,12 @@ export function FileSelector(props: FileSelectorProps) {
           multiple
         />
       </div>
-      <div className="file-menu">
-        <GiPlantRoots
-          size={'2rem'}
-          onClick={fileSlice.setToggleTreeView}
-          cursor={'pointer'}
-          color={fileSlice.toggleTreeView ? 'lime' : 'grey'}
-        />
-        {fileSlice.toggleLeafNodeValues ? (
-          <FaEye
-            onClick={fileSlice.setToggleLeafNodeValues}
-            size={'2rem'}
-            cursor={'pointer'}
-            color={fileSlice.toggleLeafNodeValues ? 'skyblue' : 'grey'}
-          />
-        ) : (
-          <FaEyeSlash onClick={fileSlice.setToggleLeafNodeValues} size={'2rem'} cursor={'pointer'} color="grey" />
-        )}
+      <div className="file-selector-current-file">
+        <span>{fileSlice.selectedFile?.name}</span>
+      </div>
+      <div className="file-selector-menu">
+        {fileSlice.selectedFile?.extension === 'pdf' && <PdfViewerMenu formatter={(p, t) => `${p} / ${t}`} />}
+        {fileSlice.selectedFile?.extension === 'json' && <JsonViewerMenu />}
         <FaSave size={'2rem'} color="orange" />
         <FaEdit size={'2rem'} color="yellow" />
       </div>

@@ -1,9 +1,9 @@
 .file-importer {
+    gap: 0.5rem;
     display: grid;
     grid-template-areas:
         "menu menu"
         "content content";
-    gap: 0.5rem;
 
     &-menu {
         grid-area: menu;
@@ -64,12 +64,29 @@
 }
 
 .file-card {
-    display: flex;
-    align-items: center;
-    width: 50ch;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    line-height: normal;
-    line-break: loose;
+    display: grid;
+    grid-template-areas: "icon content";
+    // grid-template-columns: 0.2fr 0.8fr;
+    padding: 0.3rem;
+    gap: 0.5rem;
+
+    div[data-icon] {
+        grid-area: icon;
+    }
+
+    div[data-content] {
+        grid-area: content;
+
+        span {
+            margin-inline: 0.3rem;
+        }
+
+        span[data-name="filename"] {
+            display: block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 40ch;
+        }
+    }
 }
