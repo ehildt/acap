@@ -29,7 +29,7 @@ export function YmlRowObject(props: RowProps) {
       }}
     >
       {props.kvPair.key && <span style={highlight ? { color: 'red' } : {}}>{props.kvPair.key}</span>}
-      {props.kvPair.key && <span>:</span>}
+      {props.separate && <span>:</span>}
       {ymlViewRows}
     </div>
   );
