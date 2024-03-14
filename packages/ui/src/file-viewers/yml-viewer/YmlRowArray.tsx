@@ -24,7 +24,7 @@ export function YmlRowArray(props: RowProps) {
       }}
     >
       {props.kvPair.key && <span style={highlight ? { color: 'magenta' } : {}}>{props.kvPair.key}</span>}
-      {props.kvPair.key && <span>:</span>}
+      {props.separate && <span>:</span>}
       {ymlViewerRows}
     </div>
   );
