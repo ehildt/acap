@@ -6,6 +6,7 @@ import { FaFileImport } from 'react-icons/fa6';
 
 import { JsonViewerMenu } from '@/file-viewers/json-viewer/JsonViewerMenu';
 import { PdfViewerMenu } from '@/file-viewers/pdf-viewer/PdfViewerMenu';
+import { YmlViewerMenu } from '@/file-viewers/yml-viewer/YmlViewerMenu';
 
 import { useFileImporterImmerStore } from '..';
 import { useChangeEventProxy } from './FileSelector.hooks';
@@ -36,6 +37,7 @@ export function FileSelector(props: FileSelectorProps) {
       <div className="file-selector-menu">
         {fileSlice.selectedFile?.extension === 'pdf' && <PdfViewerMenu formatter={(p, t) => `${p} / ${t}`} />}
         {fileSlice.selectedFile?.extension === 'json' && <JsonViewerMenu />}
+        {fileSlice.selectedFile?.extension === 'yml' && <YmlViewerMenu />}
         <FaSave size={'2rem'} color="orange" />
         <FaEdit size={'2rem'} color="yellow" />
       </div>
