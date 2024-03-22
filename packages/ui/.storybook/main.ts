@@ -7,8 +7,4 @@ export default {
     name: '@storybook/react-vite',
     options: {},
   },
-  docs: {
-    autodocs: true
-  }
 } satisfies StorybookConfig;
-

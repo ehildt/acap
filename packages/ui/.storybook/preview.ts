@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/react';
+import { themes } from '@storybook/theming';
 import '../scss/style.scss';
 
 export default {
@@ -9,6 +10,9 @@ export default {
         color: /(background|color)$/i,
         date: /Date$/,
       },
+    },
+    docs: {
+      theme: themes.dark,
     },
   },
 } satisfies Preview;
