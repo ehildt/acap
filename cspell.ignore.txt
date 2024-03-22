@@ -1,5 +1,6 @@
 acap
 adpyke
+autodocs
 autoprefixer
 azuretools
 bgclr
