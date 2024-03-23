@@ -96,7 +96,7 @@ Getting Started
 </h1>
 </br>
 
-Install Lerna & Nx by running the command `npm i -g lerna nx`. In the project root run `docker compose up backend`. The frontend is still WIP. You can still run it with `lerna run dev --scope frontend`. That's it for the kickoff.
+Install Lerna & Nx by running the command `npm i -g lerna nx pnpm`. In the project root run `pnpm install`, then `docker compose up backend`. The frontend is still WIP. You can run it with `lerna run dev --scope frontend`. You can run Storybook with `lerna run storybook --scope ui`. In case you would like to take a look at some stable react components, we recommend the Scrollbar, Slider, PageMenu and the SelectBox components.
 
 **ACAP** simplifies the initialization process by providing a convenient ready-to-use setup. It leverages a `config.yml` file, reducing dependence on system environment variables, while still allowing flexibility to set them when required.
 

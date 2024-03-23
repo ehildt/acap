@@ -1,7 +1,7 @@
 .menu-item {
     width: 100%;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 0.5dvw;
+    border-radius: 0.3rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,7 +41,7 @@
     }
 
     &-content {
-        border-radius: 0.5dvw;
+        border-radius: 0.3rem;
         display: inline-flex;
         background-color: #13161c;
         color: azure;

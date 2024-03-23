@@ -1,7 +1,7 @@
 .metae {
     padding: 1rem;
     background-color: #13161c;
-    border-radius: 0.5dvw;
+    border-radius: 0.3rem;
     user-select: none;
     opacity: 0;
     animation: fade-in 300ms ease-in-out forwards;
@@ -21,7 +21,7 @@
             background-color: rgba($color: #cccccc, $alpha: 0.1);
             margin: 0.5rem;
             padding: 0.3rem;
-            border-radius: 0.5dvw;
+            border-radius: 0.3rem;
             opacity: 0;
             animation: fade-in 300ms ease-in-out forwards;
         }

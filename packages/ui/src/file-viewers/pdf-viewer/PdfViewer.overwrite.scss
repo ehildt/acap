@@ -3,10 +3,10 @@
 
 .react-pdf__Document,
 .react-pdf__Page {
-    border-radius: 0.5rem;
+    border-radius: 0.3rem;
 
     &__canvas {
-        border-radius: 0.5rem;
+        border-radius: 0.3rem;
         width: 100% !important;
         height: 100% !important;
     }
