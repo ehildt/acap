@@ -1,6 +1,6 @@
 .pdf-viewer {
     position: relative;
-    border-radius: 0.5rem;
+    border-radius: 0.3rem;
     background: #13161c;
 
     p {
@@ -9,7 +9,7 @@
 
     &-container {
         & > * {
-            border-radius: 0.5rem;
+            border-radius: 0.3rem;
         }
     }
 }

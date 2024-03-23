@@ -7,7 +7,7 @@ export type MetaeItemProps = {
 
 export function MetaeItem(props: MetaeItemProps) {
   const keys = Object.keys(props.metae);
-  const items = keys?.map((key) => Object.keys(props.metae[key] ?? [])?.length)?.reduce((acc, val) => acc + val, 0);
+
   return keys.map((key, index) => (
     <div
       key={`${key}_${index}`}
