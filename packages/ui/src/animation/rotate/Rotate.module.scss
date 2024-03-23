@@ -1,0 +1,16 @@
+.rotate {
+    overflow: hidden;
+    overflow-wrap: break-word;
+
+    &-content {
+        transition: all var(--animation-rotate-speedMS, 250ms) ease-in-out;
+        transform: rotateX(var(--animation-rotateX, 0deg)) rotateY(var(--animation-rotateY, 0deg))
+            rotateZ(var(--animation-rotateZ, 0deg));
+    }
+
+    &:hover &-content {
+        transition: all var(--animation-rotate-speedMS2, 250ms) ease-in-out;
+        transform: rotateX(var(--animation-rotateX2, 0deg)) rotateY(var(--animation-rotateY2, 0deg))
+            rotateZ(var(--animation-rotateZ2, 0deg));
+    }
+}

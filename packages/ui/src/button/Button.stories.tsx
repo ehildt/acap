@@ -1,71 +1,65 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { useTranslation } from 'react-i18next';
-import { FaAd, FaHeart, FaSmile, FaVoteYea } from 'react-icons/fa';
+import type { Meta, StoryObj } from '@storybook/react';
+import { FaHeart, FaPlus, FaSmile } from 'react-icons/fa';
 
-import { Button as Component } from './Button';
+import { Skew } from '@/animation/skew/Skew';
+
+import { Button } from './Button';
 
 export default {
   title: 'buttons/button',
-  component: Component,
-} as ComponentMeta<typeof Component>;
+  component: Button,
+} satisfies Meta<typeof Button>;
 
-const Template: ComponentStory<typeof Component> = (args) => {
-  const { t } = useTranslation();
-  const text = args.text ? t(args.text, { ns: 'common' }) : args.text;
-  return <Component {...args} text={text} />;
-};
+export const DefaultButton = {
+  render: () => <Button onClick={() => confirm('button clicked!')}>clickMe</Button>,
+} satisfies StoryObj<typeof Button>;
 
-export const ButtonText = Template.bind({});
-ButtonText.args = {
-  text: 'button.ok',
-};
+export const DefaultWithStyle = {
+  render: () => (
+    <Button style={{ background: 'gray', fontWeight: 'bolder', borderColor: 'rgba(130,200,80, 1)' }}>withStyle</Button>
+  ),
+} satisfies StoryObj<typeof Button>;
 
-export const ButtonTextValueProxy = Template.bind({});
-ButtonTextValueProxy.args = {
-  text: 'button.ok',
-  valueProxy(value) {
-    return value
-      .split('')
-      .reverse()
-      .reduce((str, char) => `${str}${char}`);
-  },
-};
+export const ButtonWithHover = {
+  render: () => (
+    <div style={{ display: 'flex', gap: '0.5rem' }}>
+      <Button color="green" hoverColor="yellowgreen">
+        colors
+      </Button>
+      <Button hoverColor="pink" color="plum" borderColor="green" borderHoverColor="yellowgreen">
+        colors
+      </Button>
+      <Button
+        hoverColor="black"
+        color="plum"
+        borderColor="white"
+        borderHoverColor="red"
+        backgroundColor="black"
+        backgroundHoverColor="gray"
+      >
+        colors
+      </Button>
+    </div>
+  ),
+} satisfies StoryObj<typeof Button>;
 
-export const ButtonIconBefore = Template.bind({});
-ButtonIconBefore.args = {
-  iconBefore: <FaAd />,
-};
-
-export const ButtonIconAfter = Template.bind({});
-ButtonIconAfter.args = {
-  iconAfter: <FaVoteYea />,
-};
-
-export const ButtonTextIconBefore = Template.bind({});
-ButtonTextIconBefore.args = {
-  text: 'button.ok',
-  iconBefore: <FaAd />,
-};
-
-export const ButtonTextIconAfter = Template.bind({});
-ButtonTextIconAfter.args = {
-  text: 'button.save',
-  iconAfter: <FaSmile />,
-};
-
-export const ButtonTextIconBeforeAfter = Template.bind({});
-ButtonTextIconBeforeAfter.args = {
-  text: 'button.submit',
-  iconAfter: <FaSmile />,
-  iconBefore: <FaAd />,
-};
-
-export const ButtonTextUpperCaseIconBeforeAfter = Template.bind({});
-ButtonTextUpperCaseIconBeforeAfter.args = {
-  text: 'button.cancel',
-  iconAfter: <FaHeart color="var(--clr-primary-300)" size={'3rem'} />,
-  iconBefore: <FaAd />,
-  onClick(t) {
-    console.log(t.textContent);
-  },
-};
+export const ButtonIcons = {
+  render: () => (
+    <div style={{ display: 'flex', gap: '0.5rem' }}>
+      <Button iconBefore={<FaSmile />}>iconBefore</Button>
+      <Button iconAfter={<FaSmile />}>iconAfter</Button>
+      <Button
+        iconAfter={<FaPlus size={'2rem'} color="yellowgreen" />}
+        iconBefore={<FaHeart size={'2rem'} color="pink" />}
+      >
+        <Skew x="0turn" y="0deg" x2="1turn" y2="360deg">
+          before & after
+        </Skew>
+      </Button>
+      <Button
+        iconAfter={<FaPlus size={'2rem'} color="yellowgreen" />}
+        iconBefore={<FaHeart size={'2rem'} color="pink" />}
+      />
+    </div>
+  ),
+} satisfies StoryObj<typeof Button>;

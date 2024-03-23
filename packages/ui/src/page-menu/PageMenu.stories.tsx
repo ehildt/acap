@@ -1,22 +1,22 @@
-import { ComponentStory, Meta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
-import { PageMenu as Component } from './PageMenu';
+import { PageMenu } from './PageMenu';
 import { PageMenuItem } from './PageMenuItem';
 
 export default {
   title: 'menus/page-menu',
-  component: Component,
-  decorators: [(Story) => <div style={{ width: '20rem' }}>{Story()}</div>],
-} as Meta<typeof Component>;
+  component: PageMenu,
+  decorators: [(story) => <div style={{ width: '20rem' }}>{story()}</div>],
+} satisfies Meta<typeof PageMenu>;
 
-const Template: ComponentStory<typeof Component> = (args) => (
-  <Component {...args}>
-    <PageMenuItem>Intro</PageMenuItem>
-    <PageMenuItem>SoftSkills</PageMenuItem>
-    <PageMenuItem>SkillTree</PageMenuItem>
-    <PageMenuItem>Career</PageMenuItem>
-    <PageMenuItem>Education</PageMenuItem>
-  </Component>
-);
-
-export const PageMenu = Template.bind({});
+export const DefaultPageMenu = {
+  render: (args) => (
+    <PageMenu {...args}>
+      <PageMenuItem>Intro</PageMenuItem>
+      <PageMenuItem>SoftSkills</PageMenuItem>
+      <PageMenuItem>SkillTree</PageMenuItem>
+      <PageMenuItem>Career</PageMenuItem>
+      <PageMenuItem>Education</PageMenuItem>
+    </PageMenu>
+  ),
+} satisfies StoryObj<typeof PageMenu>;

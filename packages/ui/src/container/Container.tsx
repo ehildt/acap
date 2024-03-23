@@ -4,14 +4,14 @@ import style from './Container.module.scss';
 
 type ContainerProps = {
   children: ReactNode;
-  styleContainer?: CSSProperties;
-  styleContent?: CSSProperties;
+  outerStyle?: CSSProperties;
+  innerStyle?: CSSProperties;
 };
 
 export function Container(props: ContainerProps) {
   return (
-    <div className={style.container} style={props.styleContainer}>
-      <div className={style.containerContent} style={props.styleContent}>
+    <div className={style.container} style={props.outerStyle}>
+      <div className={style.containerContent} style={props.innerStyle}>
         {props.children}
       </div>
     </div>

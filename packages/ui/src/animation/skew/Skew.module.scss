@@ -1,0 +1,14 @@
+.skew {
+    overflow: hidden;
+    overflow-wrap: break-word;
+
+    &-content {
+        transition: all var(--animation-skew-speedMS, 250ms) ease-in-out;
+        transform: skew(var(--animation-skewX, 0deg), var(--animation-skewY, 0deg));
+    }
+
+    &:hover &-content {
+        transition: all var(--animation-skew-speedMS2, 250ms) ease-in-out;
+        transform: skew(var(--animation-skewX2, 0deg), var(--animation-skewY2, 0deg));
+    }
+}
