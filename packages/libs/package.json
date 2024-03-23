@@ -33,7 +33,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@types/react": "^18.2.67",
+    "@types/react": "^18.2.69",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
     "@vitest/coverage-v8": "^1.4.0",
@@ -48,7 +48,7 @@
     "prettier": "^3.2.5",
     "ts-unused-exports": "^10.0.1",
     "typescript": "^5.4.3",
-    "vite": "^5.2.3",
+    "vite": "^5.2.4",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.4.0"
   },
