@@ -19,6 +19,7 @@ dtos
 errorlens
 fastify
 gitconfiglocal
+github
 hangxingliu
 Hildt
 jackspeak

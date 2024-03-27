@@ -33,9 +33,9 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@types/react": "^18.2.69",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
+    "@types/react": "^18.2.73",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "@vitest/coverage-v8": "^1.4.0",
     "depcheck": "^1.4.7",
     "dependency-cruiser": "^16.2.4",
@@ -44,11 +44,11 @@
     "eslint-plugin-sonarjs": "0.24.0",
     "eslint-plugin-unused-imports": "^3.1.0",
     "lint-staged": "^15.2.2",
-    "npm-check-updates": "^16.14.17",
+    "npm-check-updates": "^16.14.18",
     "prettier": "^3.2.5",
     "ts-unused-exports": "^10.0.1",
     "typescript": "^5.4.3",
-    "vite": "^5.2.4",
+    "vite": "^5.2.6",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.4.0"
   },

@@ -49,11 +49,11 @@
           },
           {
             "type": "ci",
-            "release": "patch"
+            "release": false
           },
           {
             "type": "ui",
-            "release": "patch"
+            "release": "minor"
           },
           {
             "type": "perf",
@@ -61,10 +61,6 @@
           },
           {
             "type": "test",
-            "release": "patch"
-          },
-          {
-            "type": "refactor",
             "release": "patch"
           }
         ]
@@ -116,10 +112,6 @@
               "section": "Code Refactoring"
             },
             {
-              "type": "refactor",
-              "section": "Code Refactoring"
-            },
-            {
               "type": "style",
               "section": "Code Refactoring"
             },
@@ -151,9 +143,9 @@
       {
         "assets": [
           "CHANGELOG.md",
-          "package.json"
+          "pnpm-lock.yaml"
         ],
-        "message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
+        "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ]
   ]
